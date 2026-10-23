@@ -527,6 +527,11 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 @media (max-width:1100px){.dtFloorBox{margin-top:0}}
 @media (max-width:760px){.dtFloorLg{padding-left:8px}}
 </style>
+<style>
+@keyframes flMarch{to{stroke-dashoffset:-24}}
+@keyframes flNudge{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+@media (prefers-reduced-motion:no-preference){.flMarch{animation:flMarch 1s linear infinite}.flNudge{animation:flNudge 1.4s ease-in-out infinite}}
+</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; background: #FFFFFF; width: 100%; letter-spacing: -0.2px">
@@ -1829,13 +1834,13 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
       XC = W - 4 - Math.max(need, TAG);
       MAXW = Math.max(MINR - X0, XC - 22 - X0);
     }
-    XC = Math.min(XC, W - 4 - TAG); if (X0 + MAXW + 22 > XC) XC = X0 + MAXW + 22;
+    XC = Math.min(XC, W - 14 - TAG); if (X0 + MAXW + 22 > XC) XC = X0 + MAXW + 22;
     var CW = W - 4 - XC;   // 설명 글자에 쓸 수 있는 폭 (넘치면 …로 줄임)
     var FH = Math.max(26, Math.min(56, Math.floor(((targetH || 380) - 30 - GAP) / rows.length)));
     var y = TOP; rows.forEach(function (r, i) { if (i === gi && gi > 0) y += GAP; r.y = y; r.w = Math.max(6, Math.round(r.tot / max * MAXW)); y += FH; });
     var H = y + 8, groundY = gi > 0 ? rows[gi].y - GAP / 2 : -1;
     var T = function (x, yy, txt, a, fill) { return '<text x="' + x + '" y="' + yy + '"' + (a ? ' text-anchor="' + a + '"' : '') + ' dominant-baseline="central" style="font:' + FS + ';fill:' + (fill || '#232A30') + ';pointer-events:none">' + esc(txt) + '</text>'; };
-    var body = '', over = '', lead = '', call = '', used = {};
+    var body = '', over = '', lead = '', call = '', mark = '', used = {};
     if (groundY > 0) body += '<rect x="' + (X0 - 6) + '" y="' + groundY + '" width="' + (W - X0 + 4) + '" height="' + (H - groundY - 4) + '" fill="#CDBFA6" opacity="0.16"/><line x1="' + (X0 - 6) + '" y1="' + groundY + '" x2="' + W + '" y2="' + groundY + '" stroke="#8A7F70" stroke-width="1.6"/>';
     rows.forEach(function (r) {
       var x = X0, outs = [];
@@ -1855,26 +1860,49 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
         // 연장선은 칸 아래쪽을 따라 지나가서 다른 칸의 글자를 가리지 않음
         var by = r.y + FH - 5 - (n - 1 - j) * Math.min(5, (FH - 10) / Math.max(1, n));
         lead += '<circle cx="' + o.cx.toFixed(1) + '" cy="' + by + '" r="2" fill="#4A555E"/><path d="M' + o.cx.toFixed(1) + ' ' + by + ' L' + (X0 + r.w + 8) + ' ' + by + ' L' + (XC - 6) + ' ' + ly + '" fill="none" stroke="#6E7A83" stroke-width="0.8"/>';
-        if (tw(o.lab) <= CW) call += T(XC, ly, o.lab, null, '#2D3A44');
-        else if (n === 1 && FH >= 30) {   // 길면 두 줄 (용도 / 평)
-          var mm = /^(.*?)\s(\d+평)$/.exec(o.lab) || [0, o.lab, ''];
-          call += T(XC, ly - 8, fitTxt(mm[1], CW), null, '#2D3A44') + T(XC, ly + 9, mm[2], null, '#2D3A44');
-        } else call += T(XC, ly, fitTxt(o.lab, CW), null, '#2D3A44');
+        var mm = /^(.*?)\s(\d+평)$/.exec(o.lab) || [0, o.lab, ''];
+        call += '<text data-fit="' + (n === 1 && FH >= 30 ? '2' : '1') + '" data-name="' + esc(mm[1]) + '" data-py="' + esc(mm[2]) + '" x="' + XC + '" y="' + ly + '" dominant-baseline="central" style="font:' + FS + ';fill:#2D3A44;pointer-events:none">' + esc(o.lab) + '</text>';
       });
       body += T(X0 - 8, r.y + FH / 2, r.label, 'end', r.here ? '#14191F' : '#6B757D');
-      if (r.here && !outs.length) call += '<line x1="' + (X0 + r.w + 4) + '" y1="' + (r.y + FH / 2) + '" x2="' + (XC - 4) + '" y2="' + (r.y + FH / 2) + '" stroke="#B08A4E" stroke-width="1" stroke-dasharray="3 3"/><rect x="' + XC + '" y="' + (r.y + FH / 2 - 11) + '" width="' + TAG + '" height="22" rx="11" fill="#B08A4E"/>' + T(XC + TAG / 2, r.y + FH / 2, '이 매물', 'middle', '#FFFFFF');
+      if (r.here) {   // 해당 매물 층: 움직이는 점선 네모 + 「◀ 이 매물」
+        var bx = X0 - 4, bby = r.y - 4, bw = W - 4 - bx, bh = FH + 8;
+        mark += '<rect x="' + bx + '" y="' + bby + '" width="' + bw + '" height="' + bh + '" rx="6" fill="#B08A4E" opacity="0.08"/>' +
+          '<rect class="flMarch" x="' + bx + '" y="' + bby + '" width="' + bw + '" height="' + bh + '" rx="6" fill="none" stroke="#B08A4E" stroke-width="2" stroke-dasharray="8 4"/>';
+        if (!outs.length) mark += '<g class="flNudge"><path d="M' + (XC + 2) + ' ' + (r.y + FH / 2) + ' l9 -7 v14 z" fill="#B08A4E"/><rect x="' + (XC + 10) + '" y="' + (r.y + FH / 2 - 12) + '" width="' + TAG + '" height="24" rx="12" fill="#B08A4E"/>' + T(XC + 10 + TAG / 2, r.y + FH / 2, '이 매물', 'middle', '#FFFFFF') + '</g>';
+      }
     });
     for (var i = 1; i < rows.length; i++) { if (i === gi) continue; var a = rows[i - 1], b = rows[i]; over += '<line x1="' + X0 + '" y1="' + b.y + '" x2="' + (X0 + Math.min(a.w, b.w)) + '" y2="' + b.y + '" stroke="#5B6770" stroke-width="0.8" opacity="0.6"/>'; }
     var wall = function (l) { if (!l.length) return ''; var d = 'M' + X0 + ' ' + l[0].y + ' H' + (X0 + l[0].w); for (var i = 0; i < l.length; i++) { d += ' V' + (l[i].y + FH); if (i + 1 < l.length) d += ' H' + (X0 + l[i + 1].w); } return '<path d="' + d + ' H' + X0 + ' Z" fill="none" stroke="#3A4650" stroke-width="2.4"/>'; };
     var walls = gi > 0 ? wall(rows.slice(0, gi)) + wall(rows.slice(gi)) : wall(rows);
     var legend = Object.keys(FCAT).filter(function (k) { return used[k]; }).map(function (k) { return '<span><i style="background:' + FCAT[k][1] + '"></i>' + FCAT[k][0] + '</span>'; }).join('');
-    return '<svg class="dtFloorSvg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="층별 현황: 층별 면적과 용도"><title>층별 현황</title>' + body + lead + over + walls + call + '</svg><div class="dtFloorLg" style="padding-left:' + (X0 / W * 100).toFixed(1) + '%">' + legend + '</div>';
+    return '<svg class="dtFloorSvg" data-xc="' + XC + '" data-cw="' + CW + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="층별 현황: 층별 면적과 용도"><title>층별 현황</title>' + body + lead + over + walls + mark + call + '</svg><div class="dtFloorLg" style="padding-left:' + (X0 / W * 100).toFixed(1) + '%">' + legend + '</div>';
+  }
+  // 실제 화면 글자 길이를 재서 넘치면 두 줄(용도/평)로, 그래도 넘치면 용도만 …로 줄임 (평수는 항상 표시)
+  function fitCallouts(svg) {
+    if (!svg) return;
+    var XC = +svg.getAttribute('data-xc'), CW = +svg.getAttribute('data-cw') - 2, NS = 'http://www.w3.org/2000/svg';
+    svg.querySelectorAll('text[data-fit]').forEach(function (t) {
+      try {
+        if (t.getComputedTextLength() <= CW) return;
+        var nm = t.getAttribute('data-name'), py = t.getAttribute('data-py'), yy = +t.getAttribute('y');
+        if (t.getAttribute('data-fit') === '2' && py) {
+          t.textContent = '';
+          var a = document.createElementNS(NS, 'tspan'); a.setAttribute('x', XC); a.setAttribute('y', yy - 9); a.textContent = nm; t.appendChild(a);
+          var b = document.createElementNS(NS, 'tspan'); b.setAttribute('x', XC); b.setAttribute('y', yy + 9); b.textContent = py; t.appendChild(b);
+          var n = nm; while (a.getComputedTextLength() > CW && n.length > 1) { n = n.slice(0, -1); a.textContent = n + '…'; }
+        } else {
+          var n2 = nm; t.textContent = n2 + ' ' + py;
+          while (t.getComputedTextLength() > CW && n2.length > 1) { n2 = n2.slice(0, -1); t.textContent = n2 + '… ' + py; }
+        }
+      } catch (e) { }
+    });
   }
   function renderFloors() {
     var box = DT.el && DT.el.querySelector('#dtFloor'); if (!box || !DT.it) return;
     var tbl = DT.el.querySelector('.dtInfoGrid .dtInfo.one'), stacked = window.matchMedia('(max-width:1100px)').matches;
     var target = stacked ? 0 : (tbl ? tbl.getBoundingClientRect().height - 50 : 380);
     box.innerHTML = floorSvg(DT.it, stacked ? 0 : target) || '';
+    fitCallouts(box.querySelector('.dtFloorSvg'));
   }
   var flT; window.addEventListener('resize', function () { if (document.body.classList.contains('detailMode')) { clearTimeout(flT); flT = setTimeout(renderFloors, 150); } });
   function closeDetail() {
