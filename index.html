@@ -555,6 +555,14 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 .dtInfoGrid .dtFloorBox h3{height:38px}
 @media (max-width:760px){.flTxt li{grid-template-columns:60px minmax(0,1fr);font-size:13.5px}.flUses{flex-direction:column;gap:2px}.flUse{display:block}.flUse em{white-space:nowrap;margin-left:6px}}
 </style>
+<style>
+/* 층별 현황 글자: 층 | 용도 사이 세로 구분선 정렬 */
+.flTxt ul{padding:0!important}
+.flTxt li{align-items:stretch!important;padding:0!important;gap:0!important;grid-template-columns:78px minmax(0,1fr)!important}
+.flTxt li b{border-right:1px solid #D9D2C4;padding:5px 12px 5px 0;display:flex;align-items:flex-start}
+.flTxt li .flUses{padding:5px 0 5px 14px}
+@media (max-width:760px){.flTxt li{grid-template-columns:62px minmax(0,1fr)!important}.flTxt li .flUses{padding-left:10px}}
+</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; background: #FFFFFF; width: 100%; letter-spacing: -0.2px">
@@ -1646,7 +1654,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
           var list = keys.map(function (k) { return by[k]; }).sort(function (a, b) { return floorKey(a.name) - floorKey(b.name); });
           var m2 = function (v) { return Number(v).toLocaleString('ko-KR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '㎡'; };
           return '<div class="wide flTxt"><dt>층별 현황</dt><dd><ul>' + list.map(function (g) {
-            return '<li' + (isHereFloor(g.name, it.floor) ? ' class="here"' : '') + '><b>' + esc(g.name) + '</b><span class="flUses">' +
+            return '<li><b>' + esc(g.name) + '</b><span class="flUses">' +
               g.items.map(function (f) { return '<span class="flUse"><span>' + esc(f[2] || '-') + '</span><em>' + m2(f[3]) + '</em></span>'; }).join('') + '</span></li>';
           }).join('') + '</ul></dd></div>';
         })() + '</dl>' +
