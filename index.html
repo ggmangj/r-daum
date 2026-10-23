@@ -540,6 +540,21 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 .flTxt li.here b,.flTxt li.here span{color:#B3261E;font-weight:700}
 @media (max-width:760px){.flTxt ul{grid-template-columns:1fr;grid-template-rows:none;grid-auto-flow:row}.dtInfo .wide.flTxt{grid-template-columns:110px minmax(0,1fr)}}
 </style>
+<style>
+/* 층별 현황 글자: 한 층 한 줄(세로 정렬), 같은 층은 오른쪽으로 나열 */
+.flTxt ul{display:flex!important;flex-direction:column;gap:0!important;grid-template-rows:none!important}
+.flTxt li{display:grid!important;grid-template-columns:72px minmax(0,1fr);gap:12px;align-items:baseline;padding:3px 0;border-bottom:1px dashed #EFEAE0;font-size:14px;line-height:1.55}
+.flTxt li:last-child{border-bottom:0}
+.flTxt li b{width:auto!important;font-weight:600;color:#46515B}
+.flUses{display:flex;flex-wrap:wrap;gap:2px 22px}
+.flUse{display:inline-flex;gap:8px;align-items:baseline}
+.flUse em{font-style:normal;color:#46515B;font-variant-numeric:tabular-nums;white-space:nowrap}
+.flTxt li.here b,.flTxt li.here .flUse span,.flTxt li.here .flUse em{color:#B3261E;font-weight:700}
+/* 표 행 높이 줄이기 */
+.dtInfo dt,.dtInfo dd{padding-top:8px!important;padding-bottom:8px!important}
+.dtInfoGrid .dtFloorBox h3{height:38px}
+@media (max-width:760px){.flTxt li{grid-template-columns:60px minmax(0,1fr);font-size:13.5px}.flUses{flex-direction:column;gap:2px}.flUse{display:block}.flUse em{white-space:nowrap;margin-left:6px}}
+</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; background: #FFFFFF; width: 100%; letter-spacing: -0.2px">
@@ -1624,10 +1639,15 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
       ].filter(function (r) { return nz(r[1]); });
       regHtml = '<section class="dtSec"><h2>건축물정보</h2>' +
         '<dl class="dtInfo">' + rows.map(function (r) { return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>'; }).join('') + (rows.length % 2 ? '<div class="pad"><dt></dt><dd></dd></div>' : '') +
-        (function () {   // 층별 현황 (글자): 지하 가장 낮은 층 → 옥탑 순서, 한 층 한 줄
-          var fr = floorRows(reg).slice().reverse(); if (!fr.length) return '';
-          return '<div class="wide flTxt"><dt>층별 현황</dt><dd><ul style="--flRows:' + Math.ceil(fr.length / 2) + '">' + fr.map(function (r) {
-            return '<li' + (isHereFloor(r.name, it.floor) ? ' class="here"' : '') + '><b>' + esc(r.label) + '</b><span>' + r.segs.map(function (sg) { return esc(sg.label) + ' ' + Math.round(sg.area / 3.3058) + '평'; }).join(' · ') + '</span></li>';
+        (function () {   // 층별 현황 (글자): 건축물대장 표기 그대로 (층 이름·용도·㎡), 지하 가장 낮은 층 → 옥탑, 같은 층은 오른쪽으로 나열
+          var fl = (reg.fl || []).filter(function (f) { return +f[3] > 0; }); if (!fl.length) return '';
+          var by = {}, keys = [];
+          fl.forEach(function (f) { var k = String(f[0]).replace(/\s+/g, ''); if (!by[k]) { by[k] = { name: f[0], items: [] }; keys.push(k); } by[k].items.push(f); });
+          var list = keys.map(function (k) { return by[k]; }).sort(function (a, b) { return floorKey(a.name) - floorKey(b.name); });
+          var m2 = function (v) { return Number(v).toLocaleString('ko-KR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + '㎡'; };
+          return '<div class="wide flTxt"><dt>층별 현황</dt><dd><ul>' + list.map(function (g) {
+            return '<li' + (isHereFloor(g.name, it.floor) ? ' class="here"' : '') + '><b>' + esc(g.name) + '</b><span class="flUses">' +
+              g.items.map(function (f) { return '<span class="flUse"><span>' + esc(f[2] || '-') + '</span><em>' + m2(f[3]) + '</em></span>'; }).join('') + '</span></li>';
           }).join('') + '</ul></dd></div>';
         })() + '</dl>' +
         '<p class="dtNote">※ 국토교통부 건축HUB 건축물대장(표제부·층별개요) 기준 (소유자·변동·구조·인증·관리 현황 제외). 계약 전 건축물대장 원본으로 다시 확인해 드립니다.</p></section>';
