@@ -1819,7 +1819,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
     var tw = function (t) { var n = 0; t = String(t); for (var i = 0; i < t.length; i++) n += (/[가-힣]/.test(t[i]) ? FSZ : (t[i] === ' ' ? 4 : (/[·…]/.test(t[i]) ? 6 : 8))); return n; };
     var fitTxt = function (t, w) { if (tw(t) <= w) return t; var m = /^(.*?)(\s\d+평)$/.exec(t), head = m ? m[1] : t, tail = m ? m[2] : ''; while (head.length > 1 && tw(head + '…' + tail) > w) head = head.slice(0, -1); return head + '…' + tail; };
     var W = 400, PAD = 10, TOP = 10, GAP = gi > 0 ? 12 : 0, TAG = 64;
-    var X0 = Math.ceil(Math.max.apply(null, rows.map(function (r) { return tw(r.label); })) + 14);
+    var X0 = Math.ceil(Math.max.apply(null, rows.map(function (r) { return tw(r.label); })) * 1.12 + 16);   // 실제 글꼴이 조금 넓어도 왼쪽이 잘리지 않게 여유
     var segW = function (r, sg, MAXW) { return Math.max(6, r.tot / max * MAXW) * sg.area / r.tot; };
     var labOf = function (sg) { return sg.label + ' ' + Math.round(sg.area / PY) + '평'; };
     // 바깥 설명 칸 폭을 먼저 정하고, 가장 넓은 층이 그림 가운데를 넘도록 건물 폭을 정함
@@ -1866,9 +1866,9 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
       body += T(X0 - 8, r.y + FH / 2, r.label, 'end', r.here ? '#14191F' : '#6B757D');
       if (r.here) {   // 해당 매물 층: 움직이는 점선 네모 + 「◀ 이 매물」
         var bx = X0 - 4, bby = r.y - 4, bw = W - 4 - bx, bh = FH + 8;
-        mark += '<rect x="' + bx + '" y="' + bby + '" width="' + bw + '" height="' + bh + '" rx="6" fill="#B08A4E" opacity="0.08"/>' +
-          '<rect class="flMarch" x="' + bx + '" y="' + bby + '" width="' + bw + '" height="' + bh + '" rx="6" fill="none" stroke="#B08A4E" stroke-width="2" stroke-dasharray="8 4"/>';
-        if (!outs.length) mark += '<g class="flNudge"><path d="M' + (XC + 2) + ' ' + (r.y + FH / 2) + ' l9 -7 v14 z" fill="#B08A4E"/><rect x="' + (XC + 10) + '" y="' + (r.y + FH / 2 - 12) + '" width="' + TAG + '" height="24" rx="12" fill="#B08A4E"/>' + T(XC + 10 + TAG / 2, r.y + FH / 2, '이 매물', 'middle', '#FFFFFF') + '</g>';
+        mark += '<rect x="' + bx + '" y="' + bby + '" width="' + bw + '" height="' + bh + '" rx="6" fill="#B3261E" opacity="0.06"/>' +
+          '<rect class="flMarch" x="' + bx + '" y="' + bby + '" width="' + bw + '" height="' + bh + '" rx="6" fill="none" stroke="#B3261E" stroke-width="2" stroke-dasharray="8 4"/>';
+        if (!outs.length) mark += '<g class="flNudge"><path d="M' + (XC + 2) + ' ' + (r.y + FH / 2) + ' l9 -7 v14 z" fill="#B3261E"/><rect x="' + (XC + 10) + '" y="' + (r.y + FH / 2 - 12) + '" width="' + TAG + '" height="24" rx="12" fill="#B3261E"/>' + T(XC + 10 + TAG / 2, r.y + FH / 2, '이 매물', 'middle', '#FFFFFF') + '</g>';
       }
     });
     for (var i = 1; i < rows.length; i++) { if (i === gi) continue; var a = rows[i - 1], b = rows[i]; over += '<line x1="' + X0 + '" y1="' + b.y + '" x2="' + (X0 + Math.min(a.w, b.w)) + '" y2="' + b.y + '" stroke="#5B6770" stroke-width="0.8" opacity="0.6"/>'; }
