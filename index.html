@@ -521,7 +521,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 .dtFloorBox h3{margin:0;height:44px;box-sizing:border-box;display:flex;align-items:center;padding:0 18px;background:#FAF7F1;color:#46515B;font-size:14.5px;font-weight:600;border-bottom:1px solid #EFEAE0}
 .dtFloor{flex:1;display:flex;flex-direction:column;justify-content:center;padding:10px 8px 8px}
 .dtFloorSvg{width:100%;height:auto;display:block}
-.dtFloorLg{display:flex;flex-wrap:wrap;gap:3px 10px;padding:8px 10px 2px 60px;font-size:11px;color:#8A939A}
+.dtFloorLg{display:flex;flex-wrap:wrap;gap:3px 10px;padding:8px 10px 2px;font-size:11px;color:#8A939A}
 .dtFloorLg span{display:inline-flex;align-items:center;gap:4px}
 .dtFloorLg i{width:8px;height:8px;border-radius:2px;border:0.5px solid #9AA3AA;display:inline-block}
 @media (max-width:1100px){.dtFloorBox{margin-top:0}}
@@ -1807,23 +1807,42 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
     });
     var rows = order.map(function (k) { return groups[k]; }).sort(function (a, b) { return floorKey(b.name) - floorKey(a.name); });
     if (!rows.length) return '';
-    rows.forEach(function (r) { r.tot = r.segs.reduce(function (s, x) { return s + x.area; }, 0); r.here = it.floor && sameFloor(r.name, it.floor); });
+    rows.forEach(function (r) { r.tot = r.segs.reduce(function (s, x) { return s + x.area; }, 0); r.here = it.floor && sameFloor(r.name, it.floor); r.label = floorNameKo(r.name); });
     var max = Math.max.apply(null, rows.map(function (r) { return r.tot; }));
     var gi = -1; rows.forEach(function (r, i) { if (gi < 0 && floorKey(r.name) < 0) gi = i; });
-    var W = 400, X0 = 60, MAXW = 222, PAD = 10, XC = X0 + MAXW + 22, TOP = 10, GAP = gi > 0 ? 12 : 0, FS = '500 13.5px Noto Sans KR, sans-serif';
-    var FH = Math.max(24, Math.min(46, Math.floor(((targetH || 380) - 30 - GAP) / rows.length)));
+    var FSZ = 13.5, FS = '500 ' + FSZ + 'px Noto Sans KR, sans-serif';
+    var tw = function (t) { var n = 0; t = String(t); for (var i = 0; i < t.length; i++) n += (/[가-힣]/.test(t[i]) ? FSZ : (t[i] === ' ' ? 4 : (/[·…]/.test(t[i]) ? 6 : 8))); return n; };
+    var fitTxt = function (t, w) { if (tw(t) <= w) return t; var m = /^(.*?)(\s\d+평)$/.exec(t), head = m ? m[1] : t, tail = m ? m[2] : ''; while (head.length > 1 && tw(head + '…' + tail) > w) head = head.slice(0, -1); return head + '…' + tail; };
+    var W = 400, PAD = 10, TOP = 10, GAP = gi > 0 ? 12 : 0, TAG = 64;
+    var X0 = Math.ceil(Math.max.apply(null, rows.map(function (r) { return tw(r.label); })) + 14);
+    var segW = function (r, sg, MAXW) { return Math.max(6, r.tot / max * MAXW) * sg.area / r.tot; };
+    var labOf = function (sg) { return sg.label + ' ' + Math.round(sg.area / PY) + '평'; };
+    // 바깥 설명 칸 폭을 먼저 정하고, 가장 넓은 층이 그림 가운데를 넘도록 건물 폭을 정함
+    var MINR = W * 0.70, XC, MAXW = W - X0 - 22 - 130;   // 가장 넓은 층은 최소 70% 지점까지 (가운데를 확실히 넘김)
+    for (var pass = 0; pass < 3; pass++) {
+      var need = 0;
+      rows.forEach(function (r) {
+        var outs = 0;
+        r.segs.forEach(function (sg) { if (tw(labOf(sg)) + PAD * 2 > segW(r, sg, MAXW)) { outs++; need = Math.max(need, tw(labOf(sg))); } });
+        if (r.here && !outs) need = Math.max(need, TAG);
+      });
+      XC = W - 4 - Math.max(need, TAG);
+      MAXW = Math.max(MINR - X0, XC - 22 - X0);
+    }
+    XC = Math.min(XC, W - 4 - TAG); if (X0 + MAXW + 22 > XC) XC = X0 + MAXW + 22;
+    var CW = W - 4 - XC;   // 설명 글자에 쓸 수 있는 폭 (넘치면 …로 줄임)
+    var FH = Math.max(26, Math.min(56, Math.floor(((targetH || 380) - 30 - GAP) / rows.length)));
     var y = TOP; rows.forEach(function (r, i) { if (i === gi && gi > 0) y += GAP; r.y = y; r.w = Math.max(6, Math.round(r.tot / max * MAXW)); y += FH; });
     var H = y + 8, groundY = gi > 0 ? rows[gi].y - GAP / 2 : -1;
-    var tw = function (t) { var n = 0; for (var i = 0; i < t.length; i++) n += (/[가-힣]/.test(t[i]) ? 13.5 : (t[i] === ' ' ? 4 : 8)); return n; };
     var T = function (x, yy, txt, a, fill) { return '<text x="' + x + '" y="' + yy + '"' + (a ? ' text-anchor="' + a + '"' : '') + ' dominant-baseline="central" style="font:' + FS + ';fill:' + (fill || '#232A30') + ';pointer-events:none">' + esc(txt) + '</text>'; };
-    var body = '', over = '', call = '', used = {};
-    if (groundY > 0) body += '<rect x="' + (X0 - 6) + '" y="' + groundY + '" width="' + (W - X0) + '" height="' + (H - groundY - 4) + '" fill="#CDBFA6" opacity="0.16"/><line x1="' + (X0 - 6) + '" y1="' + groundY + '" x2="' + (W - 2) + '" y2="' + groundY + '" stroke="#8A7F70" stroke-width="1.6"/>';
+    var body = '', over = '', lead = '', call = '', used = {};
+    if (groundY > 0) body += '<rect x="' + (X0 - 6) + '" y="' + groundY + '" width="' + (W - X0 + 4) + '" height="' + (H - groundY - 4) + '" fill="#CDBFA6" opacity="0.16"/><line x1="' + (X0 - 6) + '" y1="' + groundY + '" x2="' + W + '" y2="' + groundY + '" stroke="#8A7F70" stroke-width="1.6"/>';
     rows.forEach(function (r) {
       var x = X0, outs = [];
       r.segs.forEach(function (sg, k) {
         used[sg.cat] = 1;
-        var sw = r.w * sg.area / r.tot, c = FCAT[sg.cat][1], lab = sg.label + ' ' + Math.round(sg.area / PY) + '평';
-        body += '<rect x="' + x.toFixed(1) + '" y="' + r.y + '" width="' + sw.toFixed(1) + '" height="' + FH + '" fill="' + c + '"><title>' + esc(floorNameKo(r.name) + ' · ' + sg.full + ' · ' + (sg.area / PY).toFixed(1) + '평 (' + sg.area + '㎡)') + '</title></rect>';
+        var sw = r.w * sg.area / r.tot, c = FCAT[sg.cat][1], lab = labOf(sg);
+        body += '<rect x="' + x.toFixed(1) + '" y="' + r.y + '" width="' + sw.toFixed(1) + '" height="' + FH + '" fill="' + c + '"><title>' + esc(r.label + ' · ' + sg.full + ' · ' + (sg.area / PY).toFixed(1) + '평 (' + sg.area + '㎡)') + '</title></rect>';
         if (k > 0) over += '<line x1="' + x.toFixed(1) + '" y1="' + r.y + '" x2="' + x.toFixed(1) + '" y2="' + (r.y + FH) + '" stroke="#7D8890" stroke-width="1"/>';
         if (tw(lab) + PAD * 2 <= sw) over += T((x + PAD).toFixed(1), r.y + FH / 2, lab);
         else outs.push({ cx: x + sw / 2, lab: lab });
@@ -1832,17 +1851,24 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
       var maxOut = Math.max(1, Math.floor(FH / 15));
       if (outs.length > maxOut) { var rest = outs.slice(maxOut - 1); outs = outs.slice(0, maxOut - 1); outs.push({ cx: rest[0].cx, lab: '외 ' + rest.length + '곳' }); }
       outs.forEach(function (o, j) {
-        var n = outs.length, ly = r.y + FH / 2 + (n > 1 ? (j - (n - 1) / 2) * 15 : 0), cy = r.y + FH / 2 + (n > 1 ? (j - (n - 1) / 2) * Math.min(8, FH / (n + 1)) : 0);
-        call += '<circle cx="' + o.cx.toFixed(1) + '" cy="' + cy + '" r="2" fill="#4A555E"/><path d="M' + o.cx.toFixed(1) + ' ' + cy + ' L' + (X0 + r.w + 8) + ' ' + cy + ' L' + (XC - 6) + ' ' + ly + '" fill="none" stroke="#6E7A83" stroke-width="0.8"/>' + T(XC, ly, o.lab, null, '#2D3A44');
+        var n = outs.length, ly = r.y + FH / 2 + (n > 1 ? (j - (n - 1) / 2) * 15 : 0);
+        // 연장선은 칸 아래쪽을 따라 지나가서 다른 칸의 글자를 가리지 않음
+        var by = r.y + FH - 5 - (n - 1 - j) * Math.min(5, (FH - 10) / Math.max(1, n));
+        lead += '<circle cx="' + o.cx.toFixed(1) + '" cy="' + by + '" r="2" fill="#4A555E"/><path d="M' + o.cx.toFixed(1) + ' ' + by + ' L' + (X0 + r.w + 8) + ' ' + by + ' L' + (XC - 6) + ' ' + ly + '" fill="none" stroke="#6E7A83" stroke-width="0.8"/>';
+        if (tw(o.lab) <= CW) call += T(XC, ly, o.lab, null, '#2D3A44');
+        else if (n === 1 && FH >= 30) {   // 길면 두 줄 (용도 / 평)
+          var mm = /^(.*?)\s(\d+평)$/.exec(o.lab) || [0, o.lab, ''];
+          call += T(XC, ly - 8, fitTxt(mm[1], CW), null, '#2D3A44') + T(XC, ly + 9, mm[2], null, '#2D3A44');
+        } else call += T(XC, ly, fitTxt(o.lab, CW), null, '#2D3A44');
       });
-      body += T(X0 - 8, r.y + FH / 2, floorNameKo(r.name), 'end', r.here ? '#14191F' : '#6B757D');
-      if (r.here && !outs.length) call += '<line x1="' + (X0 + r.w + 4) + '" y1="' + (r.y + FH / 2) + '" x2="' + (XC - 4) + '" y2="' + (r.y + FH / 2) + '" stroke="#B08A4E" stroke-width="1" stroke-dasharray="3 3"/><rect x="' + XC + '" y="' + (r.y + FH / 2 - 11) + '" width="64" height="22" rx="11" fill="#B08A4E"/>' + T(XC + 32, r.y + FH / 2, '이 매물', 'middle', '#FFFFFF');
+      body += T(X0 - 8, r.y + FH / 2, r.label, 'end', r.here ? '#14191F' : '#6B757D');
+      if (r.here && !outs.length) call += '<line x1="' + (X0 + r.w + 4) + '" y1="' + (r.y + FH / 2) + '" x2="' + (XC - 4) + '" y2="' + (r.y + FH / 2) + '" stroke="#B08A4E" stroke-width="1" stroke-dasharray="3 3"/><rect x="' + XC + '" y="' + (r.y + FH / 2 - 11) + '" width="' + TAG + '" height="22" rx="11" fill="#B08A4E"/>' + T(XC + TAG / 2, r.y + FH / 2, '이 매물', 'middle', '#FFFFFF');
     });
     for (var i = 1; i < rows.length; i++) { if (i === gi) continue; var a = rows[i - 1], b = rows[i]; over += '<line x1="' + X0 + '" y1="' + b.y + '" x2="' + (X0 + Math.min(a.w, b.w)) + '" y2="' + b.y + '" stroke="#5B6770" stroke-width="0.8" opacity="0.6"/>'; }
     var wall = function (l) { if (!l.length) return ''; var d = 'M' + X0 + ' ' + l[0].y + ' H' + (X0 + l[0].w); for (var i = 0; i < l.length; i++) { d += ' V' + (l[i].y + FH); if (i + 1 < l.length) d += ' H' + (X0 + l[i + 1].w); } return '<path d="' + d + ' H' + X0 + ' Z" fill="none" stroke="#3A4650" stroke-width="2.4"/>'; };
     var walls = gi > 0 ? wall(rows.slice(0, gi)) + wall(rows.slice(gi)) : wall(rows);
     var legend = Object.keys(FCAT).filter(function (k) { return used[k]; }).map(function (k) { return '<span><i style="background:' + FCAT[k][1] + '"></i>' + FCAT[k][0] + '</span>'; }).join('');
-    return '<svg class="dtFloorSvg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="층별 현황: 층별 면적과 용도"><title>층별 현황</title>' + body + over + walls + call + '</svg><div class="dtFloorLg">' + legend + '</div>';
+    return '<svg class="dtFloorSvg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="층별 현황: 층별 면적과 용도"><title>층별 현황</title>' + body + lead + over + walls + call + '</svg><div class="dtFloorLg" style="padding-left:' + (X0 / W * 100).toFixed(1) + '%">' + legend + '</div>';
   }
   function renderFloors() {
     var box = DT.el && DT.el.querySelector('#dtFloor'); if (!box || !DT.it) return;
