@@ -515,6 +515,18 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 @media (max-width:1100px){.dtInfoGrid{gap:28px!important}}
 </style>
 <style>.dtInfo:not(.one)>div{grid-template-columns:150px minmax(0,1fr)}@media (max-width:760px){.dtInfo:not(.one)>div{grid-template-columns:130px minmax(0,1fr)}}</style>
+<style>
+.dtInfoGrid.solo{grid-template-columns:1fr!important}
+.dtFloorBox{border-top:2px solid #1F3644;border-bottom:1px solid #EFEAE0;display:flex;flex-direction:column;background:#FFFFFF}
+.dtFloorBox h3{margin:0;height:44px;box-sizing:border-box;display:flex;align-items:center;padding:0 18px;background:#FAF7F1;color:#46515B;font-size:14.5px;font-weight:600;border-bottom:1px solid #EFEAE0}
+.dtFloor{flex:1;display:flex;flex-direction:column;justify-content:center;padding:10px 8px 8px}
+.dtFloorSvg{width:100%;height:auto;display:block}
+.dtFloorLg{display:flex;flex-wrap:wrap;gap:3px 10px;padding:8px 10px 2px 60px;font-size:11px;color:#8A939A}
+.dtFloorLg span{display:inline-flex;align-items:center;gap:4px}
+.dtFloorLg i{width:8px;height:8px;border-radius:2px;border:0.5px solid #9AA3AA;display:inline-block}
+@media (max-width:1100px){.dtFloorBox{margin-top:0}}
+@media (max-width:760px){.dtFloorLg{padding-left:8px}}
+</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; background: #FFFFFF; width: 100%; letter-spacing: -0.2px">
@@ -1579,7 +1591,8 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
       '</dl>';
     var feat = (nz(it.point) ? '<p class="dtPoint"><b>POINT</b>&nbsp; ' + esc(it.point) + '</p>' : '') +
       (opts.length ? '<div class="dtChips">' + opts.map(function (o) { return '<span>' + esc(o) + '</span>'; }).join('') + '</div>' : '');
-    var descBox = '<div class="dtDescBox"><h3>상세 설명</h3><div class="dtDesc">' + desc + '</div></div>';
+    var hasFl = !!(it.reg && it.reg.fl && it.reg.fl.length);
+    var floorBox = hasFl ? '<div class="dtFloorBox"><h3>층별 현황</h3><div id="dtFloor" class="dtFloor"></div></div>' : '';
     // ── 건축물대장 (표제부·층별현황·지역지구) ──
     var reg = it.reg, regHtml = '';
     if (reg) {
@@ -1598,10 +1611,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
       ].filter(function (r) { return nz(r[1]); });
       regHtml = '<section class="dtSec"><h2>건축물대장</h2>' +
         '<dl class="dtInfo">' + rows.map(function (r) { return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>'; }).join('') + (rows.length % 2 ? '<div class="pad"><dt></dt><dd></dd></div>' : '') + '</dl>' +
-        (reg.fl && reg.fl.length ? (reg.fl.sort(function (x, y) { return floorKey(x[0]) - floorKey(y[0]); }), '') + '<h3 class="dtSub3">층별 현황</h3><div class="dtFlWrap"><table class="dtFl"><thead><tr><th scope="col">층</th><th scope="col">구조</th><th scope="col">용도</th><th scope="col">면적</th></tr></thead><tbody>' +
-          reg.fl.map(function (f) { return '<tr' + (it.floor && String(f[0]).replace(/\s/g, '') === String(it.floor).replace(/\s/g, '') ? ' class="here"' : '') + '><td>' + esc(f[0]) + '</td><td>' + esc(f[1]) + '</td><td>' + esc(f[2]) + '</td><td>' + esc(a(f[3])) + '</td></tr>'; }).join('') +
-          '</tbody></table></div>' : '') +
-        '<p class="dtNote">※ 국토교통부 건축HUB 건축물대장 표제부·층별현황 기준 (소유자·변동·구조·인증·관리 현황 제외). 계약 전 건축물대장 원본으로 다시 확인해 드립니다.</p></section>';
+        '<p class="dtNote">※ 국토교통부 건축HUB 건축물대장 표제부·층별개요 기준 (소유자·변동·구조·인증·관리 현황 제외). 계약 전 건축물대장 원본으로 다시 확인해 드립니다.</p></section>';
     }
     var office = '<div class="dtOffice">' + OFFICE_INFO.map(function (o) { return '<div><b>' + o[0] + '</b><span>' + o[1] + '</span></div>'; }).join('') + '</div>';
     var callSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>';
@@ -1629,7 +1639,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
       '<div class="dtTools"><button type="button" class="dtTool" data-act="share"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"></path></svg><span>링크 복사</span></button>' +
       '<button type="button" class="dtTool" data-act="print"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z"></path></svg><span>인쇄</span></button></div></div>' +
       '<div class="dtGrid"><div class="dtMain">' + gal + price +
-      '<section class="dtSec"><h2>매물 정보</h2><div class="dtInfoGrid">' + info + descBox + '</div>' +
+      '<section class="dtSec"><h2>매물 정보</h2><div class="dtInfoGrid' + (hasFl ? '' : ' solo') + '">' + info + floorBox + '</div>' +
       '<p class="dtNote">※ 「중개대상물의 표시·광고 명시사항 세부기준」에 따른 표시입니다. 소재지는 동까지만 표시하며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
       '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
       regHtml +
@@ -1747,15 +1757,100 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
     DT.el.innerHTML = detailHtml(it);
     document.title = it.title + ' | 부동산다움';
     window.scrollTo(0, 0);
-    bindDetail(it); detailMap(it); alignDesc();
+    bindDetail(it); detailMap(it); renderFloors();
   }
-  // 상세 설명 칸의 줄 간격·가로줄을 왼쪽 표의 행 높이에 맞춤
-  function alignDesc() {
-    var box = DT.el && DT.el.querySelector('.dtInfoGrid .dtDescBox'), row = DT.el && DT.el.querySelector('.dtInfoGrid .dtInfo.one > div');
-    if (!box || !row) return;
-    var h = row.getBoundingClientRect().height; if (h > 20) box.style.setProperty('--rowH', h + 'px');
+  /* ===== 층별 현황 그림 (건축물대장 층별개요 → 층별 면적으로 그린 건물 단면) ===== */
+  var FCAT = {
+    sale: ['판매', '#FFE2B8'], office: ['업무', '#D2F0EE'], food: ['음식점', '#FFD3D6'], med: ['의료', '#CFE4FF'],
+    edu: ['교육', '#D3F1D6'], life: ['생활서비스', '#E6DCFF'], sport: ['운동시설', '#FFF1AE'], house: ['주거', '#E9F0C9'],
+    park: ['주차', '#E6E9EE'], mech: ['기계·계단실', '#D5D9DF'], etc: ['기타', '#EEE8DF']
+  };
+  function useCat(t) {
+    if (/주차|카리프트|차량/.test(t)) return 'park';
+    if (/기계|전기실|물탱크|펌프|계단|승강기|ELEV|발전|저수|정화|창고|화장실|공조/i.test(t)) return 'mech';
+    if (/의원|치과|한의|병원|의료|약국|조산/.test(t)) return 'med';
+    if (/음식|카페|커피|제과|주점/.test(t)) return 'food';
+    if (/학원|교습|독서실|교육|연구/.test(t)) return 'edu';
+    if (/체육|탁구|골프|당구|헬스|체력|무도|볼링|수영|운동|필라테스|요가/.test(t)) return 'sport';
+    if (/미용|용원|이용원|세탁|목욕|안마|네일|피부|사진/.test(t)) return 'life';
+    if (/사무소|사무실|업무|금융|오피스/.test(t)) return 'office';
+    if (/주택|다가구|다세대|공동주택|주거|원룸|아파트|기숙/.test(t)) return 'house';
+    if (/소매|판매|점포|매장|근린생활/.test(t)) return 'sale';
+    return 'etc';
   }
-  window.addEventListener('resize', function () { if (document.body.classList.contains('detailMode')) alignDesc(); });
+  function useShort(t) {
+    t = String(t || '').trim().replace(/이\(미\)용원/g, '미용원').replace(/\((?:연면적제외|연면적 제외)\)/g, '');
+    var m = /^([^(]*)\((.*)\)\s*$/.exec(t), main = m ? m[1].trim() : t, sub = m ? m[2].trim() : '';
+    sub = sub.replace(/^제?[12]종\s*근린생활시설\s*\(?/, '').replace(/\)+$/, '');
+    var pick = (/^(기타)?(제[12]종)?\s*근린생활시설$|^기타/.test(main) || !main) && sub ? sub : main;
+    pick = pick.replace(/^기타\s*/, '').replace(/제[12]종\s*/, '');
+    var parts = pick.replace(/\([^)]*\)/g, '').split(/[,·\/]/).map(function (x) { return x.trim(); }).filter(function (x) { return x && !/[A-Za-z]/.test(x); });
+    if (!parts.length) parts = [pick.replace(/[A-Za-z.()]+/g, '').trim()];
+    var out = parts.slice(0, 2).join('·');
+    return out.length > 8 ? out.slice(0, 7) + '…' : out;
+  }
+  function floorNameKo(n) { return String(n || '').replace(/^지(\d+)층$/, '지하 $1층').replace(/^옥탑\s*(\d+)\s*층$/, '옥탑 $1층').replace(/^지하(\d)/, '지하 $1'); }
+  function sameFloor(a, b) {
+    var k = function (s) { s = String(s || '').replace(/\s+/g, ''); var n = (/(\d+)/.exec(s) || [0, ''])[1]; return (/^(지하|지|B)/i.test(s) ? 'B' : /옥탑/.test(s) ? 'R' : '') + n; };
+    return k(a) && k(a) === k(b);
+  }
+  function floorSvg(it, targetH) {
+    var reg = it.reg; if (!reg || !reg.fl || !reg.fl.length) return '';
+    var PY = 3.3058, groups = {}, order = [];
+    reg.fl.forEach(function (f) {
+      var area = +f[3]; if (!(area > 0)) return;
+      var key = String(f[0]).replace(/\s+/g, '');
+      if (!groups[key]) { groups[key] = { name: f[0], segs: [] }; order.push(key); }
+      var full = String(f[2] || ''), cat = useCat(full), sh = useShort(full) || FCAT[cat][0];
+      var prev = groups[key].segs.filter(function (s) { return s.label === sh; })[0];
+      if (prev) prev.area += area; else groups[key].segs.push({ cat: cat, label: sh, full: full, area: area });
+    });
+    var rows = order.map(function (k) { return groups[k]; }).sort(function (a, b) { return floorKey(b.name) - floorKey(a.name); });
+    if (!rows.length) return '';
+    rows.forEach(function (r) { r.tot = r.segs.reduce(function (s, x) { return s + x.area; }, 0); r.here = it.floor && sameFloor(r.name, it.floor); });
+    var max = Math.max.apply(null, rows.map(function (r) { return r.tot; }));
+    var gi = -1; rows.forEach(function (r, i) { if (gi < 0 && floorKey(r.name) < 0) gi = i; });
+    var W = 400, X0 = 60, MAXW = 222, PAD = 10, XC = X0 + MAXW + 22, TOP = 10, GAP = gi > 0 ? 12 : 0, FS = '500 13.5px Noto Sans KR, sans-serif';
+    var FH = Math.max(24, Math.min(46, Math.floor(((targetH || 380) - 30 - GAP) / rows.length)));
+    var y = TOP; rows.forEach(function (r, i) { if (i === gi && gi > 0) y += GAP; r.y = y; r.w = Math.max(6, Math.round(r.tot / max * MAXW)); y += FH; });
+    var H = y + 8, groundY = gi > 0 ? rows[gi].y - GAP / 2 : -1;
+    var tw = function (t) { var n = 0; for (var i = 0; i < t.length; i++) n += (/[가-힣]/.test(t[i]) ? 13.5 : (t[i] === ' ' ? 4 : 8)); return n; };
+    var T = function (x, yy, txt, a, fill) { return '<text x="' + x + '" y="' + yy + '"' + (a ? ' text-anchor="' + a + '"' : '') + ' dominant-baseline="central" style="font:' + FS + ';fill:' + (fill || '#232A30') + ';pointer-events:none">' + esc(txt) + '</text>'; };
+    var body = '', over = '', call = '', used = {};
+    if (groundY > 0) body += '<rect x="' + (X0 - 6) + '" y="' + groundY + '" width="' + (W - X0) + '" height="' + (H - groundY - 4) + '" fill="#CDBFA6" opacity="0.16"/><line x1="' + (X0 - 6) + '" y1="' + groundY + '" x2="' + (W - 2) + '" y2="' + groundY + '" stroke="#8A7F70" stroke-width="1.6"/>';
+    rows.forEach(function (r) {
+      var x = X0, outs = [];
+      r.segs.forEach(function (sg, k) {
+        used[sg.cat] = 1;
+        var sw = r.w * sg.area / r.tot, c = FCAT[sg.cat][1], lab = sg.label + ' ' + Math.round(sg.area / PY) + '평';
+        body += '<rect x="' + x.toFixed(1) + '" y="' + r.y + '" width="' + sw.toFixed(1) + '" height="' + FH + '" fill="' + c + '"><title>' + esc(floorNameKo(r.name) + ' · ' + sg.full + ' · ' + (sg.area / PY).toFixed(1) + '평 (' + sg.area + '㎡)') + '</title></rect>';
+        if (k > 0) over += '<line x1="' + x.toFixed(1) + '" y1="' + r.y + '" x2="' + x.toFixed(1) + '" y2="' + (r.y + FH) + '" stroke="#7D8890" stroke-width="1"/>';
+        if (tw(lab) + PAD * 2 <= sw) over += T((x + PAD).toFixed(1), r.y + FH / 2, lab);
+        else outs.push({ cx: x + sw / 2, lab: lab });
+        x += sw;
+      });
+      var maxOut = Math.max(1, Math.floor(FH / 15));
+      if (outs.length > maxOut) { var rest = outs.slice(maxOut - 1); outs = outs.slice(0, maxOut - 1); outs.push({ cx: rest[0].cx, lab: '외 ' + rest.length + '곳' }); }
+      outs.forEach(function (o, j) {
+        var n = outs.length, ly = r.y + FH / 2 + (n > 1 ? (j - (n - 1) / 2) * 15 : 0), cy = r.y + FH / 2 + (n > 1 ? (j - (n - 1) / 2) * Math.min(8, FH / (n + 1)) : 0);
+        call += '<circle cx="' + o.cx.toFixed(1) + '" cy="' + cy + '" r="2" fill="#4A555E"/><path d="M' + o.cx.toFixed(1) + ' ' + cy + ' L' + (X0 + r.w + 8) + ' ' + cy + ' L' + (XC - 6) + ' ' + ly + '" fill="none" stroke="#6E7A83" stroke-width="0.8"/>' + T(XC, ly, o.lab, null, '#2D3A44');
+      });
+      body += T(X0 - 8, r.y + FH / 2, floorNameKo(r.name), 'end', r.here ? '#14191F' : '#6B757D');
+      if (r.here && !outs.length) call += '<line x1="' + (X0 + r.w + 4) + '" y1="' + (r.y + FH / 2) + '" x2="' + (XC - 4) + '" y2="' + (r.y + FH / 2) + '" stroke="#B08A4E" stroke-width="1" stroke-dasharray="3 3"/><rect x="' + XC + '" y="' + (r.y + FH / 2 - 11) + '" width="64" height="22" rx="11" fill="#B08A4E"/>' + T(XC + 32, r.y + FH / 2, '이 매물', 'middle', '#FFFFFF');
+    });
+    for (var i = 1; i < rows.length; i++) { if (i === gi) continue; var a = rows[i - 1], b = rows[i]; over += '<line x1="' + X0 + '" y1="' + b.y + '" x2="' + (X0 + Math.min(a.w, b.w)) + '" y2="' + b.y + '" stroke="#5B6770" stroke-width="0.8" opacity="0.6"/>'; }
+    var wall = function (l) { if (!l.length) return ''; var d = 'M' + X0 + ' ' + l[0].y + ' H' + (X0 + l[0].w); for (var i = 0; i < l.length; i++) { d += ' V' + (l[i].y + FH); if (i + 1 < l.length) d += ' H' + (X0 + l[i + 1].w); } return '<path d="' + d + ' H' + X0 + ' Z" fill="none" stroke="#3A4650" stroke-width="2.4"/>'; };
+    var walls = gi > 0 ? wall(rows.slice(0, gi)) + wall(rows.slice(gi)) : wall(rows);
+    var legend = Object.keys(FCAT).filter(function (k) { return used[k]; }).map(function (k) { return '<span><i style="background:' + FCAT[k][1] + '"></i>' + FCAT[k][0] + '</span>'; }).join('');
+    return '<svg class="dtFloorSvg" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="층별 현황: 층별 면적과 용도"><title>층별 현황</title>' + body + over + walls + call + '</svg><div class="dtFloorLg">' + legend + '</div>';
+  }
+  function renderFloors() {
+    var box = DT.el && DT.el.querySelector('#dtFloor'); if (!box || !DT.it) return;
+    var tbl = DT.el.querySelector('.dtInfoGrid .dtInfo.one'), stacked = window.matchMedia('(max-width:1100px)').matches;
+    var target = stacked ? 0 : (tbl ? tbl.getBoundingClientRect().height - 50 : 380);
+    box.innerHTML = floorSvg(DT.it, stacked ? 0 : target) || '';
+  }
+  var flT; window.addEventListener('resize', function () { if (document.body.classList.contains('detailMode')) { clearTimeout(flT); flT = setTimeout(renderFloors, 150); } });
   function closeDetail() {
     if (!document.body.classList.contains('detailMode')) return;
     document.body.classList.remove('detailMode'); DT.el.hidden = true; DT.el.innerHTML = ''; document.title = DT.baseTitle;
