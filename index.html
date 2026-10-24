@@ -722,12 +722,12 @@ h1,h2,h3,h4,.heroH1,.heroMapTitle,#sectorTitle,.procHead h2,.dtTitle,.dtSec h2{c
 .featAll{flex:none;display:inline-flex;align-items:center;gap:6px;height:52px;padding:0 22px;border:1px solid #1F3644;border-radius:999px;background:#FFFFFF;color:#1F3644!important;font-weight:700;font-size:15px;transition:background-color .18s,color .18s}
 .featAll:hover{background:#1F3644;color:#FFFFFF!important}
 @media (max-width:760px){.featTools{flex-direction:column;align-items:stretch;width:100%}.featAll{justify-content:center;height:46px}}
-.dtFloatBack{position:fixed;left:24px;bottom:24px;z-index:70;display:none;align-items:center;gap:6px;height:46px;padding:0 20px 0 14px;border:0;border-radius:999px;background:#1F3644;color:#FFFFFF;font:700 14.5px 'Noto Sans KR',sans-serif;box-shadow:0 6px 18px rgba(31,54,68,.28);cursor:pointer;opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s,background-color .18s}
-.dtFloatBack svg{color:#C9A46A}
+.dtFloatBack{position:fixed;left:16px;top:50%;z-index:70;display:none;flex-direction:column;align-items:center;justify-content:center;gap:4px;width:60px;height:72px;padding:0;border:0;border-radius:16px;background:#1F3644;color:#FFFFFF;font:700 13px/1.1 'Noto Sans KR',sans-serif;letter-spacing:-.3px;box-shadow:0 6px 18px rgba(31,54,68,.28);cursor:pointer;opacity:0;transform:translate(-6px,-50%);transition:opacity .2s,transform .2s,background-color .18s}
+.dtFloatBack svg{color:#C9A46A;width:20px;height:20px}
 .dtFloatBack:hover{background:#2A4757}
 body.detailMode .dtFloatBack{display:inline-flex}
-body.detailMode .dtFloatBack.show{opacity:1;transform:none}
-@media (max-width:760px){.dtFloatBack{left:12px;bottom:calc(80px + env(safe-area-inset-bottom));height:42px;font-size:14px}}
+body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
+@media (max-width:760px){.dtFloatBack{left:8px!important;width:52px;height:62px;font-size:12px;border-radius:14px}}
 @media (prefers-reduced-motion:reduce){.dtFloatBack{transition:none}}
 @media print{.dtFloatBack{display:none!important}}
 </style>
@@ -766,6 +766,13 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:none}
  .dtInfo>div,.flTxt li,.dtFloorBox,tr{break-inside:avoid}
  .dtSec h2{break-after:avoid}
 }
+</style>
+<style id="flDivider">
+/* 층별 현황: 세로 구분선을 칸마다 짧게 (가로줄과 닿지 않게) */
+.flTxt li{border-bottom:1px solid #EFEAE0!important}
+.flTxt li:last-child{border-bottom:0!important}
+.flTxt li b{border-right:0!important;position:relative}
+.flTxt li b:after{content:'';position:absolute;right:0;top:7px;bottom:7px;width:1px;background:#D9D2C4}
 </style>
 </head>
 <body>
@@ -2477,7 +2484,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:none}
   window.addEventListener('resize', hideTip);
 })();
 </script>
-<button type="button" class="dtFloatBack" aria-label="목록으로 돌아가기" tabindex="-1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>목록으로</button>
+<button type="button" class="dtFloatBack" aria-label="목록으로 돌아가기" tabindex="-1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg><span>목록</span></button>
 <script>
 (function(){
   // 상세 페이지: 스크롤을 내리면 '목록으로' 버튼이 화면 아래에 떠 있음
@@ -2486,6 +2493,9 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:none}
     var on=document.body.classList.contains('detailMode'), b=document.querySelector('#itemDetail .dtBack');
     var show=on && b && b.getBoundingClientRect().bottom<0;
     fb.classList.toggle('show',!!show); fb.tabIndex=show?0:-1;
+    // 상세 내용 바로 왼쪽에 붙임 (여백이 부족하면 화면 왼쪽 끝)
+    var w=document.querySelector('#itemDetail .dtWrap');
+    if(w && innerWidth>760){ var cs=getComputedStyle(w), left=w.getBoundingClientRect().left+parseFloat(cs.paddingLeft||0); fb.style.left=Math.max(8,Math.round(left-fb.offsetWidth-14))+'px'; } else fb.style.left='';
   }
   fb.addEventListener('click',function(){ var b=document.querySelector('#itemDetail .dtBack'); if(b) b.click(); fb.classList.remove('show'); });
   window.addEventListener('scroll',upd,{passive:true}); document.addEventListener('scroll',upd,{passive:true,capture:true});
