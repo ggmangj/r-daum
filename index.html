@@ -1825,7 +1825,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:none}
     (function go() {
       if (!$('dtNoPhoto') || $('dtNoPhoto') !== box) return;
       var ok = window.naver && naver.maps && naver.maps.Panorama && M && M.kind === 'naver';
-      if (!ok) { if (++tries < 40 && !(M && M.kind === 'leaflet')) setTimeout(go, 200); return; }
+      if (!ok) { if (++tries < 75 && !(M && M.kind === 'leaflet')) setTimeout(go, 200); return; }
       try {
         var target = new naver.maps.LatLng(it.lat, it.lng);
         var host = document.createElement('div'); host.className = 'dtPanoHost';
@@ -2488,8 +2488,11 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:none}
     fb.classList.toggle('show',!!show); fb.tabIndex=show?0:-1;
   }
   fb.addEventListener('click',function(){ var b=document.querySelector('#itemDetail .dtBack'); if(b) b.click(); fb.classList.remove('show'); });
-  window.addEventListener('scroll',upd,{passive:true}); window.addEventListener('hashchange',function(){setTimeout(upd,60)});
+  window.addEventListener('scroll',upd,{passive:true}); document.addEventListener('scroll',upd,{passive:true,capture:true});
+  window.addEventListener('resize',upd); window.addEventListener('hashchange',function(){setTimeout(upd,60);setTimeout(upd,600)});
   new MutationObserver(upd).observe(document.body,{attributes:true,attributeFilter:['class']});
+  // 스크롤 이벤트가 누락되는 환경 대비: 상세 화면일 때만 0.4초마다 확인
+  setInterval(function(){ if(document.body.classList.contains('detailMode')||fb.classList.contains('show')) upd(); },400);
 })();
 </script>
 </body>
