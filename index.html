@@ -564,56 +564,73 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 @media (max-width:760px){.flTxt li{grid-template-columns:62px minmax(0,1fr)!important}.flTxt li .flUses{padding-left:10px}}
 </style>
 <style id="layout4">
-.heroSplit{display:grid;grid-template-columns:440px minmax(0,1fr);gap:36px;align-items:start}
-.heroLeft{display:flex;flex-direction:column;gap:22px;min-width:0}
-.heroHead{display:flex;flex-direction:column;gap:16px}
-.heroH1{margin:0;font-size:40px;line-height:1.28;font-weight:900;letter-spacing:-1.6px}
+.heroSplit{display:grid;grid-template-columns:290px minmax(0,1fr);gap:30px;align-items:start}
+.heroLeft{display:flex;flex-direction:column;gap:18px;min-width:0}
+.heroHead{display:flex;flex-direction:column;gap:12px}
+.heroHead>div:first-child{font-size:10px!important;letter-spacing:1.6px!important;gap:8px!important;white-space:nowrap}
+.heroHead>div:first-child>span{width:18px!important}
+.heroH1{margin:0;font-size:26px;line-height:1.32;font-weight:900;letter-spacing:-1px}
 .h1l{white-space:nowrap}
 .heroSplit .leadLine2{white-space:normal!important}
-.heroSplit .heroLead{font-size:16px!important}
-.heroSplit #heroSearch{padding:18px!important;gap:14px!important}
-.heroSplit .searchGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
-.heroSplit .quickTags{gap:6px!important}
-.heroSplit .searchGo{flex:1 1 100%;justify-content:center}
-.heroSplit .quickTags{-webkit-mask-image:linear-gradient(90deg,#000 86%,transparent);mask-image:linear-gradient(90deg,#000 86%,transparent);padding-right:24px}
-.heroMap .elev>div:first-child>div:first-child{white-space:nowrap;gap:8px;font-size:13px!important;padding:14px 16px!important}
-.heroMap #mapUpdated{font-size:11px!important}
+.heroSplit .heroLead{font-size:13.5px!important;letter-spacing:-.2px!important}
 .heroMap{min-width:0;scroll-margin-top:24px}
 .heroMapHead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
 .heroMapTitle{margin:0;font-size:22px!important;font-weight:900;letter-spacing:-.6px;display:flex;align-items:center;gap:12px;line-height:1.3!important}
 .heroMapTitle span{font-family:Inter,sans-serif;font-size:11px;font-weight:600;letter-spacing:2.2px;color:#9C7A47}
-.mapAsk{display:inline-flex;align-items:center;gap:7px;height:42px;padding:0 18px;border-radius:999px;background:#1F3644;color:#FFFFFF!important;font-size:14px;font-weight:700;transition:background-color .18s}
-.mapAsk svg{color:#C9A46A}.mapAsk:hover{background:#2A4757}
 .heroMap .mapTools{display:flex!important;flex-wrap:nowrap!important;gap:8px!important;margin-bottom:12px}
 .heroMap .mapTools>label{flex:1 1 0;min-width:0}
 .heroMap .mapSel{width:100%!important;min-width:0}
 .heroMap #mapSearchBar{margin-bottom:12px}
 .heroMap>p{margin-top:10px!important;font-size:12px!important}
-.clinicWrap{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:40px;align-items:stretch}
-.clinicWrap .flipCard{scroll-margin-top:24px}
-.clinicWrap .flipFront{border:1px solid rgba(188,151,94,.55)}
-.clinicWrap .frontCopy{font-size:22px!important}
-.clinicWrap .frontStats{grid-template-columns:1fr!important;gap:6px!important;margin-top:4px!important}
-.clinicWrap .frontStats>div{display:flex!important;justify-content:space-between;align-items:center;padding:11px 14px!important}
-.clinicWrap .frontStats>div:nth-child(3){display:flex!important}
-.clinicWrap .frontStats>div>div:last-child{font-size:15px!important}
+.heroMap .elev>div:first-child{flex:0 0 270px!important}
+.heroMap .elev>div:first-child>div:first-child{white-space:nowrap;gap:8px;font-size:13px!important;padding:14px 16px!important}
+.heroMap #mapUpdated{font-size:11px!important}
+/* 히어로 상담 카드 */
+.heroCard{scroll-margin-top:24px}
+.heroCard .flipFront{min-height:455px;border:1px solid rgba(188,151,94,.55);box-shadow:0 14px 30px rgba(31,54,68,.18)}
+.heroCard .flipHint{top:12px!important;right:12px!important;padding:5px 9px!important;font-size:10.5px!important;gap:4px!important}.heroCard .flipHint svg{width:12px;height:12px}
+.hcBrand{position:relative;display:flex;align-items:center;gap:12px;margin-top:2px}
+.hcBrand img{width:36px;height:auto;display:block}
+.hcBrand b{display:block;font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:25px;line-height:.9;letter-spacing:.16em;color:#F6F2EA}
+.hcBrand small{display:block;margin-top:7px;font-family:Montserrat,Inter,sans-serif;font-weight:600;font-size:8px;letter-spacing:.5em;color:#C9A46A}
+.hcCopy{position:relative;font-size:20px!important;font-weight:700;line-height:1.45;letter-spacing:-.6px}
+.hcStats{position:relative;display:flex;flex-direction:column;gap:6px}
+.hcStats>div{display:flex;justify-content:space-between;align-items:center;gap:8px;background:rgba(255,255,255,.1);border-radius:9px;padding:10px 12px}
+.hcStats span{font-size:12px;color:#C3CAD8}.hcStats b{font-size:14px;color:#FFFFFF;white-space:nowrap}
+.hcCta{position:relative;display:flex;flex-direction:column;gap:7px}
+.hcAsk{display:block;text-align:center;border-radius:10px;padding:12px;background:#BC975E;color:#14191F;font-weight:800;font-size:15px;transition:background-color .18s}
+.heroCard .flipFront:hover .hcAsk{background:#CBA86F}
+.hcTel{display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid rgba(255,255,255,.35);border-radius:10px;padding:10px;color:#FFFFFF!important;font-size:13.5px;font-weight:700}
+.hcTel:hover{background:rgba(255,255,255,.08)}
+.heroCard #quickForm{padding:18px 16px!important;gap:9px!important}
+.heroCard #quickForm>div:first-child>div>div:last-child{font-size:17px!important}
+.heroCard #quickForm>div:nth-child(2){gap:7px!important}
+.heroCard #quickForm input:not([type=checkbox]),.heroCard #quickForm select{height:36px!important;font-size:13px!important;padding:0 8px!important}
+.heroCard #quickForm textarea{font-size:13px!important;padding:8px!important}
+.heroCard #quickForm label{font-size:11.5px!important;gap:4px!important}
+.heroCard .qfAgree{font-size:11.5px!important;gap:6px!important;letter-spacing:-.3px}
+.heroCard .qfSubmit{height:44px!important;font-size:15px!important}
+.heroCard #quickForm>div[style*="border-top"]{display:none!important}
 @media (max-width:1100px){
  .heroSplit{grid-template-columns:minmax(0,1fr)}
- .clinicWrap{grid-template-columns:minmax(0,1fr)}
- .clinicWrap .flipCard{width:100%;max-width:520px;justify-self:center}
+ .heroH1{font-size:clamp(26px,4vw,40px)}
+ .heroHead>div:first-child{font-size:12px!important;letter-spacing:2.4px!important}
+ .heroSplit .heroLead{font-size:16px!important}
+ .heroLeft{display:contents}
+ .heroHead{order:1}.heroMap{order:2}.heroCard{order:3;width:100%;max-width:520px}
 }
 @media (max-width:760px){
  .heroSplit{padding-top:26px!important;padding-bottom:40px!important;gap:24px!important}
  .heroLeft{display:contents}
- .heroHead{order:1}.heroMap{order:2}#heroSearch{order:3}
+ .heroHead{order:1}.heroMap{order:2}.heroCard{order:3;max-width:none}
+ .heroHead>div:first-child{font-size:10px!important;letter-spacing:1.6px!important}
  .heroH1{font-size:clamp(23px,7.2vw,34px)!important;letter-spacing:-1px!important;line-height:1.3!important}
  .heroMap .mapTools{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))}
  .heroMap .mapTools>label:first-child{grid-column:1/-1}
- .heroMapTitle{font-size:20px!important;white-space:nowrap}.heroMapTitle span{display:none}.mapAsk{white-space:nowrap;flex:none}
- .mapAsk{height:40px;padding:0 14px}
- .clinicWrap{gap:32px}
- .clinicWrap .flipFront{min-height:540px!important}
- .clinicWrap .frontStats>div>div:last-child{font-size:14px!important}
+ .heroMap .elev>div:first-child{flex:1 1 100%!important}
+ .heroMapTitle{font-size:20px!important;white-space:nowrap}.heroMapTitle span{display:none}
+ .heroCard .flipFront{min-height:0!important;padding:22px!important}
+ .heroCard #quickForm input:not([type=checkbox]),.heroCard #quickForm select,.heroCard #quickForm textarea{font-size:16px!important}
 }
 </style>
 </head>
@@ -661,59 +678,58 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 <span style="width: 28px; height: 2px; background: #1F3644"></span>COMMERCIAL REAL ESTATE · APGUJEONG
 </div>
 <h1 class="heroH1"><span class="h1l">상가 · 병의원 · 사무실,</span><br><span class="h1l"><span class="heroName">부동산다움</span>에서 <span style="background: linear-gradient(transparent 62%, #E8D7B6 62%)">답을 찾다</span></span></h1>
-<p class="heroLead" style="margin: 0; font-size: 16px; line-height: 1.7; color: #46515B; word-break: keep-all">조건만 말씀해 주세요. 발품은 저희가 팔겠습니다.<br><span class="leadLine2">압구정역 5번출구에서 신사동 · 압구정로데오 · 도산공원 일대 병의원, 상가, 사무실을 전문 중개합니다.</span></p>
+<p class="heroLead" style="margin: 0; font-size: 16px; line-height: 1.7; color: #46515B; word-break: keep-all">조건만 말씀해 주세요. 발품은 저희가 팔겠습니다. <span class="leadLine2">압구정역 5번출구에서 신사동 · 압구정로데오 · 도산공원 일대 병의원, 상가, 사무실을 전문 중개합니다.</span></p>
 </div>
-<form class="elev" id="heroSearch" style="background: #FFFFFF; border: 1px solid #E6E0D4; border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 16px">
-<div role="tablist" aria-label="거래 유형" style="display: flex; gap: 6px">
-<button type="button" id="btnLease" style="height: 40px; padding: 0 20px; border: 0; border-radius: 8px; background: #14191F; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer">임대</button>
-<button type="button" id="btnSale" style="height: 40px; padding: 0 20px; border: 1px solid #D9D2C4; border-radius: 8px; background: #FFFFFF; color: #46515B; font-size: 15px; font-weight: 500; cursor: pointer">매매</button>
+<div class="flipCard heroCard" id="consult" style="min-width: 0">
+<div class="flipInner">
+<div class="flipFace flipFront elevHero" style="border-radius: 18px; background: #1F3644; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; gap: 18px; padding: 22px; color: #FFFFFF">
+<span class="flipHint" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 0 1 15.5-6.3L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.3L3 16M3 21v-5h5"></path></svg>빠른 상담</span>
+<svg viewBox="0 0 300 520" preserveAspectRatio="xMaxYMax slice" style="position: absolute; inset: 0; width: 100%; height: 100%; opacity: .55" aria-hidden="true"><g fill="none" stroke="#3F5B69" stroke-width="1.2"><rect x="190" y="150" width="60" height="380"></rect><path d="M190 190h60M190 230h60M190 270h60M190 310h60M190 350h60M190 390h60M190 430h60M190 470h60M220 150v380"></path><rect x="262" y="90" width="60" height="440"></rect><path d="M262 130h60M262 170h60M262 210h60M262 250h60M262 290h60M262 330h60M262 370h60M262 410h60M262 450h60M262 490h60"></path></g></svg>
+<div class="hcBrand" role="img" aria-label="DAUM REAL ESTATE 부동산다움공인중개사사무소"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDQgMTI0IiB3aWR0aD0iMjA4IiBoZWlnaHQ9IjI0OCI+PGRlZnM+CjxtYXNrIGlkPSJ0RCIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iMCIgeT0iMCIgd2lkdGg9IjEwNCIgaGVpZ2h0PSIxMjQiPjxyZWN0IHdpZHRoPSIxMDQiIGhlaWdodD0iMTI0IiBmaWxsPSIjZmZmIi8+PHJlY3QgeD0iMjEuNSIgeT0iMzgiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI0NCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjUwIiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iNTYiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI2MiIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjY4IiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iNzQiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI4MCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9Ijg2IiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iOTIiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI5OCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjEwNCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjwvbWFzaz4KPG1hc2sgaWQ9ImJEIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTA0IiBoZWlnaHQ9IjEyNCI+PHJlY3Qgd2lkdGg9IjEwNCIgaGVpZ2h0PSIxMjQiIGZpbGw9IiNmZmYiLz48cmVjdCB4PSI0OCIgeT0iNDQiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iNTgiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iNzIiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iODYiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iMTAwIiB3aWR0aD0iNTYiIGhlaWdodD0iMy40IiBmaWxsPSIjMDAwIi8+PC9tYXNrPgo8L2RlZnM+CjxyZWN0IHg9IjI2LjIiIHk9IjIiIHdpZHRoPSIxLjYiIGhlaWdodD0iMTMiIGZpbGw9IiNDOUE0NkEiLz4KPHBhdGggZD0iTTE4IDExMlYzMUwyNyAxNEwzNiAzMVYxMTJaIiBmaWxsPSIjQzlBNDZBIiBtYXNrPSJ1cmwoI3REKSIvPgo8cGF0aCBkPSJNNDEgMzFINThDODMgMzEgOTggNTAgOTggNzEuNUM5OCA5MyA4MyAxMTIgNTggMTEySDQxWiIgZmlsbD0iI0Y2RjJFQSIgbWFzaz0idXJsKCNiRCkiLz4KPHJlY3QgeD0iOCIgeT0iMTE2IiB3aWR0aD0iOTIiIGhlaWdodD0iMy4yIiBmaWxsPSIjRjZGMkVBIi8+PC9zdmc+" alt="" aria-hidden="true"><span><b>DAUM</b><small>REAL ESTATE</small></span></div>
+<div class="frontCopy hcCopy">공간의 가치를 아는 중개,<br>그것이 '다움'입니다.</div>
+<div class="hcStats"><div><span>위치</span><b>압구정역 5번출구</b></div><div><span>특화</span><b>메디컬 · 무권리</b></div><div><span>상담</span><b>02-555-1165</b></div></div>
+<div class="hcCta"><span class="hcAsk">상담 신청하기 →</span><a href="tel:0255551165" class="hcTel"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>바로 전화 02-555-1165</a></div>
 </div>
-<div class="searchGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px">
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #46515B">매물 종류
-<select id="sType" style="height: 46px; border: 1px solid #D9D2C4; border-radius: 8px; padding: 0 12px; font-size: 15px; color: #14191F; background: #FFFFFF"><option>전체</option><option>상가</option><option>병의원</option><option>사무실</option><option>사옥·통임대</option><option>빌딩</option></select>
-</label>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #46515B">지역
-<select id="sRegion" style="height: 46px; border: 1px solid #D9D2C4; border-radius: 8px; padding: 0 12px; font-size: 15px; color: #14191F; background: #FFFFFF"><option>강남구 전체</option><option>압구정동</option><option>신사동</option><option>청담동</option><option>논현동</option><option>역삼동</option><option>삼성동</option><option>서초구 전체</option><option>잠원동</option><option>반포동</option><option>서초동</option></select>
-</label>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #46515B">전용면적
-<select id="sArea" style="height: 46px; border: 1px solid #D9D2C4; border-radius: 8px; padding: 0 12px; font-size: 15px; color: #14191F; background: #FFFFFF"><option>전체</option><option>30평 이하</option><option>30~50평</option><option>50~100평</option><option>100평 이상</option></select>
-</label>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: #46515B"><span id="priceLabel">월 임대료</span>
-<select id="sPrice" style="height: 46px; border: 1px solid #D9D2C4; border-radius: 8px; padding: 0 12px; font-size: 15px; color: #14191F; background: #FFFFFF"><option>전체</option><option id="priceOpt1">300만 이하</option><option id="priceOpt2">300~1,000만</option><option id="priceOpt3">1,000만 이상</option></select>
-</label>
+<form class="flipFace flipBack elev" id="quickForm" novalidate aria-label="빠른 상담 신청" style="position: relative; border-radius: 18px; background: #FFFFFF; border: 1px solid #E6E0D4; padding: 26px 24px; display: flex; flex-direction: column; gap: 12px; color: #14191F">
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px">
+<div>
+<div style="font-family: Inter, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 2.2px; color: #BC975E; margin-bottom: 6px">QUICK CONTACT</div>
+<div style="font-size: 21px; font-weight: 900; line-height: 1.35; letter-spacing: -0.8px">원하는 조건만 남겨주세요.</div>
 </div>
-<div style="display: flex; gap: 10px; flex-wrap: wrap">
-<label style="flex: 1 1 280px; display: flex"><span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">키워드 검색</span>
-<input type="text" id="sKw" enterkeyhint="search" placeholder="역명, 건물명, 매물번호로 검색 (예: 압구정로데오, 도산대로)" style="width: 100%; height: 50px; border: 1px solid #D9D2C4; border-radius: 8px; padding: 0 14px; font-size: 15px"></label>
-<button type="button" id="searchGo" class="searchGo" style="height: 50px; padding: 0 28px; border: 0; border-radius: 8px; background: #1F3644; color: #FFFFFF; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>매물 검색</button>
+<button type="button" class="flipClose" aria-label="앞면으로 돌아가기" style="flex: none; width: 36px; height: 36px; border-radius: 50%; border: 1px solid #E6E0D4; background: #FFFFFF; color: #46515B; font-size: 18px; cursor: pointer">↺</button>
 </div>
-<div class="quickTags" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 13px">
-<span style="color: #5B6670; font-weight: 700; margin-right: 4px">빠른 찾기</span>
-
-<a href="#map" data-kw="압구정역" style="padding: 7px 12px; border-radius: 999px; background: #F6F2EA; color: #1F3644; font-weight: 500">#압구정역</a>
-
-<a href="#map" data-kw="압구정로데오" style="padding: 7px 12px; border-radius: 999px; background: #F6F2EA; color: #1F3644; font-weight: 500">#압구정로데오</a>
-
-<a href="#map" data-kw="도산공원" style="padding: 7px 12px; border-radius: 999px; background: #F6F2EA; color: #1F3644; font-weight: 500">#도산공원</a>
-
-<a href="#map" data-kw="도산대로" style="padding: 7px 12px; border-radius: 999px; background: #F6F2EA; color: #1F3644; font-weight: 500">#도산대로</a>
-
-<a href="#map" data-kw="가로수길" style="padding: 7px 12px; border-radius: 999px; background: #F6F2EA; color: #1F3644; font-weight: 500">#가로수길</a>
-
-<a href="#map" data-kw="메디컬라인" style="padding: 7px 12px; border-radius: 999px; background: #F6F2EA; color: #1F3644; font-weight: 500">#메디컬라인</a>
-
-<a href="#map" data-kw="무권리" style="padding: 7px 12px; border-radius: 999px; background: #F6F2EA; color: #1F3644; font-weight: 500">#무권리</a>
-
-<a href="#map" data-kw="통임대" style="padding: 7px 12px; border-radius: 999px; background: #F6F2EA; color: #1F3644; font-weight: 500">#통임대</a>
-
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<label style="display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 700; color: #46515B"><span>이름 <b class="qfReq" aria-hidden="true">*</b></span><input type="text" name="name" required maxlength="30" autocomplete="name" placeholder="홍길동" style="height: 42px; border: 1px solid #D9D2C4; border-radius: 8px; padding: 0 12px; font-size: 14px; background: #FFFFFF; width: 100%; min-width: 0"></label>
+<label style="display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 700; color: #46515B"><span>연락처 <b class="qfReq" aria-hidden="true">*</b></span><input type="tel" name="phone" required maxlength="13" inputmode="numeric" autocomplete="tel" placeholder="010-0000-0000" style="height: 42px; border: 1px solid #D9D2C4; border-radius: 8px; padding: 0 12px; font-size: 14px; background: #FFFFFF; width: 100%; min-width: 0"></label>
+<label style="display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 700; color: #46515B">문의 유형<select name="type" style="height: 42px; border: 1px solid #D9D2C4; border-radius: 8px; padding: 0 12px; font-size: 14px; background: #FFFFFF; width: 100%; min-width: 0; padding: 0 8px"><option>임차 (매물 찾기)</option><option>매수</option><option>임대 의뢰 (건물주)</option><option>매도 의뢰</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 700; color: #46515B">업종 / 용도<select id="consultType" name="use" style="height: 42px; border: 1px solid #D9D2C4; border-radius: 8px; padding: 0 12px; font-size: 14px; background: #FFFFFF; width: 100%; min-width: 0; padding: 0 8px"><option>사무실</option><option>상가 (리테일·F&amp;B)</option><option>병의원</option><option>체육시설</option><option>음식점</option><option>미용실</option><option>학원</option><option>사옥·통임대</option><option>빌딩 매매</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 700; color: #46515B">희망 지역<input type="text" name="region" maxlength="60" placeholder="예: 압구정역, 신사동" style="height: 42px; border: 1px solid #D9D2C4; border-radius: 8px; padding: 0 12px; font-size: 14px; background: #FFFFFF; width: 100%; min-width: 0"></label>
+<label style="display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 700; color: #46515B">면적 · 예산<input type="text" name="areaBudget" maxlength="60" placeholder="예: 50평 / 월 600만" style="height: 42px; border: 1px solid #D9D2C4; border-radius: 8px; padding: 0 12px; font-size: 14px; background: #FFFFFF; width: 100%; min-width: 0"></label>
+</div>
+<label style="display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 700; color: #46515B">상세 내용<textarea id="consultMsg" name="memo" maxlength="1000" rows="3" placeholder="입주 희망 시기, 주차 대수, 필요 시설 등" style="border: 1px solid #D9D2C4; border-radius: 8px; padding: 10px 12px; font-size: 14px; resize: none; width: 100%"></textarea></label>
+<label class="qfAgree" style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #46515B"><input type="checkbox" name="agree" required style="width: 18px; height: 18px; flex: none">개인정보 수집·이용 동의 <b class="qfReq" aria-hidden="true">*</b> <a href="#privacy" class="privacyLink" style="text-decoration: underline">약관 보기</a></label>
+<input type="hidden" name="listing" id="consultListing">
+<div class="qfTrap" aria-hidden="true"><label>웹사이트<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+<p class="qfMsg" role="alert" aria-live="assertive"></p>
+<button type="submit" class="qfSubmit" style="height: 48px; border: 0; border-radius: 10px; background: #1F3644; color: #FFFFFF; font-size: 16px; font-weight: 700; cursor: pointer">상담 신청하기</button>
+<div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid #EFEAE0; font-size: 13px; color: #46515B; margin-top: auto">
+<span>바로 통화하기</span>
+<span style="display: flex; gap: 12px"><a href="tel:0255551165" style="font-weight: 700; color: #1F3644">02-555-1165</a></span>
+</div>
+<div class="qfDone" role="status" aria-live="polite" hidden>
+<span class="qfCheck" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+<div style="font-size: 22px; font-weight: 900; letter-spacing: -0.6px; color: #1F3644">접수되었습니다.</div>
+<div style="font-size: 15px; line-height: 1.6; color: #46515B">영업일 기준 <b style="color: #1F3644">당일 연락</b>드리겠습니다.<br><span class="qfWho"></span></div>
+<div style="font-size: 13px; color: #6B757D; line-height: 1.6">급하신 경우 바로 전화 주세요.<br><a href="tel:0255551165" style="font-weight: 700; color: #1F3644">02-555-1165</a></div>
+<button type="button" class="qfAgain" style="margin-top: 6px; height: 44px; padding: 0 22px; border: 1px solid #1F3644; border-radius: 999px; background: #FFFFFF; color: #1F3644; font-size: 14px; font-weight: 700; cursor: pointer">새 문의 작성</button>
 </div>
 </form>
+</div>
+</div>
 </div>
 <div id="map" class="heroMap">
 <div class="heroMapHead">
 <h2 class="heroMapTitle"><span>MAP SEARCH</span>지도로 매물 찾기</h2>
-<a href="#consult" class="mapAsk"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>빠른 상담</a>
 </div>
 <div class="mapTools" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
 <label style="display: flex; align-items: center"><span class="sr">동 선택</span>
@@ -923,15 +939,14 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 <button type="button" role="tab" data-sector="academy" aria-selected="false">학원</button>
 </div>
 </div>
-<div class="clinicWrap" style="max-width: 1280px; margin: 0 auto; padding: 0 32px">
-<div id="sectorBody" class="sectorBody" style="display: flex; flex-wrap: wrap; gap: 36px; min-width: 0">
-<div style="flex: 1 1 280px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<div id="sectorBody" class="sectorBody" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; flex-wrap: wrap; gap: 56px">
+<div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
 <div id="sectorEyebrow" style="font-family: Inter, sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 2.4px; color: #BC975E">MEDICAL LEASING</div>
-<h2 id="sectorTitle" style="margin: 0; font-size: 34px; font-weight: 900; line-height: 1.3; letter-spacing: -1.2px">병의원 개원,<br>입지부터 계약 특약까지</h2>
+<h2 id="sectorTitle" style="margin: 0; font-size: 38px; font-weight: 900; line-height: 1.3; letter-spacing: -1.2px">병의원 개원,<br>입지부터 계약 특약까지</h2>
 <p id="sectorDesc" style="margin: 0; font-size: 16px; line-height: 1.75; color: #C3CAD8">진료과목에 따라 필요한 건물 조건이 달라집니다. 개원 전 확인해야 할 항목을 체크리스트로 정리해 매물과 함께 브리핑해 드립니다.</p>
 <a href="#consult" id="sectorCta" style="align-self: flex-start; margin-top: 8px; padding: 15px 26px; border-radius: 999px; background: #BC975E; color: #14191F; font-weight: 700">병의원 개원 상담 신청 →</a>
 </div>
-<div id="sectorGrid" style="flex: 999 1 440px; min-width: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px">
+<div id="sectorGrid" style="flex: 999 1 560px; min-width: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px">
 
 <div class="elevDark elevLift" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 8px">
 <span style="font-family: Inter, sans-serif; font-size: 13px; font-weight: 700; color: #BC975E">01</span>
@@ -971,71 +986,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 
 </div>
 </div>
-<div class="flipCard" id="consult" style="min-width: 0">
-<div class="flipInner">
-<div class="flipFace flipFront elevHero" style="min-height: 600px; border-radius: 18px; background: #1F3644; position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: 32px; color: #FFFFFF">
-<span class="flipHint" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 12a9 9 0 0 1 15.5-6.3L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.3L3 16M3 21v-5h5"></path></svg>빠른 상담</span>
-<svg viewBox="0 0 400 520" preserveAspectRatio="xMidYMax slice" style="position: absolute; inset: 0; width: 100%; height: 100%" aria-hidden="true">
-<g fill="none" stroke="#3F5B69" stroke-width="1.2" opacity="0.85">
-<rect x="-10" y="250" width="90" height="290"></rect><path d="M-10 290h90M-10 330h90M-10 370h90M-10 410h90M-10 450h90M-10 490h90M35 250v290"></path>
-<rect x="100" y="140" width="120" height="400"></rect><path d="M100 180h120M100 220h120M100 260h120M100 300h120M100 340h120M100 380h120M100 420h120M100 460h120M100 500h120M160 140v400"></path>
-<rect x="240" y="200" width="80" height="340"></rect><path d="M240 240h80M240 280h80M240 320h80M240 360h80M240 400h80M240 440h80M240 480h80M280 200v340"></path>
-<rect x="335" y="300" width="80" height="240"></rect><path d="M335 340h80M335 380h80M335 420h80M335 460h80M335 500h80M375 300v240"></path>
-</g>
-</svg>
-<div aria-hidden="true" style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 30%, #1F3644 0%, rgba(31,54,68,0.92) 32%, rgba(31,54,68,0) 56%)"></div>
-<div class="heroLogo" role="img" aria-label="DAUM REAL ESTATE 부동산다움공인중개사사무소" style="position: absolute; top: 58px; left: 0; right: 0; display: flex; flex-direction: column; align-items: center">
-<img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDQgMTI0IiB3aWR0aD0iMjA4IiBoZWlnaHQ9IjI0OCI+PGRlZnM+CjxtYXNrIGlkPSJ0RCIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iMCIgeT0iMCIgd2lkdGg9IjEwNCIgaGVpZ2h0PSIxMjQiPjxyZWN0IHdpZHRoPSIxMDQiIGhlaWdodD0iMTI0IiBmaWxsPSIjZmZmIi8+PHJlY3QgeD0iMjEuNSIgeT0iMzgiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI0NCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjUwIiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iNTYiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI2MiIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjY4IiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iNzQiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI4MCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9Ijg2IiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iOTIiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI5OCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjEwNCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjwvbWFzaz4KPG1hc2sgaWQ9ImJEIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTA0IiBoZWlnaHQ9IjEyNCI+PHJlY3Qgd2lkdGg9IjEwNCIgaGVpZ2h0PSIxMjQiIGZpbGw9IiNmZmYiLz48cmVjdCB4PSI0OCIgeT0iNDQiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iNTgiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iNzIiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iODYiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iMTAwIiB3aWR0aD0iNTYiIGhlaWdodD0iMy40IiBmaWxsPSIjMDAwIi8+PC9tYXNrPgo8L2RlZnM+CjxyZWN0IHg9IjI2LjIiIHk9IjIiIHdpZHRoPSIxLjYiIGhlaWdodD0iMTMiIGZpbGw9IiNDOUE0NkEiLz4KPHBhdGggZD0iTTE4IDExMlYzMUwyNyAxNEwzNiAzMVYxMTJaIiBmaWxsPSIjQzlBNDZBIiBtYXNrPSJ1cmwoI3REKSIvPgo8cGF0aCBkPSJNNDEgMzFINThDODMgMzEgOTggNTAgOTggNzEuNUM5OCA5MyA4MyAxMTIgNTggMTEySDQxWiIgZmlsbD0iI0Y2RjJFQSIgbWFzaz0idXJsKCNiRCkiLz4KPHJlY3QgeD0iOCIgeT0iMTE2IiB3aWR0aD0iOTIiIGhlaWdodD0iMy4yIiBmaWxsPSIjRjZGMkVBIi8+PC9zdmc+" alt="" aria-hidden="true" style="width: 92px; height: auto; display: block">
-<span style="margin-top: 20px; font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 46px; line-height: .85; letter-spacing: .2em; margin-right: -.2em; color: #F6F2EA">DAUM</span>
-<span style="margin-top: 14px; display: flex; align-items: center; gap: 12px"><span style="width: 30px; height: 1px; background: #C9A46A"></span><span style="font-family: Montserrat, Inter, sans-serif; font-weight: 600; font-size: 10px; letter-spacing: .55em; margin-right: -.55em; color: #C9A46A">REAL ESTATE</span><span style="width: 30px; height: 1px; background: #C9A46A"></span></span>
-<span style="margin-top: 10px; font-family: 'Noto Sans KR', sans-serif; font-weight: 500; font-size: 11px; letter-spacing: .24em; margin-right: -.24em; color: #B9C3C8">부동산다움공인중개사사무소</span>
-</div>
-<div style="position: relative; display: flex; flex-direction: column; gap: 14px">
-<div class="frontCopy" style="font-size: 26px; font-weight: 700; line-height: 1.4; letter-spacing: -0.8px">공간의 가치를 아는 중개,<br>그것이 '다움'입니다.</div>
-<div class="frontStats" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 8px">
-<div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 14px"><div style="font-size: 12px; color: #C3CAD8">위치</div><div style="font-size: 16px; font-weight: 700">압구정역 5번출구</div></div>
-<div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 14px"><div style="font-size: 12px; color: #C3CAD8">특화</div><div style="font-size: 16px; font-weight: 700">메디컬 · 무권리</div></div>
-<div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 14px"><div style="font-size: 12px; color: #C3CAD8">상담</div><div style="font-size: 16px; font-weight: 700">02-555-1165</div></div>
-</div>
-</div>
-</div>
-<form class="flipFace flipBack elev" id="quickForm" novalidate aria-label="빠른 상담 신청" style="position: relative; border-radius: 18px; background: #FFFFFF; border: 1px solid #E6E0D4; padding: 26px 24px; display: flex; flex-direction: column; gap: 12px; color: #14191F">
-<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px">
-<div>
-<div style="font-family: Inter, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 2.2px; color: #BC975E; margin-bottom: 6px">QUICK CONTACT</div>
-<div style="font-size: 21px; font-weight: 900; line-height: 1.35; letter-spacing: -0.8px">원하는 조건만 남겨주세요.</div>
-</div>
-<button type="button" class="flipClose" aria-label="앞면으로 돌아가기" style="flex: none; width: 36px; height: 36px; border-radius: 50%; border: 1px solid #E6E0D4; background: #FFFFFF; color: #46515B; font-size: 18px; cursor: pointer">↺</button>
-</div>
-<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
-<label style="display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 700; color: #46515B"><span>이름 <b class="qfReq" aria-hidden="true">*</b></span><input type="text" name="name" required maxlength="30" autocomplete="name" placeholder="홍길동" style="height: 42px; border: 1px solid #D9D2C4; border-radius: 8px; padding: 0 12px; font-size: 14px; background: #FFFFFF; width: 100%; min-width: 0"></label>
-<label style="display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 700; color: #46515B"><span>연락처 <b class="qfReq" aria-hidden="true">*</b></span><input type="tel" name="phone" required maxlength="13" inputmode="numeric" autocomplete="tel" placeholder="010-0000-0000" style="height: 42px; border: 1px solid #D9D2C4; border-radius: 8px; padding: 0 12px; font-size: 14px; background: #FFFFFF; width: 100%; min-width: 0"></label>
-<label style="display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 700; color: #46515B">문의 유형<select name="type" style="height: 42px; border: 1px solid #D9D2C4; border-radius: 8px; padding: 0 12px; font-size: 14px; background: #FFFFFF; width: 100%; min-width: 0; padding: 0 8px"><option>임차 (매물 찾기)</option><option>매수</option><option>임대 의뢰 (건물주)</option><option>매도 의뢰</option></select></label>
-<label style="display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 700; color: #46515B">업종 / 용도<select id="consultType" name="use" style="height: 42px; border: 1px solid #D9D2C4; border-radius: 8px; padding: 0 12px; font-size: 14px; background: #FFFFFF; width: 100%; min-width: 0; padding: 0 8px"><option>사무실</option><option>상가 (리테일·F&amp;B)</option><option>병의원</option><option>체육시설</option><option>음식점</option><option>미용실</option><option>학원</option><option>사옥·통임대</option><option>빌딩 매매</option></select></label>
-<label style="display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 700; color: #46515B">희망 지역<input type="text" name="region" maxlength="60" placeholder="예: 압구정역, 신사동" style="height: 42px; border: 1px solid #D9D2C4; border-radius: 8px; padding: 0 12px; font-size: 14px; background: #FFFFFF; width: 100%; min-width: 0"></label>
-<label style="display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 700; color: #46515B">면적 · 예산<input type="text" name="areaBudget" maxlength="60" placeholder="예: 50평 / 월 600만" style="height: 42px; border: 1px solid #D9D2C4; border-radius: 8px; padding: 0 12px; font-size: 14px; background: #FFFFFF; width: 100%; min-width: 0"></label>
-</div>
-<label style="display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 700; color: #46515B">상세 내용<textarea id="consultMsg" name="memo" maxlength="1000" rows="5" placeholder="입주 희망 시기, 주차 대수, 필요 시설 등" style="border: 1px solid #D9D2C4; border-radius: 8px; padding: 10px 12px; font-size: 14px; resize: none; width: 100%"></textarea></label>
-<label class="qfAgree" style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #46515B"><input type="checkbox" name="agree" required style="width: 18px; height: 18px; flex: none">개인정보 수집 · 이용에 동의합니다. <b class="qfReq" aria-hidden="true">*</b> <a href="#privacy" class="privacyLink" style="text-decoration: underline">약관 보기</a></label>
-<input type="hidden" name="listing" id="consultListing">
-<div class="qfTrap" aria-hidden="true"><label>웹사이트<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
-<p class="qfMsg" role="alert" aria-live="assertive"></p>
-<button type="submit" class="qfSubmit" style="height: 48px; border: 0; border-radius: 10px; background: #1F3644; color: #FFFFFF; font-size: 16px; font-weight: 700; cursor: pointer">상담 신청하기</button>
-<div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid #EFEAE0; font-size: 13px; color: #46515B; margin-top: auto">
-<span>바로 통화하기</span>
-<span style="display: flex; gap: 12px"><a href="tel:0255551165" style="font-weight: 700; color: #1F3644">02-555-1165</a></span>
-</div>
-<div class="qfDone" role="status" aria-live="polite" hidden>
-<span class="qfCheck" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
-<div style="font-size: 22px; font-weight: 900; letter-spacing: -0.6px; color: #1F3644">접수되었습니다.</div>
-<div style="font-size: 15px; line-height: 1.6; color: #46515B">영업일 기준 <b style="color: #1F3644">당일 연락</b>드리겠습니다.<br><span class="qfWho"></span></div>
-<div style="font-size: 13px; color: #6B757D; line-height: 1.6">급하신 경우 바로 전화 주세요.<br><a href="tel:0255551165" style="font-weight: 700; color: #1F3644">02-555-1165</a></div>
-<button type="button" class="qfAgain" style="margin-top: 6px; height: 44px; padding: 0 22px; border: 1px solid #1F3644; border-radius: 999px; background: #FFFFFF; color: #1F3644; font-size: 14px; font-weight: 700; cursor: pointer">새 문의 작성</button>
-</div>
-</form>
-</div>
-</div>
-</div>
+
 </section>
 
 <!-- ===== 진행 프로세스 ===== -->
@@ -1569,7 +1520,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
   function renderSearchBar() {
     var bar = $('mapSearchBar'), chips = [];
     if (SEARCH.sale) chips.push('매매');
-    if (SEARCH.cat) chips.push($('sType').value);
+    if (SEARCH.cat && $('sType')) chips.push($('sType').value);
     if (SEARCH.gu) chips.push(SEARCH.gu + ' 전체');
     if (SEARCH.kw) chips.push('“' + SEARCH.kw + '”');
     if (!chips.length) { bar.hidden = true; bar.innerHTML = ''; return; }
@@ -2104,25 +2055,6 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
       .catch(function () { load(DEMO, false); });
   } else load(DEMO, false);
 
-  /* 임대/매매 전환 (검색 카드) */
-  var mOn = 'height: 40px; padding: 0 20px; border: 0; border-radius: 8px; background: #14191F; color: #FFFFFF; font-size: 15px; font-weight: 700; cursor: pointer';
-  var mOff = 'height: 40px; padding: 0 20px; border: 1px solid #D9D2C4; border-radius: 8px; background: #FFFFFF; color: #46515B; font-size: 15px; font-weight: 500; cursor: pointer';
-  function mode(lease) {
-    SALE = !lease;
-    $('btnLease').setAttribute('style', lease ? mOn : mOff);
-    $('btnSale').setAttribute('style', lease ? mOff : mOn);
-    $('priceLabel').textContent = lease ? '월 임대료' : '매매가';
-    var o = lease ? ['300만 이하', '300~1,000만', '1,000만 이상'] : ['50억 이하', '50~150억', '150억 이상'];
-    for (var i = 1; i <= 3; i++) $('priceOpt' + i).textContent = o[i - 1];
-  }
-  $('btnLease').addEventListener('click', function () { mode(true); });
-  $('btnSale').addEventListener('click', function () { mode(false); });
-  $('searchGo').addEventListener('click', function () { runSearch(); });
-  $('heroSearch').addEventListener('submit', function (e) { e.preventDefault(); runSearch(); });
-  $('sKw').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); runSearch(); } });
-  document.querySelectorAll('[data-kw]').forEach(function (a) {
-    a.addEventListener('click', function (e) { e.preventDefault(); $('sKw').value = a.getAttribute('data-kw'); runSearch(); });
-  });
   $('mapSearchBar').addEventListener('click', function (e) { if (e.target.closest('.msReset')) resetSearch(); });
 })();
 
@@ -2136,7 +2068,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
   c.addEventListener('focusin',function(){ if(back.contains(document.activeElement)){ c.classList.add('flipped'); c.classList.remove('closed'); } });
   c.addEventListener('mouseleave',function(){ if(!busy() && !c.classList.contains('done') && !document.querySelector('#privacyDlg[open]')) c.classList.remove('flipped'); c.classList.remove('closed'); });
   // 터치 화면: 앞면을 누르면 뒤집기
-  c.querySelector('.flipFront').addEventListener('click',function(){ c.classList.add('flipped'); c.classList.remove('closed'); });
+  c.querySelector('.flipFront').addEventListener('click',function(e){ if(e.target.closest('.hcTel')) return; c.classList.add('flipped'); c.classList.remove('closed'); });
   document.addEventListener('click',function(e){ var a=e.target.closest('a[href="#consult"]'); if(!a) return; c.classList.add('flipped'); c.classList.remove('closed'); setTimeout(function(){ var f=back.querySelector('input'); if(f) f.focus({preventScroll:true}); },700); });
   c.querySelector('.flipClose').addEventListener('click',function(e){ e.stopPropagation(); c.classList.remove('flipped','done'); c.classList.add('closed'); if(document.activeElement) document.activeElement.blur(); });
 })();
