@@ -633,67 +633,6 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
  .heroCard #quickForm input:not([type=checkbox]),.heroCard #quickForm select,.heroCard #quickForm textarea{font-size:16px!important}
 }
 </style>
-<style id="procCss">
-.sectorGrid3{grid-template-columns:repeat(3,minmax(0,1fr))}
-.sectorGrid3>div{padding:18px!important;gap:5px!important}
-.sectorGrid3>div>span:nth-child(2){font-size:16.5px!important}
-.sectorGrid3>div>span:nth-child(3){font-size:13px!important;line-height:1.55!important}
-#sectorDesc{font-size:15px!important}
-.procBand{scroll-margin-top:24px}
-.procIn{margin-top:44px;padding-top:34px;border-top:1px solid rgba(255,255,255,.14)}
-.procHead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;margin-bottom:28px}
-.procEb{font-family:Inter,sans-serif;font-size:12px;font-weight:600;letter-spacing:2.4px;color:#BC975E;flex-basis:100%}
-.procHead h2{margin:0;font-size:26px!important;font-weight:800;letter-spacing:-.8px;color:#FFFFFF;line-height:1.35!important}
-.procHead h2 em{font-style:normal;color:#E8D7B6;white-space:nowrap}
-.procHead p{margin:0;font-size:14px;color:#A9B4C2}
-.procLine{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:relative}
-.procLine:before{content:'';position:absolute;left:10%;right:10%;top:19px;height:2px;background:linear-gradient(90deg,#BC975E,rgba(188,151,94,.35))}
-.procLine li{position:relative;text-align:center;padding:0 12px;display:flex;flex-direction:column;align-items:center;gap:6px}
-.procLine i{display:flex;width:40px;height:40px;border-radius:50%;background:#1F3644;border:2px solid #BC975E;color:#E8D7B6;font-style:normal;font-family:Inter,sans-serif;font-weight:700;font-size:14px;align-items:center;justify-content:center;margin-bottom:6px;transition:background-color .2s,color .2s}
-.procLine li:hover i{background:#BC975E;color:#14191F}
-.procLine b{font-size:16px}
-.procLine span{font-size:13px;line-height:1.55;color:#C3CAD8;max-width:200px}
-@media (max-width:1100px){.sectorGrid3{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:760px){
- #clinic{padding:56px 0 52px!important}
- #sectorTitle{font-size:clamp(26px,7.4vw,32px)!important}
- .sectorGrid3{grid-template-columns:minmax(0,1fr)}
- .procIn{margin-top:36px;padding-top:28px}
- .procHead h2{font-size:22px!important}
- .procLine{grid-template-columns:minmax(0,1fr);gap:0}
- .procLine:before{left:19px;right:auto;top:20px;bottom:20px;width:2px;height:auto;background:linear-gradient(180deg,#BC975E,rgba(188,151,94,.35))}
- .procLine li{display:grid;grid-template-columns:40px minmax(0,1fr);column-gap:14px;text-align:left;padding:0 0 18px;align-items:start}
- .procLine li:last-child{padding-bottom:0}
- .procLine i{grid-row:1/3;margin:0}
- .procLine b{padding-top:9px}
- .procLine span{max-width:none}
-}
-</style>
-<style id="clinicIvory">
-#clinic .sectorTabs button{border-color:#D9D2C4;background:#FFFFFF;color:#46515B}
-#clinic .sectorTabs button:hover{border-color:#BC975E;color:#1F3644;background:#F6F2EA}
-#clinic .sectorTabs button[aria-selected="true"]{background:#1F3644;border-color:#1F3644;color:#FFFFFF}
-#clinic .sectorTabs button:focus-visible{outline-color:#BC975E}
-#sectorEyebrow{color:#9C7A47!important}
-#sectorTitle{color:#14191F}
-#sectorDesc{color:#46515B!important}
-#sectorCta{background:#1F3644!important;color:#FFFFFF!important;transition:background-color .18s}
-#sectorCta:hover{background:#2A4757!important}
-#sectorGrid>div{background:#FFFFFF!important;border:1px solid #E6E0D4!important;box-shadow:0 1px 2px rgba(31,54,68,.06),0 3px 8px rgba(31,54,68,.06)!important;transition:border-color .2s,transform .2s,box-shadow .2s}
-#sectorGrid>div:hover{border-color:#BC975E!important;transform:translateY(-2px);box-shadow:0 6px 14px rgba(31,54,68,.10)!important}
-#sectorGrid>div>span:first-child{color:#A27D48!important}
-#sectorGrid>div>span:nth-child(2){color:#14191F}
-#sectorGrid>div>span:nth-child(3){color:#5B6670!important}
-#clinic .procIn{border-top-color:#E6E0D4}
-#clinic .procEb{color:#9C7A47}
-#clinic .procHead h2{color:#14191F}
-#clinic .procHead h2 em{color:#14191F;background:linear-gradient(transparent 62%,#E8D7B6 62%)}
-#clinic .procHead p{color:#5B6670}
-#clinic .procLine i{background:#FFFFFF;color:#1F3644;border-color:#BC975E}
-#clinic .procLine li:hover i{background:#1F3644;color:#FFFFFF;border-color:#1F3644}
-#clinic .procLine b{color:#14191F}
-#clinic .procLine span{color:#5B6670}
-</style>
 <style id="heroAlign">
 @media (min-width:1101px){
  .heroSplit{align-items:stretch}
@@ -721,6 +660,55 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
   document.addEventListener('DOMContentLoaded',al);
 })();
 </script>
+<style id="guideCss">
+/* 실무 가이드: 밑줄 탭 + 선 구분 목록 */
+.guideTabsWrap .sectorTabs{display:flex;gap:30px;flex-wrap:nowrap;border-bottom:1px solid #E6E0D4;border-radius:0!important;overflow-x:auto;scrollbar-width:none}
+.guideTabsWrap .sectorTabs::-webkit-scrollbar{display:none}
+.guideTabsWrap .sectorTabs button{flex:none;min-height:0;padding:0 2px 14px!important;border:0!important;border-radius:0;background:none!important;color:#8A939B;font:600 16px/1.2 'Noto Sans KR',sans-serif;position:relative;cursor:pointer;transition:color .18s}
+.guideTabsWrap .sectorTabs button:hover{color:#1F3644}
+.guideTabsWrap .sectorTabs button[aria-selected="true"]{color:#14191F;font-weight:800}
+.guideTabsWrap .sectorTabs button[aria-selected="true"]:after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:3px;background:#1F3644;border-radius:2px}
+.guideTabsWrap .sectorTabs button:focus-visible{outline:2px solid #BC975E;outline-offset:2px}
+.guideBody{display:grid;grid-template-columns:300px minmax(0,1fr);gap:56px}
+#sectorEyebrow{color:#9C7A47!important;font-size:11px!important;letter-spacing:2.4px!important}
+#sectorTitle{margin-top:10px!important;font-size:25px!important;letter-spacing:-1px!important;color:#14191F}
+#sectorDesc{margin-top:12px!important;font-size:14px!important;color:#46515B!important}
+.guideList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:40px}
+.guideList>div{display:grid!important;grid-template-columns:34px minmax(0,1fr);grid-template-rows:auto auto;gap:0!important;background:none!important;border:0!important;border-top:1px solid #E6E0D4!important;border-radius:0!important;box-shadow:none!important;padding:16px 0!important;transform:none!important}
+.guideList>div:nth-child(-n+2){border-top:0!important;padding-top:2px!important}
+.guideList>div>span:first-child{grid-row:1/3;font-size:13px!important;color:#A27D48!important;padding-top:2px}
+.guideList>div>span:nth-child(2){font-size:16px!important;font-weight:700;color:#14191F;margin-bottom:4px}
+.guideList>div>span:nth-child(3){font-size:13px!important;line-height:1.55!important;color:#5B6670!important}
+/* 상담부터 입주까지 */
+.procBand{scroll-margin-top:24px}
+.procIn{margin-top:40px;padding-top:26px;border-top:1px solid #E6E0D4;display:grid;grid-template-columns:220px minmax(0,1fr);gap:30px;align-items:start}
+.procEb{display:block;font-family:Inter,sans-serif;font-size:11px;font-weight:600;letter-spacing:2.4px;color:#9C7A47}
+.procHead h2{margin:6px 0 0;font-size:19px!important;font-weight:800;line-height:1.4!important;letter-spacing:-.4px;color:#14191F}
+.procLine{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.procLine li{padding:0 14px;border-left:1px solid #E6E0D4;display:flex;flex-direction:column}
+.procLine li:first-child{border-left:0;padding-left:0}
+.procLine i{font-style:normal;font-family:Inter,sans-serif;font-size:12px;font-weight:700;color:#A27D48}
+.procLine b{font-size:14.5px;margin:4px 0 3px;color:#14191F}
+.procLine span{font-size:12.5px;line-height:1.5;color:#6B757D}
+@media (max-width:1100px){
+ .guideBody{grid-template-columns:minmax(0,1fr);gap:28px}
+ .procIn{grid-template-columns:minmax(0,1fr);gap:18px}
+}
+@media (max-width:760px){
+ #clinic{padding:52px 0 48px!important}
+ .guideTabsWrap{margin-bottom:26px!important}
+ .guideTabsWrap .sectorTabs{gap:22px;margin:0 -20px;padding:0 20px}
+ .guideTabsWrap .sectorTabs button{font-size:15px;padding-bottom:12px!important}
+ #sectorTitle{font-size:clamp(22px,6.4vw,25px)!important}
+ .guideList{grid-template-columns:minmax(0,1fr)}
+ .guideList>div:nth-child(2){border-top:1px solid #E6E0D4!important;padding-top:16px!important}
+ .procLine{grid-template-columns:minmax(0,1fr)}
+ .procLine li{display:grid;grid-template-columns:34px minmax(0,1fr);border-left:0;border-top:1px solid #E6E0D4;padding:12px 0}
+ .procLine li:first-child{border-top:0;padding-top:0}
+ .procLine i{grid-row:1/3;padding-top:2px}
+ .procLine b{margin:0 0 2px}
+}
+</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; background: #FFFFFF; width: 100%; letter-spacing: -0.2px">
@@ -740,13 +728,10 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 <header class="siteHead" style="background: #FFFFFF; border-bottom: 1px solid #E6E0D4">
 <div class="headRow" style="max-width: 1280px; margin: 0 auto; padding: 18px 32px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
 <a href="#top" aria-label="부동산다움 홈" style="display: flex; align-items: center"><span class="dmLock dmLight"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDQgMTI0IiB3aWR0aD0iMjA4IiBoZWlnaHQ9IjI0OCI+PGRlZnM+CjxtYXNrIGlkPSJ0TCIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iMCIgeT0iMCIgd2lkdGg9IjEwNCIgaGVpZ2h0PSIxMjQiPjxyZWN0IHdpZHRoPSIxMDQiIGhlaWdodD0iMTI0IiBmaWxsPSIjZmZmIi8+PHJlY3QgeD0iMjEuNSIgeT0iMzgiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI0NCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjUwIiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iNTYiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI2MiIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjY4IiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iNzQiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI4MCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9Ijg2IiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iOTIiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI5OCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjEwNCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjwvbWFzaz4KPG1hc2sgaWQ9ImJMIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTA0IiBoZWlnaHQ9IjEyNCI+PHJlY3Qgd2lkdGg9IjEwNCIgaGVpZ2h0PSIxMjQiIGZpbGw9IiNmZmYiLz48cmVjdCB4PSI0OCIgeT0iNDQiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iNTgiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iNzIiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iODYiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iMTAwIiB3aWR0aD0iNTYiIGhlaWdodD0iMy40IiBmaWxsPSIjMDAwIi8+PC9tYXNrPgo8L2RlZnM+CjxyZWN0IHg9IjI2LjIiIHk9IjIiIHdpZHRoPSIxLjYiIGhlaWdodD0iMTMiIGZpbGw9IiNCRTk2NUMiLz4KPHBhdGggZD0iTTE4IDExMlYzMUwyNyAxNEwzNiAzMVYxMTJaIiBmaWxsPSIjQkU5NjVDIiBtYXNrPSJ1cmwoI3RMKSIvPgo8cGF0aCBkPSJNNDEgMzFINThDODMgMzEgOTggNTAgOTggNzEuNUM5OCA5MyA4MyAxMTIgNTggMTEySDQxWiIgZmlsbD0iIzFGMzY0NCIgbWFzaz0idXJsKCNiTCkiLz4KPHJlY3QgeD0iOCIgeT0iMTE2IiB3aWR0aD0iOTIiIGhlaWdodD0iMy4yIiBmaWxsPSIjMUYzNjQ0Ii8+PC9zdmc+" alt="" aria-hidden="true" class="dmMark"><span class="dmRule"></span><span class="dmText"><span class="dmName">DAUM</span><span class="dmTag">REAL ESTATE</span></span></span></a>
-<nav class="mainNav" aria-label="주 메뉴" style="display: flex; flex-wrap: wrap; gap: 30px; font-size: 16px; font-weight: 700">
-<a href="#map" style="color: #1F3644">상가 임대차</a>
-<a href="#" data-soon="빌딩 매매" style="color: #14191F">빌딩 매매</a>
-<a href="#" data-soon="실거래 조회" style="color: #14191F">실거래 조회</a>
+<nav class="mainNav" aria-label="주 메뉴" style="display: flex; flex-wrap: wrap; gap: 44px; font-size: 16px; font-weight: 700">
+<a href="#map" style="color: #14191F">매물 조회</a>
 <a href="#listings" style="color: #14191F">추천 매물</a>
 <a href="#clinic" style="color: #14191F">실무 가이드</a>
-<a href="#about" style="color: #5B6670; font-weight: 500">회사 소개</a>
 </nav>
 <a href="tel:0255551165" class="headTel" aria-label="전화 상담 02-555-1165" style="display: flex; align-items: center; gap: 8px; background: #1F3644; color: #FFFFFF; padding: 11px 18px; border-radius: 999px; font-weight: 700; font-size: 15px; min-height: 44px">
 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#BC975E" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>
@@ -1015,7 +1000,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 </div>
 </div>
 </section><section id="clinic" style="background: #FBF8F3; color: #14191F; padding: 72px 0 64px; border-top: 1px solid #E6E0D4">
-<div style="max-width: 1280px; margin: 0 auto 30px; padding: 0 32px">
+<div class="guideTabsWrap" style="max-width: 1280px; margin: 0 auto 34px; padding: 0 32px">
 <div role="tablist" aria-label="업종별 입점 가이드" id="sectorTabs" class="scrollTabs sectorTabs">
 <button type="button" role="tab" data-sector="clinic" aria-selected="true">병의원</button>
 <button type="button" role="tab" data-sector="gym" aria-selected="false">체육시설</button>
@@ -1024,13 +1009,13 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 <button type="button" role="tab" data-sector="academy" aria-selected="false">학원</button>
 </div>
 </div>
-<div id="sectorBody" class="sectorBody" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; flex-wrap: wrap; gap: 56px">
-<div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
+<div id="sectorBody" class="sectorBody guideBody" style="max-width: 1280px; margin: 0 auto; padding: 0 32px">
+<div class="guideLead" style="min-width: 0; display: flex; flex-direction: column">
 <div id="sectorEyebrow" style="font-family: Inter, sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 2.4px; color: #BC975E">MEDICAL LEASING</div>
 <h2 id="sectorTitle" style="margin: 0; font-size: 34px; font-weight: 900; line-height: 1.3; letter-spacing: -1.2px">병의원 개원,<br>입지부터 계약 특약까지</h2>
 <p id="sectorDesc" style="margin: 0; font-size: 16px; line-height: 1.75; color: #C3CAD8">진료과목에 따라 필요한 건물 조건이 달라집니다. 개원 전 확인해야 할 항목을 체크리스트로 정리해 매물과 함께 브리핑해 드립니다.</p>
 </div>
-<div id="sectorGrid" class="sectorGrid3" style="flex: 999 1 560px; min-width: 0; display: grid; gap: 12px">
+<div id="sectorGrid" class="guideList" style="min-width: 0">
 
 <div class="elevDark elevLift" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 8px">
 <span style="font-family: Inter, sans-serif; font-size: 13px; font-weight: 700; color: #BC975E">01</span>
@@ -1073,8 +1058,8 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 
 <div id="about" class="procBand" style="max-width: 1280px; margin: 0 auto; padding: 0 32px">
 <div class="procIn">
-<div class="procHead"><span class="procEb">HOW WE WORK</span><h2>상담부터 입주까지, <em>부동산다움의 방식</em></h2><p>매물 소개에서 끝나지 않고, 계약서에 남는 조건까지 함께 챙깁니다.</p></div>
-<ol class="procLine"><li><i>01</i><b>조건 상담</b><span>업종·면적·예산·입주 시기를 듣고 우선순위를 정리합니다.</span></li><li><i>02</i><b>맞춤 매물 브리핑</b><span>후보 매물과 주변 임대 시세를 비교한 자료를 드립니다.</span></li><li><i>03</i><b>현장 투어</b><span>동선을 짜 한 번에 둘러보고 체크리스트를 확인합니다.</span></li><li><i>04</i><b>조건 협상 · LOI</b><span>렌트프리·인테리어 기간을 입주의향서로 정리합니다.</span></li><li><i>05</i><b>계약 · 특약 검토</b><span>권리관계와 원상복구·승계 특약을 꼼꼼히 반영합니다.</span></li></ol>
+<div class="procHead"><span class="procEb">HOW WE WORK</span><h2>상담부터 입주까지</h2></div>
+<ol class="procLine"><li><i>01</i><b>조건 상담</b><span>업종·면적·예산·입주 시기</span></li><li><i>02</i><b>맞춤 매물 브리핑</b><span>후보 매물과 시세 비교</span></li><li><i>03</i><b>현장 투어</b><span>동선을 짜 한 번에</span></li><li><i>04</i><b>조건 협상 · LOI</b><span>렌트프리·인테리어 기간</span></li><li><i>05</i><b>계약 · 특약 검토</b><span>권리관계·원상복구 특약</span></li></ol>
 </div>
 </div>
 </section>
@@ -1093,7 +1078,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 <span style="line-height: 1.8">부동산다움공인중개사사무소 · 개업공인중개사 안혁준<br>중개사무소 등록번호 제11680-2021-00537호 · 사업자등록번호 415-16-62854<br>서울특별시 강남구 신사동 578-1 일상빌딩 1층 (압구정역 5번출구)<br><a href="tel:0255551165" style="color: inherit">전화 02-555-1165</a> · <a href="mailto:airbbb@naver.com" style="color: inherit">이메일 airbbb@naver.com</a> · <a href="https://r-daum.com" style="color: inherit">홈페이지 r-daum.com</a></span>
 </div>
 <div style="display: flex; gap: 48px; flex-wrap: wrap">
-<div style="display: flex; flex-direction: column; gap: 10px"><span style="color: #FFFFFF; font-weight: 700">바로가기</span><a href="#map" style="color: #A9B1C2">상가 임대차</a><a href="#listings" style="color: #A9B1C2">추천 매물</a><a href="#clinic" style="color: #A9B1C2">실무 가이드</a><a href="#about" style="color: #A9B1C2">회사 소개</a></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><span style="color: #FFFFFF; font-weight: 700">바로가기</span><a href="#map" style="color: #A9B1C2">매물 조회</a><a href="#listings" style="color: #A9B1C2">추천 매물</a><a href="#clinic" style="color: #A9B1C2">실무 가이드</a></div>
 <div style="display: flex; flex-direction: column; gap: 10px"><span style="color: #FFFFFF; font-weight: 700">고객지원</span><a href="#consult" style="color: #A9B1C2">매물 의뢰</a><a href="https://blog.naver.com/airbbb" style="color: #A9B1C2">네이버 블로그</a></div>
 </div>
 </div>
@@ -1732,7 +1717,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
       '<p class="dtSmall">※ 매물 정보는 등록 시점 기준이며 실제와 다를 수 있습니다. 계약 전 현장과 공부서류를 반드시 확인해 주세요.</p></aside>';
     return '<div class="dtWrap">' +
       '<nav class="dtCrumb" aria-label="현재 위치"><button type="button" class="dtBack"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>목록으로</button>' +
-      '<span><a href="#top">홈</a> <i>›</i> ' + (DT.from === 'listings' ? '<a href="#listings">추천 매물</a>' : '<a href="#map">상가 임대차</a>') + ' <i>›</i> No.' + esc(it.id) + '</span></nav>' +
+      '<span><a href="#top">홈</a> <i>›</i> ' + (DT.from === 'listings' ? '<a href="#listings">추천 매물</a>' : '<a href="#map">매물 조회</a>') + ' <i>›</i> No.' + esc(it.id) + '</span></nav>' +
       '<div class="dtHead"><div><div class="dtBadges">' + badges + '</div><h1 class="dtTitle">' + esc(it.title) + '</h1>' +
       '<div class="dtSub"><span>' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + '</span><i>|</i><span>' + esc(areaText(it.area)) + '</span><i>|</i><span>' + esc(it.floor || '-') + '</span>' + (it.date ? '<i>|</i><span>등록 ' + esc(it.date) + '</span>' : '') + '</div></div>' +
       '<div class="dtTools"><button type="button" class="dtTool" data-act="share"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"></path></svg><span>링크 복사</span></button>' +
