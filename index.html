@@ -732,7 +732,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:none}
 @media print{.dtFloatBack{display:none!important}}
 </style>
 <style id="panoCss">
-.dtPanoHost{position:absolute;inset:0;z-index:1;opacity:0;transition:opacity .4s}
+.dtPanoHost{position:absolute;inset:0;z-index:1;opacity:0;transition:opacity .4s;overflow:hidden}
 .dtNoPhoto.hasPano .dtPanoHost{opacity:1}
 .dtNoPhoto.hasPano>svg,.dtNoPhoto.hasPano>b,.dtNoPhoto.hasPano>span:not(.dtPanoTag){visibility:hidden}
 .dtPanoTag{position:absolute;left:14px;bottom:14px;z-index:2;padding:7px 12px;border-radius:999px;background:rgba(20,25,31,.72);color:#FFFFFF!important;font-size:12.5px!important;font-weight:600;line-height:1.2!important;pointer-events:none;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
@@ -1829,8 +1829,10 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:none}
       try {
         var target = new naver.maps.LatLng(it.lat, it.lng);
         var host = document.createElement('div'); host.className = 'dtPanoHost';
-        box.appendChild(host);
-        var pano = new naver.maps.Panorama(host, { position: target, pov: { pan: 0, tilt: 5, fov: 100 }, aroundControl: false, flightSpot: false, zoomControl: true, zoomControlOptions: { position: naver.maps.Position && naver.maps.Position.TOP_RIGHT }, logoControl: true });
+        var inner = document.createElement('div'); inner.style.cssText = 'width:100%;height:100%';
+        host.appendChild(inner); box.appendChild(host);
+        var sz = function () { return new naver.maps.Size(Math.max(200, box.clientWidth), Math.max(150, box.clientHeight)); };
+        var pano = new naver.maps.Panorama(inner, { size: sz(), position: target, pov: { pan: 0, tilt: 5, fov: 100 }, aroundControl: false, flightSpot: false, zoomControl: true, zoomControlOptions: { position: naver.maps.Position && naver.maps.Position.TOP_RIGHT }, logoControl: true });
         var face = function () {
           try {
             var p = pano.getPosition(); if (!p) return;
@@ -1850,6 +1852,8 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:none}
         naver.maps.Event.addListener(pano, 'pano_status', function (st) { if (st === 'OK') show(); else fail(); });
         naver.maps.Event.addListener(pano, 'init', function () { show(); });
         naver.maps.Event.addListener(pano, 'pano_changed', function () { if (done) face(); });
+        var onRs = function () { if (!document.body.contains(box)) { window.removeEventListener('resize', onRs); return; } try { pano.setSize(sz()); } catch (e) { } };
+        window.addEventListener('resize', onRs);
         setTimeout(function () { if (!done) { try { if (pano.getPosition()) { show(); return; } } catch (e) { } fail(); } }, 6000);
       } catch (err) { }
     })();
