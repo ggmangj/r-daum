@@ -633,6 +633,42 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
  .heroCard #quickForm input:not([type=checkbox]),.heroCard #quickForm select,.heroCard #quickForm textarea{font-size:16px!important}
 }
 </style>
+<style id="procCss">
+.sectorGrid3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.sectorGrid3>div{padding:18px!important;gap:5px!important}
+.sectorGrid3>div>span:nth-child(2){font-size:16.5px!important}
+.sectorGrid3>div>span:nth-child(3){font-size:13px!important;line-height:1.55!important}
+#sectorDesc{font-size:15px!important}
+.procBand{scroll-margin-top:24px}
+.procIn{margin-top:44px;padding-top:34px;border-top:1px solid rgba(255,255,255,.14)}
+.procHead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 18px;margin-bottom:28px}
+.procEb{font-family:Inter,sans-serif;font-size:12px;font-weight:600;letter-spacing:2.4px;color:#BC975E;flex-basis:100%}
+.procHead h2{margin:0;font-size:26px!important;font-weight:800;letter-spacing:-.8px;color:#FFFFFF;line-height:1.35!important}
+.procHead h2 em{font-style:normal;color:#E8D7B6;white-space:nowrap}
+.procHead p{margin:0;font-size:14px;color:#A9B4C2}
+.procLine{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:relative}
+.procLine:before{content:'';position:absolute;left:10%;right:10%;top:19px;height:2px;background:linear-gradient(90deg,#BC975E,rgba(188,151,94,.35))}
+.procLine li{position:relative;text-align:center;padding:0 12px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.procLine i{display:flex;width:40px;height:40px;border-radius:50%;background:#1F3644;border:2px solid #BC975E;color:#E8D7B6;font-style:normal;font-family:Inter,sans-serif;font-weight:700;font-size:14px;align-items:center;justify-content:center;margin-bottom:6px;transition:background-color .2s,color .2s}
+.procLine li:hover i{background:#BC975E;color:#14191F}
+.procLine b{font-size:16px}
+.procLine span{font-size:13px;line-height:1.55;color:#C3CAD8;max-width:200px}
+@media (max-width:1100px){.sectorGrid3{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:760px){
+ #clinic{padding:56px 0 52px!important}
+ #sectorTitle{font-size:clamp(26px,7.4vw,32px)!important}
+ .sectorGrid3{grid-template-columns:minmax(0,1fr)}
+ .procIn{margin-top:36px;padding-top:28px}
+ .procHead h2{font-size:22px!important}
+ .procLine{grid-template-columns:minmax(0,1fr);gap:0}
+ .procLine:before{left:19px;right:auto;top:20px;bottom:20px;width:2px;height:auto;background:linear-gradient(180deg,#BC975E,rgba(188,151,94,.35))}
+ .procLine li{display:grid;grid-template-columns:40px minmax(0,1fr);column-gap:14px;text-align:left;padding:0 0 18px;align-items:start}
+ .procLine li:last-child{padding-bottom:0}
+ .procLine i{grid-row:1/3;margin:0}
+ .procLine b{padding-top:9px}
+ .procLine span{max-width:none}
+}
+</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; background: #FFFFFF; width: 100%; letter-spacing: -0.2px">
@@ -929,8 +965,8 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 <a href="#listings" style="padding: 14px 26px; border: 1px solid #1F3644; border-radius: 999px; font-weight: 700; color: #1F3644; background: #FFFFFF">전체 매물 보기 →</a>
 </div>
 </div>
-</section><section id="clinic" style="background: #1F3644; color: #FFFFFF; padding: 96px 0">
-<div style="max-width: 1280px; margin: 0 auto 36px; padding: 0 32px">
+</section><section id="clinic" style="background: #1F3644; color: #FFFFFF; padding: 72px 0 64px">
+<div style="max-width: 1280px; margin: 0 auto 30px; padding: 0 32px">
 <div role="tablist" aria-label="업종별 입점 가이드" id="sectorTabs" class="scrollTabs sectorTabs">
 <button type="button" role="tab" data-sector="clinic" aria-selected="true">병의원</button>
 <button type="button" role="tab" data-sector="gym" aria-selected="false">체육시설</button>
@@ -942,11 +978,11 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 <div id="sectorBody" class="sectorBody" style="max-width: 1280px; margin: 0 auto; padding: 0 32px; display: flex; flex-wrap: wrap; gap: 56px">
 <div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 20px">
 <div id="sectorEyebrow" style="font-family: Inter, sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 2.4px; color: #BC975E">MEDICAL LEASING</div>
-<h2 id="sectorTitle" style="margin: 0; font-size: 38px; font-weight: 900; line-height: 1.3; letter-spacing: -1.2px">병의원 개원,<br>입지부터 계약 특약까지</h2>
+<h2 id="sectorTitle" style="margin: 0; font-size: 34px; font-weight: 900; line-height: 1.3; letter-spacing: -1.2px">병의원 개원,<br>입지부터 계약 특약까지</h2>
 <p id="sectorDesc" style="margin: 0; font-size: 16px; line-height: 1.75; color: #C3CAD8">진료과목에 따라 필요한 건물 조건이 달라집니다. 개원 전 확인해야 할 항목을 체크리스트로 정리해 매물과 함께 브리핑해 드립니다.</p>
 <a href="#consult" id="sectorCta" style="align-self: flex-start; margin-top: 8px; padding: 15px 26px; border-radius: 999px; background: #BC975E; color: #14191F; font-weight: 700">병의원 개원 상담 신청 →</a>
 </div>
-<div id="sectorGrid" style="flex: 999 1 560px; min-width: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px">
+<div id="sectorGrid" class="sectorGrid3" style="flex: 999 1 560px; min-width: 0; display: grid; gap: 12px">
 
 <div class="elevDark elevLift" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 8px">
 <span style="font-family: Inter, sans-serif; font-size: 13px; font-weight: 700; color: #BC975E">01</span>
@@ -987,49 +1023,15 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 </div>
 </div>
 
-</section>
-
-<!-- ===== 진행 프로세스 ===== -->
-<section id="about" style="max-width: 1280px; margin: 0 auto; padding: 96px 32px">
-<div style="text-align: center; margin-bottom: 44px">
-<div style="font-family: Inter, sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 2.4px; color: #1F3644; margin-bottom: 12px">HOW WE WORK</div>
-<h2 style="margin: 0 0 12px; font-size: 36px; font-weight: 900; letter-spacing: -1.2px">상담부터 입주까지, <span style="background: linear-gradient(transparent 62%, #E8D7B6 62%)">부동산다움의 방식</span></h2>
-<p style="margin: 0; color: #5B6670; font-size: 16px">매물 소개에서 끝나지 않고, 계약서에 남는 조건까지 함께 챙깁니다.</p>
+<div id="about" class="procBand" style="max-width: 1280px; margin: 0 auto; padding: 0 32px">
+<div class="procIn">
+<div class="procHead"><span class="procEb">HOW WE WORK</span><h2>상담부터 입주까지, <em>부동산다움의 방식</em></h2><p>매물 소개에서 끝나지 않고, 계약서에 남는 조건까지 함께 챙깁니다.</p></div>
+<ol class="procLine"><li><i>01</i><b>조건 상담</b><span>업종·면적·예산·입주 시기를 듣고 우선순위를 정리합니다.</span></li><li><i>02</i><b>맞춤 매물 브리핑</b><span>후보 매물과 주변 임대 시세를 비교한 자료를 드립니다.</span></li><li><i>03</i><b>현장 투어</b><span>동선을 짜 한 번에 둘러보고 체크리스트를 확인합니다.</span></li><li><i>04</i><b>조건 협상 · LOI</b><span>렌트프리·인테리어 기간을 입주의향서로 정리합니다.</span></li><li><i>05</i><b>계약 · 특약 검토</b><span>권리관계와 원상복구·승계 특약을 꼼꼼히 반영합니다.</span></li></ol>
 </div>
-<div class="elev" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0; border: 1px solid #E6E0D4; border-radius: 16px; overflow: hidden">
-
-<div style="padding: 28px 24px; border-right: 1px solid #E6E0D4; display: flex; flex-direction: column; gap: 10px; background: #FFFFFF">
-<span style="font-family: Inter, sans-serif; font-size: 32px; font-weight: 700; color: #1F3644">01</span>
-<span style="font-size: 18px; font-weight: 700">조건 상담</span>
-<span style="font-size: 14px; line-height: 1.6; color: #5B6670">업종, 면적, 예산, 입주 시기를 듣고 우선순위를 정리합니다.</span>
-</div>
-
-<div style="padding: 28px 24px; border-right: 1px solid #E6E0D4; display: flex; flex-direction: column; gap: 10px; background: #FFFFFF">
-<span style="font-family: Inter, sans-serif; font-size: 32px; font-weight: 700; color: #1F3644">02</span>
-<span style="font-size: 18px; font-weight: 700">맞춤 매물 브리핑</span>
-<span style="font-size: 14px; line-height: 1.6; color: #5B6670">후보 매물과 주변 임대 시세를 비교한 브리핑 자료를 드립니다.</span>
-</div>
-
-<div style="padding: 28px 24px; border-right: 1px solid #E6E0D4; display: flex; flex-direction: column; gap: 10px; background: #FFFFFF">
-<span style="font-family: Inter, sans-serif; font-size: 32px; font-weight: 700; color: #1F3644">03</span>
-<span style="font-size: 18px; font-weight: 700">현장 투어</span>
-<span style="font-size: 14px; line-height: 1.6; color: #5B6670">동선을 짜 한 번에 둘러보고 현장에서 체크리스트를 확인합니다.</span>
-</div>
-
-<div style="padding: 28px 24px; border-right: 1px solid #E6E0D4; display: flex; flex-direction: column; gap: 10px; background: #FFFFFF">
-<span style="font-family: Inter, sans-serif; font-size: 32px; font-weight: 700; color: #1F3644">04</span>
-<span style="font-size: 18px; font-weight: 700">조건 협상 · LOI</span>
-<span style="font-size: 14px; line-height: 1.6; color: #5B6670">렌트프리, 인테리어 기간 등 조건을 입주의향서로 정리해 협상합니다.</span>
-</div>
-
-<div style="padding: 28px 24px; border-right: 1px solid #E6E0D4; display: flex; flex-direction: column; gap: 10px; background: #FFFFFF">
-<span style="font-family: Inter, sans-serif; font-size: 32px; font-weight: 700; color: #1F3644">05</span>
-<span style="font-size: 18px; font-weight: 700">계약 · 특약 검토</span>
-<span style="font-size: 14px; line-height: 1.6; color: #5B6670">권리관계 확인과 원상복구·승계 등 필요한 특약을 꼼꼼히 반영합니다.</span>
-</div>
-
 </div>
 </section>
+
+
 
 
 
