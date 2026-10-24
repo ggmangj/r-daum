@@ -731,7 +731,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 @media print{.dtFloatBack{display:none!important}}
 </style>
 <style id="panoCss">
-.dtPanoHost{position:absolute;inset:0;z-index:1;opacity:0;transition:opacity .4s;overflow:hidden}
+.dtPanoHost{position:absolute;inset:0;z-index:1;opacity:0;overflow:hidden}
 .dtNoPhoto.hasPano .dtPanoHost{opacity:1}
 .dtNoPhoto.hasPano>svg,.dtNoPhoto.hasPano>b,.dtNoPhoto.hasPano>span:not(.dtPanoTag){visibility:hidden}
 .dtPanoTag{position:absolute;left:14px;bottom:14px;z-index:2;padding:7px 12px;border-radius:999px;background:rgba(20,25,31,.72);color:#FFFFFF!important;font-size:12.5px!important;font-weight:600;line-height:1.2!important;pointer-events:none;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
@@ -1979,13 +1979,14 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
           tag.innerHTML = '거리뷰 · 현장 사진은 상담 시 보내드립니다';
           box.appendChild(tag);
         };
-        var fail = function () { if (done) return; done = true; try { host.remove(); } catch (e) { } };
+        // 거리뷰가 늦게 오거나 한 번 실패해도 바로 포기하지 않음 (한 번 더 시도)
+        var fail = function () { if (done) return; if (!go.retried && $('dtNoPhoto') === box) { go.retried = true; try { host.remove(); } catch (e) { } setTimeout(go, 1500); } };
         naver.maps.Event.addListener(pano, 'pano_status', function (st) { if (st === 'OK') show(); else fail(); });
         naver.maps.Event.addListener(pano, 'init', function () { show(); });
         naver.maps.Event.addListener(pano, 'pano_changed', function () { if (done) face(); });
         var onRs = function () { if (!document.body.contains(box)) { window.removeEventListener('resize', onRs); return; } try { pano.setSize(sz()); } catch (e) { } };
         window.addEventListener('resize', onRs);
-        setTimeout(function () { if (!done) { try { if (pano.getPosition()) { show(); return; } } catch (e) { } fail(); } }, 6000);
+        [4000, 9000, 15000].forEach(function (ms) { setTimeout(function () { if (!done) { try { if (pano.getPosition()) show(); } catch (e) { } } }, ms); });
       } catch (err) { }
     })();
   }
