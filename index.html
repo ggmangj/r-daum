@@ -582,7 +582,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 .heroMap .mapSel{width:100%!important;min-width:0}
 .heroMap #mapSearchBar{margin-bottom:12px}
 .heroMap>p{margin-top:10px!important;font-size:12px!important}
-.heroMap .elev>div:first-child{flex:0 0 270px!important}
+.heroMap .elev>div:first-child{flex:0 0 292px!important}
 .heroMap .elev>div:first-child>div:first-child{white-space:nowrap;gap:8px;font-size:13px!important;padding:14px 16px!important}
 .heroMap #mapUpdated{font-size:11px!important}
 /* 히어로 상담 카드 */
@@ -610,7 +610,6 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 .heroCard #quickForm label{font-size:11.5px!important;gap:4px!important}
 .heroCard .qfAgree{font-size:11.5px!important;gap:6px!important;letter-spacing:-.3px}
 .heroCard .qfSubmit{height:44px!important;font-size:15px!important}
-.heroCard #quickForm>div[style*="border-top"]{display:none!important}
 @media (max-width:1100px){
  .heroSplit{grid-template-columns:minmax(0,1fr)}
  .heroH1{font-size:clamp(26px,4vw,40px)}
@@ -785,6 +784,23 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 }
 @media (max-width:760px){body.scrolled .siteHead{box-shadow:0 2px 10px rgba(31,54,68,.08)}}
 </style>
+<style id="cardTel">
+.dtCardMgmt{font-size:.82em;font-weight:700;color:#46515B}
+/* 히어로 상담 신청서: 아래 '바로 전화' 버튼 */
+.heroCard #quickForm>div[style*="border-top"]{display:flex!important;padding:0!important;border:0!important;margin-top:0!important}
+.heroCard #quickForm>div[style*="border-top"]>span:first-child{display:none}
+.heroCard #quickForm>div[style*="border-top"]>span:last-child{flex:1;display:flex}
+.heroCard #quickForm>div[style*="border-top"] a{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;height:40px;border:1px solid #1F3644;border-radius:10px;color:#1F3644!important;font-size:13.5px;font-weight:700;background:#FFFFFF;transition:background-color .18s}
+.heroCard #quickForm>div[style*="border-top"] a:hover{background:#F6F2EA}
+.heroCard #quickForm>div[style*="border-top"] a:before{content:'';width:15px;height:15px;background:currentColor;-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2'%3E%3Cpath d='M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2'%3E%3Cpath d='M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z'/%3E%3C/svg%3E") center/contain no-repeat}
+.heroCard #quickForm textarea{min-height:0;height:48px}
+</style>
+<style id="miPrice3">
+.mapItem .miPrice{flex-wrap:nowrap!important;white-space:nowrap;gap:3px!important;font-size:12.5px!important;overflow:hidden}
+.mapItem .miPrice b{font-size:14px!important;letter-spacing:-.4px}
+.mapItem .miPrice i{margin:0 2px!important}
+.mapItem .miPrice .miMg{color:#46515B;font-weight:700}
+</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; background: #FFFFFF; width: 100%; letter-spacing: -0.2px">
@@ -860,7 +876,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 <button type="submit" class="qfSubmit" style="height: 48px; border: 0; border-radius: 10px; background: #1F3644; color: #FFFFFF; font-size: 16px; font-weight: 700; cursor: pointer">상담 신청하기</button>
 <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid #EFEAE0; font-size: 13px; color: #46515B; margin-top: auto">
 <span>바로 통화하기</span>
-<span style="display: flex; gap: 12px"><a href="tel:0255551165" style="font-weight: 700; color: #1F3644">02-555-1165</a></span>
+<span style="display: flex; gap: 12px"><a href="tel:0255551165" style="font-weight: 700; color: #1F3644">바로 전화 02-555-1165</a></span>
 </div>
 <div class="qfDone" role="status" aria-live="polite" hidden>
 <span class="qfCheck" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
@@ -1506,7 +1522,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
       return '<button type="button" class="mapItem' + (it.id === focusId ? ' on' : '') + '" data-id="' + esc(it.id) + '">' +
         '<span class="miMeta">' + esc(it.catLabel) + ' · ' + esc(it.dong) + '</span>' +
         '<span class="miTitle">' + listTitle(it.title) + '</span>' +
-        '<span class="miPrice">보 <b class="miDep">' + esc(it.depText) + '</b><i>/</i>월 <b class="miRent">' + esc(it.rentText) + '</b></span>' +
+        '<span class="miPrice">보 <b class="miDep">' + esc(it.depText) + '</b><i>/</i>월 <b class="miRent">' + esc(it.rentText) + '</b><i>/</i>관 <b class="miMg">' + esc(it.mgmt || '문의') + '</b></span>' +
         '</button>';
     }).join('') : SEARCH.sale ? '<div style="padding: 40px 20px; text-align: center; color: #6B757D; font-size: 14px; line-height: 1.7"><b style="color: #1F3644">매매(빌딩) 매물은 비공개로 안내합니다.</b><br>원하시는 조건을 남겨주시면 맞는 매물을 브리핑해 드립니다.<br><a href="#consult" style="font-weight: 700">매매 상담 신청하기 →</a></div>' : '<div style="padding: 40px 20px; text-align: center; color: #6B757D; font-size: 14px">이 범위에 매물이 없습니다.<br>지도를 움직이거나 조건을 바꿔 보세요.<br><a href="#consult" style="font-weight: 700">비공개 매물 문의하기 →</a></div>';
   }
@@ -1775,7 +1791,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
     var callSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>';
     var side = '<aside class="dtSide"><div class="dtCard">' +
       '<div class="dtCardTop"><small>No.' + esc(it.id) + '</small><small>' + esc(areaText(it.area)) + ' · ' + esc(it.floor || '') + '</small></div>' +
-      '<div class="dtCardPrice">보증금 ' + esc(it.depText || '문의') + '<br>월세 <em>' + esc(it.rentText || '문의') + '</em></div>' +
+      '<div class="dtCardPrice">보증금 ' + esc(it.depText || '문의') + '<br>월세 <em>' + esc(it.rentText || '문의') + '</em><br><span class="dtCardMgmt">관리비 ' + esc(it.mgmt || '문의') + '</span></div>' +
       '<a href="tel:0255551165" class="dtCall">' + callSvg + '전화 상담 02-555-1165</a>' +
       (/^https:\/\/([a-z0-9-]+\.)*(naver\.me|land\.naver\.com)\//i.test(nz(it.naverUrl)) ? '<a href="' + esc(it.naverUrl) + '" target="_blank" rel="noopener" class="dtNaver"><span class="dtN">N</span>네이버 부동산에서 보기</a>' : '') +
       '</div>' +
