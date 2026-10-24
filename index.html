@@ -854,6 +854,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 @media (max-width:380px){.headIntake{padding:0 10px;font-size:13px}}
 @media print{#intakeDlg{display:none!important}}
 </style>
+<style id="flNote">.dtFloorNote{margin:6px 0 0;padding:0 10px 8px;font-size:11.5px;line-height:1.5;color:#8A939A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}@media (max-width:760px){.dtFloorNote{padding-left:8px}}</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; background: #FFFFFF; width: 100%; letter-spacing: -0.2px">
@@ -1800,16 +1801,16 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
       infoRow('사용승인일', it.approval) +
       infoRow('주차대수', it.parking) +
       infoRow('관리비', it.mgmt) +
+      infoRow('엘리베이터', elev) +
       infoRow('방향', dirTxt) +
       infoRow('입주가능일', it.moveIn, false, '협의 (문의)') +
       infoRow('욕실(화장실)', it.toilet) +
-      infoRow('엘리베이터', elev) +
       infoRow('권리금', it.premium) +
       '</dl>';
     var feat = (nz(it.point) ? '<p class="dtPoint"><b>POINT</b>&nbsp; ' + esc(it.point) + '</p>' : '') +
       (opts.length ? '<div class="dtChips">' + opts.map(function (o) { return '<span>' + esc(o) + '</span>'; }).join('') + '</div>' : '');
     var hasFl = !!(it.reg && it.reg.fl && it.reg.fl.length);
-    var floorBox = hasFl ? '<div class="dtFloorBox"><h3>층별 현황</h3><div id="dtFloor" class="dtFloor"></div></div>' : '';
+    var floorBox = hasFl ? '<div class="dtFloorBox"><h3>층별 현황</h3><div id="dtFloor" class="dtFloor"></div><p class="dtFloorNote">※ 건축물대장상 용도로, 실제 업종과 다를 수 있습니다.</p></div>' : '';
     // ── 건축물대장 (표제부·층별현황·지역지구) ──
     var reg = it.reg, regHtml = '';
     if (reg) {
