@@ -709,6 +709,64 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
  .procLine b{margin:0 0 2px}
 }
 </style>
+<style id="softHead">
+.hlWord{background:linear-gradient(transparent 62%,#E8D7B6 62%)}
+/* 제목 글씨를 살짝 부드러운 먹색으로 */
+h1,h2,h3,h4,.heroH1,.heroMapTitle,#sectorTitle,.procHead h2,.dtTitle,.dtSec h2{color:#2A333C!important}
+.guideList>div>span:nth-child(2),.procLine b{color:#2A333C!important}
+#clinic .procHead h2{color:#2A333C!important}
+.siteFoot h2,.siteFoot h3{color:inherit!important}
+</style>
+<style id="featFloat">
+.featTools{display:flex;align-items:center;gap:12px;min-width:0;max-width:100%}
+.featAll{flex:none;display:inline-flex;align-items:center;gap:6px;height:52px;padding:0 22px;border:1px solid #1F3644;border-radius:999px;background:#FFFFFF;color:#1F3644!important;font-weight:700;font-size:15px;transition:background-color .18s,color .18s}
+.featAll:hover{background:#1F3644;color:#FFFFFF!important}
+@media (max-width:760px){.featTools{flex-direction:column;align-items:stretch;width:100%}.featAll{justify-content:center;height:46px}}
+.dtFloatBack{position:fixed;left:24px;bottom:24px;z-index:70;display:none;align-items:center;gap:6px;height:46px;padding:0 20px 0 14px;border:0;border-radius:999px;background:#1F3644;color:#FFFFFF;font:700 14.5px 'Noto Sans KR',sans-serif;box-shadow:0 6px 18px rgba(31,54,68,.28);cursor:pointer;opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s,background-color .18s}
+.dtFloatBack svg{color:#C9A46A}
+.dtFloatBack:hover{background:#2A4757}
+body.detailMode .dtFloatBack{display:inline-flex}
+body.detailMode .dtFloatBack.show{opacity:1;transform:none}
+@media (max-width:760px){.dtFloatBack{left:12px;bottom:calc(80px + env(safe-area-inset-bottom));height:42px;font-size:14px}}
+@media (prefers-reduced-motion:reduce){.dtFloatBack{transition:none}}
+@media print{.dtFloatBack{display:none!important}}
+</style>
+<style id="panoCss">
+.dtPanoHost{position:absolute;inset:0;z-index:1;opacity:0;transition:opacity .4s}
+.dtNoPhoto.hasPano .dtPanoHost{opacity:1}
+.dtNoPhoto.hasPano>svg,.dtNoPhoto.hasPano>b,.dtNoPhoto.hasPano>span:not(.dtPanoTag){visibility:hidden}
+.dtPanoTag{position:absolute;left:14px;bottom:14px;z-index:2;padding:7px 12px;border-radius:999px;background:rgba(20,25,31,.72);color:#FFFFFF!important;font-size:12.5px!important;font-weight:600;line-height:1.2!important;pointer-events:none;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+@media (max-width:760px){.dtPanoTag{left:10px;bottom:10px;font-size:11.5px!important}}
+</style>
+<style id="pdfCss">
+.dtPdf{background:#1F3644!important;border-color:#1F3644!important;color:#FFFFFF!important}
+.dtPdf:hover{background:#2A4757!important}
+.dtPdf svg{color:#C9A46A}
+.dtPrintHead{display:none}
+@media print{
+ @page{size:A4;margin:12mm 11mm}
+ html,body{background:#FFFFFF!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ .topBar,.siteHead,.siteFoot,.mBar,.dtFloatBack,.dtTools,.dtCrumb,.dtSide .dtForm,.soonToast,#privacyDlg{display:none!important}
+ .dtWrap{padding:0!important;max-width:none}
+ .dtPrintHead{display:flex!important;flex-direction:column;gap:2px;padding:0 0 10px;margin:0 0 14px;border-bottom:2px solid #1F3644;font-size:10.5px;color:#46515B}
+ .dtPrintHead b{font-family:'Cormorant Garamond',Georgia,serif;font-size:18px;letter-spacing:.18em;color:#1F3644}
+ html{zoom:.86}
+ .dtGrid{grid-template-columns:1fr!important;gap:12px!important}
+ .dtSide,.dtNoPhoto,.dtThumbs,.dtSec:has(.dtMap){display:none!important}
+ .dtMainImg{aspect-ratio:auto!important}.dtMainImg img{max-height:80mm;width:100%;object-fit:cover}
+ .dtCount{display:none!important}
+ .dtHead{margin-bottom:12px!important}
+ .dtTitle{font-size:22px!important}
+ .dtPrice{margin-top:10px!important}
+ .dtSec{margin-top:18px!important}
+ .dtInfoGrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:16px!important;align-items:start}
+ .dtFloorBox{margin-top:0!important}
+ #dtFloor svg{max-height:120mm;width:100%;height:auto}
+ .dtInfo>div,.flTxt li,.dtFloorBox,tr{break-inside:avoid}
+ .dtSec h2{break-after:avoid}
+}
+</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; background: #FFFFFF; width: 100%; letter-spacing: -0.2px">
@@ -844,6 +902,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 <div style="font-family: Inter, sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 2.4px; color: #1F3644; margin-bottom: 12px">FEATURED LISTINGS</div>
 <h2 style="margin: 0; font-size: 36px; font-weight: 900; letter-spacing: -1.2px">이달의 <span style="background: linear-gradient(transparent 62%, #E8D7B6 62%)">추천 매물</span></h2>
 </div>
+<div class="featTools">
 <div role="tablist" aria-label="매물 분류" class="scrollTabs" style="display: flex; flex-wrap: wrap; gap: 6px; background: #FFFFFF; border: 1px solid #E6E0D4; padding: 5px; border-radius: 999px">
 
 <button type="button" role="tab" data-tab="all" class="tabBtn" style="padding: 10px 18px; min-height: 40px; border: 0; border-radius: 999px; background: #1F3644; color: #FFFFFF; font-size: 14px; font-weight: 700; cursor: pointer">전체</button>
@@ -856,6 +915,8 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 
 <button type="button" role="tab" data-tab="building" class="tabBtn" style="padding: 10px 18px; min-height: 40px; border: 0; border-radius: 999px; background: transparent; color: #46515B; font-size: 14px; font-weight: 500; cursor: pointer">사옥·통임대</button>
 
+</div>
+<a href="#map" class="featAll">전체 매물 보기 <span aria-hidden="true">→</span></a>
 </div>
 </div>
 
@@ -994,10 +1055,6 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 
 </div>
 </div>
-<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-top: 28px">
-<span id="listingNote" style="font-size: 13px; color: #6B757D">※ 부동산다움 블로그 등록 매물 기준 · 가격 미표기 매물은 전화 문의</span>
-<a href="#listings" style="padding: 14px 26px; border: 1px solid #1F3644; border-radius: 999px; font-weight: 700; color: #1F3644; background: #FFFFFF">전체 매물 보기 →</a>
-</div>
 </div>
 </section><section id="clinic" style="background: #FBF8F3; color: #14191F; padding: 72px 0 64px; border-top: 1px solid #E6E0D4">
 <div class="guideTabsWrap" style="max-width: 1280px; margin: 0 auto 34px; padding: 0 32px">
@@ -1012,7 +1069,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 <div id="sectorBody" class="sectorBody guideBody" style="max-width: 1280px; margin: 0 auto; padding: 0 32px">
 <div class="guideLead" style="min-width: 0; display: flex; flex-direction: column">
 <div id="sectorEyebrow" style="font-family: Inter, sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 2.4px; color: #BC975E">MEDICAL LEASING</div>
-<h2 id="sectorTitle" style="margin: 0; font-size: 34px; font-weight: 900; line-height: 1.3; letter-spacing: -1.2px">병의원 개원,<br>입지부터 계약 특약까지</h2>
+<h2 id="sectorTitle" style="margin: 0; font-size: 34px; font-weight: 900; line-height: 1.3; letter-spacing: -1.2px"><span class="hlWord">병의원</span> 개원,<br>입지부터 계약 특약까지</h2>
 <p id="sectorDesc" style="margin: 0; font-size: 16px; line-height: 1.75; color: #C3CAD8">진료과목에 따라 필요한 건물 조건이 달라집니다. 개원 전 확인해야 할 항목을 체크리스트로 정리해 매물과 함께 브리핑해 드립니다.</p>
 </div>
 <div id="sectorGrid" class="guideList" style="min-width: 0">
@@ -1345,7 +1402,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
     };
     window.navermap_authFailure = function () { useLeaflet(); };
     if (!NAVER_KEY) { useLeaflet(); return; }
-    loadScript('https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=' + encodeURIComponent(NAVER_KEY) + '&submodules=geocoder')
+    loadScript('https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=' + encodeURIComponent(NAVER_KEY) + '&submodules=geocoder,panorama')
       .then(function () {
         if (!window.naver || !naver.maps) return useLeaflet();
         var box = document.createElement('div'); box.style.cssText = 'width:100%;height:100%'; el.innerHTML = ''; el.appendChild(box);
@@ -1507,7 +1564,6 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
     $('mapDong').innerHTML = '<option value="">전체 지역</option>' + dongs.map(function (d) { return '<option>' + esc(d) + '</option>'; }).join('');
     $('mapUpdated').textContent = live && updated ? '업데이트 ' + new Date(updated).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
     $('demoNote').textContent = live ? '' : '(현재 예시 매물 표시 중 · 매물장 연결 전)';
-    $('listingNote').textContent = live ? '※ 매물 정보는 매물장과 연동됩니다. 계약 전 현장과 서류를 반드시 확인해 주세요.' : '※ 부동산다움 블로그 등록 매물 예시 · 가격 미표기 매물은 전화 문의';
     renderFeatured();
     applyFilters(true);
     route(false);
@@ -1632,7 +1688,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
     var gal = photos.length
       ? '<div class="dtGal"><button type="button" class="dtMainImg" aria-label="사진 크게 보기"><img src="' + photoUrl(photos[0], 1600) + '" alt="' + esc(it.title) + ' 대표 사진" referrerpolicy="no-referrer"><span class="dtCount">1 / ' + photos.length + '</span></button>' +
         (photos.length > 1 ? '<div class="dtThumbs" role="list">' + photos.map(function (p, i) { return '<button type="button" role="listitem" data-i="' + i + '" class="' + (i ? '' : 'on') + '" aria-label="' + (i + 1) + '번째 사진"><img src="' + photoUrl(p, 400) + '" alt="" loading="lazy" referrerpolicy="no-referrer"></button>'; }).join('') + '</div>' : '') + '</div>'
-      : '<div class="dtNoPhoto"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#BC975E" stroke-width="1.5" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><path d="M21 16l-5-5-8 8"></path></svg><b>현장 사진 준비 중</b><span>실제 내부 사진과 도면은 상담 시 바로 보내드립니다.<br>02-555-1165</span></div>';
+      : '<div class="dtNoPhoto" id="dtNoPhoto"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#BC975E" stroke-width="1.5" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><path d="M21 16l-5-5-8 8"></path></svg><b>현장 사진 준비 중</b><span>실제 내부 사진과 도면은 상담 시 바로 보내드립니다.<br>02-555-1165</span></div>';
     var price = '<div class="dtPrice"><div><small>보증금</small><b>' + esc(it.depText || '문의') + '</b></div><div class="rent"><small>월세</small><b>' + esc(it.rentText || '문의') + '</b></div>' +
       '<div><small>관리비</small><b>' + esc(it.mgmt || '문의') + '</b></div><div class="prem"><small>권리금</small><b>' + esc(it.premium || '문의') + '</b></div></div>';
     var desc = nz(it.desc) ? esc(it.desc) :
@@ -1715,13 +1771,13 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
       '<label class="dtAgree"><input type="checkbox" name="agree"> 개인정보 수집·이용 동의 (필수)<a href="#privacy" class="privacyLink">약관 보기</a></label>' +
       '<p class="dtMsg" role="alert"></p><button type="submit" class="dtSubmit">문의 남기기</button></form></div>' +
       '<p class="dtSmall">※ 매물 정보는 등록 시점 기준이며 실제와 다를 수 있습니다. 계약 전 현장과 공부서류를 반드시 확인해 주세요.</p></aside>';
-    return '<div class="dtWrap">' +
+    return '<div class="dtWrap"><div class="dtPrintHead" aria-hidden="true"><b>DAUM REAL ESTATE</b><span>부동산다움공인중개사사무소 · 개업공인중개사 안혁준 · 등록번호 제11680-2021-00537호</span><span>서울특별시 강남구 신사동 578-1 일상빌딩 1층 · 02-555-1165 · r-daum.com</span></div>' +
       '<nav class="dtCrumb" aria-label="현재 위치"><button type="button" class="dtBack"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>목록으로</button>' +
       '<span><a href="#top">홈</a> <i>›</i> ' + (DT.from === 'listings' ? '<a href="#listings">추천 매물</a>' : '<a href="#map">매물 조회</a>') + ' <i>›</i> No.' + esc(it.id) + '</span></nav>' +
       '<div class="dtHead"><div><div class="dtBadges">' + badges + '</div><h1 class="dtTitle">' + esc(it.title) + '</h1>' +
       '<div class="dtSub"><span>' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + '</span><i>|</i><span>' + esc(areaText(it.area)) + '</span><i>|</i><span>' + esc(it.floor || '-') + '</span>' + (it.date ? '<i>|</i><span>등록 ' + esc(it.date) + '</span>' : '') + '</div></div>' +
       '<div class="dtTools"><button type="button" class="dtTool" data-act="share"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"></path></svg><span>링크 복사</span></button>' +
-      '<button type="button" class="dtTool" data-act="print"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z"></path></svg><span>인쇄</span></button></div></div>' +
+      '<button type="button" class="dtTool dtPdf" data-act="pdf"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5M12 11v6M9 14l3 3 3-3"></path></svg><span>PDF 저장</span></button></div></div>' +
       '<div class="dtGrid"><div class="dtMain">' + gal + price +
       '<section class="dtSec"><h2>매물 정보</h2><div class="dtInfoGrid' + (hasFl ? '' : ' solo') + '">' + info + floorBox + '</div>' +
       '<p class="dtNote">※ 「중개대상물의 표시·광고 명시사항 세부기준」에 따른 표시입니다. 소재지는 동까지만 표시하며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
@@ -1762,6 +1818,42 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
       else el.innerHTML = '<div style="padding:40px;text-align:center;color:#5B6670">지도를 불러오지 못했습니다.</div>';
     })();
   }
+  // 현장 사진이 없으면 네이버 거리뷰(파노라마)를 대신 보여줌 · 거리뷰가 없는 곳은 '사진 준비 중' 유지
+  function detailPano(it) {
+    var box = $('dtNoPhoto'); if (!box || !isFinite(it.lat) || !it.lat) return;
+    var tries = 0, done = false;
+    (function go() {
+      if (!$('dtNoPhoto') || $('dtNoPhoto') !== box) return;
+      var ok = window.naver && naver.maps && naver.maps.Panorama && M && M.kind === 'naver';
+      if (!ok) { if (++tries < 40 && !(M && M.kind === 'leaflet')) setTimeout(go, 200); return; }
+      try {
+        var target = new naver.maps.LatLng(it.lat, it.lng);
+        var host = document.createElement('div'); host.className = 'dtPanoHost';
+        box.appendChild(host);
+        var pano = new naver.maps.Panorama(host, { position: target, pov: { pan: 0, tilt: 5, fov: 100 }, aroundControl: false, flightSpot: false, zoomControl: true, zoomControlOptions: { position: naver.maps.Position && naver.maps.Position.TOP_RIGHT }, logoControl: true });
+        var face = function () {
+          try {
+            var p = pano.getPosition(); if (!p) return;
+            var la1 = p.lat() * Math.PI / 180, la2 = it.lat * Math.PI / 180, dl = (it.lng - p.lng()) * Math.PI / 180;
+            var brg = Math.atan2(Math.sin(dl) * Math.cos(la2), Math.cos(la1) * Math.sin(la2) - Math.sin(la1) * Math.cos(la2) * Math.cos(dl)) * 180 / Math.PI;
+            pano.setPov({ pan: (brg + 360) % 360, tilt: 5, fov: 100 });
+          } catch (e) { }
+        };
+        var show = function () {
+          if (done) return; done = true; face();
+          box.classList.add('hasPano');
+          var tag = document.createElement('span'); tag.className = 'dtPanoTag';
+          tag.innerHTML = '거리뷰 · 현장 사진은 상담 시 보내드립니다';
+          box.appendChild(tag);
+        };
+        var fail = function () { if (done) return; done = true; try { host.remove(); } catch (e) { } };
+        naver.maps.Event.addListener(pano, 'pano_status', function (st) { if (st === 'OK') show(); else fail(); });
+        naver.maps.Event.addListener(pano, 'init', function () { show(); });
+        naver.maps.Event.addListener(pano, 'pano_changed', function () { if (done) face(); });
+        setTimeout(function () { if (!done) { try { if (pano.getPosition()) { show(); return; } } catch (e) { } fail(); } }, 6000);
+      } catch (err) { }
+    })();
+  }
   function lightbox(i) {
     var it = DT.it, ph = (it && it.photos) || []; if (!ph.length) return;
     var d = $('dtLight');
@@ -1796,7 +1888,15 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
     var th = el.querySelector('.dtThumbs'); if (th) th.addEventListener('click', function (e) { var b = e.target.closest('button[data-i]'); if (b) setPhoto(+b.getAttribute('data-i')); });
     el.querySelectorAll('.dtTool').forEach(function (b) {
       b.addEventListener('click', function () {
-        if (b.getAttribute('data-act') === 'print') { window.print(); return; }
+        if (b.getAttribute('data-act') === 'pdf') {
+          var t0 = document.title;
+          document.title = '부동산다움_No.' + it.id + '_' + ((it.dong || '') + ' ' + (it.floor || '')).trim().replace(/\s+/g, '_');
+          var back = function () { document.title = t0; window.removeEventListener('afterprint', back); };
+          window.addEventListener('afterprint', back);
+          if (typeof window.bdToast === 'function') window.bdToast('인쇄 창의 <b>대상(프린터)</b>에서 <b>‘PDF로 저장’</b>을 선택해 주세요.');
+          setTimeout(function () { window.print(); setTimeout(back, 1500); }, 350);
+          return;
+        }
         var url = location.href, label = b.querySelector('span');
         var ok = function () { label.textContent = '복사 완료'; setTimeout(function () { label.textContent = '링크 복사'; }, 1800); };
         if (navigator.share && matchMedia('(pointer: coarse)').matches) { navigator.share({ title: it.title + ' | 부동산다움', url: url }).catch(function () {}); return; }
@@ -1841,7 +1941,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
     DT.el.innerHTML = detailHtml(it);
     document.title = it.title + ' | 부동산다움';
     window.scrollTo(0, 0);
-    bindDetail(it); detailMap(it); renderFloors();
+    bindDetail(it); detailMap(it); renderFloors(); if (!(it.photos && it.photos.length)) detailPano(it);
   }
   /* ===== 층별 현황 그림 (건축물대장 층별개요 → 층별 면적으로 그린 건물 단면) ===== */
   var FCAT = {   // 홈페이지 네이비·골드·아이보리 톤에 맞춘 차분한 색
@@ -2287,7 +2387,8 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
   function paint(k) {
     var d = SECTORS[k];
     document.getElementById('sectorEyebrow').textContent = d.eb;
-    document.getElementById('sectorTitle').innerHTML = d.title;
+    var kw = (tabs.querySelector('[data-sector="' + k + '"]') || {}).textContent || '';
+    document.getElementById('sectorTitle').innerHTML = kw && d.title.indexOf(kw) >= 0 ? d.title.replace(kw, '<span class="hlWord">' + kw + '</span>') : d.title;
     document.getElementById('sectorDesc').textContent = d.desc;
     var cta = document.getElementById('sectorCta'); if (cta) { cta.textContent = d.cta; cta.setAttribute('data-sector', k); }
     document.getElementById('sectorGrid').innerHTML = d.items.map(function (it, i) {
@@ -2336,6 +2437,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
     requestAnimationFrame(function(){ el.classList.add('on'); });
     clearTimeout(t); t=setTimeout(function(){ el.classList.remove('on'); },2800);
   }
+  window.bdToast = toast;
   // PC(마우스 사용)에서는 전화 링크를 누르면 앱 선택창 대신 번호를 복사하고 안내
   var isPC = window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches;
   document.addEventListener('click',function(e){
@@ -2369,6 +2471,21 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
   }
   window.addEventListener('scroll', hideTip, { passive: true });
   window.addEventListener('resize', hideTip);
+})();
+</script>
+<button type="button" class="dtFloatBack" aria-label="목록으로 돌아가기" tabindex="-1"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>목록으로</button>
+<script>
+(function(){
+  // 상세 페이지: 스크롤을 내리면 '목록으로' 버튼이 화면 아래에 떠 있음
+  var fb=document.querySelector('.dtFloatBack'); if(!fb) return;
+  function upd(){
+    var on=document.body.classList.contains('detailMode'), b=document.querySelector('#itemDetail .dtBack');
+    var show=on && b && b.getBoundingClientRect().bottom<0;
+    fb.classList.toggle('show',!!show); fb.tabIndex=show?0:-1;
+  }
+  fb.addEventListener('click',function(){ var b=document.querySelector('#itemDetail .dtBack'); if(b) b.click(); fb.classList.remove('show'); });
+  window.addEventListener('scroll',upd,{passive:true}); window.addEventListener('hashchange',function(){setTimeout(upd,60)});
+  new MutationObserver(upd).observe(document.body,{attributes:true,attributeFilter:['class']});
 })();
 </script>
 </body>
