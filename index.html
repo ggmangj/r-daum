@@ -801,6 +801,58 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 .mapItem .miPrice i{margin:0 2px!important}
 .mapItem .miPrice .miMg{color:#46515B;font-weight:700}
 </style>
+<style id="intakeCss">
+.headActs{display:flex;align-items:center;gap:10px}
+.headIntake{display:inline-flex;align-items:center;gap:7px;height:48px;padding:0 20px;border:0;border-radius:999px;background:#BC975E;color:#14191F;font:800 15px 'Noto Sans KR',sans-serif;letter-spacing:-.3px;cursor:pointer;box-shadow:0 4px 12px rgba(188,151,94,.35);transition:background-color .18s,transform .18s}
+.headIntake:hover{background:#CBA86F;transform:translateY(-1px)}
+.headIntake:focus-visible{outline:2px solid #1F3644;outline-offset:2px}
+#intakeDlg{width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 32px);padding:0;border:0;border-radius:18px;background:#FFFFFF;color:#2A333C;box-shadow:0 24px 60px rgba(31,54,68,.3);font-family:'Noto Sans KR',sans-serif;overflow:auto}
+#intakeDlg::backdrop{background:rgba(20,25,31,.5)}
+.ikHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:22px 24px 14px;border-bottom:1px solid #EFEAE0;position:sticky;top:0;background:#FFFFFF;z-index:1}
+.ikEb{font-family:Inter,sans-serif;font-size:11px;font-weight:600;letter-spacing:2.2px;color:#BC975E}
+.ikHead h2{margin:4px 0 2px;font-size:22px!important;font-weight:900;letter-spacing:-.6px}
+.ikHead p{margin:0;font-size:13px;color:#5B6670}
+.ikClose{flex:none;width:36px;height:36px;border-radius:50%;border:1px solid #E6E0D4;background:#FFFFFF;color:#46515B;font-size:15px;cursor:pointer}
+.ikBody{padding:16px 24px 22px;display:flex;flex-direction:column;gap:12px}
+.ikRow2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ikList{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;counter-reset:ik}
+.ikList li{counter-increment:ik}
+.ikList .ikF>span:before{content:counter(ik) '. ';color:#A27D48;font-family:Inter,sans-serif}
+.ikF{display:flex;flex-direction:column;gap:5px;font-size:12.5px;font-weight:700;color:#46515B}
+.ikF b,.ikAgree b{color:#C4553A}
+.ikF input,.ikF textarea{height:42px;border:1px solid #D9D2C4;border-radius:8px;padding:0 12px;font:400 14px 'Noto Sans KR',sans-serif;color:#14191F;background:#FFFFFF;width:100%;box-sizing:border-box}
+.ikF textarea{height:auto;padding:10px 12px;resize:none}
+.ikF input:focus,.ikF textarea:focus{outline:2px solid #BC975E;outline-offset:1px;border-color:#BC975E}
+.ikF input[aria-invalid="true"]{border-color:#C4553A;background:#FFF7F5}
+.ikAgree{display:flex;align-items:center;gap:8px;font-size:13px;color:#46515B}.ikAgree input{width:18px;height:18px}.ikAgree a{margin-left:auto;text-decoration:underline;color:#46515B}
+.ikAgree.bad{color:#C4553A}
+.ikMsg{margin:0;min-height:0;font-size:13px;color:#C4553A}
+.ikMsg:empty{display:none}
+.ikSubmit{height:50px;border:0;border-radius:10px;background:#1F3644;color:#FFFFFF;font:800 16px 'Noto Sans KR',sans-serif;cursor:pointer}
+.ikSubmit:hover{background:#2A4757}.ikSubmit:disabled{opacity:.6;cursor:wait}
+.ikDone{padding:44px 24px 34px;display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+.ikDone[hidden]{display:none}
+.ikCheck{width:58px;height:58px;border-radius:50%;background:#1F3644;display:flex;align-items:center;justify-content:center;margin-bottom:6px}
+.ikDone b{font-size:22px;font-weight:900;color:#1F3644;letter-spacing:-.5px}
+.ikDone span{font-size:15px;color:#46515B}
+.ikOk{margin-top:14px;min-width:140px;height:46px;border:0;border-radius:999px;background:#BC975E;color:#14191F;font:800 16px 'Noto Sans KR',sans-serif;cursor:pointer}
+#intakeDlg.isDone .ikHead,#intakeDlg.isDone .ikBody{display:none}
+@media (max-width:1100px){.headIntake{height:42px;padding:0 14px;font-size:14px}}
+@media (max-width:760px){
+ .headActs{order:2;gap:6px}
+ .headIntake{height:42px;padding:0 12px;font-size:13.5px;box-shadow:none}
+ .headIntake svg{display:none}
+ .headActs .headTel{font-size:0!important;width:42px;height:42px;min-height:42px!important;padding:0!important;justify-content:center;gap:0!important}
+ .headActs .headTel svg{width:18px;height:18px}
+ .headRow{flex-wrap:wrap!important}
+ .headRow>a:first-child{flex:1 1 auto;min-width:0}
+ .ikRow2{grid-template-columns:1fr}
+ .ikF input,.ikF textarea{font-size:16px}
+ .ikHead{padding:18px 18px 12px}.ikBody{padding:14px 18px 18px}
+}
+@media (max-width:380px){.headIntake{padding:0 10px;font-size:13px}}
+@media print{#intakeDlg{display:none!important}}
+</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; background: #FFFFFF; width: 100%; letter-spacing: -0.2px">
@@ -811,7 +863,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 <span class="topAddr">압구정역 5번출구 · 신사동 578-1 일상빌딩 1층 · 병의원 / 상가 / 사무실 전문 중개</span>
 <div style="display: flex; gap: 20px; flex-wrap: wrap">
 <a href="https://fin.land.naver.com/realtors/uqxOYJHV7UU" target="_blank" rel="noopener" style="color: #D3D8E2">네이버 부동산</a>
-<a href="#consult" style="color: #D3D8E2">매물 의뢰하기</a>
+<a href="#intake" data-intake style="color: #D3D8E2">매물 접수하기</a>
 </div>
 </div>
 </div>
@@ -825,10 +877,11 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 <a href="#listings" style="color: #14191F">추천 매물</a>
 <a href="#clinic" style="color: #14191F">실무 가이드</a>
 </nav>
+<div class="headActs"><button type="button" class="headIntake" data-intake aria-haspopup="dialog"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13"></path><path d="M12 11v6M9 14h6"></path></svg>매물 접수</button>
 <a href="tel:0255551165" class="headTel" aria-label="전화 상담 02-555-1165" style="display: flex; align-items: center; gap: 8px; background: #1F3644; color: #FFFFFF; padding: 11px 18px; border-radius: 999px; font-weight: 700; font-size: 15px; min-height: 44px">
 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#BC975E" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>
 02-555-1165
-</a>
+</a></div>
 </div>
 </header>
 <section id="itemDetail" hidden aria-label="매물 상세"></section>
@@ -2318,6 +2371,32 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
   var cl=f.querySelector('.flipClose'); if(cl) cl.addEventListener('click',function(){ done.hidden=true; });
 })();
 </script>
+<dialog id="intakeDlg" aria-labelledby="ikTitle">
+<form id="intakeForm" novalidate method="dialog">
+<div class="ikHead"><div><div class="ikEb">LISTING INTAKE</div><h2 id="ikTitle">매물 접수</h2><p>임대 · 매매를 맡기실 매물 정보를 남겨주세요.</p></div><button type="button" class="ikClose" aria-label="닫기">✕</button></div>
+<div class="ikBody">
+<div class="ikRow2"><label class="ikF"><span>이름 <b>*</b></span><input type="text" name="name" maxlength="30" placeholder="홍길동" required></label><label class="ikF"><span>연락처 <b>*</b></span><input type="tel" name="phone" maxlength="13" placeholder="010-0000-0000" required></label></div>
+<ol class="ikList">
+<li><label class="ikF"><span>주소 및 임대층 <b>*</b></span><input type="text" name="addr" maxlength="100" placeholder="예: 신사동 ○○○-○ / 3층" required></label></li>
+<li><label class="ikF"><span>보증금 · 임대료 · 관리비</span><input type="text" name="price" maxlength="80" placeholder="예: 5,000만 / 월 400만 / 관리 40만"></label></li>
+<li><label class="ikF"><span>입주가능일</span><input type="text" name="movein" maxlength="80" placeholder="예: 즉시 / 2026년 12월 협의"></label></li>
+<li><label class="ikF"><span>현 업종 및 현 상태</span><input type="text" name="cur" maxlength="80" placeholder="예: 사무실 사용 중 / 공실"></label></li>
+<li><label class="ikF"><span>주차대수 / 주차형태</span><input type="text" name="park" maxlength="80" placeholder="예: 1대 / 지상 또는 기계식"></label></li>
+<li><label class="ikF"><span>권리금</span><input type="text" name="prem" maxlength="80" placeholder="예: 무권리 / 3,000만"></label></li>
+</ol>
+<label class="ikF"><span>추가 내용 (선택)</span><textarea name="etc" rows="2" maxlength="500" placeholder="면적, 연락 가능 시간 등"></textarea></label>
+<label class="ikAgree"><input type="checkbox" name="agree"> 개인정보 수집·이용 동의 <b>*</b> <a href="#privacy" class="privacyLink">약관 보기</a></label>
+<div class="qfTrap" aria-hidden="true"><label>웹사이트<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+<p class="ikMsg" role="alert" aria-live="assertive"></p>
+<button type="submit" class="ikSubmit">매물 접수하기</button>
+</div>
+<div class="ikDone" hidden role="status" aria-live="polite">
+<span class="ikCheck" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+<b>매물 접수되었습니다.</b><span>담당자가 연락드리겠습니다.</span>
+<button type="button" class="ikOk">OK</button>
+</div>
+</form>
+</dialog>
 <dialog id="privacyDlg" aria-labelledby="privacyTitle">
 <div class="pvHead">
 <div>
@@ -2546,6 +2625,51 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
       if(inDetail){ location.hash='#top'; setTimeout(function(){ window.scrollTo(0,0); if(history.replaceState) history.replaceState(null,'',location.pathname+location.search); },80); }
       else { window.scrollTo({top:0,behavior:'smooth'}); if(history.replaceState) history.replaceState(null,'',location.pathname+location.search); }
     });
+  });
+})();
+</script>
+<script>
+(function(){
+  var d=document.getElementById('intakeDlg'), f=document.getElementById('intakeForm'); if(!d||!f||!d.showModal) return;
+  var msg=f.querySelector('.ikMsg'), btn=f.querySelector('.ikSubmit'), done=f.querySelector('.ikDone'), openedAt=0;
+  function open(){ d.classList.remove('isDone'); done.hidden=true; msg.textContent=''; openedAt=Date.now(); d.showModal(); setTimeout(function(){ f.elements.name.focus(); },50); }
+  function close(){ d.close(); }
+  document.addEventListener('click',function(e){ var t=e.target.closest('[data-intake]'); if(!t) return; e.preventDefault(); open(); });
+  if(location.hash==='#intake') setTimeout(open,300);
+  f.querySelector('.ikClose').addEventListener('click',close);
+  f.querySelector('.ikOk').addEventListener('click',function(){ close(); f.reset(); d.classList.remove('isDone'); done.hidden=true; });
+  d.addEventListener('click',function(e){ if(e.target===d) close(); });
+  var ph=f.elements.phone;
+  ph.addEventListener('input',function(){ var x=ph.value.replace(/\D/g,'').slice(0,11),o=x;
+    if(/^02/.test(x)) o=x.length>9?x.replace(/^(02)(\d{4})(\d{0,4})$/,'$1-$2-$3'):x.replace(/^(02)(\d{0,3})(\d{0,4})$/,'$1-$2-$3');
+    else o=x.length>10?x.replace(/^(\d{3})(\d{4})(\d{0,4})$/,'$1-$2-$3'):x.replace(/^(\d{3})(\d{0,3})(\d{0,4})$/,'$1-$2-$3');
+    ph.value=o.replace(/-+$/,''); });
+  function mark(el,bad){ if(el.type==='checkbox') el.closest('label').classList.toggle('bad',bad); else el.setAttribute('aria-invalid',bad?'true':'false'); }
+  ['name','phone','addr'].forEach(function(n){ f.elements[n].addEventListener('input',function(){ mark(f.elements[n],false); }); });
+  f.elements.agree.addEventListener('change',function(){ mark(f.elements.agree,false); });
+  f.addEventListener('submit',function(e){
+    e.preventDefault(); msg.textContent='';
+    var v=function(n){ return (f.elements[n].value||'').trim(); };
+    var p=v('phone').replace(/\D/g,''), okP=/^(01[016789]\d{7,8}|0[2-6][0-9]?\d{6,8})$/.test(p), errs=[], first=null;
+    mark(f.elements.name,!v('name')); mark(f.elements.phone,!okP); mark(f.elements.addr,!v('addr')); mark(f.elements.agree,!f.elements.agree.checked);
+    if(!v('name')){errs.push('이름');first=first||f.elements.name;}
+    if(!okP){errs.push('연락처');first=first||f.elements.phone;}
+    if(!v('addr')){errs.push('주소 및 임대층');first=first||f.elements.addr;}
+    if(!f.elements.agree.checked){errs.push('개인정보 동의');first=first||f.elements.agree;}
+    if(errs.length){ msg.textContent='필수 항목을 확인해 주세요: '+errs.join(', '); first.focus(); return; }
+    var url=window.BD_SHEET_URL; if(!url){ msg.textContent='접수 연결이 설정되지 않았습니다. 전화(02-555-1165)로 문의해 주세요.'; return; }
+    var memo='[매물 접수] 1.주소·임대층: '+v('addr')+' / 2.보증금·임대료·관리비: '+(v('price')||'-')+' / 3.입주가능일: '+(v('movein')||'-')+' / 4.현 업종·상태: '+(v('cur')||'-')+' / 5.주차: '+(v('park')||'-')+' / 6.권리금: '+(v('prem')||'-')+(v('etc')?' / 기타: '+v('etc'):'');
+    var data={ name:v('name'), phone:v('phone'), type:'임대 의뢰 (건물주)', use:'매물 접수', region:v('addr').slice(0,60), area:'', budget:(v('price')||'').slice(0,60),
+      memo:memo.slice(0,1000), listing:'', agree:f.elements.agree.checked, website:f.elements.website.value, elapsed:Date.now()-openedAt };
+    btn.disabled=true; btn.textContent='접수 중…';
+    fetch(url,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(data)})
+      .then(function(r){ return r.json(); })
+      .then(function(res){
+        if(!res||!res.ok){ msg.textContent=(res&&res.error)||'접수에 실패했습니다. 전화(02-555-1165)로 문의해 주세요.'; return; }
+        d.classList.add('isDone'); done.hidden=false; f.querySelector('.ikOk').focus();
+      })
+      .catch(function(){ msg.textContent='네트워크 오류로 접수하지 못했습니다. 잠시 후 다시 시도하거나 전화로 문의해 주세요.'; })
+      .then(function(){ btn.disabled=false; btn.textContent='매물 접수하기'; });
   });
 })();
 </script>
