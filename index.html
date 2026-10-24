@@ -855,6 +855,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 @media print{#intakeDlg{display:none!important}}
 </style>
 <style id="flNote">.dtFloorNote{margin:6px 0 0;padding:0 10px 8px;font-size:11.5px;line-height:1.5;color:#8A939A;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}@media (max-width:760px){.dtFloorNote{padding-left:8px}}</style>
+<style id="flLeft">.dtFloor{padding:12px 12px 8px 18px!important}.dtFloorLg{padding:8px 12px 2px 18px!important}.dtFloorNote{padding:0 12px 10px 18px!important}@media (max-width:760px){.dtFloor{padding-left:16px!important}.dtFloorLg,.dtFloorNote{padding-left:16px!important}.dtInfoGrid .dtFloorBox h3{padding-left:16px}}</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; background: #FFFFFF; width: 100%; letter-spacing: -0.2px">
@@ -2109,7 +2110,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
     var FSZ = 13.5, FS = '500 ' + FSZ + 'px Noto Sans KR, sans-serif';
     var tw = function (t) { var n = 0; t = String(t); for (var i = 0; i < t.length; i++) n += (/[가-힣]/.test(t[i]) ? FSZ : (t[i] === ' ' ? 4 : (/[·…]/.test(t[i]) ? 6 : 8))); return n; };
     var W = 400, PAD = 10, TOP = 12, GAP = gi > 0 ? 14 : 0, TAG = 64, E = 4;
-    var X0 = Math.ceil(Math.max.apply(null, rows.map(function (r) { return tw(r.label); })) * 1.12 + 16);
+    var X0 = Math.ceil(Math.max.apply(null, rows.map(function (r) { return tw(r.label); })) * 1.08 + 14);
     var segW = function (r, sg, MAXW) { return Math.max(6, r.tot / max * MAXW) * sg.area / r.tot; };
     var labOf = function (sg) { return sg.label + ' ' + Math.round(sg.area / PY) + '평'; };
     var MINR = W * 0.70, XC, MAXW = W - X0 - 22 - 130;
@@ -2153,7 +2154,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
         var mm = /^(.*?)\s(\d+평)$/.exec(o.lab) || [0, o.lab, ''];
         call += '<text data-fit="' + (n === 1 && FH >= 30 ? '2' : '1') + '" data-name="' + esc(mm[1]) + '" data-py="' + esc(mm[2]) + '" x="' + XC + '" y="' + ly + '" dominant-baseline="central" style="font:' + FS + ';fill:#2D3A44;pointer-events:none">' + esc(o.lab) + '</text>';
       });
-      body += T(X0 - 8, r.y + FH / 2, r.label, 'end', r.here ? '#14191F' : '#6B757D');
+      body += T(0, r.y + FH / 2, r.label, 'start', r.here ? '#14191F' : '#6B757D');
     });
     for (var i = 1; i < rows.length; i++) { if (i === gi) continue; var a = rows[i - 1], b = rows[i]; over += '<line x1="' + X0 + '" y1="' + b.y + '" x2="' + (X0 + Math.min(a.w, b.w)) + '" y2="' + b.y + '" stroke="#5B6770" stroke-width="0.8" opacity="0.55"/>'; }
     var wall = function (l) { if (!l.length) return ''; var d = 'M' + X0 + ' ' + l[0].y + ' H' + (X0 + l[0].w); for (var i = 0; i < l.length; i++) { d += ' V' + (l[i].y + FH); if (i + 1 < l.length) d += ' H' + (X0 + l[i + 1].w); } return '<path d="' + d + ' H' + X0 + ' Z" fill="none" stroke="#1F3644" stroke-width="2.4"/>'; };
