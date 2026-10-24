@@ -803,8 +803,9 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 </style>
 <style id="intakeCss">
 .headActs{display:flex;align-items:center;gap:10px}
-.headIntake{display:inline-flex;align-items:center;gap:7px;height:48px;padding:0 20px;border:0;border-radius:999px;background:#BC975E;color:#14191F;font:800 15px 'Noto Sans KR',sans-serif;letter-spacing:-.3px;cursor:pointer;box-shadow:0 4px 12px rgba(188,151,94,.35);transition:background-color .18s,transform .18s}
-.headIntake:hover{background:#CBA86F;transform:translateY(-1px)}
+.headIntake{display:inline-flex;align-items:center;gap:7px;height:48px;padding:0 20px;border:0;border-radius:999px;background:#C4553A;color:#FFFFFF;font:800 15px 'Noto Sans KR',sans-serif;letter-spacing:-.3px;cursor:pointer;box-shadow:0 1px 1px rgba(40,10,4,.35),0 3px 5px rgba(60,18,8,.42);transition:background-color .15s,transform .12s,box-shadow .12s}
+.headIntake:hover{background:#B04A31;transform:translateY(-1px);box-shadow:0 1px 1px rgba(40,10,4,.35),0 4px 7px rgba(60,18,8,.45)}
+.headIntake:active{transform:translateY(1px);box-shadow:0 1px 1px rgba(40,10,4,.35),0 1px 2px rgba(60,18,8,.4)}
 .headIntake:focus-visible{outline:2px solid #1F3644;outline-offset:2px}
 #intakeDlg{width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 32px);padding:0;border:0;border-radius:18px;background:#FFFFFF;color:#2A333C;box-shadow:0 24px 60px rgba(31,54,68,.3);font-family:'Noto Sans KR',sans-serif;overflow:auto}
 #intakeDlg::backdrop{background:rgba(20,25,31,.5)}
@@ -840,7 +841,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 @media (max-width:1100px){.headIntake{height:42px;padding:0 14px;font-size:14px}}
 @media (max-width:760px){
  .headActs{order:2;gap:6px}
- .headIntake{height:42px;padding:0 12px;font-size:13.5px;box-shadow:none}
+ .headIntake{height:42px;padding:0 12px;font-size:13.5px}
  .headIntake svg{display:none}
  .headActs .headTel{font-size:0!important;width:42px;height:42px;min-height:42px!important;padding:0!important;justify-content:center;gap:0!important}
  .headActs .headTel svg{width:18px;height:18px}
@@ -2381,7 +2382,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 <li><label class="ikF"><span>보증금 · 임대료 · 관리비</span><input type="text" name="price" maxlength="80" placeholder="예: 5,000만 / 월 400만 / 관리 40만"></label></li>
 <li><label class="ikF"><span>입주가능일</span><input type="text" name="movein" maxlength="80" placeholder="예: 즉시 / 2026년 12월 협의"></label></li>
 <li><label class="ikF"><span>현 업종 및 현 상태</span><input type="text" name="cur" maxlength="80" placeholder="예: 사무실 사용 중 / 공실"></label></li>
-<li><label class="ikF"><span>주차대수 / 주차형태</span><input type="text" name="park" maxlength="80" placeholder="예: 1대 / 지상 또는 기계식"></label></li>
+<li><label class="ikF"><span>무료주차 / 엘리베이터</span><input type="text" name="park" maxlength="80" placeholder="예: 무료 1대 / 엘리베이터 있음"></label></li>
 <li><label class="ikF"><span>권리금</span><input type="text" name="prem" maxlength="80" placeholder="예: 무권리 / 3,000만"></label></li>
 </ol>
 <label class="ikF"><span>추가 내용 (선택)</span><textarea name="etc" rows="2" maxlength="500" placeholder="면적, 연락 가능 시간 등"></textarea></label>
@@ -2658,7 +2659,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
     if(!f.elements.agree.checked){errs.push('개인정보 동의');first=first||f.elements.agree;}
     if(errs.length){ msg.textContent='필수 항목을 확인해 주세요: '+errs.join(', '); first.focus(); return; }
     var url=window.BD_SHEET_URL; if(!url){ msg.textContent='접수 연결이 설정되지 않았습니다. 전화(02-555-1165)로 문의해 주세요.'; return; }
-    var memo='[매물 접수] 1.주소·임대층: '+v('addr')+' / 2.보증금·임대료·관리비: '+(v('price')||'-')+' / 3.입주가능일: '+(v('movein')||'-')+' / 4.현 업종·상태: '+(v('cur')||'-')+' / 5.주차: '+(v('park')||'-')+' / 6.권리금: '+(v('prem')||'-')+(v('etc')?' / 기타: '+v('etc'):'');
+    var memo='[매물 접수] 1.주소·임대층: '+v('addr')+' / 2.보증금·임대료·관리비: '+(v('price')||'-')+' / 3.입주가능일: '+(v('movein')||'-')+' / 4.현 업종·상태: '+(v('cur')||'-')+' / 5.무료주차·엘리베이터: '+(v('park')||'-')+' / 6.권리금: '+(v('prem')||'-')+(v('etc')?' / 기타: '+v('etc'):'');
     var data={ name:v('name'), phone:v('phone'), type:'임대 의뢰 (건물주)', use:'매물 접수', region:v('addr').slice(0,60), area:'', budget:(v('price')||'').slice(0,60),
       memo:memo.slice(0,1000), listing:'', agree:f.elements.agree.checked, website:f.elements.website.value, elapsed:Date.now()-openedAt };
     btn.disabled=true; btn.textContent='접수 중…';
