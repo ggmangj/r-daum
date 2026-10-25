@@ -892,6 +892,17 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 .dtThumbEmpty{display:block;background:#F4F0E8;border:1px dashed #E0D8C8}
 @media (max-width:760px){.dtThumb5{gap:6px}.dtThumb5 button,.dtThumb5 .dtThumbEmpty{border-radius:8px}}
 </style>
+<style id="noSearchCss">
+.heroMapHead{flex-wrap:wrap}
+.noSearch{display:flex;align-items:center;height:42px;border:1px solid #D9D2C4;border-radius:999px;background:#FFFFFF;padding:0 4px 0 16px;min-width:0;transition:border-color .18s,box-shadow .18s}
+.noSearch:focus-within{border-color:#1F3644;box-shadow:0 0 0 3px rgba(31,54,68,.12)}
+.noSearch input{border:0;outline:0;background:none;width:210px;min-width:0;font:600 14px 'Noto Sans KR',sans-serif;color:#2A333C;letter-spacing:.3px}
+.noSearch input::placeholder{color:#9AA1A8;font-weight:400;letter-spacing:0}
+.noSearch input::-webkit-search-cancel-button{display:none}
+.noSearch button{flex:none;width:34px;height:34px;border:0;border-radius:50%;background:#1F3644;color:#FFFFFF;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.noSearch button:hover{background:#2A4757}
+@media (max-width:760px){.heroMapHead{gap:10px}.noSearch{flex:1 1 100%;order:2;height:44px}.noSearch input{width:100%;font-size:16px}}
+</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; background: #FFFFFF; width: 100%; letter-spacing: -0.2px">
@@ -983,6 +994,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 <div id="map" class="heroMap">
 <div class="heroMapHead">
 <h2 class="heroMapTitle"><span>MAP SEARCH</span>지도로 매물 찾기</h2>
+<form class="noSearch" id="noSearch" role="search"><label class="sr" for="noInput">매물번호 검색</label><input id="noInput" type="search" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="12" placeholder="매물번호 검색 (예: D5B531F)"><button type="submit" aria-label="매물번호로 찾기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></button></form>
 </div>
 <div class="mapTools" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
 <label style="display: flex; align-items: center"><span class="sr">동 선택</span>
@@ -2349,7 +2361,29 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
     // 공유 링크로 바로 들어온 경우: 지도(또는 추천 매물) 목록으로
     location.hash = DT.from === 'listings' ? '#listings' : '#map';
   }
+  // 매물번호 바로 열기: r-daum.com/#D5B531F, r-daum.com/?no=D5B531F, 검색칸
+  function findNo(q) {
+    q = String(q || '').toUpperCase().replace(/^\s*(NO\.?|매물번호)\s*/, '').replace(/[^0-9A-Z]/g, '');
+    if (!q) return null;
+    var ex = ITEMS.filter(function (x) { return String(x.id).toUpperCase() === q; }); if (ex.length) return ex[0].id;
+    if (!/^D/.test(q)) { ex = ITEMS.filter(function (x) { return String(x.id).toUpperCase() === 'D' + q; }); if (ex.length) return ex[0].id; }
+    var part = ITEMS.filter(function (x) { return String(x.id).toUpperCase().indexOf(q) >= 0; });
+    return part.length === 1 ? part[0].id : (part.length ? part.length : null);
+  }
+  (function () {
+    var f = document.getElementById('noSearch'); if (!f) return;
+    f.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var inp = document.getElementById('noInput'), r = findNo(inp.value);
+      if (typeof r === 'string') { inp.blur(); location.hash = '#item/' + encodeURIComponent(r); inp.value = ''; }
+      else if (window.bdToast) window.bdToast(typeof r === 'number' ? '번호가 겹치는 매물이 <b>' + r + '건</b> 있습니다. 매물번호를 끝까지 입력해 주세요.' : '<b>' + (inp.value || '') + '</b> 매물을 찾을 수 없습니다. 번호를 다시 확인해 주세요.');
+    });
+  })();
   function route(fromEvent, ev) {
+    var sh = /^#(?:no=)?([Dd][0-9A-Fa-f]{6}[A-Za-z]?)$/.exec(location.hash);
+    if (sh) { history.replaceState(null, '', location.pathname + '#item/' + sh[1].toUpperCase()); }
+    var qn = /[?&]no=([^&#]+)/.exec(location.search);
+    if (qn && !/^#item\//.test(location.hash)) { history.replaceState(null, '', location.pathname + '#item/' + decodeURIComponent(qn[1]).toUpperCase()); }
     var m = /^#item\/([^?&#]+)/.exec(location.hash);
     if (m) {
       if (fromEvent && !document.body.classList.contains('detailMode')) {
