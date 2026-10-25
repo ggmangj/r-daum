@@ -886,6 +886,12 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 @media (max-width:760px){.adList li{grid-template-columns:56px minmax(0,1fr);}.adList li .adGo{grid-column:2;justify-self:start}.adMain{gap:2px 10px}}
 @media print{.adChk,.adGo{display:none!important}.adList li{grid-template-columns:minmax(0,1fr)}}
 </style>
+<style id="thumb5">
+.dtThumb5{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;overflow:visible!important}
+.dtThumb5 button,.dtThumb5 .dtThumbEmpty{width:auto!important;height:auto!important;aspect-ratio:4/3;border-radius:10px}
+.dtThumbEmpty{display:block;background:#F4F0E8;border:1px dashed #E0D8C8}
+@media (max-width:760px){.dtThumb5{gap:6px}.dtThumb5 button,.dtThumb5 .dtThumbEmpty{border-radius:8px}}
+</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; background: #FFFFFF; width: 100%; letter-spacing: -0.2px">
@@ -1808,7 +1814,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
     return n;
   }
   function detailHtml(it) {
-    var photos = it.photos || [], elev = /^(O|Y|유|있)/i.test(it.elev || '') ? '있음' : /^(X|N|무|없)/i.test(it.elev || '') ? '없음' : nz(it.elev);
+    var photos = (it.photos || []).slice(0, 5), elev = /^(O|Y|유|있)/i.test(it.elev || '') ? '있음' : /^(X|N|무|없)/i.test(it.elev || '') ? '없음' : nz(it.elev);
     if (it.bldElev > 0) elev = (elev === '없음' ? '' : '있음 ') + '(건물 총 ' + it.bldElev + '대)';
     var floorTxt = nz(it.floor) + (nz(it.totalFloor) ? ' / ' + nz(it.totalFloor).replace(/^(\d+)$/, '$1층').replace(/\s*\/\s*/g, '·') : '');
     var station = nz(it.station) || nearStations(it);
@@ -1817,7 +1823,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
       (it.featured ? '<span class="dtBadge line">추천 매물</span>' : '');
     var gal = photos.length
       ? '<div class="dtGal"><button type="button" class="dtMainImg" aria-label="사진 크게 보기"><img src="' + photoUrl(photos[0], 1600) + '" alt="' + esc(it.title) + ' 대표 사진" referrerpolicy="no-referrer"><span class="dtCount">1 / ' + photos.length + '</span></button>' +
-        (photos.length > 1 ? '<div class="dtThumbs" role="list">' + photos.map(function (p, i) { return '<button type="button" role="listitem" data-i="' + i + '" class="' + (i ? '' : 'on') + '" aria-label="' + (i + 1) + '번째 사진"><img src="' + photoUrl(p, 400) + '" alt="" loading="lazy" referrerpolicy="no-referrer"></button>'; }).join('') + '</div>' : '') + '</div>'
+        (photos.length > 1 ? '<div class="dtThumbs dtThumb5" role="list">' + [0, 1, 2, 3, 4].map(function (i) { var p = photos[i]; return p ? '<button type="button" role="listitem" data-i="' + i + '" class="' + (i ? '' : 'on') + '" aria-label="' + (i + 1) + '번째 사진"><img src="' + photoUrl(p, 400) + '" alt="" loading="lazy" referrerpolicy="no-referrer"></button>' : '<span class="dtThumbEmpty" aria-hidden="true"></span>'; }).join('') + '</div>' : '') + '</div>'
       : '<div class="dtNoPhoto" id="dtNoPhoto"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#BC975E" stroke-width="1.5" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><path d="M21 16l-5-5-8 8"></path></svg><b>현장 사진 준비 중</b><span>실제 내부 사진과 도면은 상담 시 바로 보내드립니다.<br>02-555-1165</span></div>';
     var price = '<div class="dtPrice"><div><small>보증금</small><b>' + esc(it.depText || '문의') + '</b></div><div class="rent"><small>월세</small><b>' + esc(it.rentText || '문의') + '</b></div>' +
       '<div><small>관리비</small><b>' + esc(it.mgmt || '문의') + '</b></div><div class="prem"><small>권리금</small><b>' + esc(it.premium || '문의') + '</b></div></div>';
@@ -2105,7 +2111,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
   }
   function openDetail(id) {
     DT.el = DT.el || $('itemDetail');
-    var it = byId(id); DT.it = it; DT.idx = 0;
+    var it = byId(id); if (it && it.photos && it.photos.length > 5) it.photos = it.photos.slice(0, 5); DT.it = it; DT.idx = 0;
     if (!document.body.classList.contains('detailMode')) DT.prevScroll = window.scrollY;
     document.body.classList.add('detailMode'); DT.el.hidden = false;
     if (!it) {
