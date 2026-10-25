@@ -2200,6 +2200,10 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
   // 매물장 「층」 값으로 해당 층인지 판단: 3층 / B1 / 지하1층 / 1~2층 / 1,2층 / 지하1~지상2층 / 통임대·전층·건물 전체
   function isHereFloor(name, fl) {
     fl = String(fl || '').replace(/\s+/g, ''); if (!fl) return false;
+    // '연층(지하1층~1층)', '복층(1~2층)' 처럼 괄호 안에 층 범위가 있으면 그 범위만 사용
+    var par = /\(([^)]*\d[^)]*)\)/.exec(fl); if (par) fl = par[1];
+    fl = fl.replace(/^(연층|복층|연|복)/, '');
+    fl = fl.replace(/(지하|B)(\d+)층[~\-](\d+)층/gi, '$1$2층~지상$3층');   // 지하1층~1층 → 지하1층~지상1층
     if (/통|전층|전체|건물/.test(fl)) return !/옥탑/.test(String(name));
     var num = function (s) { s = String(s || ''); var m = /(\d+)/.exec(s); if (!m) return null; return /^(지하|지|B)/i.test(s) ? -(+m[1]) : /옥탑|R/i.test(s) ? 1000 + (+m[1]) : +m[1]; };
     var me = num(String(name).replace(/\s+/g, '')); if (me == null) return false;
@@ -2340,7 +2344,18 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
         else { var cx = ox + ow / 2; ytag += '<a href="' + href + '" class="flAdd"><title>' + esc(ttl) + '</title><rect x="' + (cx - TW / 2) + '" y="' + (r.y + FH / 2 - 11) + '" width="' + TW + '" height="22" rx="11" fill="' + YEL + '" stroke="#FFFFFF" stroke-width="1.2"/>' + T(cx, r.y + FH / 2, '추가임대', 'middle', '#14191F') + '</a>'; }
       });
     });
-    if (tagRow && !tagRow.outs) mark += '<g class="flNudge"><path d="M' + (XC + 2) + ' ' + (tagRow.y + FH / 2) + ' l9 -7 v14 z" fill="' + RED + '"/><rect x="' + (XC + 10) + '" y="' + (tagRow.y + FH / 2 - 12) + '" width="' + TAG + '" height="24" rx="12" fill="' + RED + '"/>' + T(XC + 10 + TAG / 2, tagRow.y + FH / 2, '이 매물', 'middle', '#FFFFFF') + '</g>';
+    // '이 매물' 표시: 설명 글씨가 없는 층을 우선, 모두 글씨가 있으면 그 층 윗부분 빈자리에
+    if (tagRow && here.length > 1) { tagRow = here.slice().sort(function (a, b) { return (a.outs || 0) - (b.outs || 0); })[0]; }
+    var tagY = null;
+    if (tagRow) {
+      if (!tagRow.outs) tagY = tagRow.y + FH / 2;
+    }
+    if (tagRow && tagY == null) {
+      // 오른쪽에 설명 글씨가 있으면, 빨간 점선 윗변에 배지처럼 붙여서 표시
+      var top = here.slice().sort(function (a, b) { return a.y - b.y; })[0], by = top.y - E;
+      mark += '<g><rect x="' + (X0 + 4) + '" y="' + (by - 11) + '" width="' + TAG + '" height="22" rx="11" fill="' + RED + '" stroke="#FFFFFF" stroke-width="1.5"/>' + T(X0 + 4 + TAG / 2, by, '이 매물', 'middle', '#FFFFFF') + '</g>';
+    }
+    if (tagY != null) mark += '<g class="flNudge"><path d="M' + (XC + 2) + ' ' + tagY + ' l9 -7 v14 z" fill="' + RED + '"/><rect x="' + (XC + 10) + '" y="' + (tagY - 12) + '" width="' + TAG + '" height="24" rx="12" fill="' + RED + '"/>' + T(XC + 10 + TAG / 2, tagY, '이 매물', 'middle', '#FFFFFF') + '</g>';
     var legend = Object.keys(FCAT).filter(function (k) { return used[k]; }).map(function (k) { return '<span><i style="background:' + FCAT[k][1] + '"></i>' + FCAT[k][0] + '</span>'; }).join('');
     return '<div class="dtFloorLg lgTop">' + legend + '</div><svg class="dtFloorSvg" data-xc="' + XC + '" data-cw="' + CW + '" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="층별 현황: 층별 면적과 용도"><title>층별 현황</title>' + body + lead + over + walls + mark + call + ytag + '</svg>';
   }
