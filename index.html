@@ -1984,18 +1984,20 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
   function drawWalk(mp, it) {
     if (!window.fetch || !naver.maps.Polyline) return;
     var near = WALK_ST.map(function (s) { return [s, distM(it.lat, it.lng, s[1], s[2])]; }).sort(function (a, b) { return a[1] - b[1]; });
-    var pick = near.filter(function (s, i) { return i < 3 && (i === 0 ? s[1] < 2000 : s[1] < 1100); }).map(function (s) { return s[0]; });
+    var pick = near.filter(function (s, i) { return i < 4 && s[1] < 700; }).map(function (s) { return s[0]; });   // 직선 700m 넘으면 도보 10분 안쪽이 될 수 없음
     if (!pick.length) return;
     Promise.all(pick.map(function (s) { return walkRoute(it, s); })).then(function (rs) {
       var bounds = new naver.maps.LatLngBounds(new naver.maps.LatLng(it.lat, it.lng), new naver.maps.LatLng(it.lat, it.lng)), any = false, legend = [];
+      var k = 0;
       rs.forEach(function (r, i) {
-        if (!r || !r.pts || r.pts.length < 2 || r.d > 2500) return;
-        any = true; var col = WALK_COL[i], min = Math.max(1, Math.round(r.d / 67));
+        if (!r || !r.pts || r.pts.length < 2) return;
+        var min = Math.max(1, Math.round(r.d / 67)); if (min > 10 || k >= 3) return;   // 도보 10분 이내 역만 (최대 3곳)
+        any = true; var col = WALK_COL[k++];
         var path = r.pts.map(function (p) { var ll = new naver.maps.LatLng(p[1], p[0]); bounds.extend(ll); return ll; });
         new naver.maps.Polyline({ map: mp, path: path, strokeColor: '#FFFFFF', strokeWeight: 8, strokeOpacity: .9, strokeLineCap: 'round', strokeLineJoin: 'round' });
         new naver.maps.Polyline({ map: mp, path: path, strokeColor: col, strokeWeight: 4.5, strokeOpacity: 1, strokeStyle: 'shortdot', strokeLineCap: 'round', strokeLineJoin: 'round' });
         var end = path[path.length - 1];
-        new naver.maps.Marker({ position: end, map: mp, zIndex: 200 + i, icon: { content: '<div class="walkTag" style="background:' + col + '"><b>' + esc(pick[i][0]) + '</b> 도보 ' + min + '분<i style="border-top-color:' + col + '"></i></div>', anchor: new naver.maps.Point(0, 0) } });
+        new naver.maps.Marker({ position: end, map: mp, zIndex: 200 + k, icon: { content: '<div class="walkTag" style="background:' + col + '"><b>' + esc(pick[i][0]) + '</b> 도보 ' + min + '분<i style="border-top-color:' + col + '"></i></div>', anchor: new naver.maps.Point(0, 0) } });
         legend.push('<span><i style="background:' + col + '"></i>' + esc(pick[i][0]) + ' 약 ' + r.d.toLocaleString() + 'm · 도보 약 ' + min + '분</span>');
       });
       if (!any) return;
