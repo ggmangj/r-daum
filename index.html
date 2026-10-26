@@ -1874,6 +1874,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
     var info = '<dl class="dtInfo one">' +
       infoRow('매물번호', it.id) +
       infoRow('소재지', (it.gu || '강남구') + ' ' + (it.dong || '') + (it.floor ? ' · ' + it.floor : '')) +
+      (station ? infoRow('지하철역', station) : '') +
       infoRow('거래 형태', '임대차 (월세)') +
       infoRow('가격', '보증금 ' + (it.depText || '문의') + ' / 월세 ' + (it.rentText || '문의')) +
       infoRow('중개대상물 종류', kindTxt ? '건축물 · ' + kindTxt : '건축물 · ' + (it.catLabel || '')) +
