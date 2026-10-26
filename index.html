@@ -892,6 +892,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 .dtThumbEmpty{display:block;background:#F4F0E8;border:1px dashed #E0D8C8}
 @media (max-width:760px){.dtThumb5{gap:6px}.dtThumb5 button,.dtThumb5 .dtThumbEmpty{border-radius:8px}}
 </style>
+<style id="walkCss">.walkTag{position:relative;transform:translate(-50%,calc(-100% - 10px));white-space:nowrap;color:#FFFFFF;font:600 12.5px/1 'Noto Sans KR',sans-serif;padding:7px 10px;border-radius:6px;box-shadow:0 3px 10px rgba(0,0,0,.25)}.walkTag b{font-weight:800;margin-right:2px}.walkTag i{position:absolute;left:50%;bottom:-6px;margin-left:-6px;border:6px solid transparent;border-bottom:0}.walkLegend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 2px 0;font-size:13.5px;color:#46515B}.walkLegend span{display:inline-flex;align-items:center;gap:6px}.walkLegend i{width:18px;height:4px;border-radius:2px;display:inline-block}@media print{.walkLegend{display:none}}@media (max-width:760px){.walkTag{font-size:11.5px;padding:6px 8px}.walkLegend{flex-direction:column;font-size:13px}}</style>
 <style id="mNoList">@media (max-width:760px){#mapList{display:none!important}#leafletMap{height:460px!important}}</style>
 <style id="noSearchCss">
 .heroMapHead{flex-wrap:wrap}
@@ -1874,7 +1875,6 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
     var info = '<dl class="dtInfo one">' +
       infoRow('매물번호', it.id) +
       infoRow('소재지', (it.gu || '강남구') + ' ' + (it.dong || '') + (it.floor ? ' · ' + it.floor : '')) +
-      (station ? infoRow('지하철역', station) : '') +
       infoRow('거래 형태', '임대차 (월세)') +
       infoRow('가격', '보증금 ' + (it.depText || '문의') + ' / 월세 ' + (it.rentText || '문의')) +
       infoRow('중개대상물 종류', kindTxt ? '건축물 · ' + kindTxt : '건축물 · ' + (it.catLabel || '')) +
@@ -1966,6 +1966,44 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
       .sort(function (a, b) { return a[1] - b[1]; }).slice(0, 4).map(function (p) { return p[0]; });
     box.innerHTML = list.length ? '<div class="dtSec" style="margin-top:0"><h2>주변 비슷한 매물</h2></div><div class="dtSimGrid">' + list.map(card).join('') + '</div>' : '';
   }
+
+  // ── 지하철역까지 도보 동선 (OpenStreetMap 도보 길찾기 · 분당 67m 기준) ──
+  var WALK_ST = [['대모산입구역',37.49111,127.07278],['수서역',37.48694,127.10194],['압구정로데오역',37.52763,127.04063],['강남구청역',37.51722,127.04139],['서울숲역',37.54365,127.04469],['선정릉역',37.51030,127.04385],['선릉역',37.50445,127.04899],['개포동역',37.48889,127.06611],['도곡역',37.49083,127.05538],['한티역',37.49611,127.05278],['구룡역',37.48667,127.05917],['봉은사역',37.51422,127.06027],['삼전역',37.50453,127.08721],['종합운동장역',37.51111,127.07361],['신반포역',37.50333,126.99583],['구반포역',37.50139,126.98722],['고속터미널역',37.50594,127.00447],['사평역',37.50416,127.01522],['신논현역',37.50444,127.02444],['언주역',37.50722,127.03389],['삼성중앙역',37.51278,127.05250],['동작역',37.50278,126.98028],['성수역',37.54444,127.05611],['뚝섬역',37.54722,127.04750],['잠실새내역',37.51139,127.08611],['교대역',37.49361,127.01361],['강남역',37.49793,127.02758],['역삼역',37.50079,127.03689],['삼성역',37.50887,127.06319],['방배역',37.48139,126.99778],['사당역',37.47650,126.98161],['서초역',37.49194,127.00806],['옥수역',37.54061,127.01888],['양재역',37.48444,127.03389],['신사역',37.51621,127.01975],['논현역',37.51111,127.02139],['양재시민의숲역',37.46990,127.03800],['압구정역',37.52742,127.02833],['금호역',37.54799,127.01600],['대청역',37.49352,127.07954],['남부터미널역',37.48499,127.01621],['잠원역',37.51288,127.01116],['일원역',37.48378,127.08405],['학여울역',37.49650,127.06988],['대치역',37.49451,127.06337],['매봉역',37.48691,127.04671],['이촌역',37.52254,126.97316],['학동역',37.51417,127.03167],['청담역',37.51917,127.05194],['반포역',37.50806,127.01167],['내방역',37.48778,126.99361],['이수역',37.48777,126.98204],['이태원역',37.53444,126.99389],['녹사평역',37.53472,126.98667],['한강진역',37.53944,127.00167],['버티고개역',37.54778,127.00639],['서빙고역',37.51957,126.98856],['한남역',37.52913,127.00810]];
+  var WALK_COL = ['#1F3644', '#C4553A', '#A07A3C'];
+  function walkRoute(it, st) {
+    var key = 'walk:' + it.lat.toFixed(5) + ',' + it.lng.toFixed(5) + '>' + st[0];
+    try { var c = sessionStorage.getItem(key); if (c) return Promise.resolve(JSON.parse(c)); } catch (e) { }
+    var u = 'https://routing.openstreetmap.de/routed-foot/route/v1/foot/' + it.lng + ',' + it.lat + ';' + st[2] + ',' + st[1] + '?overview=full&geometries=geojson';
+    return fetch(u).then(function (r) { return r.json(); }).then(function (j) {
+      var rt = j && j.routes && j.routes[0]; if (!rt) return null;
+      var out = { d: Math.round(rt.distance), pts: rt.geometry.coordinates };
+      try { sessionStorage.setItem(key, JSON.stringify(out)); } catch (e) { }
+      return out;
+    }).catch(function () { return null; });
+  }
+  function drawWalk(mp, it) {
+    if (!window.fetch || !naver.maps.Polyline) return;
+    var near = WALK_ST.map(function (s) { return [s, distM(it.lat, it.lng, s[1], s[2])]; }).sort(function (a, b) { return a[1] - b[1]; });
+    var pick = near.filter(function (s, i) { return i < 3 && (i === 0 ? s[1] < 2000 : s[1] < 1100); }).map(function (s) { return s[0]; });
+    if (!pick.length) return;
+    Promise.all(pick.map(function (s) { return walkRoute(it, s); })).then(function (rs) {
+      var bounds = new naver.maps.LatLngBounds(new naver.maps.LatLng(it.lat, it.lng), new naver.maps.LatLng(it.lat, it.lng)), any = false, legend = [];
+      rs.forEach(function (r, i) {
+        if (!r || !r.pts || r.pts.length < 2 || r.d > 2500) return;
+        any = true; var col = WALK_COL[i], min = Math.max(1, Math.round(r.d / 67));
+        var path = r.pts.map(function (p) { var ll = new naver.maps.LatLng(p[1], p[0]); bounds.extend(ll); return ll; });
+        new naver.maps.Polyline({ map: mp, path: path, strokeColor: '#FFFFFF', strokeWeight: 8, strokeOpacity: .9, strokeLineCap: 'round', strokeLineJoin: 'round' });
+        new naver.maps.Polyline({ map: mp, path: path, strokeColor: col, strokeWeight: 4.5, strokeOpacity: 1, strokeStyle: 'shortdot', strokeLineCap: 'round', strokeLineJoin: 'round' });
+        var end = path[path.length - 1];
+        new naver.maps.Marker({ position: end, map: mp, zIndex: 200 + i, icon: { content: '<div class="walkTag" style="background:' + col + '"><b>' + esc(pick[i][0]) + '</b> 도보 ' + min + '분<i style="border-top-color:' + col + '"></i></div>', anchor: new naver.maps.Point(0, 0) } });
+        legend.push('<span><i style="background:' + col + '"></i>' + esc(pick[i][0]) + ' 약 ' + r.d.toLocaleString() + 'm · 도보 약 ' + min + '분</span>');
+      });
+      if (!any) return;
+      try { mp.fitBounds(bounds, { top: 56, right: 60, bottom: 30, left: 40 }); } catch (e) { mp.fitBounds(bounds); }
+      var lg = document.createElement('div'); lg.className = 'walkLegend'; lg.innerHTML = legend.join('');
+      var host = $('dtMap'); if (host && host.parentNode) host.parentNode.insertBefore(lg, host.nextSibling);
+    });
+  }
   function detailMap(it) {
     var el = $('dtMap'); if (!el) return;
     if (!isFinite(it.lat) || !it.lat) { el.innerHTML = '<div style="padding:40px;text-align:center;color:#5B6670">위치 정보는 상담 시 안내해 드립니다.</div>'; return; }
@@ -1976,7 +2014,8 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
         if (window.naver && naver.maps && naver.maps.Map && M && M.kind === 'naver') {
           var c = new naver.maps.LatLng(it.lat, it.lng);
           var mp = new naver.maps.Map(el, { center: c, zoom: 17, scrollWheel: false, zoomControl: true, zoomControlOptions: { position: naver.maps.Position && naver.maps.Position.TOP_RIGHT } });
-          new naver.maps.Marker({ position: c, map: mp, icon: { content: pin, anchor: naver.maps.Point ? new naver.maps.Point(15, 15) : undefined } });
+          new naver.maps.Marker({ position: c, map: mp, zIndex: 100, icon: { content: pin, anchor: naver.maps.Point ? new naver.maps.Point(15, 15) : undefined } });
+          try { drawWalk(mp, it); } catch (e) { }
           return;
         }
         if (window.L && (!M || M.kind === 'leaflet' || tries > 25)) {
