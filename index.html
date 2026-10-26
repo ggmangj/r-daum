@@ -892,12 +892,41 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 .dtThumbEmpty{display:block;background:#F4F0E8;border:1px dashed #E0D8C8}
 @media (max-width:760px){.dtThumb5{gap:6px}.dtThumb5 button,.dtThumb5 .dtThumbEmpty{border-radius:8px}}
 </style>
+<style id="headFix">
+.heroMapHead{justify-content:flex-start!important}
+.heroMapHead .heroMapTitle{flex:none}
+.heroMapHead #mapSearchBar{flex:1 1 auto;min-width:0;margin:0!important;display:flex;align-items:center;gap:6px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:0 4px}
+.heroMapHead #mapSearchBar[hidden]{display:block!important;visibility:hidden;height:1px}
+.heroMapHead #mapSearchBar>*{flex:none}
+.heroMapHead .noSearch{margin-left:auto}
+.heroMapHead #mapSearchBar:not([hidden])+.noSearch{margin-left:0}
+@media (min-width:761px){.heroMapHead{flex-wrap:nowrap!important}}
+.heroMapHead .noSearch,.heroMapHead .mapFullBtn,.heroMapHead .mapFullClose{flex:none}
+@media (min-width:761px){body:not(.mapFull) .heroMapHead:has(#mapSearchBar:not([hidden])) .heroMapTitle span{display:none}body:not(.mapFull) .heroMapHead:has(#mapSearchBar:not([hidden])) .noSearch input{width:120px}body:not(.mapFull) .heroMapHead:has(#mapSearchBar:not([hidden])) .mapFullBtn{padding:0 12px}.heroMapHead #mapSearchBar .msLbl{font-size:12.5px}}
+@media (max-width:760px){.asHead span{font-size:0!important}.asHead em{font-size:12.5px!important;margin:0!important}.heroMapHead #mapSearchBar{order:3;flex:1 1 100%}.heroMapHead #mapSearchBar[hidden]{display:none!important}}
+/* 카드가 길어지면 로고를 가운데 크게 */
+.heroCard .flipFront.tall .hcBrand{flex:1 1 auto;justify-content:center;align-items:center;margin:0}
+.heroCard .flipFront.tall .hcLock{flex-direction:column;gap:14px}
+.heroCard .flipFront.tall .hcLock .dmRule{display:none}
+.heroCard .flipFront.tall .hcLock .dmMark{height:92px}
+.heroCard .flipFront.tall .hcLock .dmText{transform:none;text-align:center;display:flex;flex-direction:column;align-items:center}
+.heroCard .flipFront.tall .hcLock .dmName{font-size:40px;top:0}
+.heroCard .flipFront.tall .hcLock .dmTag{font-size:10.5px;margin-top:10px}
+.heroCard .flipFront.tall .hcCopy{text-align:center}
+</style>
+<script>
+(function(){
+  function tall(){var f=document.querySelector('.heroCard .flipFront');if(!f)return;f.classList.remove('tall');f.classList.toggle('tall',f.getBoundingClientRect().height>=600);}
+  window.addEventListener('load',tall);window.addEventListener('resize',tall);setTimeout(tall,800);setTimeout(tall,2500);
+  if(window.ResizeObserver){var f=document.querySelector('.heroCard .flipFront');if(f)new ResizeObserver(function(){requestAnimationFrame(tall)}).observe(f);}
+})();
+</script>
 <style id="mapFullCss">
 .mapFullBtn,.mapFullClose{display:inline-flex;align-items:center;gap:6px;height:44px;padding:0 16px;border:1px solid #1F3644;border-radius:999px;background:#FFFFFF;color:#1F3644;font:700 14px 'Noto Sans KR',sans-serif;cursor:pointer;white-space:nowrap}
 .mapFullBtn:hover{background:#1F3644;color:#FFFFFF}.mapFullBtn svg{color:#BC975E}
 .mapFullClose{display:none;background:#1F3644;color:#FFFFFF}.mapFullClose:hover{background:#2A4757}
 .autoSearch{margin:0 0 12px;padding:14px 16px 12px;border:1.5px solid #1F3644;border-radius:16px;background:#FFFFFF}
-.asHead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px}.asHead b{font-size:15.5px;color:#1F3644;letter-spacing:-.3px}.asHead span{font-size:12.5px;color:#6B757D}
+.asHead{display:flex;align-items:baseline;gap:10px;flex-wrap:nowrap;margin-bottom:10px;white-space:nowrap;overflow:hidden}.asHead span{overflow:hidden;text-overflow:ellipsis}.asHead em{font-style:normal;color:#8A6A35;margin-left:6px}.asHead b{font-size:15.5px;color:#1F3644;letter-spacing:-.3px}.asHead span{font-size:12.5px;color:#6B757D}
 .asRow{display:flex;gap:8px}.asRow input{flex:1;min-width:0;height:46px;border:1px solid #D9D2C4;border-radius:12px;padding:0 14px;font:500 15px 'Noto Sans KR',sans-serif;color:#14191F;background:#FBFAF7}
 .asRow input:focus{outline:2px solid #BC975E;outline-offset:0;border-color:#BC975E;background:#FFFFFF}
 .asRow button{flex:none;height:46px;padding:0 22px;border:0;border-radius:12px;background:#1F3644;color:#FFFFFF;font:800 15px 'Noto Sans KR',sans-serif;cursor:pointer}.asRow button:hover{background:#2A4757}
@@ -1058,10 +1087,10 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 </div>
 <div id="map" class="heroMap">
 <div class="heroMapHead">
-<h2 class="heroMapTitle"><span>MAP SEARCH</span>지도로 매물 찾기</h2>
+<h2 class="heroMapTitle"><span>MAP SEARCH</span>지도로 매물 찾기</h2><div id="mapSearchBar" class="msBar" hidden></div>
 <form class="noSearch" id="noSearch" role="search"><label class="sr" for="noInput">매물번호 검색</label><input id="noInput" type="search" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="12" placeholder="매물번호 검색 (예: D5B531F)"><button type="submit" aria-label="매물번호로 찾기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></button></form><button type="button" class="mapFullBtn" id="mapFullBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"></path></svg>지도 크게 보기</button><button type="button" class="mapFullClose" id="mapFullClose" aria-label="크게 보기 닫기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button>
 </div>
-<form class="autoSearch" id="autoSearch" autocomplete="off"><div class="asHead"><b>매물 자동 검색</b><span>원하는 조건을 문장으로 적으면 맞는 매물을 찾아 드려요</span></div><div class="asRow"><label class="sr" for="asInput">매물 자동 검색</label><input id="asInput" type="search" maxlength="120" placeholder="예) 강남역 도보 5분, 50평 이상, 한층 전체, 2층 이상 (지하층 불가)"><button type="submit">찾기</button></div><div class="asEx"><span>예시</span><button type="button" data-ex="압구정역 도보 5분, 30평 이상, 1층">압구정역 도보 5분 · 30평 이상 · 1층</button><button type="button" data-ex="신사동 병의원 50평 이상, 한층 전체, 지하층 불가">신사동 병의원 · 50평 이상 · 한층 전체</button><button type="button" data-ex="강남역 도보 10분, 월세 500만 이하, 무권리">강남역 10분 · 월세 500 이하 · 무권리</button></div></form>
+<form class="autoSearch" id="autoSearch" autocomplete="off"><div class="asHead"><b>매물 자동 검색</b><span>원하는 조건을 문장으로 적으면 맞는 매물을 찾아 드려요 <em>예) 강남역 도보 5분, 50평 이상, 2층 이상</em></span></div><div class="asRow"><label class="sr" for="asInput">매물 자동 검색</label><input id="asInput" type="search" maxlength="120" placeholder="예) 강남역 도보 5분, 50평 이상, 한층 전체, 2층 이상 (지하층 불가)"><button type="submit">찾기</button></div></form>
 <div class="mapTools" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
 <label style="display: flex; align-items: center"><span class="sr">동 선택</span>
 <select id="mapDong" class="mapSel" style="height: 44px; border: 1px solid #D9D2C4; border-radius: 999px; padding: 0 14px; font-size: 14px; background: #FFFFFF"><option value="">전체 지역</option></select></label>
@@ -1074,7 +1103,6 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 <label style="display: flex; align-items: center"><span class="sr">월세</span>
 <select id="mapRent" class="mapSel" style="height: 44px; border: 1px solid #D9D2C4; border-radius: 999px; padding: 0 14px; font-size: 14px; background: #FFFFFF"><option value="">전체 월세</option><option value="0-300">300만 이하</option><option value="300-500">300만~500만</option><option value="500-1000">500만~1,000만</option><option value="1000-2000">1,000만~2,000만</option><option value="2000-9999999">2,000만 이상</option></select></label>
 </div>
-<div id="mapSearchBar" class="msBar" hidden></div>
 <div class="elev" style="display: flex; flex-wrap: wrap; gap: 0; border: 1px solid #E6E0D4; border-radius: 18px; overflow: hidden; background: #FFFFFF">
 <div style="flex: 1 1 250px; min-width: 0; display: flex; flex-direction: column; border-right: 1px solid #E6E0D4">
 <div style="padding: 16px 18px; border-bottom: 1px solid #EFEAE0; display: flex; justify-content: space-between; align-items: center; font-size: 14px">
