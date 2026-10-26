@@ -886,6 +886,15 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 @media (max-width:760px){.adList li{grid-template-columns:56px minmax(0,1fr);}.adList li .adGo{grid-column:2;justify-self:start}.adMain{gap:2px 10px}}
 @media print{.adChk,.adGo{display:none!important}.adList li{grid-template-columns:minmax(0,1fr)}}
 </style>
+<style id="fullBtnRow">
+.heroMap .mapTools>label{flex:1 1 0;min-width:0}.heroMap .mapTools>label .mapSel{width:100%}
+.mapTools .mapFullBtn{flex:none;height:44px;background:#E6EEF0!important;border-color:#3A6271!important;color:#294652!important;box-shadow:0 1px 0 rgba(41,70,82,.06)}
+.mapTools .mapFullBtn:hover{background:#294652!important;color:#FFFFFF!important}
+.heroMapHead .noSearch{margin-left:auto!important}
+@media (min-width:761px) and (max-width:1100px){.heroMap .mapSel{height:40px!important}.mapTools .mapFullBtn{height:40px}}
+@media (max-width:760px){.mapTools .mapFullBtn{display:none!important}}
+body.mapFull .mapTools .mapFullBtn{display:none}
+</style>
 <style id="thumb5">
 .dtThumb5{display:flex!important;gap:8px;overflow-x:auto!important;scroll-snap-type:x mandatory;scrollbar-width:thin!important;scrollbar-color:#CFC5B3 transparent;padding-bottom:8px!important}
 .dtThumb5::-webkit-scrollbar{display:block!important;height:6px}
@@ -1123,7 +1132,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 <div id="map" class="heroMap">
 <div class="heroMapHead">
 <h2 class="heroMapTitle"><span>MAP SEARCH</span>지도로 매물 찾기</h2><div id="mapSearchBar" class="msBar" hidden></div>
-<form class="noSearch" id="noSearch" role="search"><label class="sr" for="noInput">매물번호 검색</label><input id="noInput" type="search" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="12" placeholder="매물번호 검색 (예: D5B531F)"><button type="submit" aria-label="매물번호로 찾기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></button></form><button type="button" class="mapFullBtn" id="mapFullBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"></path></svg>지도 크게 보기</button><button type="button" class="mapFullClose" id="mapFullClose" aria-label="크게 보기 닫기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button>
+<form class="noSearch" id="noSearch" role="search"><label class="sr" for="noInput">매물번호 검색</label><input id="noInput" type="search" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="12" placeholder="매물번호 검색 (예: D5B531F)"><button type="submit" aria-label="매물번호로 찾기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></button></form><button type="button" class="mapFullClose" id="mapFullClose" aria-label="크게 보기 닫기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button>
 </div>
 <form class="autoSearch" id="autoSearch" autocomplete="off"><div class="asHead"><b>매물 자동 검색</b><span>원하는 조건을 문장으로 적으면 맞는 매물을 찾아 드려요 <em>예) 강남역 도보 5분, 50평 이상, 2층 이상</em></span></div><div class="asRow"><label class="sr" for="asInput">매물 자동 검색</label><input id="asInput" type="search" maxlength="120" placeholder="예) 강남역 도보 5분, 50평 이상, 한층 전체, 2층 이상 (지하층 불가)"><button type="submit">찾기</button></div></form>
 <div class="mapTools" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
@@ -1137,6 +1146,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 <select id="mapDep" class="mapSel" style="height: 44px; border: 1px solid #D9D2C4; border-radius: 999px; padding: 0 14px; font-size: 14px; background: #FFFFFF"><option value="">전체 보증금</option><option value="0-3000">3,000만 이하</option><option value="3000-5000">3,000만~5,000만</option><option value="5000-10000">5,000만~1억</option><option value="10000-30000">1억~3억</option><option value="30000-9999999">3억 이상</option></select></label>
 <label style="display: flex; align-items: center"><span class="sr">월세</span>
 <select id="mapRent" class="mapSel" style="height: 44px; border: 1px solid #D9D2C4; border-radius: 999px; padding: 0 14px; font-size: 14px; background: #FFFFFF"><option value="">전체 월세</option><option value="0-300">300만 이하</option><option value="300-500">300만~500만</option><option value="500-1000">500만~1,000만</option><option value="1000-2000">1,000만~2,000만</option><option value="2000-9999999">2,000만 이상</option></select></label>
+<button type="button" class="mapFullBtn" id="mapFullBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"></path></svg>지도 크게 보기</button>
 </div>
 <div class="elev" style="display: flex; flex-wrap: wrap; gap: 0; border: 1px solid #E6E0D4; border-radius: 18px; overflow: hidden; background: #FFFFFF">
 <div style="flex: 1 1 250px; min-width: 0; display: flex; flex-direction: column; border-right: 1px solid #E6E0D4">
