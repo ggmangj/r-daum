@@ -893,7 +893,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 @media (max-width:760px){.dtThumb5{gap:6px}.dtThumb5 button,.dtThumb5 .dtThumbEmpty{border-radius:8px}}
 </style>
 <style id="heroB">
-.heroSplit .heroLead{margin-top:2px!important;padding-top:14px!important;border-top:1px solid #DCD3C2;font-size:15px!important;font-weight:600;line-height:1.7!important;color:#36424C!important;letter-spacing:-.3px!important}
+.heroSplit .heroLead{margin-top:2px!important;padding-top:14px!important;border-top:1px solid #DCD3C2}
 .trustBox{display:none}
 @media (min-width:1101px){
  .heroCard{flex:none!important}
@@ -904,7 +904,25 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
  .tbi b{font-size:13.5px;color:#294652;letter-spacing:-.4px;white-space:nowrap}.tbi b:before{content:"✓ ";color:#BC975E;font-weight:900}
  .tbi span{font-size:11.5px;line-height:1.45;color:#5B6670;letter-spacing:-.3px}
 }
-@media (max-width:760px){.heroSplit .heroLead{font-size:16px!important}}
+</style>
+<style id="fitScreen">
+@media (min-width:1101px){
+ .headRow{padding-top:10px!important;padding-bottom:10px!important}
+ .heroSplit{padding-top:22px!important;padding-bottom:40px!important}
+ .heroMap #mapList{height:470px!important}
+ .heroMap #leafletMap{height:521px!important}
+ .heroMap .autoSearch{padding:10px 14px 10px;margin-bottom:10px}.heroMap .asHead{margin-bottom:8px}.heroMap .asRow input,.heroMap .asRow button{height:42px}
+ .heroMap .mapTools{margin-bottom:10px!important}.heroMap .mapSel{height:40px!important}
+ .heroMapHead{margin-bottom:10px!important}
+ .heroLeft{gap:14px!important}
+ .heroCard #quickForm{padding:14px 14px!important;gap:7px!important}
+ .heroCard #quickForm input:not([type=checkbox]),.heroCard #quickForm select{height:32px!important}
+ .heroCard #quickForm textarea{height:40px!important}
+ .heroCard .qfSubmit{height:40px!important}
+ .heroCard #quickForm>div[style*="border-top"] a{height:36px!important}
+ .heroCard .flipFront{padding:18px!important;gap:12px!important}
+ .tbi{padding:8px 11px!important;gap:2px!important}
+}
 </style>
 <style id="headFix">
 .heroMapHead{justify-content:flex-start!important}
@@ -917,7 +935,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 @media (min-width:761px){.heroMapHead{flex-wrap:nowrap!important}}
 .heroMapHead .noSearch,.heroMapHead .mapFullBtn,.heroMapHead .mapFullClose{flex:none}
 @media (min-width:761px){body:not(.mapFull) .heroMapHead:has(#mapSearchBar:not([hidden])) .heroMapTitle span{display:none}body:not(.mapFull) .heroMapHead:has(#mapSearchBar:not([hidden])) .noSearch input{width:120px}body:not(.mapFull) .heroMapHead:has(#mapSearchBar:not([hidden])) .mapFullBtn{padding:0 12px}.heroMapHead #mapSearchBar .msLbl{font-size:12.5px}}
-@media (max-width:760px){.heroMapHead .noSearch{flex:1 1 100%!important;margin-left:0!important}.asHead span{font-size:0!important}.asHead em{font-size:12.5px!important;margin:0!important}.heroMapHead #mapSearchBar{order:3;flex:1 1 100%}.heroMapHead #mapSearchBar[hidden]{display:none!important}}
+@media (max-width:760px){.heroMapHead .mapFullBtn{display:none!important}.heroMapHead .noSearch{flex:1 1 100%!important;margin-left:0!important}.asHead span{font-size:0!important}.asHead em{font-size:12.5px!important;margin:0!important}.heroMapHead #mapSearchBar{order:3;flex:1 1 100%}.heroMapHead #mapSearchBar[hidden]{display:none!important}}
 /* 카드가 길어지면 로고를 가운데 크게 */
 .heroCard .flipFront.tall .hcBrand{flex:1 1 auto;justify-content:center;align-items:center;margin:0}
 .heroCard .flipFront.tall .hcLock{flex-direction:column;gap:14px}
@@ -2013,7 +2031,8 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 
   /* ---------- 지도 크게 보기 (전체 화면) ---------- */
   function mapRefit() { if (!M) return; [60, 350].forEach(function (ms) { setTimeout(function () { if (M.resize) M.resize(); drawMap(); }, ms); }); }
-  function openFullMap() { if (document.body.classList.contains('mapFull')) return; document.body.classList.add('mapFull'); mapRefit(); }
+  function canFull() { return innerWidth > 760; }
+  function openFullMap() { if (!canFull() || document.body.classList.contains('mapFull')) return; document.body.classList.add('mapFull'); mapRefit(); }
   function closeFullMap() { if (!document.body.classList.contains('mapFull')) return; document.body.classList.remove('mapFull'); mapRefit(); var sec = $('map'); if (sec) setTimeout(function () { sec.scrollIntoView(); }, 80); }
   window.bdMapFull = { open: openFullMap, close: closeFullMap };
   (function () {
@@ -2023,9 +2042,9 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && document.body.classList.contains('mapFull') && !document.body.classList.contains('detailMode')) closeFullMap(); });
     // 상단 메뉴 '매물 조회' → 크게 보기
     document.querySelectorAll('.mainNav a[href="#map"]').forEach(function (a) {
-      a.addEventListener('click', function (e) { document.body.classList.add('mapFull'); if (!document.body.classList.contains('detailMode')) { e.preventDefault(); mapRefit(); } });
+      a.addEventListener('click', function (e) { if (!canFull()) return; document.body.classList.add('mapFull'); if (!document.body.classList.contains('detailMode')) { e.preventDefault(); mapRefit(); } });
     });
-    window.addEventListener('resize', function () { if (M && M.resize && document.body.classList.contains('mapFull')) M.resize(); });
+    window.addEventListener('resize', function () { if (document.body.classList.contains('mapFull') && !canFull()) { document.body.classList.remove('mapFull'); } if (M && M.resize) M.resize(); });
   })();
 
   /* ================= 매물 상세 페이지 (#item/매물번호) ================= */
@@ -2102,7 +2121,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       infoRow('방향', dirTxt) +
       infoRow('입주가능일', it.moveIn, false, '협의 (문의)') +
       infoRow('욕실(화장실)', it.toilet) +
-      infoRow('권리금', it.premium) +
+      infoRow('권리금', it.premium === '무권리' ? '없음' : '유선문의') +
       '</dl>';
     var feat = (nz(it.point) ? '<p class="dtPoint"><b>POINT</b>&nbsp; ' + esc(it.point) + '</p>' : '') +
       (opts.length ? '<div class="dtChips">' + opts.map(function (o) { return '<span>' + esc(o) + '</span>'; }).join('') + '</div>' : '');
@@ -2662,7 +2681,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     });
   }
   function closeByUser() {
-    document.body.classList.add('mapFull');   // 목록으로 → 지도 크게 보기로
+    if (innerWidth > 760) document.body.classList.add('mapFull');   // 목록으로 → 지도 크게 보기로 (컴퓨터 화면만)
     if (DT.internal) { DT.internal = false; DT.restore = true; history.back(); return; }
     // 공유 링크로 바로 들어온 경우: 지도(또는 추천 매물) 목록으로
     location.hash = DT.from === 'listings' ? '#listings' : '#map';
