@@ -892,6 +892,48 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 .dtThumbEmpty{display:block;background:#F4F0E8;border:1px dashed #E0D8C8}
 @media (max-width:760px){.dtThumb5{gap:6px}.dtThumb5 button,.dtThumb5 .dtThumbEmpty{border-radius:8px}}
 </style>
+<style id="mapFullCss">
+.mapFullBtn,.mapFullClose{display:inline-flex;align-items:center;gap:6px;height:44px;padding:0 16px;border:1px solid #1F3644;border-radius:999px;background:#FFFFFF;color:#1F3644;font:700 14px 'Noto Sans KR',sans-serif;cursor:pointer;white-space:nowrap}
+.mapFullBtn:hover{background:#1F3644;color:#FFFFFF}.mapFullBtn svg{color:#BC975E}
+.mapFullClose{display:none;background:#1F3644;color:#FFFFFF}.mapFullClose:hover{background:#2A4757}
+.autoSearch{margin:0 0 12px;padding:14px 16px 12px;border:1.5px solid #1F3644;border-radius:16px;background:#FFFFFF}
+.asHead{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px}.asHead b{font-size:15.5px;color:#1F3644;letter-spacing:-.3px}.asHead span{font-size:12.5px;color:#6B757D}
+.asRow{display:flex;gap:8px}.asRow input{flex:1;min-width:0;height:46px;border:1px solid #D9D2C4;border-radius:12px;padding:0 14px;font:500 15px 'Noto Sans KR',sans-serif;color:#14191F;background:#FBFAF7}
+.asRow input:focus{outline:2px solid #BC975E;outline-offset:0;border-color:#BC975E;background:#FFFFFF}
+.asRow button{flex:none;height:46px;padding:0 22px;border:0;border-radius:12px;background:#1F3644;color:#FFFFFF;font:800 15px 'Noto Sans KR',sans-serif;cursor:pointer}.asRow button:hover{background:#2A4757}
+.asEx{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:9px;font-size:12.5px}.asEx span{color:#8A939A;margin-right:2px}
+.asEx button{border:1px solid #E6E0D4;background:#F6F2EA;color:#46515B;border-radius:999px;padding:5px 11px;font:500 12.5px 'Noto Sans KR',sans-serif;cursor:pointer}.asEx button:hover{border-color:#BC975E;color:#1F3644}
+.msChip.auto{background:#1F3644;color:#FFFFFF;border-color:#1F3644}
+body.mapFull:not(.detailMode){overflow:hidden}
+body.mapFull #map{position:fixed;inset:0;z-index:95;margin:0;width:auto;max-width:none;background:#F7F3EC;padding:14px 22px 14px;display:flex;flex-direction:column;overflow:hidden}
+body.mapFull #map .heroMapHead,body.mapFull #map .autoSearch,body.mapFull #map .mapTools,body.mapFull #map #mapSearchBar{flex:none}
+body.mapFull #map .autoSearch{padding:10px 14px 10px}body.mapFull #map .asHead{margin-bottom:8px}
+body.mapFull #map .elev{flex:1 1 auto;min-height:0;flex-wrap:nowrap!important}
+body.mapFull #map .elev>div:first-child{flex:0 0 360px!important;height:100%}
+body.mapFull #map .elev>div:last-child{height:100%}
+body.mapFull #mapList{height:auto!important;flex:1 1 auto;min-height:0}
+body.mapFull #leafletMap{height:100%!important}
+body.mapFull #map>p{display:none}
+body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-flex}
+@media (max-width:760px){
+ .mapFullBtn{height:40px;padding:0 12px;font-size:13px}
+ .asRow button{padding:0 16px}.asEx button{font-size:12px}
+ body.mapFull #map{padding:10px 10px calc(10px + env(safe-area-inset-bottom))}
+ body.mapFull #map .heroMapTitle span{display:none}
+ body.mapFull #map .asHead span,body.mapFull #map .asEx{display:none}
+ body.mapFull #map .heroMapHead .noSearch{display:none}
+ body.mapFull #map .elev>div:first-child{flex:none!important;height:auto}
+ body.mapFull #map .elev{flex-direction:column}
+ body.mapFull #map .elev>div:last-child{flex:1 1 auto;min-height:0}
+ body.mapFull #map .mapTools{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:none;margin-bottom:8px}
+ body.mapFull #map .mapTools>label{flex:0 0 auto!important}
+ body.mapFull #map .mapSel{width:auto!important;height:38px!important;font-size:13px!important}
+ body.mapFull #map #mapSearchBar{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-bottom:8px}
+ body.mapFull #map #mapSearchBar>*{flex:none}
+ body.mapFull #map .autoSearch{margin-bottom:8px}
+}
+@media print{.mapFullBtn,.mapFullClose,.autoSearch{display:none!important}}
+</style>
 <style id="walkCss">.walkTag{position:relative;transform:translate(-50%,calc(-100% - 10px));white-space:nowrap;color:#FFFFFF;font:600 12.5px/1 'Noto Sans KR',sans-serif;padding:7px 10px;border-radius:6px;box-shadow:0 3px 10px rgba(0,0,0,.25)}.walkTag b{font-weight:800;margin-right:2px}.walkTag i{position:absolute;left:50%;bottom:-6px;margin-left:-6px;border:6px solid transparent;border-bottom:0}.walkLegend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 2px 0;font-size:13.5px;color:#46515B}.walkLegend span{display:inline-flex;align-items:center;gap:6px}.walkLegend i{width:18px;height:4px;border-radius:2px;display:inline-block}@media print{.walkLegend{display:none}}@media (max-width:760px){.walkTag{font-size:11.5px;padding:6px 8px}.walkLegend{flex-direction:column;font-size:13px}}</style>
 <style id="mNoList">@media (max-width:760px){#mapList{display:none!important}#leafletMap{height:460px!important}}</style>
 <style id="noSearchCss">
@@ -1017,8 +1059,9 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 <div id="map" class="heroMap">
 <div class="heroMapHead">
 <h2 class="heroMapTitle"><span>MAP SEARCH</span>지도로 매물 찾기</h2>
-<form class="noSearch" id="noSearch" role="search"><label class="sr" for="noInput">매물번호 검색</label><input id="noInput" type="search" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="12" placeholder="매물번호 검색 (예: D5B531F)"><button type="submit" aria-label="매물번호로 찾기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></button></form>
+<form class="noSearch" id="noSearch" role="search"><label class="sr" for="noInput">매물번호 검색</label><input id="noInput" type="search" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="12" placeholder="매물번호 검색 (예: D5B531F)"><button type="submit" aria-label="매물번호로 찾기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></button></form><button type="button" class="mapFullBtn" id="mapFullBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"></path></svg>지도 크게 보기</button><button type="button" class="mapFullClose" id="mapFullClose" aria-label="크게 보기 닫기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button>
 </div>
+<form class="autoSearch" id="autoSearch" autocomplete="off"><div class="asHead"><b>매물 자동 검색</b><span>원하는 조건을 문장으로 적으면 맞는 매물을 찾아 드려요</span></div><div class="asRow"><label class="sr" for="asInput">매물 자동 검색</label><input id="asInput" type="search" maxlength="120" placeholder="예) 강남역 도보 5분, 50평 이상, 한층 전체, 2층 이상 (지하층 불가)"><button type="submit">찾기</button></div><div class="asEx"><span>예시</span><button type="button" data-ex="압구정역 도보 5분, 30평 이상, 1층">압구정역 도보 5분 · 30평 이상 · 1층</button><button type="button" data-ex="신사동 병의원 50평 이상, 한층 전체, 지하층 불가">신사동 병의원 · 50평 이상 · 한층 전체</button><button type="button" data-ex="강남역 도보 10분, 월세 500만 이하, 무권리">강남역 10분 · 월세 500 이하 · 무권리</button></div></form>
 <div class="mapTools" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
 <label style="display: flex; align-items: center"><span class="sr">동 선택</span>
 <select id="mapDong" class="mapSel" style="height: 44px; border: 1px solid #D9D2C4; border-radius: 999px; padding: 0 14px; font-size: 14px; background: #FFFFFF"><option value="">전체 지역</option></select></label>
@@ -1521,6 +1564,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
         map.fitBounds(b, { top: 40, right: 40, bottom: 40, left: 40 });
       },
       go: function (p, z) { map.morph(ll(p), z); },
+      resize: function () { try { map.setSize(new nm.Size(el.clientWidth, el.clientHeight)); } catch (e) { } },
       onChange: function (fn) { nm.Event.addListener(map, 'idle', fn); }
     };
   }
@@ -1544,6 +1588,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
       closePopup: function () { map.closePopup(); },
       fit: function (pts) { if (!pts.length) return; map.fitBounds(L.latLngBounds(pts.map(function (p) { return [p.lat, p.lng]; })).pad(0.15), { maxZoom: 16 }); },
       go: function (p, z) { map.setView([p.lat, p.lng], z); },
+      resize: function () { try { map.invalidateSize(); } catch (e) { } },
       onChange: function (fn) { map.on('moveend zoomend', fn); }
     };
   }
@@ -1622,6 +1667,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
       if (SEARCH.cat && !has(it, SEARCH.cat)) return false;
       if (SEARCH.gu && it.gu && it.gu !== SEARCH.gu) return false;
       if (SEARCH.kw && !kwMatch(it, SEARCH.kw)) return false;
+      if (SEARCH.auto && !autoMatch(it, SEARCH.auto)) return false;
       if (dong && it.dong !== dong) return false;
       if (ar.length === 2) { var a = it.area || 0; if (a < +ar[0] || a > +ar[1]) return false; }
       if (fl) { var f = floorNum(it.floor); if (fl === 'b' ? f !== -1 : !inRange(f > 0 ? f : null, fl.split('-'))) return false; }
@@ -1742,7 +1788,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 
 
   /* ================= 상단 매물검색 → 지도 검색 ================= */
-  var SEARCH = { cat: '', gu: '', kw: '', sale: false, label: [] };
+  var SEARCH = { cat: '', gu: '', kw: '', sale: false, label: [], auto: null };
   var SALE = false;
   var CAT_OF = { '상가': 'shop', '병의원': 'clinic', '사무실': 'office', '사옥·통임대': 'building', '빌딩': 'building' };
   // 장소 검색어 → 대략 위치(선은 여러 점) + 반경(m)
@@ -1788,9 +1834,10 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
     if (SEARCH.cat && $('sType')) chips.push($('sType').value);
     if (SEARCH.gu) chips.push(SEARCH.gu + ' 전체');
     if (SEARCH.kw) chips.push('“' + SEARCH.kw + '”');
+    var autoN = 0; if (SEARCH.auto) SEARCH.auto.chips.forEach(function (c) { chips.push(c); autoN++; });
     if (!chips.length) { bar.hidden = true; bar.innerHTML = ''; return; }
-    bar.hidden = false;
-    bar.innerHTML = '<span class="msLbl">검색 조건</span>' + chips.map(function (c) { return '<span class="msChip">' + esc(c) + '</span>'; }).join('') +
+    bar.hidden = false; var base = chips.length - autoN;
+    bar.innerHTML = '<span class="msLbl">' + (autoN ? '자동 검색 조건' : '검색 조건') + '</span>' + chips.map(function (c, i) { return '<span class="msChip' + (i >= base ? ' auto' : '') + '">' + esc(c) + '</span>'; }).join('') +
       '<button type="button" class="msReset">조건 초기화 ×</button>';
   }
   function runSearch() {
@@ -1808,10 +1855,135 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
     var sec = $('map'); if (sec) sec.scrollIntoView({ behavior: 'smooth' });
   }
   function resetSearch() {
-    SEARCH.cat = SEARCH.gu = SEARCH.kw = ''; SEARCH.sale = false;
+    SEARCH.cat = SEARCH.gu = SEARCH.kw = ''; SEARCH.sale = false; SEARCH.auto = null; var ai0 = $('asInput'); if (ai0) ai0.value = '';
     ['mapDong', 'mapArea', 'mapFloor', 'mapDep', 'mapRent'].forEach(function (id) { setSel(id, ''); });
     renderSearchBar(); applyFilters(true);
   }
+
+
+  /* ---------- 매물 자동 검색: 문장으로 적은 조건을 해석해서 지도·목록을 거름 ---------- */
+  //  예) "강남역 도보 5분, 50평 이상, 한층 전체, 2층 이상 (지하층 불가)"
+  //  · 역 + 도보 N분: 가장 가까운 출구까지 직선거리 × 1.3 ÷ 분당 67m 로 추정 (상세 지도는 실제 길로 다시 계산)
+  function parseAuto(q) {
+    var t = String(q || '').replace(/\s+/g, ' ').trim(); if (!t) return null;
+    var c = { chips: [] }, m, n = t.replace(/\s/g, '');
+    // 역 + 도보 시간
+    var sts = [];
+    (t.match(/[가-힣0-9]+역/g) || []).forEach(function (w) { var k = w; if (!WALK_EX[k]) { var f = Object.keys(WALK_EX).filter(function (x) { return x.indexOf(w.replace(/역$/, '')) === 0; })[0]; k = f || ''; } if (k && sts.indexOf(k) < 0) sts.push(k); });
+    if (sts.length) {
+      m = /(?:도보|걸어서)?\s*(\d{1,2})\s*분/.exec(t); c.min = m ? +m[1] : 10; c.sts = sts;
+      c.chips.push(sts.join('·') + ' 도보 ' + c.min + '분 이내');
+    } else if (/역세권|역\s*근처|역\s*가까/.test(t)) { c.sts = Object.keys(WALK_EX); m = /(\d{1,2})\s*분/.exec(t); c.min = m ? +m[1] : 5; c.chips.push('역세권 (도보 ' + c.min + '분 이내)'); }
+    // 면적
+    if ((m = /(\d{1,4})\s*평?\s*[~\-∼]\s*(\d{1,4})\s*평/.exec(t))) { c.aMin = +m[1]; c.aMax = +m[2]; c.chips.push(m[1] + '~' + m[2] + '평'); }
+    else if ((m = /(\d{1,4})\s*평\s*(이상|넘|초과|부터)/.exec(t))) { c.aMin = +m[1]; c.chips.push(m[1] + '평 이상'); }
+    else if ((m = /(\d{1,4})\s*평\s*(이하|미만|까지|안쪽|이내)/.exec(t))) { c.aMax = +m[1]; c.chips.push(m[1] + '평 이하'); }
+    else if ((m = /(\d{1,4})\s*평/.exec(t))) { c.aMin = Math.round(+m[1] * 0.8); c.aMax = Math.round(+m[1] * 1.2); c.chips.push(m[1] + '평 내외'); }
+    // 금액
+    var money = function (num, unit) { var v = parseFloat(String(num).replace(/,/g, '')); return /억/.test(unit) ? v * 10000 : /천/.test(unit) ? v * 1000 : v; };
+    if ((m = /월세\s*([\d,.]+)\s*(억|천|만)?\s*(?:원)?\s*(이하|이내|미만|까지|안쪽)?/.exec(t))) { c.rMax = money(m[1], m[2] || '만'); c.chips.push('월세 ' + fmtMan(c.rMax) + ' 이하'); }
+    if ((m = /보증금\s*([\d,.]+)\s*(억|천|만)?\s*(?:원)?\s*(이하|이내|미만|까지|안쪽)?/.exec(t))) { c.dMax = money(m[1], m[2] || '만'); c.chips.push('보증금 ' + fmtMan(c.dMax) + ' 이하'); }
+    // 층
+    c.noB = /지하\s*(층)?\s*(은|는)?\s*(불가|제외|안\s*됨|안돼|빼|x|X|노|싫)/.test(t) || /지상\s*(층)?\s*만/.test(t);
+    var fl = [], tt = t.replace(/지하\s*(층)?\s*(은|는)?\s*(불가|제외|안\s*됨|안돼|빼|x|X|노|싫)[^,]*/g, '');
+    if ((m = /(\d{1,2})\s*층\s*(이상|부터|위)/.exec(tt))) { fl.push({ ge: +m[1] }); c.chips.push(m[1] + '층 이상'); tt = tt.replace(m[0], ''); }
+    (tt.match(/(?:^|[^\d~\-])(\d{1,2})\s*층(?!\s*(?:이상|부터|위|전체))/g) || []).forEach(function (w) { var k = +(/(\d{1,2})\s*층/.exec(w)[1]); fl.push({ eq: k }); c.chips.push(k + '층'); });
+    if (/지하/.test(tt) && !c.noB) { fl.push({ b: 1 }); c.chips.push('지하층'); }
+    if (/지상/.test(tt) && !fl.length) c.noB = true;
+    if (c.noB) c.chips.push('지하층 제외');
+    if (fl.length) c.fl = fl;
+    // 사용 형태
+    if (/통\s*임대|통\s*건물|사옥|건물\s*전체/.test(t)) { c.bld = 1; c.chips.push('통임대·사옥'); }
+    else if (/(한\s*층|층|단독층|전층)\s*(전체|단독|통으로|통째)|단독\s*층|전층\s*사용|한\s*층\s*통/.test(t)) { c.whole = 1; c.chips.push('한 층 전체'); }
+    else if (/구분|일부|분할|나눠|쪼개/.test(t)) { c.part = 1; c.chips.push('층 일부(구분)'); }
+    // 용도
+    var CAT = [[/병\s*의원|의원|병원|클리닉|메디컬|치과|한의원|피부과|성형/, 'clinic', '병의원'], [/사무실|오피스|사옥/, 'office', '사무실'], [/상가|매장|카페|음식점|식당|리테일|F&B|쇼룸|판매/i, 'shop', '상가']];
+    CAT.forEach(function (x) { if (x[0].test(t) && !c.cat) { c.cat = x[1]; c.chips.push(x[2]); } });
+    // 동
+    var dongs = []; ITEMS.forEach(function (it) { if (it.dong && dongs.indexOf(it.dong) < 0 && n.indexOf(it.dong) >= 0) dongs.push(it.dong); });
+    if (dongs.length) { c.dongs = dongs; c.chips.push(dongs.join('·')); }
+    // 기타
+    if (/무권리|권리금\s*(없|x|X|0)/.test(t)) { c.noPrem = 1; c.chips.push('무권리'); }
+    if (/엘리베이터|엘베|승강기/.test(t) && !/(엘리베이터|엘베|승강기)\s*(없|x|X|무관)/.test(t)) { c.elev = 1; c.chips.push('엘리베이터'); }
+    if ((m = /주차\s*(\d{1,3})\s*대/.exec(t))) { c.park = +m[1]; c.chips.push('주차 ' + m[1] + '대 이상'); } else if (/주차\s*(가능|필수|되는|있는|O)/i.test(t)) { c.park = 1; c.chips.push('주차 가능'); }
+    if (!c.chips.length) return { chips: [], none: true, raw: t };
+    return c;
+  }
+  function floorSum(it, fl) {   // 건축물대장에서 그 층 바닥면적 합계(㎡)
+    var rows = it.reg && it.reg.fl; if (!rows) return 0; var k = String(fl).replace(/\s/g, ''), s = 0;
+    rows.forEach(function (r) { if (String(r[0]).replace(/\s/g, '') === k) s += +r[3] || 0; }); return s;
+  }
+  function wholeFloor(it) {
+    var f = String(it.floor || '');
+    if (/통임대|연층|복층|전층|건물\s*전체/.test(f) || has(it, 'building')) return true;
+    if (/전체|단독\s*층|단독\s*사용|층\s*통/.test((it.title || '') + ' ' + (it.point || '') + ' ' + (it.desc || ''))) return true;
+    var m = /^(지하)?\s*(\d+)\s*층/.exec(f.replace(/\s/g, '')); if (!m) return null;
+    var tot = floorSum(it, (m[1] ? '지하' : '') + m[2] + '층'); if (!tot || !it.area) return null;
+    return it.area * 3.3058 >= tot * 0.62;   // 전용면적이 그 층 바닥면적의 약 6할 이상이면 한 층 전체로 봄
+  }
+  function walkMinEst(it, names) {
+    var best = 1e9; names.forEach(function (n) { (WALK_EX[n] || []).forEach(function (e) { var d = distM(it.lat, it.lng, e[1], e[2]); if (d < best) best = d; }); });
+    return best * 1.3 / 67;
+  }
+  function autoMatch(it, c) {
+    if (c.none) return kwMatch(it, c.raw);
+    if (c.sts && !(isFinite(it.lat) && it.lat && walkMinEst(it, c.sts) <= c.min + 0.49)) return false;
+    var a = it.area || 0;
+    if (c.aMin != null && a < c.aMin) return false;
+    if (c.aMax != null && (!a || a > c.aMax)) return false;
+    if (c.rMax != null) { var r = manOf(it.rent, it.rentText); if (r == null || r > c.rMax) return false; }
+    if (c.dMax != null) { var d = manOf(it.dep, it.depText); if (d == null || d > c.dMax) return false; }
+    var f = String(it.floor || ''), isB = /지하|^\s*B\d/i.test(f), lv = [];
+    var rng = /\(([^)]*)\)/.exec(f), src = rng ? rng[1] : f;
+    var mm = /(지하)?\s*(\d+)\s*층?\s*[~\-]\s*(지하|지상)?\s*(\d+)\s*층/.exec(src.replace(/\s/g, ''));
+    if (mm) { var a1 = mm[1] ? -(+mm[2]) : +mm[2], a2 = mm[3] === '지하' ? -(+mm[4]) : +mm[4]; for (var x = Math.min(a1, a2); x <= Math.max(a1, a2); x++) if (x) lv.push(x); }
+    else if (/통임대/.test(f)) lv = null; else { var fn = floorNum(f); if (fn != null) lv.push(fn === -1 ? -1 : fn); }
+    if (c.noB && (lv ? lv.every(function (x) { return x < 0; }) : false)) return false;
+    if (c.noB && isB && !mm) return false;
+    if (c.fl) {
+      if (!lv) { /* 통임대: 모든 층 포함 */ }
+      else if (!c.fl.some(function (q) { return lv.some(function (x) { return q.b ? x < 0 : q.ge ? x >= q.ge : x === q.eq; }); })) return false;
+    }
+    if (c.bld && !(has(it, 'building') || /통임대/.test(f))) return false;
+    if (c.whole && wholeFloor(it) !== true) return false;
+    if (c.part && wholeFloor(it) === true) return false;
+    if (c.cat && !has(it, c.cat)) return false;
+    if (c.dongs && c.dongs.indexOf(it.dong) < 0) return false;
+    if (c.noPrem && it.premium !== '무권리') return false;
+    if (c.elev && !(/^(O|Y|유|있)/i.test(it.elev || '') || it.bldElev > 0)) return false;
+    if (c.park) { var pk = parseInt(String(it.parking || '').replace(/[^\d]/g, ''), 10); if (!(pk >= c.park)) return false; }
+    return true;
+  }
+  function runAuto(q) {
+    var c = parseAuto(q);
+    SEARCH.auto = c && (c.chips.length || c.none) ? c : null;
+    if (SEARCH.auto && SEARCH.auto.none) SEARCH.auto.chips = ['“' + SEARCH.auto.raw + '”'];
+    renderSearchBar(); applyFilters(true);
+    if (window.bdToast) window.bdToast(SEARCH.auto ? '조건에 맞는 매물 <b>' + VIEW.length + '건</b>을 찾았습니다.' + (VIEW.length ? '' : ' 조건을 조금 넓혀 보세요.') : '검색할 조건을 적어 주세요.');
+    if (!document.body.classList.contains('mapFull')) { var sec = $('map'); if (sec) sec.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+  }
+  (function () {
+    var f = $('autoSearch'); if (!f) return;
+    f.addEventListener('submit', function (e) { e.preventDefault(); var i = $('asInput'); i.blur(); runAuto(i.value); });
+    f.querySelectorAll('[data-ex]').forEach(function (b) { b.addEventListener('click', function () { $('asInput').value = b.getAttribute('data-ex'); runAuto(b.getAttribute('data-ex')); }); });
+  })();
+
+  /* ---------- 지도 크게 보기 (전체 화면) ---------- */
+  function mapRefit() { if (!M) return; [60, 350].forEach(function (ms) { setTimeout(function () { if (M.resize) M.resize(); drawMap(); }, ms); }); }
+  function openFullMap() { if (document.body.classList.contains('mapFull')) return; document.body.classList.add('mapFull'); mapRefit(); }
+  function closeFullMap() { if (!document.body.classList.contains('mapFull')) return; document.body.classList.remove('mapFull'); mapRefit(); var sec = $('map'); if (sec) setTimeout(function () { sec.scrollIntoView(); }, 80); }
+  window.bdMapFull = { open: openFullMap, close: closeFullMap };
+  (function () {
+    var b = $('mapFullBtn'), x = $('mapFullClose');
+    if (b) b.addEventListener('click', openFullMap);
+    if (x) x.addEventListener('click', closeFullMap);
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && document.body.classList.contains('mapFull') && !document.body.classList.contains('detailMode')) closeFullMap(); });
+    // 상단 메뉴 '매물 조회' → 크게 보기
+    document.querySelectorAll('.mainNav a[href="#map"]').forEach(function (a) {
+      a.addEventListener('click', function (e) { document.body.classList.add('mapFull'); if (!document.body.classList.contains('detailMode')) { e.preventDefault(); mapRefit(); } });
+    });
+    window.addEventListener('resize', function () { if (M && M.resize && document.body.classList.contains('mapFull')) M.resize(); });
+  })();
 
   /* ================= 매물 상세 페이지 (#item/매물번호) ================= */
   var OFFICE_INFO = [['상호', '부동산다움공인중개사사무소'], ['대표', '개업공인중개사 안혁준'], ['등록번호', '제11680-2021-00537호'],
@@ -1933,10 +2105,9 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
       (/^https:\/\/([a-z0-9-]+\.)*(naver\.me|land\.naver\.com)\//i.test(nz(it.naverUrl)) ? '<a href="' + esc(it.naverUrl) + '" target="_blank" rel="noopener" class="dtNaver"><span class="dtN">N</span>네이버 부동산에서 보기</a>' : '') +
       '</div>' +
       '<div class="dtCard"><form class="dtForm" id="dtForm" novalidate aria-label="이 매물 문의">' +
-      '<h3>이 매물 문의하기</h3><p class="lead">남겨주시면 당일 연락드립니다. 방문 희망일을 적으면 현장 안내 일정을 잡아드려요.</p>' +
+      '<h3>이 매물 문의하기</h3><p class="lead">남겨주시면 당일 연락드립니다. 현장 안내 일정도 함께 잡아드려요.</p>' +
       '<div class="dtRow2"><label>이름 *<input type="text" name="name" maxlength="30" autocomplete="name" placeholder="홍길동"></label>' +
       '<label>연락처 *<input type="tel" name="phone" maxlength="13" inputmode="numeric" autocomplete="tel" placeholder="010-0000-0000"></label></div>' +
-      '<label>방문 희망일 (선택)<input type="date" name="visit"></label>' +
       '<label>문의 내용<textarea name="memo" maxlength="1000" rows="3" placeholder="업종, 입주 시기 등 궁금한 점을 적어주세요."></textarea></label>' +
       '<span class="dtTrap" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></span>' +
       '<label class="dtAgree"><input type="checkbox" name="agree"> 개인정보 수집·이용 동의 (필수)<a href="#privacy" class="privacyLink">약관 보기</a></label>' +
@@ -2183,9 +2354,8 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
       if (!nm) errs.push('이름'); if (!okP) errs.push(ph ? '연락처(번호 형식 확인)' : '연락처'); if (!ag) errs.push('개인정보 수집·이용 동의');
       if (errs.length) { msg.textContent = '필수 항목을 확인해 주세요: ' + errs.join(', '); return; }
       var url = window.BD_SHEET_URL; if (!url) { msg.textContent = '전화(02-555-1165)로 문의해 주세요.'; return; }
-      var visit = f.elements.visit.value;
       var data = { name: nm, phone: f.elements.phone.value.trim(), type: '임차 (매물 찾기)', use: it.catLabel || '', region: (it.dong || ''), area: it.area ? Math.round(it.area) + '평' : '', budget: '',
-        memo: f.elements.memo.value.trim() + (visit ? '\n방문 희망일: ' + visit : ''), listing: it.id, agree: ag, website: f.elements.website.value, elapsed: Date.now() - opened };
+        memo: f.elements.memo.value.trim(), listing: it.id, agree: ag, website: f.elements.website.value, elapsed: Date.now() - opened };
       btn.disabled = true; btn.textContent = '접수 중…';
       fetch(url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) })
         .then(function (r) { return r.json(); })
@@ -2445,9 +2615,11 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
       window.dispatchEvent(new Event('resize'));
       // 뒤로 가기·목록으로: 상세를 열기 전 보던 위치(지도 또는 추천 매물)로 / 메뉴 클릭: 해당 섹션으로
       if (restore || !t) window.scrollTo(0, DT.prevScroll); else t.scrollIntoView();
+      if (document.body.classList.contains('mapFull')) mapRefit();
     });
   }
   function closeByUser() {
+    document.body.classList.add('mapFull');   // 목록으로 → 지도 크게 보기로
     if (DT.internal) { DT.internal = false; DT.restore = true; history.back(); return; }
     // 공유 링크로 바로 들어온 경우: 지도(또는 추천 매물) 목록으로
     location.hash = DT.from === 'listings' ? '#listings' : '#map';
