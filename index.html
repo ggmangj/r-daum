@@ -892,6 +892,20 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 .dtThumbEmpty{display:block;background:#F4F0E8;border:1px dashed #E0D8C8}
 @media (max-width:760px){.dtThumb5{gap:6px}.dtThumb5 button,.dtThumb5 .dtThumbEmpty{border-radius:8px}}
 </style>
+<style id="heroB">
+.heroSplit .heroLead{margin-top:2px!important;padding-top:14px!important;border-top:1px solid #DCD3C2;font-size:15px!important;font-weight:600;line-height:1.7!important;color:#36424C!important;letter-spacing:-.3px!important}
+.trustBox{display:none}
+@media (min-width:1101px){
+ .heroCard{flex:none!important}
+ .heroCard .flipFront{min-height:0!important}
+ .heroLeft{justify-content:flex-start;gap:16px!important}
+ .trustBox{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+ .tbi{padding:11px 12px;border:1px solid #DCD3C2;border-radius:12px;background:#FBF9F4;display:flex;flex-direction:column;gap:4px}
+ .tbi b{font-size:13.5px;color:#294652;letter-spacing:-.4px;white-space:nowrap}.tbi b:before{content:"✓ ";color:#BC975E;font-weight:900}
+ .tbi span{font-size:11.5px;line-height:1.45;color:#5B6670;letter-spacing:-.3px}
+}
+@media (max-width:760px){.heroSplit .heroLead{font-size:16px!important}}
+</style>
 <style id="headFix">
 .heroMapHead{justify-content:flex-start!important}
 .heroMapHead .heroMapTitle{flex:none}
@@ -1035,7 +1049,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 <div class="heroSplit" style="max-width: 1280px; margin: 0 auto; padding: 44px 32px 56px">
 <div class="heroLeft">
 <div class="heroHead">
-<h1 class="heroH1"><span class="h1l">상가 · 병의원 · 사무실,</span><br><span class="h1l"><span class="heroName">부동산다움</span>에서 <span style="background: linear-gradient(transparent 62%, #E8D7B6 62%)">답을 찾다</span></span></h1>
+<h1 class="heroH1"><span class="h1l">상가 · 병의원 · 사무실</span><br><span class="h1l"><span class="heroName">부동산다움</span>에서 <span style="background: linear-gradient(transparent 62%, #E8D7B6 62%)">답을 찾다</span></span></h1>
 <p class="heroLead" style="margin: 0; font-size: 16px; line-height: 1.7; color: #46515B; word-break: keep-all">조건만 말씀해 주세요. 발품은 저희가 팔겠습니다. <span class="leadLine2">신사동 · 청담동 · 논현동 · 삼성동 · 잠원동 일대 병의원, 상가, 사무실을 전문 중개합니다.</span></p>
 </div>
 <div class="flipCard heroCard" id="consult" style="min-width: 0">
@@ -1084,6 +1098,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 </form>
 </div>
 </div>
+<div class="trustBox" aria-label="부동산다움 강점"><div class="tbi"><b>비공개 매물 안내</b><span>광고하지 않는 매물까지 찾아드려요</span></div><div class="tbi"><b>계약 · 특약 검토</b><span>입주의향서부터 특약까지 꼼꼼히</span></div></div>
 </div>
 <div id="map" class="heroMap">
 <div class="heroMapHead">
