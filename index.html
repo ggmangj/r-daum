@@ -2237,8 +2237,11 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     // 역마다 가까운 출구 최대 3곳(직선거리 차이 150m 이내)까지 실제 길로 재서 더 가까운 출구 선택
     Promise.all(sts.map(function (s) {
       var tries = s.ex.filter(function (e, i) { return i === 0 || (i < 3 && e.d - s.ex[0].d < 150); });
-      return Promise.all(tries.map(function (e) { return walkRoute(it, e.lat, e.lng).then(function (r) { return r ? { st: s.n, no: e.no, r: r } : null; }); }))
-        .then(function (rs) { return rs.filter(Boolean).sort(function (a, b) { return a.r.d - b.r.d; })[0] || null; });
+      return Promise.all(tries.map(function (e) { return walkRoute(it, e.lat, e.lng).then(function (r) { return r ? { st: s.n, no: e.no, r: r, sd: e.d } : null; }); }))
+        .then(function (rs) {   // 길 거리 차이가 근소하면(30m 또는 10% 이내) 직선으로 더 가까운 출구 우선 — 큰길 건너편 출구가 지도 데이터 탓에 몇 m 차로 뽑히는 것 방지
+          rs = rs.filter(Boolean).sort(function (a, b) { return a.r.d - b.r.d; }); var best = rs[0] || null;
+          rs.forEach(function (x) { if (best && x.sd < best.sd && x.r.d - rs[0].r.d <= Math.max(30, rs[0].r.d * 0.1)) best = x; });
+          return best; });
     })).then(function (list) {
       list = list.filter(function (x) { return x && x.r.pts && x.r.pts.length > 1 && Math.max(1, Math.round(x.r.d / 67)) <= 10; })   // 도보 10분 이내만
         .sort(function (a, b) { return a.r.d - b.r.d; }).slice(0, 3);
