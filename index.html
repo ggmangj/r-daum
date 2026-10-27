@@ -886,6 +886,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 @media (max-width:760px){.adList li{grid-template-columns:56px minmax(0,1fr);}.adList li .adGo{grid-column:2;justify-self:start}.adMain{gap:2px 10px}}
 @media print{.adChk,.adGo{display:none!important}.adList li{grid-template-columns:minmax(0,1fr)}}
 </style>
+<style id="asHeadWrap">@media (max-width:760px){.autoSearch .asHead{flex-wrap:wrap!important;white-space:normal!important;overflow:visible!important}.autoSearch .asHead span{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;display:block!important;flex:1 1 100%!important}.autoSearch .asHead em{white-space:normal!important;display:inline!important}}</style>
 <style id="fullBtnRow">
 .heroMap .mapTools>label{flex:1 1 0;min-width:0}.heroMap .mapTools>label .mapSel{width:100%}
 .mapTools .mapFullBtn{flex:none;height:44px;background:#E6EEF0!important;border-color:#3A6271!important;color:#294652!important;box-shadow:0 1px 0 rgba(41,70,82,.06)}
@@ -1134,7 +1135,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 <h2 class="heroMapTitle"><span>MAP SEARCH</span>지도로 매물 찾기</h2><div id="mapSearchBar" class="msBar" hidden></div>
 <form class="noSearch" id="noSearch" role="search"><label class="sr" for="noInput">매물번호 검색</label><input id="noInput" type="search" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="12" placeholder="매물번호 검색 (예: D5B531F)"><button type="submit" aria-label="매물번호로 찾기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></button></form><button type="button" class="mapFullClose" id="mapFullClose" aria-label="크게 보기 닫기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button>
 </div>
-<form class="autoSearch" id="autoSearch" autocomplete="off"><div class="asHead"><b>매물 자동 검색</b><span>원하는 조건을 문장으로 적으면 맞는 매물을 찾아 드려요 <em>예) 강남역 도보 5분, 50평 이상, 2층 이상</em></span></div><div class="asRow"><label class="sr" for="asInput">매물 자동 검색</label><input id="asInput" type="search" maxlength="120" placeholder="예) 강남역 도보 5분, 50평 이상, 한층 전체, 2층 이상 (지하층 불가)"><button type="submit">찾기</button></div></form>
+<form class="autoSearch" id="autoSearch" autocomplete="off"><div class="asHead"><b>매물 자동 검색</b><span>원하는 조건을 문장으로 적으면 맞는 매물을 찾아 드려요 <em>예) 압구정역 도보5분, 월세 300만원 이하로 2층 매물 찾아줘</em></span></div><div class="asRow"><label class="sr" for="asInput">매물 자동 검색</label><input id="asInput" type="search" maxlength="120" placeholder="예) 강남역 도보 5분, 2층 이상, 50평 이하, 보증금 5,000만원 이하, 월세 500만원 이하"><button type="submit">찾기</button></div></form>
 <div class="mapTools" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
 <label style="display: flex; align-items: center"><span class="sr">동 선택</span>
 <select id="mapDong" class="mapSel" style="height: 44px; border: 1px solid #D9D2C4; border-radius: 999px; padding: 0 14px; font-size: 14px; background: #FFFFFF"><option value="">전체 지역</option></select></label>
