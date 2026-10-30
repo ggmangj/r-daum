@@ -1036,7 +1036,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 .dpBtn:hover{background:#BA9862}
 .dpBtn:after{content:"";position:absolute;inset:-6px;border-radius:999px;border:2px solid #BC975E;opacity:0;animation:dpPulse 1.8s ease-out 1s 4;pointer-events:none}
 @keyframes dpPulse{0%{opacity:.85;transform:scale(.92)}100%{opacity:0;transform:scale(1.18)}}
-.dpBtn.on{background:#B8955F;border-color:#FFFFFF;color:#FFFFFF}.dpBtn.on svg{color:#FFFFFF}.dpBtn.on .dpCaret{color:#FFFFFF}.dpBtn.on:after{display:none}
+.dpBtn.on{background:#C7A774;border-color:#FFFFFF;color:#FFFFFF}.dpBtn.on svg{color:#FFFFFF}.dpBtn.on .dpCaret{color:#FFFFFF}.dpBtn.on:after{display:none}
 .dpBtn .dpX{display:none;margin-left:2px;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.25);font-size:12px;line-height:18px;text-align:center}
 .dpBtn.on .dpX{display:inline-block}.dpBtn.on .dpCaret{display:none}
 @media (prefers-reduced-motion:reduce){.dpBtn:after{animation:none}}
@@ -1216,7 +1216,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 </div>
 <div style="flex: 999 1 400px; min-width: 0; position: relative">
 <div id="leafletMap" style="height: 571px; width: 100%; overflow: hidden; position: relative; background: #ECE6DA"></div>
-<div class="dongPick" id="dongPick"><select id="mapDong" class="sr" tabindex="-1" aria-hidden="true"><option value="">전체 지역</option></select><button type="button" class="dpBtn" id="dpBtn" aria-expanded="false" aria-controls="dpPanel"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg><span id="dpLabel">동 선택</span><b class="dpCaret" aria-hidden="true">▾</b><i class="dpX" role="button" aria-label="동 선택 해제" title="동 선택 해제">✕</i></button><div class="dpPanel" id="dpPanel" hidden></div></div>
+<div class="dongPick" id="dongPick"><select id="mapDong" class="sr" tabindex="-1" aria-hidden="true"><option value="">전체 지역</option></select><button type="button" class="dpBtn" id="dpBtn" aria-expanded="false" aria-controls="dpPanel"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg><span id="dpLabel">행정동</span><b class="dpCaret" aria-hidden="true">▾</b><i class="dpX" role="button" aria-label="행정동 선택 해제" title="행정동 선택 해제">✕</i></button><div class="dpPanel" id="dpPanel" hidden></div></div>
 </div>
 </div>
 <p style="margin: 14px 0 0; font-size: 13px; color: #6B757D">※ 지도 위치와 매물 정보는 실제와 다를 수 있으니, 정확한 조건과 현장 확인은 상담 시 안내해 드립니다. <span id="demoNote"></span></p>
@@ -1691,7 +1691,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       area: function (rings) {   // 선택한 동 경계 (rings: [[lng,lat]…]…), null 이면 지움
         (this._area || []).forEach(function (g) { g.setMap(null); }); this._area = [];
         if (!rings) return;
-        this._area = rings.map(function (r) { return new nm.Polygon({ map: map, paths: [r.map(function (q) { return new nm.LatLng(q[1], q[0]); })], fillColor: '#C9A86E', fillOpacity: 0.08, strokeColor: '#C29A5C', strokeWeight: 2, strokeOpacity: 0.75, strokeStyle: 'solid', clickable: false, zIndex: 1 }); });
+        this._area = rings.map(function (r) { return new nm.Polygon({ map: map, paths: [r.map(function (q) { return new nm.LatLng(q[1], q[0]); })], fillColor: '#C9A86E', fillOpacity: 0.08, strokeColor: '#D2B27C', strokeWeight: 2, strokeOpacity: 0.7, strokeStyle: 'solid', clickable: false, zIndex: 1 }); });
       },
       circle: function (p) { objs.push(new nm.Circle({ map: map, center: ll(p), radius: RADIUS_M, strokeColor: '#294652', strokeWeight: 1.5, strokeOpacity: 0.8, fillColor: '#294652', fillOpacity: 0.08, clickable: false })); },
       popup: function (p, html, noPan) { try { iw.setOptions('disableAutoPan', !!noPan); } catch (e) { } iw.setContent(html); iw.open(map, ll(p)); return iw.getContentElement(); },
@@ -1728,7 +1728,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       area: function (rings) {
         if (this._area) { map.removeLayer(this._area); this._area = null; }
         if (!rings) return;
-        this._area = L.polygon(rings.map(function (r) { return r.map(function (q) { return [q[1], q[0]]; }); }), { color: '#C29A5C', weight: 2, opacity: 0.75, fillColor: '#C9A86E', fillOpacity: 0.08, interactive: false }).addTo(map);
+        this._area = L.polygon(rings.map(function (r) { return r.map(function (q) { return [q[1], q[0]]; }); }), { color: '#D2B27C', weight: 2, opacity: 0.7, fillColor: '#C9A86E', fillOpacity: 0.08, interactive: false }).addTo(map);
       },
       circle: function (p) { L.circle([p.lat, p.lng], { radius: RADIUS_M, color: '#294652', weight: 1.5, fillColor: '#294652', fillOpacity: 0.08, interactive: false }).addTo(grp); },
       popup: function (p, html, noPan) { pop.options.autoPan = !noPan; pop.setLatLng([p.lat, p.lng]).setContent(html).openOn(map); return pop.getElement(); },
@@ -2004,7 +2004,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   }
   function dongLabel() {
     var d = $('mapDong').value, b = $('dpBtn'); if (!b) return;
-    $('dpLabel').textContent = d || '동 선택'; b.classList.toggle('on', !!d);
+    $('dpLabel').textContent = d || '행정동'; b.classList.toggle('on', !!d);
     $('dpPanel').querySelectorAll('button[data-dong]').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-dong') === d); });
   }
   // 동 경계 (dongs.json: 서울 법정동 경계, 처음 고를 때 한 번만 받아 옴)
