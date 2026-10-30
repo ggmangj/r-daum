@@ -1596,9 +1596,10 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       '</div><button type="button" class="mpopClose" aria-label="닫기">×</button></div>';
   }
   function pinHtml(it) {
-    var rent = it.rentText && it.rentText !== '문의' ? '월 ' + it.rentText : it.catLabel;
+    var fl = String(it.floor || '').replace(/\s+/g, '').replace(/^연층\((.*)\)$/, '$1');   // 층 | 평
     var area = it.area ? Math.round(it.area) + '평' : '';
-    return '<div class="pinWrap"><span class="pinLabel' + (it.unv ? ' unv' : '') + (it.id === focusId ? ' on' : '') + '">' + (area ? '<span class="pinArea">' + esc(area) + '</span>' : '') + esc(rent) + '</span></div>';
+    var main = area || it.catLabel || '';
+    return '<div class="pinWrap"><span class="pinLabel' + (it.unv ? ' unv' : '') + (it.id === focusId ? ' on' : '') + '">' + (fl ? '<span class="pinArea">' + esc(fl) + '</span>' : '') + esc(main) + '</span></div>';
   }
   function clusterHtml(g) {
     var n = g.items.length, size = n >= 50 ? 62 : n >= 20 ? 54 : n >= 5 ? 46 : 40;
