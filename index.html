@@ -1031,25 +1031,21 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 /* 지도 위 동 선택 */
 #leafletMap{z-index:0}
 .dongPick{position:absolute;top:10px;left:10px;z-index:30;max-width:calc(100% - 70px)}
-.dongPick .mrMap{display:none;vertical-align:top;margin-left:6px;height:42px;padding:0 15px;box-shadow:0 4px 14px rgba(20,25,31,.22);background:#FFFFFF}
-.dongPick .mrMap.on{display:inline-flex}
-@media (min-width:761px){.mapTools .mapReset{display:none!important}}
-@media (max-width:760px){.dongPick .mrMap,.dongPick .mrMap.on{display:none}}
-.dpBtn{position:relative;display:inline-flex;align-items:center;gap:7px;height:42px;padding:0 18px 0 15px;border:2px solid #BC975E;border-radius:999px;background:#294652;color:#FFFFFF;font:800 15px 'Noto Sans KR',sans-serif;letter-spacing:-.3px;cursor:pointer;box-shadow:0 4px 14px rgba(20,25,31,.32);white-space:nowrap}
-.dpBtn svg{color:#E8C98F;flex:none;width:17px;height:17px}.dpBtn .dpCaret{font-size:12px;color:#E8D7B6}
-.dpBtn:hover{background:#335664}
+.dpBtn{position:relative;display:inline-flex;align-items:center;gap:7px;height:42px;padding:0 18px 0 15px;border:2px solid #FFFFFF;border-radius:999px;background:#BC975E;color:#FFFFFF;font:800 15px 'Noto Sans KR',sans-serif;letter-spacing:-.3px;cursor:pointer;box-shadow:0 4px 14px rgba(20,25,31,.32);white-space:nowrap}
+.dpBtn svg{color:#FFFFFF;flex:none;width:17px;height:17px}.dpBtn .dpCaret{font-size:12px;color:#FFF3DD}
+.dpBtn:hover{background:#A9834A}
 .dpBtn:after{content:"";position:absolute;inset:-6px;border-radius:999px;border:2px solid #BC975E;opacity:0;animation:dpPulse 1.8s ease-out 1s 4;pointer-events:none}
 @keyframes dpPulse{0%{opacity:.85;transform:scale(.92)}100%{opacity:0;transform:scale(1.18)}}
-.dpBtn.on{background:#BC975E;border-color:#FFFFFF;color:#FFFFFF}.dpBtn.on svg{color:#FFFFFF}.dpBtn.on .dpCaret{color:#FFFFFF}.dpBtn.on:after{display:none}
+.dpBtn.on{background:#9C6F2E;border-color:#FFFFFF;color:#FFFFFF}.dpBtn.on svg{color:#FFFFFF}.dpBtn.on .dpCaret{color:#FFFFFF}.dpBtn.on:after{display:none}
+.dpBtn .dpX{display:none;margin-left:2px;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.25);font-size:12px;line-height:18px;text-align:center}
+.dpBtn.on .dpX{display:inline-block}.dpBtn.on .dpCaret{display:none}
 @media (prefers-reduced-motion:reduce){.dpBtn:after{animation:none}}
-/* 검색 초기화 */
-.mapReset{flex:none;display:inline-flex;align-items:center;justify-content:center;gap:5px;height:44px;padding:0 14px;border:1px solid #D9D2C4;border-radius:999px;background:#FFFFFF;color:#8A939A;font:700 14px 'Noto Sans KR',sans-serif;cursor:pointer;white-space:nowrap;transition:background-color .18s,color .18s,border-color .18s}
+/* 검색 초기화 (매물 목록 머리줄) */
+.mapReset{flex:none;display:inline-flex;align-items:center;gap:4px;height:30px;padding:0 11px;border:1px solid #D9D2C4;border-radius:999px;background:#FFFFFF;color:#8A939A;font:700 12.5px 'Noto Sans KR',sans-serif;cursor:pointer;white-space:nowrap;transition:background-color .18s,color .18s,border-color .18s}
+.mapReset:hover{border-color:#BC975E;color:#294652}
 .mapReset.on{border-color:#C0533A;color:#C0533A;background:#FFF6F3}
 .mapReset.on:hover{background:#C0533A;color:#FFFFFF}
-.mapReset:not(.on):hover{border-color:#BC975E;color:#294652}
-@media (min-width:761px) and (max-width:1100px){.mapReset{height:40px}}
-@media (min-width:1101px){.heroMap .mapReset{height:40px}}
-@media (max-width:760px){.heroMap .mapReset{grid-column:1/-1;height:36px;display:none}.heroMap .mapReset.on{display:inline-flex}body.mapFull #map .mapReset.on{display:inline-flex;flex:none}}
+#mapUpdated{display:none!important}
 /* 공클 매물 건축물대장 불러오는 중 */
 .dtBldMsg{display:flex;align-items:center;gap:8px;margin:-4px 0 12px;padding:10px 14px;border-radius:10px;background:#EEF3F5;color:#294652;font-size:13.5px;font-weight:600}
 .dtBldMsg.off{background:#F6F2EA;color:#6B757D;font-weight:500}
@@ -1208,20 +1204,19 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 <div class="rng" id="rgFloor" title="지하층은 B1 또는 -1 로 입력"><span class="rgL">층</span><input id="mapFloorMin" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최저" aria-label="층 최소"><i>~</i><input id="mapFloorMax" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최고" aria-label="층 최대"><span class="rgU">층</span></div>
 <div class="rng" id="rgDep"><span class="rgL">보증금</span><input id="mapDepMin" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최소" aria-label="보증금 최소"><i>~</i><input id="mapDepMax" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최대" aria-label="보증금 최대"><span class="rgU">만</span></div>
 <div class="rng" id="rgRent"><span class="rgL">월세</span><input id="mapRentMin" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최소" aria-label="월세 최소"><i>~</i><input id="mapRentMax" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최대" aria-label="월세 최대"><span class="rgU">만</span></div>
-<button type="button" class="mapReset" id="mapReset" title="검색 조건 모두 지우기"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg>초기화</button>
 <button type="button" class="mapFullBtn" id="mapFullBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"></path></svg>지도 크게 보기</button>
 </div>
 <div class="elev" style="display: flex; flex-wrap: wrap; gap: 0; border: 1px solid #E6E0D4; border-radius: 18px; overflow: hidden; background: #FFFFFF">
 <div style="flex: 1 1 250px; min-width: 0; display: flex; flex-direction: column; border-right: 1px solid #E6E0D4">
 <div style="padding: 16px 18px; border-bottom: 1px solid #EFEAE0; display: flex; justify-content: space-between; align-items: center; font-size: 14px">
 <span><b id="mapCount" style="color: #294652">0</b>건의 매물 <span id="mapScope" style="color: #6B757D; font-size: 12px; margin-left: 4px"></span></span>
-<span id="mapUpdated" style="color: #6B757D; font-size: 12px"></span>
+<span id="mapUpdated" hidden></span><button type="button" class="mapReset" id="mapReset" title="검색 조건 모두 지우기"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg>검색 초기화</button>
 </div>
 <div id="mapList" style="overflow-y: auto; height: 520px"></div>
 </div>
 <div style="flex: 999 1 400px; min-width: 0; position: relative">
 <div id="leafletMap" style="height: 571px; width: 100%; overflow: hidden; position: relative; background: #ECE6DA"></div>
-<div class="dongPick" id="dongPick"><select id="mapDong" class="sr" tabindex="-1" aria-hidden="true"><option value="">전체 지역</option></select><button type="button" class="dpBtn" id="dpBtn" aria-expanded="false" aria-controls="dpPanel"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg><span id="dpLabel">동 선택</span><b class="dpCaret" aria-hidden="true">▾</b></button><button type="button" class="mapReset mrMap" title="검색 조건 모두 지우기"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg>검색 초기화</button><div class="dpPanel" id="dpPanel" hidden></div></div>
+<div class="dongPick" id="dongPick"><select id="mapDong" class="sr" tabindex="-1" aria-hidden="true"><option value="">전체 지역</option></select><button type="button" class="dpBtn" id="dpBtn" aria-expanded="false" aria-controls="dpPanel"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg><span id="dpLabel">동 선택</span><b class="dpCaret" aria-hidden="true">▾</b><i class="dpX" role="button" aria-label="동 선택 해제" title="동 선택 해제">✕</i></button><div class="dpPanel" id="dpPanel" hidden></div></div>
 </div>
 </div>
 <p style="margin: 14px 0 0; font-size: 13px; color: #6B757D">※ 지도 위치와 매물 정보는 실제와 다를 수 있으니, 정확한 조건과 현장 확인은 상담 시 안내해 드립니다. <span id="demoNote"></span></p>
@@ -1693,6 +1688,11 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
         var m = new nm.Marker({ position: ll(p), map: map, zIndex: z, icon: { content: html, anchor: new nm.Point(0, 0) } });
         nm.Event.addListener(m, 'click', onClick); objs.push(m);
       },
+      area: function (rings) {   // 선택한 동 경계 (rings: [[lng,lat]…]…), null 이면 지움
+        (this._area || []).forEach(function (g) { g.setMap(null); }); this._area = [];
+        if (!rings) return;
+        this._area = rings.map(function (r) { return new nm.Polygon({ map: map, paths: [r.map(function (q) { return new nm.LatLng(q[1], q[0]); })], fillColor: '#BC975E', fillOpacity: 0.13, strokeColor: '#B07D2E', strokeWeight: 3, strokeOpacity: 0.95, strokeStyle: 'solid', clickable: false, zIndex: 1 }); });
+      },
       circle: function (p) { objs.push(new nm.Circle({ map: map, center: ll(p), radius: RADIUS_M, strokeColor: '#294652', strokeWeight: 1.5, strokeOpacity: 0.8, fillColor: '#294652', fillOpacity: 0.08, clickable: false })); },
       popup: function (p, html, noPan) { try { iw.setOptions('disableAutoPan', !!noPan); } catch (e) { } iw.setContent(html); iw.open(map, ll(p)); return iw.getContentElement(); },
       closePopup: function () { iw.close(); },
@@ -1725,6 +1725,11 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       bounds: function () { var b = map.getBounds(); return { s: b.getSouth(), w: b.getWest(), n: b.getNorth(), e: b.getEast() }; },
       clear: function () { grp.clearLayers(); },
       marker: function (p, html, z, onClick) { L.marker([p.lat, p.lng], { icon: ic(html), zIndexOffset: z }).on('click', onClick).addTo(grp); },
+      area: function (rings) {
+        if (this._area) { map.removeLayer(this._area); this._area = null; }
+        if (!rings) return;
+        this._area = L.polygon(rings.map(function (r) { return r.map(function (q) { return [q[1], q[0]]; }); }), { color: '#B07D2E', weight: 3, fillColor: '#BC975E', fillOpacity: 0.13, interactive: false }).addTo(map);
+      },
       circle: function (p) { L.circle([p.lat, p.lng], { radius: RADIUS_M, color: '#294652', weight: 1.5, fillColor: '#294652', fillOpacity: 0.08, interactive: false }).addTo(grp); },
       popup: function (p, html, noPan) { pop.options.autoPan = !noPan; pop.setLatLng([p.lat, p.lng]).setContent(html).openOn(map); return pop.getElement(); },
       closePopup: function () { map.closePopup(); },
@@ -2002,16 +2007,36 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     $('dpLabel').textContent = d || '동 선택'; b.classList.toggle('on', !!d);
     $('dpPanel').querySelectorAll('button[data-dong]').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-dong') === d); });
   }
+  // 동 경계 (dongs.json: 서울 법정동 경계, 처음 고를 때 한 번만 받아 옴)
+  var DONG_GEO = null;
+  function dongGeo() { return DONG_GEO || (DONG_GEO = fetch('dongs.json').then(function (r) { return r.json(); }).catch(function () { DONG_GEO = null; return {}; })); }
+  function showDongArea(d) {
+    if (!M || !M.area) return;
+    if (!d) { M.area(null); return; }
+    var gu = ''; ITEMS.some(function (i) { if (i.dong === d) { gu = i.gu || '강남구'; return true; } return false; });
+    dongGeo().then(function (g) {
+      if ($('mapDong').value !== d) return;
+      var rings = g[gu + '|' + d]; if (!rings) { var k = Object.keys(g).filter(function (x) { return x.split('|')[1] === d; })[0]; rings = k && g[k]; }
+      if (!rings || !rings.length) { M.area(null); return; }
+      var pts = []; rings.forEach(function (r) { r.forEach(function (q) { pts.push({ lat: q[1], lng: q[0] }); }); });
+      M.fit(pts);   // 동 전체가 보이게
+      M.area(rings);
+    });
+  }
   function dongPanel(open) {
     var p = $('dpPanel'), b = $('dpBtn'); if (!p) return;
     p.hidden = !open; b.setAttribute('aria-expanded', open ? 'true' : 'false');
   }
   function bindDongPick() {
-    $('dpBtn').addEventListener('click', function (e) { e.stopPropagation(); dongPanel($('dpPanel').hidden); });
+    $('dpBtn').addEventListener('click', function (e) {
+      e.stopPropagation();
+      if (e.target.closest('.dpX')) { setSel('mapDong', ''); dongLabel(); dongPanel(false); showDongArea(''); applyFilters(true); return; }
+      dongPanel($('dpPanel').hidden);
+    });
     $('dpPanel').addEventListener('click', function (e) {
       e.stopPropagation();
       var b = e.target.closest('button[data-dong]'); if (!b) return;
-      setSel('mapDong', b.getAttribute('data-dong')); dongLabel(); dongPanel(false); applyFilters(true);
+      setSel('mapDong', b.getAttribute('data-dong')); dongLabel(); dongPanel(false); applyFilters(!b.getAttribute('data-dong')); showDongArea(b.getAttribute('data-dong'));
     });
     document.addEventListener('click', function () { dongPanel(false); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') dongPanel(false); });
@@ -2103,7 +2128,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   }
   function resetSearch() {
     SEARCH.cat = SEARCH.gu = SEARCH.kw = ''; SEARCH.sale = false; SEARCH.auto = null; var ai0 = $('asInput'); if (ai0) ai0.value = '';
-    setSel('mapDong', ''); ['Area', 'Floor', 'Dep', 'Rent'].forEach(function (k) { setRange(k); }); dongLabel();
+    setSel('mapDong', ''); ['Area', 'Floor', 'Dep', 'Rent'].forEach(function (k) { setRange(k); }); dongLabel(); showDongArea('');
     renderSearchBar(); applyFilters(true);
   }
 
