@@ -1694,8 +1694,8 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
         this._area = [];   // 흰 테두리(아래) + 금색 선(위)
         rings.forEach(function (r) {
           var path = [r.map(function (q) { return new nm.LatLng(q[1], q[0]); })];
-          this._area.push(new nm.Polygon({ map: map, paths: path, fillColor: '#BC975E', fillOpacity: 0.09, strokeColor: '#FFFFFF', strokeWeight: 6, strokeOpacity: 0.9, clickable: false, zIndex: 1 }));
-          this._area.push(new nm.Polygon({ map: map, paths: path, fillOpacity: 0, strokeColor: '#B0853F', strokeWeight: 2.5, strokeOpacity: 1, clickable: false, zIndex: 2 }));
+          this._area.push(new nm.Polygon({ map: map, paths: path, fillColor: '#C0533A', fillOpacity: 0.06, strokeColor: '#FFFFFF', strokeWeight: 7, strokeOpacity: 0.95, clickable: false, zIndex: 1 }));
+          this._area.push(new nm.Polygon({ map: map, paths: path, fillOpacity: 0, strokeColor: '#C0533A', strokeWeight: 3, strokeOpacity: 1, clickable: false, zIndex: 2 }));
         }, this);
       },
       circle: function (p) { objs.push(new nm.Circle({ map: map, center: ll(p), radius: RADIUS_M, strokeColor: '#294652', strokeWeight: 1.5, strokeOpacity: 0.8, fillColor: '#294652', fillOpacity: 0.08, clickable: false })); },
@@ -1734,7 +1734,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
         if (this._area) { map.removeLayer(this._area); this._area = null; }
         if (!rings) return;
         var ll2 = rings.map(function (r) { return r.map(function (q) { return [q[1], q[0]]; }); });
-        this._area = L.layerGroup([L.polygon(ll2, { color: '#FFFFFF', weight: 6, opacity: 0.9, fillColor: '#BC975E', fillOpacity: 0.09, interactive: false }), L.polygon(ll2, { color: '#B0853F', weight: 2.5, opacity: 1, fill: false, interactive: false })]).addTo(map);
+        this._area = L.layerGroup([L.polygon(ll2, { color: '#FFFFFF', weight: 7, opacity: 0.95, fillColor: '#C0533A', fillOpacity: 0.06, interactive: false }), L.polygon(ll2, { color: '#C0533A', weight: 3, opacity: 1, fill: false, interactive: false })]).addTo(map);
       },
       circle: function (p) { L.circle([p.lat, p.lng], { radius: RADIUS_M, color: '#294652', weight: 1.5, fillColor: '#294652', fillOpacity: 0.08, interactive: false }).addTo(grp); },
       popup: function (p, html, noPan) { pop.options.autoPan = !noPan; pop.setLatLng([p.lat, p.lng]).setContent(html).openOn(map); return pop.getElement(); },
