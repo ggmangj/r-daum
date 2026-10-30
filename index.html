@@ -31,7 +31,7 @@ input,select,textarea,button{font-family:inherit}
 .pinWrap{position:relative;width:0;height:0}
 .pinLabel{position:absolute;left:0;top:0;transform:translate(-50%,-130%);white-space:nowrap;background:#3A6271;color:#FFFFFF;font:700 12px/1 'Noto Sans KR',sans-serif;padding:6px 9px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,.25);cursor:pointer}
 .pinLabel:after{content:"";position:absolute;left:50%;bottom:-5px;margin-left:-5px;border:5px solid transparent;border-top-color:#3A6271;border-bottom:0}
-.pinLabel.on{background:#BC975E;color:#14191F;z-index:2}.pinLabel.on:after{border-top-color:#BC975E}
+.pinLabel.unv{background:#6F8E96}.pinLabel.unv:after{border-top-color:#6F8E96}.pinLabel.on{background:#BC975E;color:#14191F;z-index:2}.pinLabel.on:after{border-top-color:#BC975E}
 .cluster{position:absolute;left:0;top:0;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(58,98,113,.94);color:#FFFFFF;font:900 15px/1 Inter,'Noto Sans KR',sans-serif;border:3px solid #FFFFFF;box-shadow:0 2px 8px rgba(0,0,0,.3);cursor:pointer}
 .officePin{position:absolute;left:0;top:0;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28));cursor:pointer}
 .officeLbl{background:#C4553A;color:#FFFFFF;font:900 13px/1 'Noto Sans KR',sans-serif;letter-spacing:-.3px;padding:7px 11px;border-radius:999px;white-space:nowrap;margin-bottom:4px}
@@ -1598,7 +1598,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   function pinHtml(it) {
     var rent = it.rentText && it.rentText !== '문의' ? '월 ' + it.rentText : it.catLabel;
     var area = it.area ? Math.round(it.area) + '평' : '';
-    return '<div class="pinWrap"><span class="pinLabel' + (it.id === focusId ? ' on' : '') + '">' + (area ? '<span class="pinArea">' + esc(area) + '</span>' : '') + esc(rent) + '</span></div>';
+    return '<div class="pinWrap"><span class="pinLabel' + (it.unv ? ' unv' : '') + (it.id === focusId ? ' on' : '') + '">' + (area ? '<span class="pinArea">' + esc(area) + '</span>' : '') + esc(rent) + '</span></div>';
   }
   function clusterHtml(g) {
     var n = g.items.length, size = n >= 50 ? 62 : n >= 20 ? 54 : n >= 5 ? 46 : 40;
@@ -2084,9 +2084,10 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   var DT = { el: null, prevScroll: 0, internal: false, it: null, idx: 0, map: null, pending: null, baseTitle: document.title, from: 'map', hashBefore: '', restore: false };
   var nz = function (v) { return v != null && String(v).trim() !== '' ? String(v).trim() : ''; };
   function pyeongM2(p) { var n = parseFloat(String(p).replace(/[^\d.]/g, '')); return isFinite(n) && n > 0 ? (Math.round(n * 10) / 10) + '평 (' + (n * 3.3058).toFixed(1) + '㎡)' : ''; }
+  var DT_UNV = false;   // 공실매물관(현장 미확인) 매물: 빈 칸은 「확인요청」
   function infoRow(k, v, wide, fallback) {
     var t = nz(v);
-    return '<div' + (wide ? ' class="wide"' : '') + '><dt>' + esc(k) + '</dt><dd' + (t ? '' : ' class="muted"') + '>' + esc(t || fallback || '문의') + '</dd></div>';
+    return '<div' + (wide ? ' class="wide"' : '') + '><dt>' + esc(k) + '</dt><dd' + (t ? '' : ' class="muted"') + '>' + esc(t || (DT_UNV ? '확인요청' : (fallback || '문의'))) + '</dd></div>';
   }
   // 층 이름 → 정렬 순서 (지하 깊은 곳 → 지상 → 옥탑)
   function floorKey(name) {
@@ -2096,6 +2097,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     return n;
   }
   function detailHtml(it) {
+    DT_UNV = !!it.unv;
     var photos = (it.photos || []).slice(0, 10), elev = /^(O|Y|유|있)/i.test(it.elev || '') ? '있음' : /^(X|N|무|없)/i.test(it.elev || '') ? '없음' : nz(it.elev);
     if (it.bldElev > 0) elev = (elev === '없음' ? '' : '있음 ') + '(건물 총 ' + it.bldElev + '대)';
     var floorTxt = nz(it.floor) + (nz(it.totalFloor) ? ' / ' + nz(it.totalFloor).replace(/^(\d+)$/, '$1층').replace(/\s*\/\s*/g, '·') : '');
@@ -2108,7 +2110,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
         (photos.length > 1 ? '<div class="dtThumbs dtThumb5" role="list">' + photos.map(function (p, i) { return p ? '<button type="button" role="listitem" data-i="' + i + '" class="' + (i ? '' : 'on') + '" aria-label="' + (i + 1) + '번째 사진"><img src="' + photoUrl(p, 400) + '" alt="" loading="lazy" referrerpolicy="no-referrer"></button>' : '<span class="dtThumbEmpty" aria-hidden="true"></span>'; }).join('') + '</div>' : '') + '</div>'
       : '<div class="dtNoPhoto" id="dtNoPhoto"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#BC975E" stroke-width="1.5" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><path d="M21 16l-5-5-8 8"></path></svg><b>현장 사진 준비 중</b><span>실제 내부 사진과 도면은 상담 시 바로 보내드립니다.<br>02-555-1165</span></div>';
     var price = '<div class="dtPrice"><div><small>보증금</small><b>' + esc(it.depText || '문의') + '</b></div><div class="rent"><small>월세</small><b>' + esc(it.rentText || '문의') + '</b></div>' +
-      '<div><small>관리비</small><b>' + esc(it.mgmt || '문의') + '</b></div><div class="prem"><small>권리금</small><b>' + esc(it.premium || '문의') + '</b></div></div>';
+      '<div><small>관리비</small><b>' + esc(it.mgmt || (it.unv ? '확인요청' : '문의')) + '</b></div><div class="prem"><small>권리금</small><b>' + esc(it.premium || (it.unv ? '확인요청' : '문의')) + '</b></div></div>';
     var desc = nz(it.desc) ? esc(it.desc) :
       esc((it.dong || '') + ' ' + (it.floor || '') + ' ' + (it.catLabel || '') + ' 임대 매물입니다.\n' +
         (it.area ? '전용 ' + Math.round(it.area) + '평' : '') + (it.parking ? ', 주차 ' + it.parking : '') + (elev === '있음' ? ', 엘리베이터 있음' : '') + (it.premium === '무권리' ? ', 무권리' : '') + '.\n' +
@@ -2134,7 +2136,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       infoRow('방향', dirTxt) +
       infoRow('입주가능일', it.moveIn, false, '협의 (문의)') +
       infoRow('욕실(화장실)', it.toilet) +
-      infoRow('권리금', it.premium === '무권리' ? '없음' : '유선문의') +
+      infoRow('권리금', it.premium === '무권리' ? '없음' : (it.unv && !it.premium ? '' : '유선문의')) +
       '</dl>';
     var feat = (nz(it.point) ? '<p class="dtPoint"><b>POINT</b>&nbsp; ' + esc(it.point) + '</p>' : '') +
       (opts.length ? '<div class="dtChips">' + opts.map(function (o) { return '<span>' + esc(o) + '</span>'; }).join('') + '</div>' : '');
@@ -2175,7 +2177,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     var callSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>';
     var side = '<aside class="dtSide"><div class="dtCard">' +
       '<div class="dtCardTop"><small>No.' + esc(it.id) + '</small><small>' + esc(areaText(it.area)) + ' · ' + esc(it.floor || '') + '</small></div>' +
-      '<div class="dtCardPrice">보증금 ' + esc(it.depText || '문의') + '<br>월세 <em>' + esc(it.rentText || '문의') + '</em><span class="dtCardSep" aria-hidden="true"></span><span class="dtCardMgmt">관리비 ' + esc(it.mgmt || '문의') + '</span></div>' +
+      '<div class="dtCardPrice">보증금 ' + esc(it.depText || '문의') + '<br>월세 <em>' + esc(it.rentText || '문의') + '</em><span class="dtCardSep" aria-hidden="true"></span><span class="dtCardMgmt">관리비 ' + esc(it.mgmt || (it.unv ? '확인요청' : '문의')) + '</span></div>' +
       '<a href="tel:025551165" class="dtCall">' + callSvg + '전화 상담 02-555-1165</a>' +
       (/^https:\/\/([a-z0-9-]+\.)*(naver\.me|land\.naver\.com)\//i.test(nz(it.naverUrl)) ? '<a href="' + esc(it.naverUrl) + '" target="_blank" rel="noopener" class="dtNaver"><span class="dtN">N</span>네이버 부동산에서 보기</a>' : '') +
       '</div>' +
