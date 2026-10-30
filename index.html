@@ -1031,10 +1031,30 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 /* 지도 위 동 선택 */
 #leafletMap{z-index:0}
 .dongPick{position:absolute;top:10px;left:10px;z-index:30;max-width:calc(100% - 70px)}
-.dpBtn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:1px solid #294652;border-radius:999px;background:#FFFFFF;color:#294652;font:700 13.5px 'Noto Sans KR',sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(20,25,31,.18);white-space:nowrap}
-.dpBtn svg{color:#BC975E;flex:none}.dpBtn .dpCaret{font-size:11px;color:#6B757D}
-.dpBtn:hover{background:#F6F2EA}
-.dpBtn.on{background:#294652;color:#FFFFFF}.dpBtn.on .dpCaret{color:#E8D7B6}
+.dongPick .mrMap{display:none;vertical-align:top;margin-left:6px;height:42px;padding:0 15px;box-shadow:0 4px 14px rgba(20,25,31,.22);background:#FFFFFF}
+.dongPick .mrMap.on{display:inline-flex}
+@media (min-width:761px){.mapTools .mapReset{display:none!important}}
+@media (max-width:760px){.dongPick .mrMap,.dongPick .mrMap.on{display:none}}
+.dpBtn{position:relative;display:inline-flex;align-items:center;gap:7px;height:42px;padding:0 18px 0 15px;border:2px solid #BC975E;border-radius:999px;background:#294652;color:#FFFFFF;font:800 15px 'Noto Sans KR',sans-serif;letter-spacing:-.3px;cursor:pointer;box-shadow:0 4px 14px rgba(20,25,31,.32);white-space:nowrap}
+.dpBtn svg{color:#E8C98F;flex:none;width:17px;height:17px}.dpBtn .dpCaret{font-size:12px;color:#E8D7B6}
+.dpBtn:hover{background:#335664}
+.dpBtn:after{content:"";position:absolute;inset:-6px;border-radius:999px;border:2px solid #BC975E;opacity:0;animation:dpPulse 1.8s ease-out 1s 4;pointer-events:none}
+@keyframes dpPulse{0%{opacity:.85;transform:scale(.92)}100%{opacity:0;transform:scale(1.18)}}
+.dpBtn.on{background:#BC975E;border-color:#FFFFFF;color:#FFFFFF}.dpBtn.on svg{color:#FFFFFF}.dpBtn.on .dpCaret{color:#FFFFFF}.dpBtn.on:after{display:none}
+@media (prefers-reduced-motion:reduce){.dpBtn:after{animation:none}}
+/* 검색 초기화 */
+.mapReset{flex:none;display:inline-flex;align-items:center;justify-content:center;gap:5px;height:44px;padding:0 14px;border:1px solid #D9D2C4;border-radius:999px;background:#FFFFFF;color:#8A939A;font:700 14px 'Noto Sans KR',sans-serif;cursor:pointer;white-space:nowrap;transition:background-color .18s,color .18s,border-color .18s}
+.mapReset.on{border-color:#C0533A;color:#C0533A;background:#FFF6F3}
+.mapReset.on:hover{background:#C0533A;color:#FFFFFF}
+.mapReset:not(.on):hover{border-color:#BC975E;color:#294652}
+@media (min-width:761px) and (max-width:1100px){.mapReset{height:40px}}
+@media (min-width:1101px){.heroMap .mapReset{height:40px}}
+@media (max-width:760px){.heroMap .mapReset{grid-column:1/-1;height:36px;display:none}.heroMap .mapReset.on{display:inline-flex}body.mapFull #map .mapReset.on{display:inline-flex;flex:none}}
+/* 공클 매물 건축물대장 불러오는 중 */
+.dtBldMsg{display:flex;align-items:center;gap:8px;margin:-4px 0 12px;padding:10px 14px;border-radius:10px;background:#EEF3F5;color:#294652;font-size:13.5px;font-weight:600}
+.dtBldMsg.off{background:#F6F2EA;color:#6B757D;font-weight:500}
+.dtBldMsg .spin{width:14px;height:14px;flex:none;border:2px solid #BC975E;border-right-color:transparent;border-radius:50%;animation:dtSpin .8s linear infinite}
+@keyframes dtSpin{to{transform:rotate(360deg)}}
 .dpPanel{margin-top:6px;width:340px;max-width:calc(100vw - 40px);max-height:min(380px,calc(100vh - 160px));overflow:auto;background:#FFFFFF;border:1px solid #E6E0D4;border-radius:14px;box-shadow:0 10px 28px rgba(20,25,31,.22);padding:10px 12px 12px}
 .dpPanel h4{margin:8px 2px 6px;font-size:12px;font-weight:800;color:#9C7A47;letter-spacing:.2px}
 .dpPanel h4:first-child{margin-top:2px}
@@ -1044,7 +1064,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 .dpPanel button[data-dong]:hover{border-color:#BC975E;color:#294652}
 .dpPanel button[data-dong].on{background:#294652;border-color:#294652;color:#FFFFFF}.dpPanel button[data-dong].on small{color:#E8D7B6}
 .dpPanel .dpAll{width:100%;margin-bottom:4px;padding:8px 11px}
-@media (max-width:760px){.dpBtn{height:34px;font-size:13px}.dpPanel{width:calc(100vw - 64px)}}
+@media (max-width:760px){.dpBtn{height:38px;font-size:14px}.dpPanel{width:calc(100vw - 64px)}}
 /* 모바일: 표의 왼쪽 칸은 글자 길이에 맞춤 (줄바꿈 없이) */
 @media (max-width:760px){
  @supports (grid-template-columns:subgrid){
@@ -1188,6 +1208,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 <div class="rng" id="rgFloor" title="지하층은 B1 또는 -1 로 입력"><span class="rgL">층</span><input id="mapFloorMin" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최저" aria-label="층 최소"><i>~</i><input id="mapFloorMax" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최고" aria-label="층 최대"><span class="rgU">층</span></div>
 <div class="rng" id="rgDep"><span class="rgL">보증금</span><input id="mapDepMin" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최소" aria-label="보증금 최소"><i>~</i><input id="mapDepMax" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최대" aria-label="보증금 최대"><span class="rgU">만</span></div>
 <div class="rng" id="rgRent"><span class="rgL">월세</span><input id="mapRentMin" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최소" aria-label="월세 최소"><i>~</i><input id="mapRentMax" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최대" aria-label="월세 최대"><span class="rgU">만</span></div>
+<button type="button" class="mapReset" id="mapReset" title="검색 조건 모두 지우기"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg>초기화</button>
 <button type="button" class="mapFullBtn" id="mapFullBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"></path></svg>지도 크게 보기</button>
 </div>
 <div class="elev" style="display: flex; flex-wrap: wrap; gap: 0; border: 1px solid #E6E0D4; border-radius: 18px; overflow: hidden; background: #FFFFFF">
@@ -1200,7 +1221,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 </div>
 <div style="flex: 999 1 400px; min-width: 0; position: relative">
 <div id="leafletMap" style="height: 571px; width: 100%; overflow: hidden; position: relative; background: #ECE6DA"></div>
-<div class="dongPick" id="dongPick"><select id="mapDong" class="sr" tabindex="-1" aria-hidden="true"><option value="">전체 지역</option></select><button type="button" class="dpBtn" id="dpBtn" aria-expanded="false" aria-controls="dpPanel"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg><span id="dpLabel">동 선택</span><b class="dpCaret" aria-hidden="true">▾</b></button><div class="dpPanel" id="dpPanel" hidden></div></div>
+<div class="dongPick" id="dongPick"><select id="mapDong" class="sr" tabindex="-1" aria-hidden="true"><option value="">전체 지역</option></select><button type="button" class="dpBtn" id="dpBtn" aria-expanded="false" aria-controls="dpPanel"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg><span id="dpLabel">동 선택</span><b class="dpCaret" aria-hidden="true">▾</b></button><button type="button" class="mapReset mrMap" title="검색 조건 모두 지우기"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg>검색 초기화</button><div class="dpPanel" id="dpPanel" hidden></div></div>
 </div>
 </div>
 <p style="margin: 14px 0 0; font-size: 13px; color: #6B757D">※ 지도 위치와 매물 정보는 실제와 다를 수 있으니, 정확한 조건과 현장 확인은 상담 시 안내해 드립니다. <span id="demoNote"></span></p>
@@ -1682,7 +1703,9 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
         map.fitBounds(b, { top: 40, right: 40, bottom: 40, left: 40 });
       },
       go: function (p, z) { map.morph(ll(p), z); },
-      resize: function () { try { map.setSize(new nm.Size(el.clientWidth, el.clientHeight)); } catch (e) { } },
+      resize: function () { if (!el.clientWidth || !el.clientHeight) return; try { map.setSize(new nm.Size(el.clientWidth, el.clientHeight)); } catch (e) { } try { map.refresh(true); } catch (e) { } },   // 숨겨진 동안(상세 화면)엔 크기를 0으로 바꾸지 않음
+      center: function () { var c = map.getCenter(); return { lat: c.lat(), lng: c.lng() }; },
+      set: function (p, z) { map.setCenter(ll(p)); map.setZoom(z, false); },
       onChange: function (fn) { nm.Event.addListener(map, 'idle', fn); }
     };
   }
@@ -1707,7 +1730,9 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       closePopup: function () { map.closePopup(); },
       fit: function (pts) { if (!pts.length) return; map.fitBounds(L.latLngBounds(pts.map(function (p) { return [p.lat, p.lng]; })).pad(0.15), { maxZoom: 16 }); },
       go: function (p, z) { map.setView([p.lat, p.lng], z); },
-      resize: function () { try { map.invalidateSize(); } catch (e) { } },
+      resize: function () { if (!el.clientWidth || !el.clientHeight) return; try { map.invalidateSize(); } catch (e) { } },
+      center: function () { var c = map.getCenter(); return { lat: c.lat, lng: c.lng }; },
+      set: function (p, z) { map.setView([p.lat, p.lng], z, { animate: false }); },
       onChange: function (fn) { map.on('moveend zoomend', fn); }
     };
   }
@@ -1874,8 +1899,14 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     v = Math.round(v); var e = Math.floor(v / 10000), m = v % 10000;
     return (e ? e + '억' + (m ? ' ' : '') : '') + (m || !e ? m.toLocaleString('ko-KR') + '만' : '');
   }
+  function filtersOn() {
+    var on = !!$('mapDong').value || !!(SEARCH.cat || SEARCH.gu || SEARCH.kw || SEARCH.auto || SEARCH.sale);
+    ['Area', 'Floor', 'Dep', 'Rent'].forEach(function (k) { var a = $('map' + k + 'Min'), b = $('map' + k + 'Max'); if (a && (a.value || b.value)) on = true; });
+    document.querySelectorAll('.mapReset').forEach(function (r) { r.classList.toggle('on', on); });
+    return on;
+  }
   function applyFilters(fit) {
-    VIEW = mapFiltered();
+    VIEW = mapFiltered(); filtersOn();
     if (M) { M.closePopup(); if (fit && VIEW.length) M.fit(VIEW); drawMap(); } else renderList();
   }
 
@@ -1915,6 +1946,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       });
     });
     bindDongPick();
+    document.querySelectorAll('.mapReset').forEach(function (r) { r.addEventListener('click', function (e) { e.stopPropagation(); dongPanel(false); resetSearch(); }); });
     $('mapList').addEventListener('click', function (e) { var b = e.target.closest('.mapItem'); if (b) focusItem(b.getAttribute('data-id')); });
     document.querySelectorAll('.tabBtn').forEach(function (b) {
       b.addEventListener('click', function () { featTab = b.getAttribute('data-tab'); renderFeatured(); });
@@ -2284,7 +2316,9 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     var hasFl = !!(it.reg && it.reg.fl && it.reg.fl.length);
     var floorBox = hasFl ? '<div class="dtFloorBox"><h3>층별 현황</h3><div id="dtFloor" class="dtFloor"></div><p class="dtFloorNote">※ 건축물대장상 용도로, 실제 업종과 다를 수 있습니다.</p></div>' : '';
     // ── 건축물대장 (표제부·층별현황·지역지구) ──
-    var reg = it.reg, regHtml = it.unv && !reg && !it.bldDone && SHEET_URL ? '<section class="dtSec" id="dtBldWait"><h2>건축물정보</h2><p class="dtNote">건축물대장(표제부·층별 현황)을 불러오는 중입니다…</p></section>' : '';
+    var reg = it.reg, regHtml = '';
+    var bldMsg = !it.unv || reg ? '' : !it.bldDone ? '<p class="dtBldMsg" id="dtBldMsg"><span class="spin" aria-hidden="true"></span>건축물대장(층별 현황·건축물정보)을 불러오는 중입니다…</p>'
+      : it.bldMsg ? '<p class="dtBldMsg off" id="dtBldMsg">' + esc(it.bldMsg) + '</p>' : '';
     if (reg) {
       var a = function (v) { return v ? Number(v).toLocaleString('ko-KR', { maximumFractionDigits: 2 }) + '㎡' : ''; };
       var pct = function (v) { return v ? (Math.round(v * 100) / 100) + '%' : ''; };
@@ -2339,7 +2373,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       '<div class="dtTools"><button type="button" class="dtTool" data-act="share"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"></path></svg><span>링크 복사</span></button>' +
       '<button type="button" class="dtTool dtPdf" data-act="pdf"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5M12 11v6M9 14l3 3 3-3"></path></svg><span>PDF 저장</span></button></div></div>' +
       '<div class="dtGrid"><div class="dtMain">' + gal + price +
-      '<section class="dtSec"><h2>매물 정보</h2><div class="dtInfoGrid' + (hasFl ? '' : ' solo') + '">' + info + floorBox + '</div>' +
+      '<section class="dtSec"><h2>매물 정보</h2>' + bldMsg + '<div class="dtInfoGrid' + (hasFl ? '' : ' solo') + '">' + info + floorBox + '</div>' +
       '<p class="dtNote">※ 「중개대상물의 표시·광고 명시사항 세부기준」에 따른 표시입니다. 소재지는 동까지만 표시하며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
       addHtml(it) +
       '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
@@ -2591,7 +2625,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   function openDetail(id) {
     DT.el = DT.el || $('itemDetail');
     var it = byId(id); if (it && it.photos && it.photos.length > 10) it.photos = it.photos.slice(0, 10); DT.it = it; DT.idx = 0;
-    if (!document.body.classList.contains('detailMode')) DT.prevScroll = window.scrollY;
+    if (!document.body.classList.contains('detailMode')) { DT.prevScroll = window.scrollY; try { DT.mapView = M && M.center ? { c: M.center(), z: M.zoom() } : null; } catch (e) { DT.mapView = null; } }
     document.body.classList.add('detailMode'); DT.el.hidden = false;
     if (!it) {
       DT.el.innerHTML = '<div class="dtWrap"><div class="dtMissing"><b>매물을 찾을 수 없습니다</b><p>계약이 완료되었거나 광고가 종료된 매물입니다.<br>비슷한 조건의 매물은 상담으로 안내해 드립니다.</p><a href="#map">지도에서 매물 찾기</a></div></div>';
@@ -2609,17 +2643,25 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   // 공실매물관 매물: 상세를 열 때 건축물대장(층별 현황·건축물정보)을 불러와 다시 그림
   function loadGsBld(it) {
     if (it.bldBusy || !SHEET_URL) return; it.bldBusy = 1;
-    var done = function () { it.bldBusy = 0; var w = DT.el && DT.el.querySelector('#dtBldWait'); if (w && DT.it === it) w.remove(); };
+    var done = function (msg) {
+      it.bldBusy = 0; it.bldMsg = msg;
+      var w = DT.el && DT.el.querySelector('#dtBldMsg'); if (w && DT.it === it) { w.className = 'dtBldMsg off'; w.textContent = msg; }
+    };
     fetch(SHEET_URL + (SHEET_URL.indexOf('?') < 0 ? '?' : '&') + 'bld=' + encodeURIComponent(it.id)).then(function (r) { return r.json(); }).then(function (d) {
       it.bldDone = 1;
-      if (!(d && d.ok && d.b)) { done(); return; }
+      if (!(d && d.ok && d.b)) {
+        done(d && d.none ? '※ 건축물대장에서 이 건물을 찾지 못했습니다. 건물 정보는 상담 시 확인해 드립니다.'
+          : d && d.error ? '※ 건축물대장 정보를 지금 불러오지 못했습니다 (' + d.error + '). 건물 정보는 상담 시 확인해 드립니다.'
+          : '※ 건축물대장 연결 준비 중입니다. 건물 정보는 상담 시 확인해 드립니다.');
+        return;
+      }
       var b = d.b;
       if (b.floors) it.totalFloor = b.floors; if (b.approval) it.approval = b.approval;
       it.usage = b.usage || it.usage; it.structure = b.structure || it.structure; it.totArea = b.totArea || 0;
       it.parkTotal = b.park ? b.park + '대' : ''; it.bldElev = b.elev || 0; it.bldSrc = 1; it.reg = b.reg || null;
       it.bldBusy = 0;
       if (DT.it === it && DT.el && !DT.el.hidden && document.body.classList.contains('detailMode')) { var y = window.scrollY; paintDetail(it); window.scrollTo(0, y); }
-    }).catch(done);
+    }).catch(function () { it.bldDone = 0; done('※ 건축물대장 정보를 불러오지 못했습니다. 잠시 후 다시 열어 주세요.'); });
   }
   /* ===== 층별 현황 그림 (건축물대장 층별개요 → 층별 면적으로 그린 건물 단면) ===== */
   var FCAT = {   // 홈페이지 네이비·골드·아이보리 톤에 맞춘 차분한 색
@@ -2855,7 +2897,13 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       window.dispatchEvent(new Event('resize'));
       // 뒤로 가기·목록으로: 상세를 열기 전 보던 위치(지도 또는 추천 매물)로 / 메뉴 클릭: 해당 섹션으로
       if (restore || !t) window.scrollTo(0, DT.prevScroll); else t.scrollIntoView();
-      if (document.body.classList.contains('mapFull')) mapRefit();
+      // 지도 다시 살리기: 크기 재계산 → 상세 열기 전 보던 위치·확대로 → 핀 다시 그림
+      if (M) [80, 400].forEach(function (ms) { setTimeout(function () {
+        if (M.resize) M.resize();
+        var v = DT.mapView; if (v && v.c && isFinite(v.c.lat) && isFinite(v.c.lng) && M.set) { try { M.set(v.c, v.z); } catch (e) { } }
+        else if (VIEW.length) M.fit(VIEW);
+        drawMap();
+      }, ms); });
     });
   }
   function closeByUser() {
