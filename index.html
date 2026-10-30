@@ -50,7 +50,7 @@ input,select,textarea,button{font-family:inherit}
 .mpopClose{position:absolute;top:8px;right:8px;width:28px;height:28px;border:0;background:none;font-size:20px;color:#6B757D;cursor:pointer}
 .mpopList{max-height:240px;overflow-y:auto;display:flex;flex-direction:column}
 .mpopList button{display:flex;flex-direction:column;gap:2px;text-align:left;border:0;border-top:1px solid #EFEAE0;background:none;padding:9px 2px;font-family:inherit;font-size:13px;color:#14191F;cursor:pointer}
-.mpopList button:hover{background:#FAF7F1}.mpopList b{font-size:13px}.mpopList span{color:#294652}
+.mpopList button:hover{background:#FAF7F1}.mpopList button.unv b{color:#6F8E96;font-weight:600}.mpopList button.unv span{color:#8FA3AA}.mpopList b{font-size:13px}.mpopList span{color:#294652}
 .leaflet-popup-content-wrapper{background:transparent;box-shadow:none;padding:0}.leaflet-popup-content{margin:0}.leaflet-popup-tip-container{display:none}
 @media (max-width:760px){#mapList{height:300px!important}#leafletMap{height:420px!important}}
 </style>
@@ -1591,7 +1591,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   function clusterPopup(g) {
     return '<div class="mpop"><div class="mpopCat">이 주변 매물 ' + g.items.length + '건</div><div class="mpopList">' +
       g.items.slice().sort(function (a, b) { return floorKey(a.floor) - floorKey(b.floor) || (a.area || 0) - (b.area || 0); }).slice(0, 12).map(function (it) {
-        return '<button type="button" data-focus="' + esc(it.id) + '"><b>' + esc(it.floor || '') + ' · ' + esc(areaText(it.area)) + '</b><span>보 ' + esc(it.depText) + ' / 월 ' + esc(it.rentText) + '</span></button>';
+        return '<button type="button"' + (it.unv ? ' class="unv"' : '') + ' data-focus="' + esc(it.id) + '"><b>' + esc(it.floor || '') + ' · ' + esc(areaText(it.area)) + '</b><span>보 ' + esc(it.depText) + ' / 월 ' + esc(it.rentText) + '</span></button>';
       }).join('') + (g.items.length > 12 ? '<div class="mpopMeta">외 ' + (g.items.length - 12) + '건은 왼쪽 목록에서 확인하세요</div>' : '') +
       '</div><button type="button" class="mpopClose" aria-label="닫기">×</button></div>';
   }
