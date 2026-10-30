@@ -1691,7 +1691,12 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       area: function (rings) {   // 선택한 동 경계 (rings: [[lng,lat]…]…), null 이면 지움
         (this._area || []).forEach(function (g) { g.setMap(null); }); this._area = [];
         if (!rings) return;
-        this._area = rings.map(function (r) { return new nm.Polygon({ map: map, paths: [r.map(function (q) { return new nm.LatLng(q[1], q[0]); })], fillColor: '#C9A86E', fillOpacity: 0.08, strokeColor: '#D2B27C', strokeWeight: 2, strokeOpacity: 0.7, strokeStyle: 'solid', clickable: false, zIndex: 1 }); });
+        this._area = [];   // 흰 테두리(아래) + 금색 선(위)
+        rings.forEach(function (r) {
+          var path = [r.map(function (q) { return new nm.LatLng(q[1], q[0]); })];
+          this._area.push(new nm.Polygon({ map: map, paths: path, fillColor: '#BC975E', fillOpacity: 0.09, strokeColor: '#FFFFFF', strokeWeight: 6, strokeOpacity: 0.9, clickable: false, zIndex: 1 }));
+          this._area.push(new nm.Polygon({ map: map, paths: path, fillOpacity: 0, strokeColor: '#B0853F', strokeWeight: 2.5, strokeOpacity: 1, clickable: false, zIndex: 2 }));
+        }, this);
       },
       circle: function (p) { objs.push(new nm.Circle({ map: map, center: ll(p), radius: RADIUS_M, strokeColor: '#294652', strokeWeight: 1.5, strokeOpacity: 0.8, fillColor: '#294652', fillOpacity: 0.08, clickable: false })); },
       popup: function (p, html, noPan) { try { iw.setOptions('disableAutoPan', !!noPan); } catch (e) { } iw.setContent(html); iw.open(map, ll(p)); return iw.getContentElement(); },
@@ -1728,7 +1733,8 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       area: function (rings) {
         if (this._area) { map.removeLayer(this._area); this._area = null; }
         if (!rings) return;
-        this._area = L.polygon(rings.map(function (r) { return r.map(function (q) { return [q[1], q[0]]; }); }), { color: '#D2B27C', weight: 2, opacity: 0.7, fillColor: '#C9A86E', fillOpacity: 0.08, interactive: false }).addTo(map);
+        var ll2 = rings.map(function (r) { return r.map(function (q) { return [q[1], q[0]]; }); });
+        this._area = L.layerGroup([L.polygon(ll2, { color: '#FFFFFF', weight: 6, opacity: 0.9, fillColor: '#BC975E', fillOpacity: 0.09, interactive: false }), L.polygon(ll2, { color: '#B0853F', weight: 2.5, opacity: 1, fill: false, interactive: false })]).addTo(map);
       },
       circle: function (p) { L.circle([p.lat, p.lng], { radius: RADIUS_M, color: '#294652', weight: 1.5, fillColor: '#294652', fillOpacity: 0.08, interactive: false }).addTo(grp); },
       popup: function (p, html, noPan) { pop.options.autoPan = !noPan; pop.setLatLng([p.lat, p.lng]).setContent(html).openOn(map); return pop.getElement(); },
