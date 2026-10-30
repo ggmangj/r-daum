@@ -1861,6 +1861,27 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   }
 
 
+  // 공실매물관(현장 미확인) 매물: 본 목록을 먼저 보여준 뒤 따로 불러와 합침
+  function loadGs() {
+    fetch(SHEET_URL + (SHEET_URL.indexOf('?') < 0 ? '?' : '&') + 'gs=1').then(function (r) { return r.json(); }).then(function (d) {
+      if (!d || !d.rows || !d.rows.length) return;
+      var have = {}; ITEMS.forEach(function (i) { have[i.id] = 1; });
+      var add = d.rows.filter(function (r) { return !have[r[0]]; }).map(function (r) {
+        return { id: r[0], unv: 1, cats: String(r[1] || '').split(',').filter(Boolean), catLabel: r[2], title: r[3], point: '', gu: r[4], dong: r[5], building: '', floor: r[6], area: r[7],
+          dep: r[8], rent: r[9], depText: r[10], rentText: r[11], mgmt: r[12], premium: r[13], parking: r[14], elev: r[15], totalFloor: r[16], approval: r[17], date: r[18],
+          direction: '', moveIn: '', toilet: '', station: '', usage: '', structure: '', totArea: 0, parkTotal: '', bldElev: 0, bldSrc: 0, reg: null, photos: [], lat: r[19], lng: r[20] };
+      });
+      if (!add.length) return;
+      ITEMS = ITEMS.concat(add);
+      var sel = $('mapDong').value, dongs = [];
+      ITEMS.forEach(function (i) { if (i.dong && dongs.indexOf(i.dong) < 0) dongs.push(i.dong); }); dongs.sort();
+      $('mapDong').innerHTML = '<option value="">전체 지역</option>' + dongs.map(function (x) { return '<option>' + esc(x) + '</option>'; }).join('');
+      $('mapDong').value = sel;
+      applyFilters(false);
+      if (/^#item\/G/i.test(location.hash)) route(false);
+    }).catch(function () { });
+  }
+
   /* ================= 상단 매물검색 → 지도 검색 ================= */
   var SEARCH = { cat: '', gu: '', kw: '', sale: false, label: [], auto: null };
   var SALE = false;
@@ -2771,7 +2792,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   ccInit(); bind(); initMap();
   if (SHEET_URL) {
     fetch(SHEET_URL).then(function (r) { return r.json(); })
-      .then(function (d) { if (d && d.items && d.items.length) load(d.items, true, d.updated); else load(DEMO, false); })
+      .then(function (d) { if (d && d.items && d.items.length) { load(d.items, true, d.updated); loadGs(); } else load(DEMO, false); })
       .catch(function () { load(DEMO, false); });
   } else load(DEMO, false);
 
