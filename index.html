@@ -1590,7 +1590,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   }
   function clusterPopup(g) {
     return '<div class="mpop"><div class="mpopCat">이 주변 매물 ' + g.items.length + '건</div><div class="mpopList">' +
-      g.items.slice(0, 12).map(function (it) {
+      g.items.slice().sort(function (a, b) { return floorKey(a.floor) - floorKey(b.floor) || (a.area || 0) - (b.area || 0); }).slice(0, 12).map(function (it) {
         return '<button type="button" data-focus="' + esc(it.id) + '"><b>' + esc(it.floor || '') + ' · ' + esc(areaText(it.area)) + '</b><span>보 ' + esc(it.depText) + ' / 월 ' + esc(it.rentText) + '</span></button>';
       }).join('') + (g.items.length > 12 ? '<div class="mpopMeta">외 ' + (g.items.length - 12) + '건은 왼쪽 목록에서 확인하세요</div>' : '') +
       '</div><button type="button" class="mpopClose" aria-label="닫기">×</button></div>';
@@ -1623,6 +1623,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       zoom: function () { return map.getZoom(); },
       px: function (p) { var o = map.getProjection().fromCoordToOffset(ll(p)); return { x: o.x, y: o.y }; },
       inView: function (p) { return map.getBounds().hasLatLng(ll(p)); },
+      bounds: function () { var b = map.getBounds(), sw = b.getSW ? b.getSW() : b.getMin(), ne = b.getNE ? b.getNE() : b.getMax(), g = function (o, k) { return typeof o[k] === 'function' ? o[k]() : o[k === 'lat' ? 'y' : 'x']; }; return { s: g(sw, 'lat'), w: g(sw, 'lng'), n: g(ne, 'lat'), e: g(ne, 'lng') }; },
       clear: function () { objs.forEach(function (o) { o.setMap(null); }); objs = []; },
       marker: function (p, html, z, onClick) {
         var m = new nm.Marker({ position: ll(p), map: map, zIndex: z, icon: { content: html, anchor: new nm.Point(0, 0) } });
@@ -1655,6 +1656,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       zoom: function () { return map.getZoom(); },
       px: function (p) { return map.project([p.lat, p.lng], map.getZoom()); },
       inView: function (p) { return map.getBounds().contains([p.lat, p.lng]); },
+      bounds: function () { var b = map.getBounds(); return { s: b.getSouth(), w: b.getWest(), n: b.getNorth(), e: b.getEast() }; },
       clear: function () { grp.clearLayers(); },
       marker: function (p, html, z, onClick) { L.marker([p.lat, p.lng], { icon: ic(html), zIndexOffset: z }).on('click', onClick).addTo(grp); },
       circle: function (p) { L.circle([p.lat, p.lng], { radius: RADIUS_M, color: '#294652', weight: 1.5, fillColor: '#294652', fillOpacity: 0.08, interactive: false }).addTo(grp); },
@@ -1692,13 +1694,16 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   }
 
   /* ---------- 묶음(클러스터) 계산 + 그리기 ---------- */
+  // 화면(+여유분) 안의 매물만, 격자 칸으로 빠르게 묶음 (매물 수천 건에서도 확대·축소가 끊기지 않게)
+  function wpx(p, z) { var s = 256 * Math.pow(2, z), sn = Math.sin(p.lat * Math.PI / 180); return { x: (p.lng + 180) / 360 * s, y: (0.5 - Math.log((1 + sn) / (1 - sn)) / (4 * Math.PI)) * s }; }
   function clusters(list) {
-    var out = [];
+    var z = M.zoom(), b = M.bounds(), padLat = (b.n - b.s) * 0.25, padLng = (b.e - b.w) * 0.25, cells = {}, out = [];
     list.forEach(function (it) {
-      var p = M.px(it), hit = null;
-      for (var i = 0; i < out.length; i++) { var c = out[i]; if (Math.abs(c.x - p.x) < CLUSTER_PX && Math.abs(c.y - p.y) < CLUSTER_PX) { hit = c; break; } }
-      if (hit) { hit.items.push(it); hit.lat += (it.lat - hit.lat) / hit.items.length; hit.lng += (it.lng - hit.lng) / hit.items.length; }
-      else out.push({ x: p.x, y: p.y, lat: it.lat, lng: it.lng, items: [it] });
+      if (it.lat < b.s - padLat || it.lat > b.n + padLat || it.lng < b.w - padLng || it.lng > b.e + padLng) return;
+      if (it.id === focusId) { out.push({ lat: it.lat, lng: it.lng, items: [it] }); return; }
+      var p = wpx(it, z), k = Math.floor(p.x / CLUSTER_PX) + ':' + Math.floor(p.y / CLUSTER_PX), c = cells[k];
+      if (c) { c.items.push(it); c.lat += (it.lat - c.lat) / c.items.length; c.lng += (it.lng - c.lng) / c.items.length; }
+      else { c = cells[k] = { lat: it.lat, lng: it.lng, items: [it] }; out.push(c); }
     });
     return out;
   }
@@ -1712,7 +1717,11 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 
   function openItem(it) { var redraw = focusId !== it.id; focusId = it.id; if (redraw) drawMap(); bindPopup(M.popup(it, itemPopup(it))); highlight(it.id); }
 
-  function drawMap() {
+  var drawT = 0;
+  function drawMap() {   // 지도 이동·확대가 연달아 일어나면 마지막 한 번만 다시 그림
+    clearTimeout(drawT); drawT = setTimeout(drawMap0, 60);
+  }
+  function drawMap0() {
     if (!M) return;
     M.clear();
     var z = M.zoom();
@@ -1761,7 +1770,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     return h.replace(/(\d+(?:\.\d+)?평)\s+(?=\S)/, '$1<span class="miSep" aria-hidden="true"></span>');
   }
   function renderList() {
-    var list = M ? VIEW.filter(function (it) { return M.inView(it); }) : VIEW;
+    var bb = M ? M.bounds() : null, list = M ? VIEW.filter(function (it) { return it.lat >= bb.s && it.lat <= bb.n && it.lng >= bb.w && it.lng <= bb.e; }) : VIEW;
     $('mapCount').textContent = list.length;
     $('mapScope').textContent = M && list.length < VIEW.length ? '지도 범위 안 · 전체 ' + VIEW.length + '건' : '';
     $('mapList').innerHTML = list.length ? list.slice(0, 200).map(function (it) {
