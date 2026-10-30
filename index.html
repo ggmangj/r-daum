@@ -1031,12 +1031,12 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 /* 지도 위 동 선택 */
 #leafletMap{z-index:0}
 .dongPick{position:absolute;top:10px;left:10px;z-index:30;max-width:calc(100% - 70px)}
-.dpBtn{position:relative;display:inline-flex;align-items:center;gap:7px;height:42px;padding:0 18px 0 15px;border:2px solid #FFFFFF;border-radius:999px;background:#BC975E;color:#FFFFFF;font:800 15px 'Noto Sans KR',sans-serif;letter-spacing:-.3px;cursor:pointer;box-shadow:0 4px 14px rgba(20,25,31,.32);white-space:nowrap}
+.dpBtn{position:relative;display:inline-flex;align-items:center;gap:7px;height:42px;padding:0 18px 0 15px;border:2px solid #FFFFFF;border-radius:999px;background:#C7A774;color:#FFFFFF;font:800 15px 'Noto Sans KR',sans-serif;letter-spacing:-.3px;cursor:pointer;box-shadow:0 3px 10px rgba(20,25,31,.2);white-space:nowrap}
 .dpBtn svg{color:#FFFFFF;flex:none;width:17px;height:17px}.dpBtn .dpCaret{font-size:12px;color:#FFF3DD}
-.dpBtn:hover{background:#A9834A}
+.dpBtn:hover{background:#BA9862}
 .dpBtn:after{content:"";position:absolute;inset:-6px;border-radius:999px;border:2px solid #BC975E;opacity:0;animation:dpPulse 1.8s ease-out 1s 4;pointer-events:none}
 @keyframes dpPulse{0%{opacity:.85;transform:scale(.92)}100%{opacity:0;transform:scale(1.18)}}
-.dpBtn.on{background:#9C6F2E;border-color:#FFFFFF;color:#FFFFFF}.dpBtn.on svg{color:#FFFFFF}.dpBtn.on .dpCaret{color:#FFFFFF}.dpBtn.on:after{display:none}
+.dpBtn.on{background:#B8955F;border-color:#FFFFFF;color:#FFFFFF}.dpBtn.on svg{color:#FFFFFF}.dpBtn.on .dpCaret{color:#FFFFFF}.dpBtn.on:after{display:none}
 .dpBtn .dpX{display:none;margin-left:2px;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.25);font-size:12px;line-height:18px;text-align:center}
 .dpBtn.on .dpX{display:inline-block}.dpBtn.on .dpCaret{display:none}
 @media (prefers-reduced-motion:reduce){.dpBtn:after{animation:none}}
@@ -1691,7 +1691,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       area: function (rings) {   // 선택한 동 경계 (rings: [[lng,lat]…]…), null 이면 지움
         (this._area || []).forEach(function (g) { g.setMap(null); }); this._area = [];
         if (!rings) return;
-        this._area = rings.map(function (r) { return new nm.Polygon({ map: map, paths: [r.map(function (q) { return new nm.LatLng(q[1], q[0]); })], fillColor: '#BC975E', fillOpacity: 0.13, strokeColor: '#B07D2E', strokeWeight: 3, strokeOpacity: 0.95, strokeStyle: 'solid', clickable: false, zIndex: 1 }); });
+        this._area = rings.map(function (r) { return new nm.Polygon({ map: map, paths: [r.map(function (q) { return new nm.LatLng(q[1], q[0]); })], fillColor: '#C9A86E', fillOpacity: 0.08, strokeColor: '#C29A5C', strokeWeight: 2, strokeOpacity: 0.75, strokeStyle: 'solid', clickable: false, zIndex: 1 }); });
       },
       circle: function (p) { objs.push(new nm.Circle({ map: map, center: ll(p), radius: RADIUS_M, strokeColor: '#294652', strokeWeight: 1.5, strokeOpacity: 0.8, fillColor: '#294652', fillOpacity: 0.08, clickable: false })); },
       popup: function (p, html, noPan) { try { iw.setOptions('disableAutoPan', !!noPan); } catch (e) { } iw.setContent(html); iw.open(map, ll(p)); return iw.getContentElement(); },
@@ -1728,7 +1728,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       area: function (rings) {
         if (this._area) { map.removeLayer(this._area); this._area = null; }
         if (!rings) return;
-        this._area = L.polygon(rings.map(function (r) { return r.map(function (q) { return [q[1], q[0]]; }); }), { color: '#B07D2E', weight: 3, fillColor: '#BC975E', fillOpacity: 0.13, interactive: false }).addTo(map);
+        this._area = L.polygon(rings.map(function (r) { return r.map(function (q) { return [q[1], q[0]]; }); }), { color: '#C29A5C', weight: 2, opacity: 0.75, fillColor: '#C9A86E', fillOpacity: 0.08, interactive: false }).addTo(map);
       },
       circle: function (p) { L.circle([p.lat, p.lng], { radius: RADIUS_M, color: '#294652', weight: 1.5, fillColor: '#294652', fillOpacity: 0.08, interactive: false }).addTo(grp); },
       popup: function (p, html, noPan) { pop.options.autoPan = !noPan; pop.setLatLng([p.lat, p.lng]).setContent(html).openOn(map); return pop.getElement(); },
