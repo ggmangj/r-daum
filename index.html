@@ -1591,7 +1591,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   function clusterPopup(g) {
     return '<div class="mpop"><div class="mpopCat">이 주변 매물 ' + g.items.length + '건</div><div class="mpopList">' +
       g.items.slice().sort(function (a, b) { return floorKey(a.floor) - floorKey(b.floor) || (a.area || 0) - (b.area || 0); }).slice(0, 12).map(function (it) {
-        return '<button type="button"' + (it.unv ? ' class="unv"' : '') + ' data-focus="' + esc(it.id) + '"><b>' + esc(it.floor || '') + ' · ' + esc(areaText(it.area)) + '</b><span>보 ' + esc(it.depText) + ' / 월 ' + esc(it.rentText) + '</span></button>';
+        return '<button type="button"' + (it.unv ? ' class="unv"' : '') + ' data-focus="' + esc(it.id) + '"><b>' + esc(it.floor || '') + ' · ' + esc(areaText(it.area)) + '</b><span>보 ' + esc(it.depText) + ' / 월 ' + esc(it.rentText) + ' / 관 ' + esc(it.mgmt || (it.unv ? '확인요청' : '문의')) + '</span></button>';
       }).join('') + (g.items.length > 12 ? '<div class="mpopMeta">외 ' + (g.items.length - 12) + '건은 왼쪽 목록에서 확인하세요</div>' : '') +
       '</div><button type="button" class="mpopClose" aria-label="닫기">×</button></div>';
   }
@@ -3186,7 +3186,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 </script>
 <script>
 /* 매니저 관리: 다움 매물 리스트 웹앱 주소 (Apps Script 배포 후 …/exec 주소를 넣으세요) */
-var MANAGER_URL='/manager.html';
+var MANAGER_URL='https://script.google.com/macros/s/AKfycbxcrADcmOUogYCPPnEY9Hh6h_NpdV31gaOiP1zNCLn1fKrRsi12m-wi9d6wU8Sbw6dn9Q/exec';
 (function(){var a=document.getElementById('mgrLink');if(!a)return;
  if(MANAGER_URL){a.href=MANAGER_URL}
  else a.addEventListener('click',function(e){e.preventDefault();alert('매물 리스트 프로그램 주소가 아직 연결되지 않았습니다.')});})();
