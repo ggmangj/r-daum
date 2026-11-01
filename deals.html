@@ -370,7 +370,7 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
     markers();
     if (fit) {
       var pts = VIEW.filter(function (o) { return o.lat; });
-      if (F.dong && GEO) { var k = Object.keys(GEO).filter(function (x) { return x.split('|')[1] === F.dong && (!F.gu || x.split('|')[0] === F.gu); })[0]; if (k) pts = bigRing(k).map(function (q) { return { lat: q[1], lng: q[0] }; }); }
+      if (F.dong && GEO) { var g0 = F.gu; if (!g0) ALL.some(function (x) { if (x.dong === F.dong) { g0 = x.gu; return true; } return false; }); var k = (g0 || '강남구') + '|' + F.dong; if (GEO[k]) pts = bigRing(k).map(function (q) { return { lat: q[1], lng: q[0] }; }); }   // 다른 구의 같은 이름 동(은평구 신사동 등)으로 가지 않게
       if (pts.length) { var b = new NM.LatLngBounds(new NM.LatLng(pts[0].lat, pts[0].lng), new NM.LatLng(pts[0].lat, pts[0].lng)); pts.forEach(function (p) { b.extend(new NM.LatLng(p.lat, p.lng)); }); M.fitBounds(b, { top: 30, right: 30, bottom: 30, left: 30 }); }
     }
   }
