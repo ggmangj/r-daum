@@ -55,8 +55,8 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
 .k small{display:block;color:#6B757D;font-size:12.5px}.k b{display:block;font-size:24px;font-weight:900;color:#294652;letter-spacing:-.5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .k em{display:block;font-style:normal;font-size:12px;color:#9C7A47;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .main{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);border:1px solid #E6E0D4;border-radius:18px;overflow:hidden;background:#fff}
-.mapBox{position:relative;border-right:1px solid #E6E0D4;min-height:600px}
-#map{position:absolute;inset:0;background:#ECE6DA;z-index:0;overflow:hidden}
+.mapBox{position:relative;border-right:1px solid #E6E0D4;min-height:600px;display:flex}
+#map{position:relative;flex:1 1 auto;width:100%;min-height:600px;background:#ECE6DA;z-index:0;overflow:hidden}
 .leg{position:absolute;left:12px;bottom:12px;z-index:5;background:rgba(255,255,255,.95);border-radius:10px;padding:8px 10px;font-size:11.5px;box-shadow:0 2px 8px rgba(0,0,0,.14);pointer-events:none}
 .leg .bar{width:170px;height:8px;border-radius:4px;background:linear-gradient(90deg,#F3E9D6,#D9B97F,#9C6F2E,#5A3A10);margin:4px 0}
 .leg .row{display:flex;justify-content:space-between;color:#6B757D}.leg .dots{margin-top:5px;color:#46515B;display:flex;gap:10px;align-items:center}
@@ -96,14 +96,14 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
 .footIn{max-width:1280px;margin:0 auto;padding:44px 32px 32px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px;line-height:1.8}
 .footIn a{color:inherit}.copy{max-width:1280px;margin:0 auto;padding:16px 32px 28px;border-top:1px solid #3D5E6B;font-size:12px;color:#9AA6B2}
 .mBar{display:none}
-@media (max-width:1100px){.mainNav{gap:24px}.main{grid-template-columns:1fr}.mapBox{border-right:0;border-bottom:1px solid #E6E0D4;min-height:480px}.list{max-height:none}#list{max-height:560px}}
+@media (max-width:1100px){.mainNav{gap:24px}.main{grid-template-columns:1fr}.mapBox{border-right:0;border-bottom:1px solid #E6E0D4;min-height:480px}#map{min-height:480px}.list{max-height:none}#list{max-height:560px}}
 @media (max-width:760px){
  .headRow{padding:12px 16px;flex-wrap:wrap}.headTel{padding:9px 14px;font-size:14px;min-height:40px}
  .mainNav{order:3;flex:1 0 100%;gap:22px;overflow-x:auto;white-space:nowrap;font-size:15px;scrollbar-width:none}
  .wrap{padding:22px 16px 90px}h1{font-size:23px}.sub{font-size:13px}
  .flt{gap:6px}.seg button{padding:6px 10px;font-size:13px}.rng{flex:1 1 calc(50% - 3px);padding:0 10px}.rng input{width:100%;min-width:0}.rst{margin-left:0}
  .kpi{grid-template-columns:1fr 1fr;gap:8px}.k{padding:12px}.k b{font-size:19px}
- .mapBox{min-height:380px}.pop{width:236px;font-size:12.5px}.pop .pr{font-size:19px}
+ .mapBox{min-height:380px}#map{min-height:380px}.pop{width:236px;font-size:12.5px}.pop .pr{font-size:19px}
  .rank{padding:16px}.rank .r{grid-template-columns:64px 1fr 76px}.rank .r span{display:none}
  .cta{padding:18px}
  .mBar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid #E6E0D4}
@@ -200,7 +200,7 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
     Promise.all([gj, rt]).then(function (v) {
       GEO = v[0] || {};
       var d = v[1] || {};
-      ALL = (d.rows || []).map(function (r) {
+      ALL = (d.rows || []).filter(function (r) { return !((r[8] > 0 && r[8] < 33) || (r[9] > 0 && r[9] < 33)); }).map(function (r) {   // 대지·연면적 10평 미만(호실 단위 거래)은 빌딩이 아니라서 제외
         var o = { date: r[0], gu: r[1], dong: r[2], jb: r[3], ok: !!r[4], zone: r[5], use: r[6], year: r[7], land: r[8], bld: r[9], amt: r[10], share: !!r[11], lat: r[12], lng: r[13], gbn: r[14] };
         o.key = [o.date, o.gu, o.dong, o.jb, o.amt, o.land].join('|');
         o.pp = o.land > 0 ? o.amt / py(o.land) : 0;          // 대지 평당가 (만원)
@@ -291,6 +291,8 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
     $('map').addEventListener('mouseleave', function () { M.setOptions('scrollWheel', false); });
     iw = new NM.InfoWindow({ content: '', borderWidth: 0, backgroundColor: 'transparent', disableAnchor: true, pixelOffset: new NM.Point(0, -12) });
     NM.Event.addListener(M, 'zoom_changed', function () { markers(); });
+    var fixSize = function () { var el = $('map'); if (el.clientWidth && el.clientHeight) try { M.setSize(new NM.Size(el.clientWidth, el.clientHeight)); } catch (e) { } };
+    setTimeout(fixSize, 50); setTimeout(fixSize, 600); window.addEventListener('resize', fixSize);
     draw(true);
   }
   function draw(fit) {
