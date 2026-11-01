@@ -136,6 +136,22 @@ h1{margin:6px 0 8px;font-size:clamp(24px,3vw,32px);font-weight:900;letter-spacin
  .rank{padding:16px}.rank .r{grid-template-columns:64px 1fr 76px}.rank .r span{display:none}
  .cta{padding:18px}
 }
+
+/* 첫 화면 안에 다 보이게 + 지도 크게 보기 */
+@media (min-width:1101px){
+ .wrap{padding-top:22px}
+ h1{margin:2px 0 4px}.sub{margin-bottom:12px;font-size:13px;line-height:1.55}
+ .flt{margin-bottom:12px}
+ .kpi{margin-bottom:12px;gap:10px}.k{padding:10px 14px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.k small{width:100%}.k b{font-size:21px;margin:0}.k em{flex:1;min-width:0}
+ .main.fit .mapBox{min-height:0}.main.fit #map{min-height:0}.main.fit .list{max-height:none;min-height:0}
+}
+.mapFullBtn{position:absolute;left:12px;top:12px;z-index:7;display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border:1.5px solid #294652;border-radius:999px;background:#fff;color:#294652;font:700 13.5px 'Noto Sans KR',sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(20,25,31,.18)}
+.mapFullBtn svg{color:#BC975E}.mapFullBtn:hover{background:#294652;color:#fff}
+body.dlFull{overflow:hidden}
+body.dlFull .main{position:fixed;inset:0;z-index:200;border-radius:0;border:0;height:100%!important;grid-template-columns:minmax(0,1fr) 380px}
+body.dlFull .mapBox{min-height:0}body.dlFull #map{min-height:0}body.dlFull .list{max-height:none;min-height:0;height:100%}
+body.dlFull .mapFullBtn{background:#294652;color:#fff}body.dlFull .mapFullBtn svg{color:#E8D7B6}
+@media (max-width:1100px){body.dlFull .main{grid-template-columns:1fr;grid-template-rows:1fr}body.dlFull .list{display:none}body.dlFull .mapBox{border:0}}
 </style>
 </head>
 <body>
@@ -187,6 +203,7 @@ h1{margin:6px 0 8px;font-size:clamp(24px,3vw,32px);font-weight:900;letter-spacin
 
 <section class="main" aria-label="실거래 지도와 목록">
  <div class="mapBox"><div id="map" role="application" aria-label="실거래 지도"></div>
+  <button type="button" class="mapFullBtn" id="fullBtn" aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"></path></svg><span>지도 크게 보기</span></button>
   <div class="leg" aria-hidden="true"><b>동별 대지 평당가</b><div class="bar"></div><div class="row"><span id="lg0">-</span><span id="lg1">-</span></div>
    <div class="dots"><span><i style="background:#3B4650"></i>거래 위치</span><span><i style="background:#fff;border:1.5px dashed #7D96A0"></i>위치 확인 중</span></div></div>
   <div class="mapMsg" id="mapMsg">실거래 자료를 불러오는 중입니다…</div>
@@ -374,7 +391,8 @@ h1{margin:6px 0 8px;font-size:clamp(24px,3vw,32px);font-weight:900;letter-spacin
     });
     markers();
     if (fit) {
-      var pts = VIEW.filter(function (o) { return o.lat; });
+      var pts = VIEW.filter(function (o) { return o.lat && !o.ap; });
+      if (!F.dong && GEO) { pts = []; Object.keys(GEO).forEach(function (k) { var g = k.split('|')[0]; if ((g === '강남구' || g === '서초구') && (!F.gu || g === F.gu)) { var r = bigRing(k); if (r) r.forEach(function (q, i) { if (i % 4 === 0) pts.push({ lat: q[1], lng: q[0] }); }); } }); }
       if (F.dong && GEO) { var g0 = F.gu; if (!g0) ALL.some(function (x) { if (x.dong === F.dong) { g0 = x.gu; return true; } return false; }); var k = (g0 || '강남구') + '|' + F.dong; if (GEO[k]) pts = bigRing(k).map(function (q) { return { lat: q[1], lng: q[0] }; }); }   // 다른 구의 같은 이름 동(은평구 신사동 등)으로 가지 않게
       if (pts.length) { var b = new NM.LatLngBounds(new NM.LatLng(pts[0].lat, pts[0].lng), new NM.LatLng(pts[0].lat, pts[0].lng)); pts.forEach(function (p) { b.extend(new NM.LatLng(p.lat, p.lng)); }); M.fitBounds(b, { top: 30, right: 30, bottom: 30, left: 30 }); }
     }
@@ -394,6 +412,7 @@ h1{margin:6px 0 8px;font-size:clamp(24px,3vw,32px);font-weight:900;letter-spacin
       objs.push(m);
     });
     Object.keys(ap).forEach(function (k) {
+      if (z < 14 && !F.dong) return;   // 멀리서 볼 때는 숨김 (동 색깔로 충분)
       var g = ap[k], m = new NM.Marker({ map: M, position: new NM.LatLng(g.o.lat, g.o.lng), zIndex: 5, icon: { content: '<div class="mkAp">' + esc(g.o.dong) + ' 위치 확인 중 <b>' + g.n + '건</b></div>', anchor: new NM.Point(0, 0) } });
       NM.Event.addListener(m, 'click', function () { F.dong = g.o.dong; $('fDong').value = F.dong; apply(true); });
       objs.push(m);
@@ -443,6 +462,24 @@ h1{margin:6px 0 8px;font-size:clamp(24px,3vw,32px);font-weight:900;letter-spacin
   s.src = 'https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=' + encodeURIComponent(NAVER_KEY);
   s.onload = initMap; s.onerror = function () { $('mapMsg').hidden = false; $('mapMsg').textContent = '지도를 불러오지 못했습니다.'; };
   document.head.appendChild(s);
+  /* 첫 화면 안에 지도까지 다 보이게 (컴퓨터) */
+  function fitMain() {
+    var m = document.querySelector('.main'); if (!m) return;
+    if (document.body.classList.contains('dlFull') || innerWidth <= 1100) { m.style.height = ''; m.classList.remove('fit'); return; }
+    var top = m.getBoundingClientRect().top + window.scrollY, h = Math.max(440, Math.min(820, innerHeight - top - 14));
+    m.style.height = h + 'px'; m.classList.add('fit');
+  }
+  function mapRefresh() { if (M) setTimeout(function () { var el = $('map'); try { M.setSize(new NM.Size(el.clientWidth, el.clientHeight)); } catch (e) { } markers(); }, 60); }
+  window.addEventListener('resize', function () { fitMain(); mapRefresh(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitMain(); mapRefresh(); });
+  setTimeout(function () { fitMain(); mapRefresh(); }, 50);
+  function setFull(on) {
+    document.body.classList.toggle('dlFull', on); $('fullBtn').setAttribute('aria-pressed', on ? 'true' : 'false');
+    $('fullBtn').querySelector('span').textContent = on ? '크게 보기 닫기' : '지도 크게 보기';
+    fitMain(); mapRefresh(); if (!on) $('fullBtn').blur();
+  }
+  $('fullBtn').addEventListener('click', function () { setFull(!document.body.classList.contains('dlFull')); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && document.body.classList.contains('dlFull')) setFull(false); });
   load();
 })();
 </script>
