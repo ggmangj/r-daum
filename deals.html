@@ -196,7 +196,7 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
   /* ---------- 데이터 ---------- */
   function load() {
     var gj = fetch('dongs.json').then(function (r) { return r.json(); }).catch(function () { return {}; });
-    var rt = fetch(SHEET_URL + '?rt=1').then(function (r) { return r.json(); });
+    var rt = fetch(SHEET_URL + '?deals=1').then(function (r) { return r.json(); });
     Promise.all([gj, rt]).then(function (v) {
       GEO = v[0] || {};
       var d = v[1] || {};
