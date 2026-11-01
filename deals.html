@@ -90,9 +90,12 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
 .leg .row{display:flex;justify-content:space-between;color:#6B757D}.leg .dots{margin-top:5px;color:#46515B;display:flex;gap:10px;align-items:center}
 .leg .dots i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:3px;vertical-align:-1px}
 .mapMsg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:6;background:#fff;border-radius:12px;padding:14px 18px;font-size:14px;color:#46515B;box-shadow:0 4px 16px rgba(0,0,0,.15);text-align:center}
-.mk{transform:translate(-50%,-50%);display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;font:800 11.5px/1 'Noto Sans KR',sans-serif;color:#fff;background:#294652;border:2px solid #fff;border-radius:999px;padding:4px 7px;box-shadow:0 2px 6px rgba(0,0,0,.28);cursor:pointer}
-.mk.ap{background:#7D96A0}.mk.on{background:#C0533A;z-index:9;transform:translate(-50%,-50%) scale(1.15)}
-.mk.dot{width:12px;height:12px;padding:0;font-size:0}
+.mk{position:relative;transform:translate(-50%,calc(-100% - 7px));display:inline-flex;flex-direction:column;align-items:center;gap:2px;white-space:nowrap;background:#3B4650;color:#fff;border-radius:6px;padding:4px 8px 4px;box-shadow:0 2px 6px rgba(0,0,0,.3);cursor:pointer;font-family:'Noto Sans KR',sans-serif}
+.mk:after{content:"";position:absolute;left:50%;bottom:-6px;margin-left:-6px;border:6px solid transparent;border-top-color:#3B4650;border-bottom:0}
+.mk b{font-size:13px;font-weight:800;line-height:1.1}.mk small{font-size:10.5px;color:#C9D1D8;line-height:1}
+.mk.on{background:#C0533A;z-index:9}.mk.on:after{border-top-color:#C0533A}.mk.on small{color:#FBE3DC}
+.mkDot{transform:translate(-50%,-50%);width:11px;height:11px;border-radius:50%;background:#3B4650;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer}
+.mkAp{transform:translate(-50%,-50%);white-space:nowrap;background:rgba(255,255,255,.95);border:1.5px dashed #7D96A0;color:#46515B;border-radius:999px;padding:5px 10px;font:600 12px 'Noto Sans KR',sans-serif;box-shadow:0 2px 6px rgba(0,0,0,.15);cursor:pointer}.mkAp b{color:#294652}
 .dongLb{transform:translate(-50%,-50%);font:700 12px 'Noto Sans KR',sans-serif;color:#294652;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;white-space:nowrap;pointer-events:none}
 .pop{width:270px;background:#fff;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.25);padding:12px 14px;font-size:13px;position:relative}
 .pop h4{margin:0 22px 2px 0;font-size:15px;letter-spacing:-.3px}.pop .dt{color:#6B757D;font-size:12px}
@@ -167,7 +170,7 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
 <p class="sub">국토교통부 실거래가 공개자료 기준 · 매일 자동 업데이트 <span id="upd"></span><br>지번은 건축물대장과 대조해 찾은 위치이며, 찾지 못한 거래는 국토부 공개 범위(예: 5**)까지만 표시합니다.</p>
 
 <div class="flt" role="group" aria-label="검색 조건">
- <div class="seg" id="fPer" role="group" aria-label="기간"><button type="button" data-v="6">6개월</button><button type="button" data-v="12" class="on">1년</button><button type="button" data-v="24">2년</button><button type="button" data-v="36">3년</button></div>
+ <div class="seg" id="fPer" role="group" aria-label="기간"><button type="button" data-v="12">1년</button><button type="button" data-v="24">2년</button><button type="button" data-v="36">3년</button><button type="button" data-v="60" class="on">5년</button></div>
  <div class="seg" id="fGu" role="group" aria-label="구"><button type="button" data-v="" class="on">전체</button><button type="button" data-v="강남구">강남구</button><button type="button" data-v="서초구">서초구</button></div>
  <label class="sr" for="fDong">동</label><select id="fDong" class="dsel"><option value="">전체 동</option></select>
  <div class="rng" id="rgP"><b>금액</b><input id="pMin" inputmode="decimal" placeholder="최소" aria-label="금액 최소(억)"><i>~</i><input id="pMax" inputmode="decimal" placeholder="최대" aria-label="금액 최대(억)"><span>억</span></div>
@@ -180,7 +183,7 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
 <section class="main" aria-label="실거래 지도와 목록">
  <div class="mapBox"><div id="map" role="application" aria-label="실거래 지도"></div>
   <div class="leg" aria-hidden="true"><b>동별 대지 평당가</b><div class="bar"></div><div class="row"><span id="lg0">-</span><span id="lg1">-</span></div>
-   <div class="dots"><span><i style="background:#294652"></i>정확한 위치</span><span><i style="background:#7D96A0"></i>번지대 일대</span></div></div>
+   <div class="dots"><span><i style="background:#3B4650"></i>거래 위치</span><span><i style="background:#fff;border:1.5px dashed #7D96A0"></i>위치 확인 중</span></div></div>
   <div class="mapMsg" id="mapMsg">실거래 자료를 불러오는 중입니다…</div>
  </div>
  <div class="list"><div class="lh"><b><span id="cnt">0</span>건의 거래</b><label class="sr" for="sort">정렬</label><select id="sort"><option value="d">최신순</option><option value="p">금액 높은순</option><option value="u">평당가 높은순</option></select></div><div id="list"></div></div>
@@ -219,7 +222,7 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   var ALL = [], VIEW = [], GEO = null, M = null, NM = null, objs = [], polys = [], iw = null, selKey = '', shown = 60;
-  var F = { per: 12, gu: '', dong: '' };
+  var F = { per: 60, gu: '', dong: '' };
 
   // 금액(만원) → "245억", "12.5억", "8,500만"
   function eok(man) {
@@ -257,7 +260,7 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
         o.key = [o.date, o.gu, o.dong, o.jb, o.amt, o.land].join('|');
         o.pp = o.land > 0 ? o.amt / py(o.land) : 0;          // 대지 평당가 (만원)
         o.bp = o.bld > 0 ? o.amt / py(o.bld) : 0;            // 연면적 평당가 (만원)
-        if (!(o.lat && o.lng)) { var p = approxPt(o); if (p) { o.lat = p.lat; o.lng = p.lng; } o.ap = true; }
+        if (!(o.lat && o.lng)) { var rr = bigRing(o.gu + '|' + o.dong); if (rr) { var cc = center(rr); o.lat = cc[1]; o.lng = cc[0]; } o.ap = true; }
         return o;
       });
       if (d.updated) $('upd').textContent = '(' + new Date(d.updated).toLocaleDateString('ko-KR') + ' 기준)';
@@ -286,7 +289,7 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
   }
   function apply(fit) {
     VIEW = filtered(); shown = 60;
-    var on = F.per !== 12 || F.gu || F.dong || $('pMin').value || $('pMax').value || $('lMin').value || $('lMax').value;
+    var on = F.per !== 60 || F.gu || F.dong || $('pMin').value || $('pMax').value || $('lMin').value || $('lMax').value;
     $('rst').classList.toggle('on', !!on);
     $('rgP').classList.toggle('on', !!($('pMin').value || $('pMax').value)); $('rgL').classList.toggle('on', !!($('lMin').value || $('lMax').value));
     $('fDong').classList.toggle('on', !!F.dong);
@@ -295,7 +298,7 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
 
   /* ---------- 요약 숫자 ---------- */
   function kpi() {
-    var n = VIEW.length, per = { 6: '최근 6개월', 12: '최근 1년', 24: '최근 2년', 36: '최근 3년' }[F.per];
+    var n = VIEW.length, per = { 12: '최근 1년', 24: '최근 2년', 36: '최근 3년', 60: '최근 5년' }[F.per];
     var pp = median(VIEW.filter(function (o) { return o.pp > 0 && !o.share; }).map(function (o) { return o.pp; }));
     var am = VIEW.map(function (o) { return o.amt; }), mx = VIEW.reduce(function (a, o) { return !a || o.amt > a.amt ? o : a; }, null);
     var avg = n ? am.reduce(function (a, b) { return a + b; }, 0) / n : 0;
@@ -329,7 +332,7 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
   }
   function rank() {
     var st = dongStats().sort(function (a, b) { return b.v - a.v; }), mx = st.length ? st[0].v : 1;
-    $('rankSub').textContent = ({ 6: '최근 6개월', 12: '최근 1년', 24: '최근 2년', 36: '최근 3년' }[F.per]) + (F.gu ? ' · ' + F.gu : ' · 강남구·서초구') + ' · 동을 누르면 지도에서 볼 수 있어요';
+    $('rankSub').textContent = ({ 12: '최근 1년', 24: '최근 2년', 36: '최근 3년', 60: '최근 5년' }[F.per]) + (F.gu ? ' · ' + F.gu : ' · 강남구·서초구') + ' · 동을 누르면 지도에서 볼 수 있어요';
     $('rank').innerHTML = st.length ? st.map(function (s) { return '<button type="button" class="r" data-dong="' + esc(s.dong) + '"><b>' + esc(s.dong) + '</b><i style="width:' + Math.max(4, s.v / mx * 100) + '%"></i><span class="v">' + eok(s.v) + '</span><span>' + s.n + '건</span></button>'; }).join('') : '<div class="empty">거래가 없습니다.</div>';
   }
 
@@ -342,7 +345,7 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
     $('map').addEventListener('mouseenter', function () { M.setOptions('scrollWheel', true); });
     $('map').addEventListener('mouseleave', function () { M.setOptions('scrollWheel', false); });
     iw = new NM.InfoWindow({ content: '', borderWidth: 0, backgroundColor: 'transparent', disableAnchor: true, pixelOffset: new NM.Point(0, -12) });
-    NM.Event.addListener(M, 'zoom_changed', function () { markers(); });
+    NM.Event.addListener(M, 'zoom_changed', function () { var z = M.getZoom(); polys.forEach(function (p) { if (p.setOptions && p instanceof NM.Polygon) try { p.setOptions('fillOpacity', z >= 15 ? 0 : (p.__f || .08)); } catch (e) { } }); markers(); });
     var fixSize = function () { var el = $('map'); if (el.clientWidth && el.clientHeight) try { M.setSize(new NM.Size(el.clientWidth, el.clientHeight)); } catch (e) { } };
     setTimeout(fixSize, 50); setTimeout(fixSize, 600); window.addEventListener('resize', fixSize);
     draw(true);
@@ -357,8 +360,9 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
       var gu = k.split('|')[0]; if (gu !== '강남구' && gu !== '서초구') return; if (F.gu && gu !== F.gu) return;
       var s = sm[k], sel = F.dong && k.split('|')[1] === F.dong;
       GEO[k].forEach(function (r) {
-        polys.push(new NM.Polygon({ map: M, paths: [r.map(function (q) { return new NM.LatLng(q[1], q[0]); })], fillColor: s ? col(hi > lo ? (s.v - lo) / (hi - lo) : .5) : '#FFFFFF', fillOpacity: s ? .55 : .15,
+        polys.push(new NM.Polygon({ map: M, paths: [r.map(function (q) { return new NM.LatLng(q[1], q[0]); })], fillColor: s ? col(hi > lo ? (s.v - lo) / (hi - lo) : .5) : '#FFFFFF', fillOpacity: M.getZoom() >= 15 ? 0 : (s ? .32 : .08),
           strokeColor: sel ? '#C0533A' : '#FFFFFF', strokeWeight: sel ? 3 : 1.5, strokeOpacity: 1, clickable: false, zIndex: sel ? 2 : 1 }));
+        polys[polys.length - 1].__f = s ? .32 : .08;
       });
       var c = center(bigRing(k));
       polys.push(new NM.Marker({ map: M, position: new NM.LatLng(c[1], c[0]), clickable: false, zIndex: 3, icon: { content: '<div class="dongLb">' + esc(k.split('|')[1]) + '</div>', anchor: new NM.Point(0, 0) } }));
@@ -370,15 +374,23 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
       if (pts.length) { var b = new NM.LatLngBounds(new NM.LatLng(pts[0].lat, pts[0].lng), new NM.LatLng(pts[0].lat, pts[0].lng)); pts.forEach(function (p) { b.extend(new NM.LatLng(p.lat, p.lng)); }); M.fitBounds(b, { top: 30, right: 30, bottom: 30, left: 30 }); }
     }
   }
+  function ym(d) { d = String(d || ''); return d.slice(0, 4) + '. ' + (+d.slice(5, 7)) + '.'; }
   function markers() {
     if (!M) return;
     objs.forEach(function (o) { o.setMap(null); }); objs = [];
-    var z = M.getZoom(), lab = z >= 14;
+    var z = M.getZoom(), lab = z >= 15, ap = {};
     VIEW.forEach(function (o) {
       if (!o.lat) return;
-      var on = o.key === selKey, cls = 'mk' + (o.ap ? ' ap' : '') + (on ? ' on' : '') + (lab || on ? '' : ' dot');
-      var m = new NM.Marker({ map: M, position: new NM.LatLng(o.lat, o.lng), zIndex: on ? 1000 : (o.ap ? 10 : 20) + Math.round(o.amt / 100000), icon: { content: '<div class="' + cls + '">' + eok(o.amt) + '</div>', anchor: new NM.Point(0, 0) } });
+      if (o.ap) { var k = o.gu + '|' + o.dong; (ap[k] = ap[k] || { o: o, n: 0 }).n++; return; }   // 정확한 위치를 아직 못 찾은 거래는 동 가운데 한 묶음으로
+      var on = o.key === selKey, big = lab || on;
+      var html = big ? '<div class="mk' + (on ? ' on' : '') + '"><b>' + eok(o.amt) + '</b><small>' + ym(o.date) + '</small></div>' : '<div class="mkDot"></div>';
+      var m = new NM.Marker({ map: M, position: new NM.LatLng(o.lat, o.lng), zIndex: on ? 1000 : 20 + Math.round(+o.date.slice(0, 4) - 2000), icon: { content: html, anchor: new NM.Point(0, 0) } });
       NM.Event.addListener(m, 'click', function () { select(o.key, false); });
+      objs.push(m);
+    });
+    Object.keys(ap).forEach(function (k) {
+      var g = ap[k], m = new NM.Marker({ map: M, position: new NM.LatLng(g.o.lat, g.o.lng), zIndex: 5, icon: { content: '<div class="mkAp">' + esc(g.o.dong) + ' 위치 확인 중 <b>' + g.n + '건</b></div>', anchor: new NM.Point(0, 0) } });
+      NM.Event.addListener(m, 'click', function () { F.dong = g.o.dong; $('fDong').value = F.dong; apply(true); });
       objs.push(m);
     });
   }
@@ -387,7 +399,7 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
       '<div class="dt">' + dotDate(o.date) + ' 계약 · ' + esc(o.gbn) + (o.zone ? ' · ' + esc(o.zone) : '') + '</div><div class="pr">' + eok(o.amt) + '</div>' +
       '<dl><dt>대지</dt><dd>' + py(o.land) + '평 (' + o.land + '㎡) · 평당 ' + eok(o.pp) + '</dd><dt>연면적</dt><dd>' + py(o.bld) + '평 · 평당 ' + eok(o.bp) + '</dd>' +
       (o.year ? '<dt>건축년도</dt><dd>' + o.year + '년</dd>' : '') + (o.use ? '<dt>건물 용도</dt><dd>' + esc(o.use) + '</dd>' : '') + '</dl>' +
-      (o.ok ? '' : '<div class="dt">※ 정확한 지번을 찾지 못해 ' + esc(o.dong) + ' 안 대략적인 위치에 표시했습니다.</div>') +
+      (o.ok ? '' : '<div class="dt">※ 정확한 지번을 확인 중인 거래라 ' + esc(o.dong) + ' 가운데에 표시했습니다.</div>') +
       '<a class="ask" href="/#consult">이 주변 빌딩 상담 받기</a></div>';
   }
   function select(key, fromList) {
@@ -413,8 +425,8 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
     $(id).addEventListener('change', function () { clearTimeout(tm); apply(true); });
   });
   $('rst').addEventListener('click', function () {
-    F = { per: 12, gu: '', dong: '' }; ['pMin', 'pMax', 'lMin', 'lMax'].forEach(function (id) { $(id).value = ''; }); $('fDong').value = '';
-    $('fPer').querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-v') === '12'); });
+    F = { per: 60, gu: '', dong: '' }; ['pMin', 'pMax', 'lMin', 'lMax'].forEach(function (id) { $(id).value = ''; }); $('fDong').value = '';
+    $('fPer').querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-v') === '60'); });
     $('fGu').querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', !x.getAttribute('data-v')); });
     selKey = ''; if (iw) iw.close(); apply(true);
   });
