@@ -150,6 +150,29 @@ body.dlFull .main{position:fixed;inset:0;z-index:200;border-radius:0;border:0;he
 body.dlFull .mapBox{min-height:0}body.dlFull #map{min-height:0}body.dlFull .list{max-height:none;min-height:0;height:100%}
 body.dlFull .mapFullBtn{background:#294652;color:#fff}body.dlFull .mapFullBtn svg{color:#E8D7B6}
 @media (max-width:1100px){body.dlFull .main{grid-template-columns:1fr;grid-template-rows:1fr}body.dlFull .list{display:none}body.dlFull .mapBox{border:0}}
+
+/* 매물 조회처럼: 왼쪽 소개·요약 / 오른쪽 검색·지도 */
+.top{display:block}
+.side .sub{margin-top:10px}
+.miniRank{display:none}
+.lh .rst{margin-left:auto;height:30px}
+.lh{gap:10px}
+@media (min-width:1101px){
+ .wrap{padding-top:24px}
+ .top{display:grid;grid-template-columns:292px minmax(0,1fr);gap:26px;align-items:start}
+ .side h1{font-size:clamp(28px,2.6vw,36px);line-height:1.28;margin:6px 0 0;letter-spacing:-1.2px}
+ .side .sub{margin:14px 0 14px;padding-top:12px;border-top:1px solid #DCD3C2;font-size:13px;line-height:1.65;color:#46515B}
+ .side .kpi{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+ .side .k{padding:10px 12px;display:block}.side .k small{font-size:12px}.side .k b{font-size:20px;margin-top:2px}.side .k em{display:block;font-size:11.5px}
+ .miniRank{display:block;background:#fff;border:1px solid #E6E0D4;border-radius:14px;padding:12px 14px 10px}
+ .miniRank h3{margin:0 0 8px;font-size:14px;color:#294652;letter-spacing:-.3px}.miniRank h3 small{font-weight:500;color:#8A939A;font-size:11.5px;margin-left:4px}
+ .mr{display:grid;grid-template-columns:16px 52px 1fr 54px;gap:6px;align-items:center;width:100%;border:0;background:none;padding:4px 0;cursor:pointer;font-size:13px;text-align:left}
+ .mr em{font-style:normal;font-weight:800;color:#BC975E;font-size:12px}.mr b{color:#2A333C}.mr i{display:block;height:7px;border-radius:4px;background:#F1ECE2;overflow:hidden}.mr i s{display:block;height:100%;background:#BC975E;border-radius:4px}
+ .mr span{text-align:right;font-weight:800;color:#294652;font-size:12.5px}.mr:hover b{color:#C0533A}
+ .more2{display:block;text-align:right;font-size:12px;color:#8A6A35;margin-top:4px}
+ .col .flt{margin-bottom:12px;flex-wrap:nowrap}
+ .col .flt .rng{flex:1 1 0;min-width:0}.col .flt .rng input{width:100%;min-width:0}
+}
 </style>
 </head>
 <body>
@@ -184,21 +207,21 @@ body.dlFull .mapFullBtn{background:#294652;color:#fff}body.dlFull .mapFullBtn sv
 </header>
 
 <main class="wrap">
+<div class="top">
+<aside class="side">
 <div class="eyebrow">BUILDING DEALS</div>
-<h1>강남·서초 <span class="heroName">빌딩 실거래가</span></h1>
+<h1>강남·서초<br><span class="heroName">빌딩 실거래가</span></h1>
 <p class="sub">국토교통부 실거래가 공개자료 기준 · 매일 자동 업데이트 <span id="upd"></span><br>지번은 건축물대장과 대조해 찾은 위치이며, 찾지 못한 거래는 국토부 공개 범위(예: 5**)까지만 표시합니다.</p>
-
+<section class="kpi" id="kpi" aria-label="요약"></section>
+<section class="miniRank" aria-label="동별 대지 평당가 상위"><h3>동별 대지 평당가 <small>상위 6곳</small></h3><div id="miniRank"></div><a href="#rankBox" class="more2">전체 순위 보기 ↓</a></section>
+</aside>
+<div class="col">
 <div class="flt" role="group" aria-label="검색 조건">
  <div class="seg" id="fPer" role="group" aria-label="기간"><button type="button" data-v="12">1년</button><button type="button" data-v="24">2년</button><button type="button" data-v="36">3년</button><button type="button" data-v="60" class="on">5년</button></div>
- <div class="seg" id="fGu" role="group" aria-label="구"><button type="button" data-v="" class="on">전체</button><button type="button" data-v="강남구">강남구</button><button type="button" data-v="서초구">서초구</button></div>
- <label class="sr" for="fDong">동</label><select id="fDong" class="dsel"><option value="">전체 동</option></select>
+ <label class="sr" for="fDong">지역</label><select id="fDong" class="dsel"><option value="">강남·서초 전체</option></select>
  <div class="rng" id="rgP"><b>금액</b><input id="pMin" inputmode="decimal" placeholder="최소" aria-label="금액 최소(억)"><i>~</i><input id="pMax" inputmode="decimal" placeholder="최대" aria-label="금액 최대(억)"><span>억</span></div>
  <div class="rng" id="rgL"><b>대지</b><input id="lMin" inputmode="decimal" placeholder="최소" aria-label="대지 최소(평)"><i>~</i><input id="lMax" inputmode="decimal" placeholder="최대" aria-label="대지 최대(평)"><span>평</span></div>
- <button type="button" class="rst" id="rst"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg>검색 초기화</button>
 </div>
-
-<section class="kpi" id="kpi" aria-label="요약"></section>
-
 <section class="main" aria-label="실거래 지도와 목록">
  <div class="mapBox"><div id="map" role="application" aria-label="실거래 지도"></div>
   <button type="button" class="mapFullBtn" id="fullBtn" aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"></path></svg><span>지도 크게 보기</span></button>
@@ -206,10 +229,12 @@ body.dlFull .mapFullBtn{background:#294652;color:#fff}body.dlFull .mapFullBtn sv
    <div class="dots"><span><i style="background:#3B4650"></i>거래 위치</span><span><i style="background:#fff;border:1.5px dashed #7D96A0"></i>위치 확인 중</span></div></div>
   <div class="mapMsg" id="mapMsg">실거래 자료를 불러오는 중입니다…</div>
  </div>
- <div class="list"><div class="lh"><b><span id="cnt">0</span>건의 거래</b><label class="sr" for="sort">정렬</label><select id="sort"><option value="d">최신순</option><option value="p">금액 높은순</option><option value="u">평당가 높은순</option></select></div><div id="list"></div></div>
+ <div class="list"><div class="lh"><b><span id="cnt">0</span>건의 거래</b><button type="button" class="rst" id="rst"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg>검색 초기화</button><label class="sr" for="sort">정렬</label><select id="sort"><option value="d">최신순</option><option value="p">금액 높은순</option><option value="u">평당가 높은순</option></select></div><div id="list"></div></div>
 </section>
+</div>
+</div>
 
-<section class="rank" aria-label="동별 대지 평당가"><h2>동별 대지 평당가</h2><p class="rs" id="rankSub"></p><div id="rank"></div>
+<section class="rank" id="rankBox" aria-label="동별 대지 평당가"><h2>동별 대지 평당가</h2><p class="rs" id="rankSub"></p><div id="rank"></div>
 <p class="note">※ 대지 평당가 = 거래금액 ÷ 대지면적(평), 동별 값은 거래들의 중간값입니다. 건물 상태·연식·층수·도로 조건에 따라 차이가 큽니다.<br>※ 국토교통부 「상업업무용 부동산 매매」 신고 자료 중 일반건물(통건물) 거래만 표시합니다. 신고 해제된 거래는 제외되며, 신고 후 공개까지 시차가 있습니다.<br>※ 지번은 공개된 대지·연면적·건축년도를 건축물대장과 대조해 추정한 것으로 실제와 다를 수 있습니다. 정확한 정보는 상담 시 등기부·대장으로 확인해 드립니다.</p></section>
 
 <section class="cta"><div><b>이 동네 빌딩, 지금 얼마일까요?</b>최근 거래 사례로 매입가·매도가를 비교 분석해 드립니다.</div><a href="/#consult">빌딩 매매 상담 받기</a></section>
@@ -285,7 +310,10 @@ body.dlFull .mapFullBtn{background:#294652;color:#fff}body.dlFull .mapFullBtn sv
       });
       if (d.updated) $('upd').textContent = '(' + new Date(d.updated).toLocaleDateString('ko-KR') + ' 기준)';
       var dongs = {}; ALL.forEach(function (o) { dongs[o.gu + '|' + o.dong] = 1; });
-      $('fDong').innerHTML = '<option value="">전체 동</option>' + Object.keys(dongs).sort(function (a, b) { return a.split('|')[0] === b.split('|')[0] ? (a < b ? -1 : 1) : (a.split('|')[0] === '강남구' ? -1 : 1); })
+      var byGu = {}; Object.keys(dongs).forEach(function (k) { (byGu[k.split('|')[0]] = byGu[k.split('|')[0]] || []).push(k.split('|')[1]); });
+      $('fDong').innerHTML = '<option value="">강남·서초 전체</option><option value="gu:강남구">강남구 전체</option><option value="gu:서초구">서초구 전체</option>' +
+        ['강남구', '서초구'].map(function (g) { return byGu[g] ? '<optgroup label="' + g + '">' + byGu[g].sort().map(function (d) { return '<option value="' + esc(d) + '">' + esc(d) + '</option>'; }).join('') + '</optgroup>' : ''; }).join('');
+      if (0) $('fDong').innerHTML = Object.keys(dongs).sort(function (a, b) { return a.split('|')[0] === b.split('|')[0] ? (a < b ? -1 : 1) : (a.split('|')[0] === '강남구' ? -1 : 1); })
         .map(function (k) { return '<option value="' + esc(k.split('|')[1]) + '">' + esc(k.split('|')[1]) + ' (' + esc(k.split('|')[0]) + ')</option>'; }).join('');
       $('mapMsg').hidden = true;
       if (!ALL.length) { $('mapMsg').hidden = false; $('mapMsg').textContent = '실거래 자료를 준비 중입니다. 잠시 후 다시 확인해 주세요.'; }
@@ -312,8 +340,8 @@ body.dlFull .mapFullBtn{background:#294652;color:#fff}body.dlFull .mapFullBtn sv
     var on = F.per !== 60 || F.gu || F.dong || $('pMin').value || $('pMax').value || $('lMin').value || $('lMax').value;
     $('rst').classList.toggle('on', !!on);
     $('rgP').classList.toggle('on', !!($('pMin').value || $('pMax').value)); $('rgL').classList.toggle('on', !!($('lMin').value || $('lMax').value));
-    $('fDong').classList.toggle('on', !!F.dong);
-    kpi(); list(); rank(); draw(fit);
+    $('fDong').classList.toggle('on', !!(F.dong || F.gu));
+    kpi(); list(); rank(); draw(fit); fitMain();
   }
 
   /* ---------- 요약 숫자 ---------- */
@@ -350,8 +378,12 @@ body.dlFull .mapFullBtn{background:#294652;color:#fff}body.dlFull .mapFullBtn sv
     var by = {}; VIEW.forEach(function (o) { if (!(o.pp > 0) || o.share) return; var k = o.gu + '|' + o.dong; (by[k] = by[k] || []).push(o.pp); });
     return Object.keys(by).map(function (k) { return { k: k, gu: k.split('|')[0], dong: k.split('|')[1], v: median(by[k]), n: by[k].length }; });
   }
+  function miniRank(st, mx) {
+    var el = $('miniRank'); if (!el) return;
+    el.innerHTML = st.length ? st.slice(0, 6).map(function (s, i) { return '<button type="button" class="mr" data-dong="' + esc(s.dong) + '"><em>' + (i + 1) + '</em><b>' + esc(s.dong) + '</b><i><s style="width:' + Math.max(6, s.v / mx * 100) + '%"></s></i><span>' + eok(s.v) + '</span></button>'; }).join('') : '<p class="empty" style="padding:12px 0">거래가 없습니다.</p>';
+  }
   function rank() {
-    var st = dongStats().sort(function (a, b) { return b.v - a.v; }), mx = st.length ? st[0].v : 1;
+    var st = dongStats().sort(function (a, b) { return b.v - a.v; }), mx = st.length ? st[0].v : 1; miniRank(st, mx);
     $('rankSub').textContent = ({ 12: '최근 1년', 24: '최근 2년', 36: '최근 3년', 60: '최근 5년' }[F.per]) + (F.gu ? ' · ' + F.gu : ' · 강남구·서초구') + ' · 동을 누르면 지도에서 볼 수 있어요';
     $('rank').innerHTML = st.length ? st.map(function (s) { return '<button type="button" class="r" data-dong="' + esc(s.dong) + '"><b>' + esc(s.dong) + '</b><i style="width:' + Math.max(4, s.v / mx * 100) + '%"></i><span class="v">' + eok(s.v) + '</span><span>' + s.n + '건</span></button>'; }).join('') : '<div class="empty">거래가 없습니다.</div>';
   }
@@ -439,8 +471,8 @@ body.dlFull .mapFullBtn{background:#294652;color:#fff}body.dlFull .mapFullBtn sv
 
   /* ---------- 이벤트 ---------- */
   function seg(id, key, conv) { $(id).addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); }); F[key] = conv(b.getAttribute('data-v')); if (key === 'gu') { F.dong = ''; $('fDong').value = ''; } apply(true); }); }
-  seg('fPer', 'per', function (v) { return +v; }); seg('fGu', 'gu', function (v) { return v; });
-  $('fDong').addEventListener('change', function () { F.dong = this.value; if (F.dong) { var o = ALL.filter(function (x) { return x.dong === F.dong; })[0]; if (o) { F.gu = ''; $('fGu').querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', !x.getAttribute('data-v')); }); } } apply(true); });
+  seg('fPer', 'per', function (v) { return +v; });
+  $('fDong').addEventListener('change', function () { var v = this.value; if (/^gu:/.test(v)) { F.gu = v.slice(3); F.dong = ''; } else { F.gu = ''; F.dong = v; } apply(true); });
   var tm = 0;
   ['pMin', 'pMax', 'lMin', 'lMax'].forEach(function (id) {
     $(id).addEventListener('input', function () { this.value = this.value.replace(/[^\d.]/g, ''); clearTimeout(tm); tm = setTimeout(function () { apply(false); }, 350); });
@@ -449,12 +481,12 @@ body.dlFull .mapFullBtn{background:#294652;color:#fff}body.dlFull .mapFullBtn sv
   $('rst').addEventListener('click', function () {
     F = { per: 60, gu: '', dong: '' }; ['pMin', 'pMax', 'lMin', 'lMax'].forEach(function (id) { $(id).value = ''; }); $('fDong').value = '';
     $('fPer').querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-v') === '60'); });
-    $('fGu').querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', !x.getAttribute('data-v')); });
     selKey = ''; if (iw) iw.close(); apply(true);
   });
   $('sort').addEventListener('change', list);
   $('list').addEventListener('click', function (e) { if (e.target.id === 'more') { shown += 60; list(); return; } var b = e.target.closest('.it'); if (b) select(b.getAttribute('data-k'), true); });
-  $('rank').addEventListener('click', function (e) { var b = e.target.closest('[data-dong]'); if (!b) return; F.dong = b.getAttribute('data-dong'); $('fDong').value = F.dong; apply(true); $('map').scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+  $('miniRank').addEventListener('click', function (e) { var b = e.target.closest('[data-dong]'); if (!b) return; F.dong = b.getAttribute('data-dong'); F.gu = ''; $('fDong').value = F.dong; apply(true); });
+  $('rank').addEventListener('click', function (e) { var b = e.target.closest('[data-dong]'); if (!b) return; F.dong = b.getAttribute('data-dong'); F.gu = ''; $('fDong').value = F.dong; apply(true); $('map').scrollIntoView({ behavior: 'smooth', block: 'center' }); });
 
   var s = document.createElement('script');
   s.src = 'https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=' + encodeURIComponent(NAVER_KEY);
