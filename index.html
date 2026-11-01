@@ -1070,6 +1070,16 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
  .dtInfo dt{white-space:nowrap;padding-left:12px!important;padding-right:12px!important}
 }
 </style>
+<style id="shopCss">
+#dtShops .shopSub{margin:-4px 0 10px;font-size:13.5px;color:#6B757D}#dtShops .shopSub b{color:#294652}
+.shopT{width:100%;border-collapse:collapse;border-top:2px solid #294652;font-size:14.5px}
+.shopT td{padding:10px 12px;border-bottom:1px solid #EFEAE0;vertical-align:top}
+.shopT td.f{width:64px;color:#6B757D;font-weight:600;white-space:nowrap;background:#FAF7F1;text-align:center}
+.shopT td.n{font-weight:700;color:#14191F;width:42%}
+.shopT td.k{color:#46515B}
+@media (max-width:760px){.shopT{font-size:13.5px}.shopT td{padding:9px 8px}.shopT td.f{width:46px}.shopT td.n{width:52%;word-break:break-all}.shopT td.k{word-break:keep-all}}
+@media print{#dtShops{break-inside:avoid}}
+</style>
 <style id="mNoList">@media (max-width:760px){#mapList{display:none!important}#leafletMap{height:460px!important}}</style>
 <style id="noSearchCss">
 .heroMapHead{flex-wrap:wrap}
@@ -2409,7 +2419,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       '<p class="dtNote">※ 「중개대상물의 표시·광고 명시사항 세부기준」에 따른 표시입니다. 소재지는 동까지만 표시하며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
       addHtml(it) +
       '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
-      regHtml +
+      regHtml + shopsHtml(it) +
       '<section class="dtSec"><h2>중개사무소 정보</h2>' + office + '</section>' +
       '</div>' + side + '</div>' +
       '</div>';
@@ -2667,6 +2677,28 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     paintDetail(it);
     window.scrollTo(0, 0);
     if (it.unv && !it.bldDone) loadGsBld(it);
+    loadShops(it);
+  }
+  /* ---------- 업종현황 (소상공인시장진흥공단 상가업소 정보) ---------- */
+  function shopsInner(it) {
+    var S = it.shops;
+    if (!S) return '<p class="dtBldMsg"><span class="spin" aria-hidden="true"></span>이 건물의 입점 업종을 불러오는 중입니다…</p>';
+    if (S.error) return '<p class="dtBldMsg off">※ 업종현황을 지금 불러오지 못했습니다. 상담 시 확인해 드립니다.</p>';
+    var ym = S.ym ? String(S.ym).replace(/^(\d{4})(\d{2}).*$/, '$1년 $2월') : '';
+    var fl = function (f) { f = String(f || '').trim(); return !f ? '-' : /^\d+$/.test(f) ? f + 'F' : /^(지하|지|B)\s*(\d+)/i.test(f) ? 'B' + f.replace(/[^\d]/g, '') : f; };
+    var rows = S.items.length ? '<table class="shopT"><tbody>' + S.items.map(function (x) { return '<tr><td class="f">' + esc(fl(x[0])) + '</td>' + (x[1] ? '<td class="n">' + esc(x[1]) + '</td>' : '') + '<td class="k">' + esc(x[2] || x[3] || '') + '</td></tr>'; }).join('') + '</tbody></table>'
+      : '<p class="dtBldMsg off">등록된 상가업소가 없습니다. (사무실 위주 건물이거나 공개 자료에 없는 건물)</p>';
+    return '<p class="shopSub">입점 상가업소 <b>' + S.items.length + '건</b>' + (ym ? ' · ' + ym + ' 기준' : '') + '</p>' + rows +
+      '<p class="dtNote">※ 소상공인시장진흥공단 상가(상권)정보 기준입니다. 사업자 등록 기준이라 사무실(법인·업무시설)은 대부분 빠지고 상가·병의원 위주로 나옵니다.<br>※ 분기마다 갱신되는 자료라 현재 영업 현황과 다를 수 있습니다.</p>';
+  }
+  function shopsHtml(it) { return SHEET_URL ? '<section class="dtSec" id="dtShops"><h2>업종현황</h2><div id="dtShopsIn">' + shopsInner(it) + '</div></section>' : ''; }
+  function loadShops(it) {
+    if (it.shops || it.shopsBusy || !SHEET_URL) return; it.shopsBusy = 1;
+    fetch(SHEET_URL + (SHEET_URL.indexOf('?') < 0 ? '?' : '&') + 'shops=' + encodeURIComponent(it.id)).then(function (r) { return r.json(); })
+      .then(function (d) { it.shops = d && d.ok ? { ym: d.ym, items: d.items || [] } : { error: 1 }; })
+      .catch(function () { it.shops = { error: 1 }; })
+      .then(function () { it.shopsBusy = 0; if (it.shops && it.shops.error) setTimeout(function () { if (it.shops && it.shops.error) delete it.shops; }, 60000);
+        var box = DT.it === it && DT.el && DT.el.querySelector('#dtShopsIn'); if (box) box.innerHTML = shopsInner(it); });
   }
   function paintDetail(it) {
     DT.el.innerHTML = detailHtml(it);
