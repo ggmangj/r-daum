@@ -90,10 +90,11 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
 .leg .row{display:flex;justify-content:space-between;color:#6B757D}.leg .dots{margin-top:5px;color:#46515B;display:flex;gap:10px;align-items:center}
 .leg .dots i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:3px;vertical-align:-1px}
 .mapMsg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:6;background:#fff;border-radius:12px;padding:14px 18px;font-size:14px;color:#46515B;box-shadow:0 4px 16px rgba(0,0,0,.15);text-align:center}
-.mk{position:relative;transform:translate(-50%,calc(-100% - 7px));display:inline-flex;flex-direction:column;align-items:center;gap:2px;white-space:nowrap;background:#3B4650;color:#fff;border-radius:6px;padding:4px 8px 4px;box-shadow:0 2px 6px rgba(0,0,0,.3);cursor:pointer;font-family:'Noto Sans KR',sans-serif}
-.mk:after{content:"";position:absolute;left:50%;bottom:-6px;margin-left:-6px;border:6px solid transparent;border-top-color:#3B4650;border-bottom:0}
-.mk b{font-size:13px;font-weight:800;line-height:1.1}.mk small{font-size:10.5px;color:#C9D1D8;line-height:1}
-.mk.on{background:#C0533A;z-index:9}.mk.on:after{border-top-color:#C0533A}.mk.on small{color:#FBE3DC}
+.mk{position:relative;transform:translate(-50%,calc(-100% - 9px));display:flex;align-items:stretch;border-radius:999px;overflow:visible;box-shadow:0 3px 8px rgba(20,25,31,.3);white-space:nowrap;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
+.mk i{font-style:normal;background:#BC975E;color:#fff;font:700 11px/1 Inter,'Noto Sans KR',sans-serif;padding:5px 7px 5px 8px;display:flex;align-items:center;border:1.5px solid #fff;border-right:0;border-radius:999px 0 0 999px}
+.mk b{background:#294652;color:#fff;font-size:12.5px;font-weight:800;line-height:1;padding:5px 9px 5px 7px;display:flex;align-items:center;border:1.5px solid #fff;border-left:0;border-radius:0 999px 999px 0}
+.mk:after{content:"";position:absolute;left:50%;bottom:-9px;margin-left:-1px;width:2px;height:8px;background:#294652}
+.mk.on b{background:#C0533A}.mk.on:after{background:#C0533A}.mk.on{z-index:9;transform:translate(-50%,calc(-100% - 9px)) scale(1.1)}
 .mkDot{transform:translate(-50%,-50%);width:11px;height:11px;border-radius:50%;background:#3B4650;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer}
 .mkAp{transform:translate(-50%,-50%);white-space:nowrap;background:rgba(255,255,255,.95);border:1.5px dashed #7D96A0;color:#46515B;border-radius:999px;padding:5px 10px;font:600 12px 'Noto Sans KR',sans-serif;box-shadow:0 2px 6px rgba(0,0,0,.15);cursor:pointer}.mkAp b{color:#294652}
 .dongLb{transform:translate(-50%,-50%);font:700 12px 'Noto Sans KR',sans-serif;color:#294652;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;white-space:nowrap;pointer-events:none}
@@ -383,7 +384,7 @@ h1{margin:6px 0 6px;font-size:30px;font-weight:900;letter-spacing:-.8px}
       if (!o.lat) return;
       if (o.ap) { var k = o.gu + '|' + o.dong; (ap[k] = ap[k] || { o: o, n: 0 }).n++; return; }   // 정확한 위치를 아직 못 찾은 거래는 동 가운데 한 묶음으로
       var on = o.key === selKey, big = lab || on;
-      var html = big ? '<div class="mk' + (on ? ' on' : '') + '"><b>' + eok(o.amt) + '</b><small>' + ym(o.date) + '</small></div>' : '<div class="mkDot"></div>';
+      var html = big ? '<div class="mk' + (on ? ' on' : '') + '"><i>' + String(o.date).slice(2, 4) + '.' + String(o.date).slice(5, 7) + '</i><b>' + eok(o.amt) + '</b></div>' : '<div class="mkDot"></div>';
       var m = new NM.Marker({ map: M, position: new NM.LatLng(o.lat, o.lng), zIndex: on ? 1000 : 20 + Math.round(+o.date.slice(0, 4) - 2000), icon: { content: html, anchor: new NM.Point(0, 0) } });
       NM.Event.addListener(m, 'click', function () { select(o.key, false); });
       objs.push(m);
