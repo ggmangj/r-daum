@@ -1080,6 +1080,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 @media (max-width:760px){.shopT{font-size:13.5px}.shopT td{padding:9px 8px}.shopT td.f{width:46px}.shopT td.n{width:52%;word-break:break-all}.shopT td.k{word-break:keep-all}}
 @media print{#dtShops{break-inside:avoid}}
 </style>
+<style id="navOn">.mainNav a.on{background:linear-gradient(transparent 50%,#E8D7B6 50%,#E8D7B6 84%,transparent 84%);padding:0 3px;margin:0 -3px}</style>
 <style id="mNoList">@media (max-width:760px){#mapList{display:none!important}#leafletMap{height:460px!important}}</style>
 <style id="noSearchCss">
 .heroMapHead{flex-wrap:wrap}
@@ -3432,6 +3433,21 @@ var MANAGER_URL='https://script.google.com/macros/s/AKfycbxcrADcmOUogYCPPnEY9Hh6
 (function(){var a=document.getElementById('mgrLink');if(!a)return;
  if(MANAGER_URL){a.href=MANAGER_URL}
  else a.addEventListener('click',function(e){e.preventDefault();alert('매물 리스트 프로그램 주소가 아직 연결되지 않았습니다.')});})();
+</script>
+<script>
+(function(){
+  // 지금 보고 있는 구역의 메뉴에 형광펜 표시 (매물 조회 · 추천 매물 · 실무 가이드)
+  var links=[].slice.call(document.querySelectorAll('.mainNav a[href^="#"]'));
+  function upd(){
+    var cur='';
+    if(document.body.classList.contains('detailMode')) cur='#map';
+    else links.forEach(function(a){ var t=document.querySelector(a.getAttribute('href')); if(!t||t.offsetParent===null) return; var r=t.getBoundingClientRect(); if(r.top<=window.innerHeight*0.45) cur=a.getAttribute('href'); });
+    if(!cur) cur='#map';
+    links.forEach(function(a){ a.classList.toggle('on',a.getAttribute('href')===cur); });
+  }
+  var tk=0; window.addEventListener('scroll',function(){ if(tk) return; tk=requestAnimationFrame(function(){ tk=0; upd(); }); },{passive:true});
+  window.addEventListener('hashchange',function(){ setTimeout(upd,50); }); window.addEventListener('load',upd); setTimeout(upd,300); setInterval(upd,1500);
+})();
 </script>
 </body>
 </html>
