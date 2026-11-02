@@ -123,10 +123,26 @@ h1{margin:6px 0 8px;font-size:clamp(24px,3vw,32px);font-weight:900;letter-spacin
 .it .p b{display:block;font-size:17px;font-weight:900;color:#294652;white-space:nowrap}.it .p em{font-style:normal;font-size:12px;color:#9C7A47;font-weight:700;white-space:nowrap}
 .more{width:100%;padding:12px;border:0;background:#FAF7F1;color:#294652;font-weight:700;cursor:pointer}
 .empty{padding:40px 16px;text-align:center;color:#8A939A;font-size:14px}
+.mkt .mHead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}.mkt .mHead .rs{margin:0}
+.mGrid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:0 26px}
+.mRow{display:grid;grid-template-columns:58px minmax(0,1fr) minmax(0,1.15fr) minmax(0,1.45fr) 44px;gap:18px;align-items:center;font-size:12.5px;width:100%;border:0;background:none;padding:5px 6px;margin:0;text-align:left;border-radius:8px;cursor:pointer;font-family:inherit;color:inherit}
+.mRow:not(.mTh):hover{background:#F7F3EC}.mRow.sel{background:#F2EADB}.mRow b{font-weight:800;font-size:13px}
+.mTh{cursor:default;font-size:11.5px;font-weight:700;color:#4A545C;border-bottom:1px solid #EEE8DC;border-radius:0;padding-bottom:7px;margin-bottom:3px}.mTh em{display:block;font-style:normal;font-weight:400;color:#9AA2A8;font-size:10.5px}
+.bLeg i{display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--c);margin:0 2px 0 6px;vertical-align:0}.bLeg i:first-child{margin-left:0}
+.cv{display:grid;grid-template-columns:minmax(0,1fr) 58px;align-items:center;gap:8px;min-width:0}.cv.cj{grid-template-columns:minmax(0,1fr) 58px 34px}.cv em{display:block;height:8px;border-radius:4px;background:#F2EEE6;overflow:hidden}.cv i{display:block;height:100%;border-radius:4px}.cv span{font-weight:800;white-space:nowrap;font-size:12.5px;text-align:right}.cv small{color:#C0533A;font-weight:700;font-size:11.5px;white-space:nowrap;text-align:right}
+.dv{display:grid;grid-template-columns:1fr 1fr;align-items:center;height:10px;position:relative}.dv:before{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:#D8D0C0}.dv i{height:8px;border-radius:2px;display:block}
+.chg{display:grid;grid-template-columns:minmax(0,1fr) 48px;gap:6px;align-items:center}.chg span{text-align:right;font-weight:800;font-size:12px}.chg .up{color:#C0533A}.chg .dn{color:#2F6FA8}.chg .na{color:#B4BBC0;font-weight:400}
+.sb{display:flex;height:16px;border-radius:4px;overflow:hidden;background:#F2EEE6}.sb div{display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;color:#fff;min-width:0;overflow:hidden}
+.mSwipe{display:none}.mN{color:#8A939A;text-align:right}.mMore[hidden]{display:none}.mLeft{display:flex;flex-direction:column;min-width:0}.mLeft .note{font-size:11.5px;line-height:1.65}.mTbl{display:flex;flex-direction:column;min-width:0;flex:1}#rank{flex:1;display:flex;flex-direction:column;justify-content:space-between}.mMore{display:block;margin:6px auto 0;border:1px solid #DDD5C6;background:#fff;border-radius:999px;padding:5px 14px;font-size:12px;color:#4A545C;cursor:pointer}
+.mSide{border-left:1px solid #EEE8DC;padding-left:24px;min-width:0;display:flex;flex-direction:column}.mSide #chgBox{flex:none}.mSide h3{margin:2px 0 8px;font-size:14px}.mSide .h3b{margin-top:16px;padding-top:14px;border-top:1px solid #EEE8DC}.cRow{display:grid;grid-template-columns:52px 1fr 52px;gap:8px;align-items:center;font-size:12.5px;margin:3px 0;width:100%;border:0;background:none;padding:2px 0;cursor:pointer;font-family:inherit;color:inherit;text-align:left}.cRow b{font-weight:700}.cRow:hover b{color:#C0533A}.cRow span{text-align:right;font-weight:800}.cRow .up{color:#C0533A}.cRow .dn{color:#2F6FA8}.mSide h3 em{font-style:normal;font-weight:400;color:#8A939A;font-size:11.5px;margin-left:4px}.mS{font-size:11px;color:#8A939A;margin:6px 0 0}
+#qChart svg{display:block;width:100%;height:auto}
 .rank{margin-top:16px;background:#fff;border:1px solid #E6E0D4;border-radius:18px;padding:18px 20px}
 .rank h2{margin:0 0 4px;font-size:18px;letter-spacing:-.4px}.rank .rs{margin:0 0 12px;font-size:12.5px;color:#6B757D}
-.rank .r{display:grid;grid-template-columns:76px 1fr 84px 52px;gap:10px;align-items:center;font-size:13.5px;margin:7px 0;width:100%;border:0;background:none;padding:2px 0;cursor:pointer;text-align:left}
-.rank .r:hover b{color:#C0533A}.rank .r i{display:block;height:12px;border-radius:6px;background:#BC975E}.rank .r .v{text-align:right;font-weight:800}.rank .r span{color:#8A939A;font-size:12px}
+.rk2{display:grid;grid-template-columns:1fr 1fr;gap:0 40px}.rkCol{min-width:0}.rkCol+.rkCol{border-left:1px solid #EEE8DC;padding-left:40px}
+.rank h2 small{font-size:12px;font-weight:600;color:#9C7A47;margin-left:4px;letter-spacing:0}
+.rank .r.j i{background:#7D96A0}.rank .r .x{color:#C0533A;font-weight:700}
+.rank .r{display:grid;grid-template-columns:62px 1fr 64px 46px;gap:8px;align-items:center;font-size:13px;margin:2px 0;width:100%;border:0;background:none;padding:2px 0;cursor:pointer;text-align:left}
+.rank .r:hover b{color:#C0533A}.rank .r i{display:block;height:8px;border-radius:4px;background:#BC975E}.rank .r .v{text-align:right;font-weight:800}.rank .r span{color:#8A939A;font-size:12px}
 .note{font-size:12px;color:#6B757D;margin:12px 0 0;line-height:1.7}
 .cta{margin-top:16px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;background:#294652;color:#E8EDF0;border-radius:18px;padding:22px 24px}
 .cta b{display:block;color:#fff;font-size:18px;margin-bottom:4px}.cta a{background:#BC975E;color:#fff;font-weight:800;border-radius:999px;padding:12px 20px;white-space:nowrap}
@@ -136,7 +152,7 @@ h1{margin:6px 0 8px;font-size:clamp(24px,3vw,32px);font-weight:900;letter-spacin
  .flt{gap:6px}.seg button{padding:6px 10px;font-size:13px}.rng{flex:1 1 calc(50% - 3px);padding:0 10px}.rng input{width:100%;min-width:0}.rst{margin-left:0}
  .kpi{grid-template-columns:1fr 1fr;gap:8px}.k{padding:12px}.k b{font-size:19px}
  .mapBox{min-height:380px}#map{min-height:380px}.pop{width:236px;font-size:12.5px}.pop .pr{font-size:19px}
- .rank{padding:16px}.rank .r{grid-template-columns:64px 1fr 76px}.rank .r span{display:none}
+ .rank{padding:16px}.mGrid{grid-template-columns:1fr}.mSide{border-left:0;padding-left:0;border-top:1px solid #EEE8DC;padding-top:14px;margin-top:10px}.mTbl{overflow-x:auto}.mRow{min-width:560px}.mSwipe{display:block;font-size:11.5px;color:#9C7A47;margin:6px 0 0}
  .cta{padding:18px}
 }
 
@@ -249,8 +265,12 @@ body.dlFull .mapFullBtn{display:none}
 </div>
 </div>
 
-<section class="rank" id="rankBox" aria-label="동별 대지 평당가"><h2>동별 대지 평당가</h2><p class="rs" id="rankSub"></p><div id="rank"></div>
-<p class="note">※ 대지 평당가 = 거래금액 ÷ 대지면적(평), 동별 값은 거래들의 중간값입니다. 건물 상태·연식·층수·도로 조건에 따라 차이가 큽니다.<br>※ 국토교통부 「상업업무용 부동산 매매」 신고 자료 중 일반건물(통건물) 거래만 표시합니다. 신고 해제된 거래는 제외되며, 신고 후 공개까지 시차가 있습니다.<br>※ 지번은 공개된 대지·연면적·건축년도를 건축물대장과 대조해 추정한 것으로 실제와 다를 수 있습니다. 정확한 정보는 상담 시 등기부·대장으로 확인해 드립니다.</p></section>
+<section class="rank mkt" id="rankBox" aria-label="동별 시장 지표">
+<div class="mHead"><h2>동별 시장 지표</h2><p class="rs" id="rankSub"></p></div>
+<div class="mGrid"><div class="mLeft"><div class="mTbl"><div class="mRow mTh"><span>동</span><span>대지 평당가 <em>실거래 중간값</em></span><span>공시지가 <em>평당 · 실거래÷공시</em></span><span>금액대별 거래 분포 <em class="bLeg"><i style="--c:#E3D3B4"></i>50억↓<i style="--c:#BC975E"></i>50~100<i style="--c:#8A6A35"></i>100~300<i style="--c:#294652"></i>300억↑</em></span><span>거래</span></div>
+<div id="rank"></div><p class="mSwipe">← 옆으로 밀어서 금액대 분포 보기</p><button type="button" class="mMore" id="mMore" hidden></button></div><p class="note">※ 대지 평당가 = 거래금액 ÷ 대지면적(평), 동별 값은 거래들의 중간값입니다. 건물 상태·연식·층수·도로 조건에 따라 차이가 큽니다.<br>※ 국토교통부 「상업업무용 부동산 매매」 신고 자료 중 일반건물(통건물) 거래만 표시합니다. 신고 해제된 거래는 제외되며, 신고 후 공개까지 시차가 있습니다.<br>※ 공시지가는 국토교통부 토지특성정보(2026.1.1 기준)의 개별공시지가를 평당으로 환산한 동별 중간값입니다.<br>※ 지번은 공개된 대지·연면적·건축년도를 건축물대장과 대조해 추정한 것으로 실제와 다를 수 있습니다. 정확한 정보는 상담 시 등기부·대장으로 확인해 드립니다.</p></div>
+<aside class="mSide"><h3>분기별 거래량 <em id="qSub"></em></h3><div id="qChart"></div><p class="mS">연한 막대는 신고가 아직 다 들어오지 않은 최근 분기입니다.</p><h3 class="h3b">1년 변화율 <em>대지 평당가 · 최근 1년 vs 그 전 1년</em></h3><div id="chgBox"></div><p class="mS">양쪽 기간 모두 거래 10건 이상인 동만 표시합니다.</p></aside></div>
+</section>
 
 <section class="cta"><div><b>이 동네 빌딩, 지금 얼마일까요?</b>최근 거래 사례로 매입가·매도가를 비교 분석해 드립니다.</div><a href="/#consult">빌딩 매매 상담 받기</a></section>
 </main>
@@ -340,13 +360,13 @@ body.dlFull .mapFullBtn{display:none}
   }
 
   /* ---------- 거르기 ---------- */
-  function filtered() {
+  function filtered(opt) { opt = opt || {};
     var lim = new Date(); lim.setMonth(lim.getMonth() - F.per); var ls = lim.toISOString().slice(0, 10);
     var p0 = num($('pMin').value), p1 = num($('pMax').value), l0 = num($('lMin').value), l1 = num($('lMax').value);
     return ALL.filter(function (o) {
-      if (o.date < ls) return false;
+      if (!opt.allTime && o.date < ls) return false;
       if (F.gu && o.gu !== F.gu) return false;
-      if (F.dong && o.dong !== F.dong) return false;
+      if (!opt.anyDong && F.dong && o.dong !== F.dong) return false;
       var e = o.amt / 10000, p = py(o.land);
       if (p0 != null && e < p0) return false; if (p1 != null && e > p1) return false;
       if (l0 != null && p < l0) return false; if (l1 != null && p > l1) return false;
@@ -400,11 +420,53 @@ body.dlFull .mapFullBtn{display:none}
     var el = $('miniRank'); if (!el) return;
     el.innerHTML = st.length ? st.slice(0, 6).map(function (s, i) { return '<button type="button" class="mr" data-dong="' + esc(s.dong) + '"><em>' + (i + 1) + '</em><b>' + esc(s.dong) + '</b><i><s style="width:' + Math.max(6, s.v / mx * 100) + '%"></s></i><span>' + eok(s.v) + '</span></button>'; }).join('') : '<p class="empty" style="padding:12px 0">거래가 없습니다.</p>';
   }
+  var JIGA = {"강남구|역삼동":[5825,3286],"강남구|개포동":[2777,727],"강남구|청담동":[7302,1156],"강남구|삼성동":[7554,1345],"강남구|대치동":[6053,1424],"강남구|신사동":[6655,2086],"강남구|논현동":[5296,2499],"강남구|압구정동":[15217,24],"강남구|세곡동":[2467,48],"강남구|자곡동":[3425,33],"강남구|율현동":[2129,15],"강남구|일원동":[3299,269],"강남구|수서동":[4860,57],"강남구|도곡동":[4069,693],"서초구|방배동":[3904,2099],"서초구|양재동":[3395,1812],"서초구|우면동":[2603,74],"서초구|원지동":[1858,57],"서초구|잠원동":[4466,544],"서초구|반포동":[4215,853],"서초구|서초동":[5041,2831],"서초구|내곡동":[2117,10],"서초구|염곡동":[1963,25],"서초구|신원동":[2119,56]};   // 동별 개별공시지가 중간값 [만원/평, 필지 수] · 토지특성정보(2026.5.20) 상업·업무용 대지
   function rank() {
     var st = dongStats().sort(function (a, b) { return b.v - a.v; }), mx = st.length ? st[0].v : 1; miniRank(st, mx);
     $('rankSub').textContent = ({ 12: '최근 1년', 24: '최근 2년', 36: '최근 3년', 60: '최근 5년' }[F.per]) + (F.gu ? ' · ' + F.gu : ' · 강남구·서초구') + ' · 동을 누르면 지도에서 볼 수 있어요';
-    $('rank').innerHTML = st.length ? st.map(function (s) { return '<button type="button" class="r" data-dong="' + esc(s.dong) + '"><b>' + esc(s.dong) + '</b><i style="width:' + Math.max(4, s.v / mx * 100) + '%"></i><span class="v">' + eok(s.v) + '</span><span>' + s.n + '건</span></button>'; }).join('') : '<div class="empty">거래가 없습니다.</div>';
+    var base = filtered({ anyDong: true }), by = {};
+    base.forEach(function (o) { var k = o.gu + '|' + o.dong, g = by[k] || (by[k] = { k: k, gu: o.gu, dong: o.dong, pp: [], b: [0, 0, 0, 0], n: 0 }); g.n++; if (o.pp > 0 && !o.share) g.pp.push(o.pp); g.b[o.amt >= 3000000 ? 3 : o.amt >= 1000000 ? 2 : o.amt >= 500000 ? 1 : 0]++; });
+    // 1년 변화율: 기간 선택과 상관없이 최근 12개월 vs 그 전 12개월 (양쪽 10건 이상일 때만)
+    var t1 = new Date(); t1.setMonth(t1.getMonth() - 12); var t2 = new Date(); t2.setMonth(t2.getMonth() - 24); t1 = t1.toISOString().slice(0, 10); t2 = t2.toISOString().slice(0, 10);
+    var ch = {}; filtered({ anyDong: true, allTime: true }).forEach(function (o) { if (!(o.pp > 0) || o.share || o.date < t2) return; var c = ch[o.gu + '|' + o.dong] || (ch[o.gu + '|' + o.dong] = [[], []]); c[o.date >= t1 ? 0 : 1].push(o.pp); });
+    var rows = Object.keys(by).map(function (k) { var g = by[k], c = ch[k]; g.v = median(g.pp); g.j = JIGA[k] ? JIGA[k][0] : 0; g.c = c && c[0].length >= 10 && c[1].length >= 10 ? (median(c[0]) / median(c[1]) - 1) * 100 : null; return g; })
+      .filter(function (g) { return g.v > 0; }).sort(function (a, b) { return b.v - a.v; });
+    var pm = rows.length ? Math.max.apply(0, rows.map(function (g) { return Math.max(g.v, g.j); })) : 1, cm = Math.max.apply(0, [20].concat(rows.map(function (g) { return g.c == null ? 0 : Math.abs(g.c); })));
+    var big = rows.slice(0, 14), small = [];   // 평당가 상위 14개 동만 (외곽 동은 생략)
+    var C4 = ['#E3D3B4', '#BC975E', '#8A6A35', '#294652'];
+    var row = function (g) {
+      var t = g.b[0] + g.b[1] + g.b[2] + g.b[3], c = g.c;
+      return '<button type="button" class="mRow' + (F.dong === g.dong ? ' sel' : '') + '" data-dong="' + esc(g.dong) + '"><b>' + esc(g.dong) + '</b>' +
+        '<span class="cv"><em><i style="width:' + Math.max(3, g.v / pm * 100) + '%;background:#BC975E"></i></em><span>' + eok(g.v) + '</span></span>' +
+        '<span class="cv cj">' + (g.j ? '<em><i style="width:' + Math.max(3, g.j / pm * 100) + '%;background:#7D96A0"></i></em><span style="color:#4A6470">' + eok(g.j) + '</span><small>' + (g.v / g.j).toFixed(1) + '배</small>' : '<em></em><span style="color:#B4BBC0;font-weight:400">-</span><small></small>') + '</span>' +
+        '<span class="sb">' + g.b.map(function (x, i) { var p = t ? x / t * 100 : 0; return p ? '<div style="width:' + p + '%;background:' + C4[i] + (i ? '' : ';color:#5a4a2a') + '">' + (p >= 12 ? Math.round(p) : '') + '</div>' : ''; }).join('') + '</span>' +
+        '<span class="mN">' + g.n + '건</span></button>';
+    };
+    var open = $('mMore').getAttribute('data-open') === '1';
+    $('rank').innerHTML = rows.length ? big.map(row).join('') + (open ? small.map(row).join('') : '') : '<div class="empty">거래가 없습니다.</div>';
+    $('mMore').hidden = !small.length; $('mMore').textContent = open ? '접기' : '거래 10건 미만 동 ' + small.length + '곳 더 보기';
+    var cl = rows.filter(function (g) { return g.c != null; }).sort(function (a, b) { return b.c - a.c; });
+    $('chgBox').innerHTML = cl.length ? cl.map(function (g) { return '<button type="button" class="cRow" data-dong="' + esc(g.dong) + '"><b>' + esc(g.dong) + '</b><span class="dv">' + (g.c >= 0 ? '<span></span><i style="width:' + Math.max(4, g.c / cm * 100) + '%;background:#C0533A"></i>' : '<i style="width:' + Math.max(4, -g.c / cm * 100) + '%;background:#2F6FA8;justify-self:end"></i><span></span>') + '</span><span class="' + (g.c >= 0 ? 'up' : 'dn') + '">' + (g.c > 0 ? '+' : '') + g.c.toFixed(1) + '%</span></button>'; }).join('') : '<p class="mS">조건에 맞는 동이 없습니다.</p>';
+    quarter();
   }
+  // 분기별 거래 건수 (선택한 구·동·금액 조건 반영, 기간은 5년 전체)
+  function quarter() {
+    var q = {}; filtered({ allTime: true }).forEach(function (o) { var y = +o.date.slice(0, 4), m = +o.date.slice(5, 7); var k = y + '.' + (((m - 1) / 3 | 0) + 1); q[k] = (q[k] || 0) + 1; });
+    var now = new Date(), ks = []; for (var i = 19; i >= 0; i--) { var d = new Date(now.getFullYear(), now.getMonth() - i * 3, 1); var k = d.getFullYear() + '.' + ((d.getMonth() / 3 | 0) + 1); if (ks.indexOf(k) < 0) ks.push(k); }
+    // 오른쪽 칸이 왼쪽 표 높이만큼 꽉 차도록 그래프 높이를 맞춤 (컴퓨터 화면)
+    // 표가 오른쪽보다 길면 그래프를 키워 오른쪽 아래 빈 곳을 채우고, 짧으면 표 줄 간격이 늘어나 맞춰짐
+    var Hfit = 170, tb = document.querySelector('.mLeft'), sd = document.querySelector('.mSide');
+    if (tb && sd && innerWidth > 760) { $('qChart').innerHTML = ''; var nat = 0; var tt = document.querySelector('.mTbl'); [].forEach.call(tt.children, function (c) { if (c.id === 'rank') [].forEach.call(c.children, function (r) { nat += r.offsetHeight; }); else nat += c.offsetHeight; }); [].forEach.call(tb.children, function (c) { if (c !== tt) nat += c.offsetHeight + parseFloat(getComputedStyle(c).marginTop) + parseFloat(getComputedStyle(c).marginBottom); });
+      var rest = 0; [].forEach.call(sd.children, function (c) { rest += c.offsetHeight + parseFloat(getComputedStyle(c).marginTop) + parseFloat(getComputedStyle(c).marginBottom); }); Hfit = Math.max(170, nat - rest - 20); }
+    var mx = Math.max.apply(0, [1].concat(ks.map(function (k) { return q[k] || 0; }))), W = Math.max(240, $('qChart').clientWidth || 320), H = Hfit, bw = W / ks.length, svg = '<svg viewBox="0 0 ' + W + ' ' + (H + 18) + '">';
+    [0.5, 1].forEach(function (f) { var y = H - f * (H - 18); svg += '<line x1="0" x2="' + W + '" y1="' + y + '" y2="' + y + '" stroke="#EEE8DC"/><text x="0" y="' + (y - 3) + '" font-size="9" fill="#9AA2A8">' + Math.round(mx * f) + '건</text>'; });
+    ks.forEach(function (k, i) { var v = q[k] || 0, h = v / mx * (H - 18), x = i * bw + 1.5, part = i >= ks.length - 2;
+      svg += '<rect x="' + x + '" y="' + (H - h) + '" width="' + (bw - 3) + '" height="' + h + '" rx="2" fill="' + (part ? '#D9CDB6' : '#294652') + '"><title>' + k.replace('.', '년 ') + '분기 ' + v + '건</title></rect>';
+      if (/\.1$/.test(k)) svg += '<text x="' + x + '" y="' + (H + 13) + '" font-size="9.5" fill="#8A939A">' + k.slice(2, 4) + '년</text>'; });
+    $('qChart').innerHTML = svg + '</svg>';
+    $('qSub').textContent = (F.dong || F.gu || '강남·서초') + ' · 최근 5년';
+  }
+
 
   /* ---------- 지도 ---------- */
   function col(t) { var c = [[243, 233, 214], [217, 185, 127], [156, 111, 46], [90, 58, 16]], s = Math.max(0, Math.min(1, t)) * 3, i = Math.min(2, Math.floor(s)), f = s - i; return 'rgb(' + c[i].map(function (v, j) { return Math.round(v + (c[i + 1][j] - v) * f); }).join(',') + ')'; }
@@ -507,8 +569,9 @@ body.dlFull .mapFullBtn{display:none}
   });
   $('sort').addEventListener('change', list);
   $('list').addEventListener('click', function (e) { if (e.target.id === 'more') { shown += 60; list(); return; } var b = e.target.closest('.it'); if (b) select(b.getAttribute('data-k'), true); });
+  $('mMore').addEventListener('click', function () { this.setAttribute('data-open', this.getAttribute('data-open') === '1' ? '0' : '1'); rank(); });
   $('miniRank').addEventListener('click', function (e) { var b = e.target.closest('[data-dong]'); if (!b) return; F.dong = b.getAttribute('data-dong'); F.gu = ''; $('fDong').value = F.dong; apply(true); });
-  $('rank').addEventListener('click', function (e) { var b = e.target.closest('[data-dong]'); if (!b) return; F.dong = b.getAttribute('data-dong'); F.gu = ''; $('fDong').value = F.dong; apply(true); $('map').scrollIntoView({ behavior: 'smooth', block: 'center' }); });
+  ['rank','chgBox'].forEach(function(id){$(id).addEventListener('click', function (e) { var b = e.target.closest('[data-dong]'); if (!b) return; F.dong = b.getAttribute('data-dong'); F.gu = ''; $('fDong').value = F.dong; apply(true); $('map').scrollIntoView({ behavior: 'smooth', block: 'center' }); }); });
 
   var s = document.createElement('script');
   s.src = 'https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=' + encodeURIComponent(NAVER_KEY);
@@ -529,7 +592,7 @@ body.dlFull .mapFullBtn{display:none}
   function mapFit() { if (!M) return; var el = $('map'), box = el.parentNode; el.style.width = ''; el.style.height = '';
     var w = box.clientWidth, h = box.clientHeight; if (w && h) { el.style.height = h + 'px'; try { M.setSize(new NM.Size(w, h)); } catch (e) { } } }
   function mapRefresh() { if (M) setTimeout(function () { mapFit(); if (lastFit === 'home') { var w = innerWidth; M.setCenter(new NM.LatLng(HOME_VIEW.lat, HOME_VIEW.lng)); M.setZoom(w < 760 ? 16 : 17, false); } else if (lastFit) M.fitBounds(lastFit, { top: 30, right: 30, bottom: 30, left: 30 }); markers(); }, 60); }
-  window.addEventListener('resize', function () { fitMain(); mapRefresh(); });
+  var qT; window.addEventListener('resize', function () { fitMain(); mapRefresh(); clearTimeout(qT); qT = setTimeout(function () { if (ALL.length) quarter(); }, 200); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitMain(); mapRefresh(); });
   setTimeout(function () { fitMain(); mapRefresh(); }, 50);
   function setFull(on) {
