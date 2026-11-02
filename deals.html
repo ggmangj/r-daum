@@ -352,7 +352,7 @@ body.dlFull .mapFullBtn{display:none}
     $('rst').classList.toggle('on', !!on);
     $('rgP').classList.toggle('on', !!($('pMin').value || $('pMax').value)); $('rgL').classList.toggle('on', !!($('lMin').value || $('lMax').value));
     $('fDong').classList.toggle('on', !!(F.dong || F.gu));
-    kpi(); list(); rank(); fitMain(); if (M) { var el0 = $('map'); try { M.setSize(new NM.Size(el0.clientWidth, el0.clientHeight)); } catch (e) { } } draw(fit);
+    kpi(); list(); rank(); fitMain(); mapFit(); draw(fit);
   }
 
   /* ---------- 요약 숫자 ---------- */
@@ -409,7 +409,7 @@ body.dlFull .mapFullBtn{display:none}
     $('map').addEventListener('mouseleave', function () { M.setOptions('scrollWheel', false); });
     iw = new NM.InfoWindow({ content: '', borderWidth: 0, backgroundColor: 'transparent', disableAnchor: true, pixelOffset: new NM.Point(0, -12) });
     NM.Event.addListener(M, 'zoom_changed', function () { var z = M.getZoom(); polys.forEach(function (p) { if (p.setOptions && p instanceof NM.Polygon) try { p.setOptions('fillOpacity', z >= 15 ? 0 : (p.__f || .08)); } catch (e) { } }); markers(); });
-    var fixSize = function () { var el = $('map'); if (el.clientWidth && el.clientHeight) try { M.setSize(new NM.Size(el.clientWidth, el.clientHeight)); } catch (e) { } };
+    var fixSize = mapFit;
     setTimeout(fixSize, 50); setTimeout(fixSize, 600); window.addEventListener('resize', fixSize);
     NM.Event.addListener(M, 'dragstart', function () { lastFit = null; });
     draw(true);
@@ -515,14 +515,17 @@ body.dlFull .mapFullBtn{display:none}
     m.style.height = h + 'px'; m.classList.add('fit');
   }
   var lastFit = null;
-  function mapRefresh() { if (M) setTimeout(function () { var el = $('map'); try { M.setSize(new NM.Size(el.clientWidth, el.clientHeight)); } catch (e) { } if (lastFit) M.fitBounds(lastFit, { top: 30, right: 30, bottom: 30, left: 30 }); markers(); }, 60); }
+  // 지도 크기를 감싸는 상자 크기에 맞춤 (네이버 지도가 남긴 고정 높이를 먼저 지워야 크게 보기에서 꽉 참)
+  function mapFit() { if (!M) return; var el = $('map'), box = el.parentNode; el.style.width = ''; el.style.height = '';
+    var w = box.clientWidth, h = box.clientHeight; if (w && h) { el.style.height = h + 'px'; try { M.setSize(new NM.Size(w, h)); } catch (e) { } } }
+  function mapRefresh() { if (M) setTimeout(function () { mapFit(); if (lastFit) M.fitBounds(lastFit, { top: 30, right: 30, bottom: 30, left: 30 }); markers(); }, 60); }
   window.addEventListener('resize', function () { fitMain(); mapRefresh(); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitMain(); mapRefresh(); });
   setTimeout(function () { fitMain(); mapRefresh(); }, 50);
   function setFull(on) {
     document.body.classList.toggle('dlFull', on); $('fullBtn').setAttribute('aria-pressed', on ? 'true' : 'false');
     $('fullBtn').querySelector('span').textContent = on ? '크게 보기 닫기' : '지도 크게 보기';
-    fitMain(); mapRefresh(); if (!on) $('fullBtn').blur();
+    fitMain(); mapRefresh(); setTimeout(mapRefresh, 250); if (!on) $('fullBtn').blur();
   }
   $('fullBtn').addEventListener('click', function () { setFull(!document.body.classList.contains('dlFull')); });
   $('fullClose').addEventListener('click', function () { setFull(false); });
