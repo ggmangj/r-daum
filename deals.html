@@ -136,8 +136,8 @@ h1{margin:6px 0 8px;font-size:clamp(24px,3vw,32px);font-weight:900;letter-spacin
 .mRow{gap:0;padding-top:0;padding-bottom:0;border-radius:0}.mRow>*{padding:7px 14px;align-self:stretch;display:flex;align-items:center}.mRow>.cv{display:grid}
 .mRow>*:first-child{padding-left:4px;padding-right:4px;white-space:nowrap}.mRow>b small{font-weight:400;color:#9AA2A8;font-size:11px;margin-left:5px}
 .chg5 .up{color:#C0533A;font-weight:800}.chg5 .dn{color:#2F6FA8;font-weight:800}.chg5.na em{color:#B4BBC0;font-weight:400}.chg5 .cv2 em{font-weight:700;color:#4A545C}.mRow>.chg5{display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:8px;align-items:center}.thChg .thT{display:flex;align-items:center;justify-content:space-between;gap:6px}.thChg b{font-size:11.5px}.thChg .seg2 button{padding:2px 7px;font-size:11px}#chgLeg{display:flex;gap:10px}#chgLeg i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#294652;margin-right:3px;vertical-align:0}#chgLeg i.o{background:#fff;border:1.5px solid #9AA2A8;width:6px;height:6px}
-.mRow>*:nth-child(5){background:#FBF7F4}.mTh>*:nth-child(5){background:#F5E9E4;border-radius:8px 8px 0 0}
-.mRow>.sb{display:flex;padding:0;margin:9px 14px;align-self:center;height:16px;background:transparent}.mRow>.sb>div{align-self:stretch}.mRow>.sb>div:first-child{border-radius:4px 0 0 4px}.mRow>.sb>div:last-child{border-radius:0 4px 4px 0}
+.mRow>*:nth-child(4){background:#F2EFE8}.mTh>*:nth-child(4){background:#E9E4DA;border-radius:8px 8px 0 0}.mRow>*:nth-child(5){background:#FBF7F4}.mTh>*:nth-child(5){background:#F5E9E4;border-radius:8px 8px 0 0}
+.sbc .sb{flex:1;display:flex;height:16px;border-radius:4px;overflow:hidden;background:transparent}
 .mTh>*{display:block;padding:6px 14px}#rank{justify-content:flex-start}
 .mRow>*:nth-child(2){background:#FAF5EA}.mRow>*:nth-child(3){background:#F1F5F6}
 .mTh>*:nth-child(2){background:#F3EAD6;border-radius:8px 8px 0 0}.mTh>*:nth-child(3){background:#E3ECEF;border-radius:8px 8px 0 0}.mTh{border-bottom:2px solid #E3DCCF;padding-bottom:0;margin-bottom:0}
@@ -455,7 +455,7 @@ body.dlFull .mapFullBtn{display:none}
       return '<button type="button" class="mRow' + (F.dong === g.dong ? ' sel' : '') + '" data-dong="' + esc(g.dong) + '"><b>' + esc(g.dong) + '<small>' + g.n + '건</small></b>' +
         '<span class="cv"><em><i style="width:' + Math.max(3, g.v / pm * 100) + '%;background:#BC975E"></i></em><span>' + eok(g.v) + '</span></span>' +
         '<span class="cv cj">' + (g.j ? '<em><i style="width:' + Math.max(3, g.j / pm * 100) + '%;background:#7D96A0"></i></em><span style="color:#4A6470">' + eok(g.j) + '</span><small>' + (g.v / g.j).toFixed(1) + '배</small>' : '<em></em><span style="color:#B4BBC0;font-weight:400">-</span><small></small>') + '</span>' +
-        '<span class="sb">' + g.b.map(function (x, i) { var p = t ? x / t * 100 : 0; return p ? '<div style="width:' + p + '%;background:' + C4[i] + (i ? '' : ';color:#5a4a2a') + '">' + (p >= 12 ? Math.round(p) : '') + '</div>' : ''; }).join('') + '</span>' +
+        '<span class="sbc"><span class="sb">' + g.b.map(function (x, i) { var p = t ? x / t * 100 : 0; return p ? '<div style="width:' + p + '%;background:' + C4[i] + (i ? '' : ';color:#5a4a2a') + '">' + (p >= 12 ? Math.round(p) : '') + '</div>' : ''; }).join('') + '</span></span>' +
         chgCell(g) + '</button>';
     };
     // 변화율: 같은 동·같은 순서(왼쪽 열)로 고정, 막대 대신 두 점(N년 전 1년 ○ → 최근 1년 ●)
