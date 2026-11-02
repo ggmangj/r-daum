@@ -3066,6 +3066,19 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   c.querySelector('.flipFront').addEventListener('click',function(e){ if(e.target.closest('.hcTel')) return; c.classList.add('flipped'); c.classList.remove('closed'); });
   document.addEventListener('click',function(e){ var a=e.target.closest('a[href="#consult"]'); if(!a) return; c.classList.add('flipped'); c.classList.remove('closed'); setTimeout(function(){ var f=back.querySelector('input'); if(f) f.focus({preventScroll:true}); },700); });
   c.querySelector('.flipClose').addEventListener('click',function(e){ e.stopPropagation(); c.classList.remove('flipped','done'); c.classList.add('closed'); if(document.activeElement) document.activeElement.blur(); });
+  // 다른 페이지(빌딩 매매 실거래가)에서 「상담 받기」로 들어오면: 문의 유형 '매수'·용도 '빌딩 매매'로 채워서 입력창을 바로 보여줌
+  var q=new URLSearchParams(location.search);
+  if(q.get('ask')==='buy'){
+    var set=function(sel,v){ if(!sel) return; [].some.call(sel.options,function(o){ if(o.text===v||o.value===v){ sel.value=o.value; return true; } }); sel.dispatchEvent(new Event('change',{bubbles:true})); };
+    var go=function(){
+      set(back.querySelector('select[name=type]'),'매수'); set(back.querySelector('select[name=use]'),'빌딩 매매');
+      [].forEach.call(back.querySelectorAll('input'),function(x){ if(/50평/.test(x.placeholder||'')) x.placeholder='예: 대지 100평 / 100억'; }); var dg=(q.get('dong')||'').slice(0,20), rg=back.querySelector('input[name=region]'); if(dg&&rg&&!rg.value) rg.value=dg;
+      var ta=back.querySelector('textarea'); if(ta&&!ta.value.trim()) ta.value=(dg?dg+' 일대 ':'')+'빌딩 매입 상담을 원합니다.\n희망 예산: \n';
+      c.classList.add('flipped'); c.classList.remove('closed');
+      c.scrollIntoView({block:'center'}); setTimeout(function(){ var f=back.querySelector('input[name=name]')||back.querySelector('input'); if(f) f.focus({preventScroll:true}); },700);
+    };
+    if(document.readyState==='complete') go(); else window.addEventListener('load',function(){ setTimeout(go,150); });
+  }
 })();
 </script>
 <script>
