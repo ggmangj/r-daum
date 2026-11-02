@@ -95,6 +95,8 @@ h1{margin:6px 0 8px;font-size:clamp(24px,3vw,32px);font-weight:900;letter-spacin
 .mk{position:relative;transform:translate(-50%,calc(-100% - 9px));display:flex;align-items:stretch;border-radius:999px;overflow:visible;box-shadow:0 3px 8px rgba(20,25,31,.3);white-space:nowrap;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
 .mk i{font-style:normal;background:#BC975E;color:#fff;font:700 11px/1 Inter,'Noto Sans KR',sans-serif;padding:5px 7px 5px 8px;display:flex;align-items:center;border:1.5px solid #fff;border-right:0;border-radius:999px 0 0 999px}
 .mk b{background:#294652;color:#fff;font-size:12.5px;font-weight:800;line-height:1;padding:5px 9px 5px 7px;display:flex;align-items:center;border:1.5px solid #fff;border-left:0;border-radius:0 999px 999px 0}
+.mk s{position:absolute;right:-8px;top:-9px;background:#C0533A;color:#fff;font:800 10px/1 'Noto Sans KR',sans-serif;text-decoration:none;padding:3px 5px;border-radius:999px;border:1.5px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}.mkDot.multi{box-shadow:0 0 0 3px rgba(192,83,58,.45)}
+.hist{margin:8px 0 2px;border-top:1px solid #EEE8DC;padding-top:8px}.hist h5{margin:0 0 4px;font-size:12px;color:#294652}.hist table{width:100%;border-collapse:collapse;font-size:12px}.hist td{padding:3px 0}.hist td.n{text-align:right;font-weight:700}.hist tr.cur td{color:#C0533A;font-weight:800}.hist .up{color:#C0533A}.hist .dn{color:#2F6FA8}
 .mk:after{content:"";position:absolute;left:50%;bottom:-9px;margin-left:-1px;width:2px;height:8px;background:#294652}
 .mk.on b{background:#C0533A}.mk.on:after{background:#C0533A}.mk.on{z-index:9;transform:translate(-50%,calc(-100% - 9px)) scale(1.1)}
 .mkDot{transform:translate(-50%,-50%);width:11px;height:11px;border-radius:50%;background:#3B4650;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer}
@@ -572,11 +574,17 @@ body.dlFull .mapFullBtn{display:none}
     if (!M) return;
     objs.forEach(function (o) { o.setMap(null); }); objs = [];
     var z = M.getZoom(), lab = z >= 15, ap = {};
+    // 같은 지번에서 여러 번 거래된 건물은 핀 하나로 묶고(최근 거래 표시 + 「N회」), 누르면 거래 이력을 함께 보여줌
+    var lots = {}, order = [];
     VIEW.forEach(function (o) {
       if (!o.lat) return;
       if (o.ap) { var k = o.gu + '|' + o.dong; (ap[k] = ap[k] || { o: o, n: 0 }).n++; return; }   // 정확한 위치를 아직 못 찾은 거래는 동 가운데 한 묶음으로
-      var on = o.key === selKey, big = lab || on;
-      var html = big ? '<div class="mk' + (on ? ' on' : '') + '"><i>' + String(o.date).slice(2, 4) + '.' + String(o.date).slice(5, 7) + '</i><b>' + eok(o.amt) + '</b></div>' : '<div class="mkDot"></div>';
+      var lk = o.gu + '|' + o.dong + '|' + o.jb; if (!lots[lk]) { lots[lk] = []; order.push(lk); } lots[lk].push(o);
+    });
+    order.forEach(function (lk) {
+      var L = lots[lk].sort(function (a, b) { return a.date < b.date ? 1 : -1; }), sel = L.filter(function (x) { return x.key === selKey; })[0], o = sel || L[0];
+      var on = !!sel, big = lab || on;
+      var html = big ? '<div class="mk' + (on ? ' on' : '') + '"><i>' + String(o.date).slice(2, 4) + '.' + String(o.date).slice(5, 7) + '</i><b>' + eok(o.amt) + '</b>' + (L.length > 1 ? '<s>' + L.length + '회</s>' : '') + '</div>' : '<div class="mkDot' + (L.length > 1 ? ' multi' : '') + '"></div>';
       var m = new NM.Marker({ map: M, position: new NM.LatLng(o.lat, o.lng), zIndex: on ? 1000 : 20 + Math.round(+o.date.slice(0, 4) - 2000), icon: { content: html, anchor: new NM.Point(0, 0) } });
       NM.Event.addListener(m, 'click', function () { select(o.key, false); });
       objs.push(m);
@@ -588,6 +596,13 @@ body.dlFull .mapFullBtn{display:none}
       objs.push(m);
     });
   }
+  function histHtml(o) {
+    if (!o.ok) return '';
+    var H = ALL.filter(function (x) { return x.ok && x.gu === o.gu && x.dong === o.dong && x.jb === o.jb; }).sort(function (a, b) { return a.date < b.date ? 1 : -1; });
+    if (H.length < 2) return '';
+    return '<div class="hist"><h5>이 건물 거래 이력 ' + H.length + '건</h5><table>' + H.map(function (x, i) { var p = H[i + 1], ch = p && p.amt ? (x.amt / p.amt - 1) * 100 : null;
+      return '<tr' + (x.key === o.key ? ' class="cur"' : '') + '><td>' + dotDate(x.date) + '</td><td class="n">' + eok(x.amt) + '</td><td class="n" style="font-weight:400;color:#6B757D">평당 ' + eok(x.pp) + '</td><td class="n ' + (ch == null ? '' : ch >= 0 ? 'up' : 'dn') + '">' + (ch == null ? '' : (ch > 0 ? '+' : '') + ch.toFixed(0) + '%') + '</td></tr>'; }).join('') + '</table></div>';
+  }
   function popHtml(o) {
     return '<div class="pop"><button type="button" class="x" aria-label="닫기">✕</button><h4>' + esc(o.gu + ' ' + o.dong + ' ' + o.jb) + (o.ok ? '' : ' 일대') + (o.share ? '<span class="tag">지분</span>' : '') + (o.multi ? '<span class="tag">' + o.multi + '건 합산</span>' : '') + '</h4>' +
       '<div class="dt">' + dotDate(o.date) + ' 계약 · ' + esc(o.gbn) + (o.zone ? ' · ' + esc(o.zone) : '') + '</div><div class="pr">' + eok(o.amt) + '</div>' +
@@ -595,6 +610,7 @@ body.dlFull .mapFullBtn{display:none}
       (o.year ? '<dt>건축년도</dt><dd>' + o.year + '년</dd>' : '') + (o.use ? '<dt>건물 용도</dt><dd>' + esc(o.use) + '</dd>' : '') + '</dl>' +
       (o.multi ? '<div class="dt">※ 같은 날 같은 금액으로 신고된 ' + o.multi + '건(여러 필지·건물)을 한 거래로 보고 대지·연면적을 합쳐 평당가를 계산했습니다.</div>' : '') + (o.alt && o.alt.length ? '<div class="dt">※ 같은 거래가 ' + esc(o.alt.join(', ')) + '(으)로도 신고되어 1건으로 정리했습니다.</div>' : '') +
       (o.ok ? '' : '<div class="dt">※ 국토부 공개자료에 지번이 일부만 나오고 건축물대장과도 일치하는 건물이 없어 ' + esc(o.dong) + ' 가운데에 표시했습니다. (지분 거래·신축·여러 필지 거래 등)</div>') +
+      histHtml(o) +
       '<a class="ask" href="/?ask=buy&dong=' + encodeURIComponent(o.dong) + '#consult">이 주변 빌딩 상담 받기</a></div>';
   }
   function select(key, fromList) {
