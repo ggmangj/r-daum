@@ -100,6 +100,11 @@ h1{margin:6px 0 8px;font-size:clamp(24px,3vw,32px);font-weight:900;letter-spacin
 .mkDot{transform:translate(-50%,-50%);width:11px;height:11px;border-radius:50%;background:#3B4650;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer}
 .mkAp{transform:translate(-50%,-50%);white-space:nowrap;background:rgba(255,255,255,.95);border:1.5px dashed #7D96A0;color:#46515B;border-radius:999px;padding:5px 10px;font:600 12px 'Noto Sans KR',sans-serif;box-shadow:0 2px 6px rgba(0,0,0,.15);cursor:pointer}.mkAp b{color:#294652}
 .dongLb{transform:translate(-50%,-50%);font:700 12px 'Noto Sans KR',sans-serif;color:#294652;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;white-space:nowrap;pointer-events:none}
+.pinWrap{position:relative;width:0;height:0}.officePin{position:absolute;left:0;top:0;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28));cursor:pointer}.officeDot{width:48px;height:48px;border-radius:50%;background:#FFFFFF;border:3px solid #C4553A;display:flex;align-items:center;justify-content:center;overflow:hidden}.officeDot img{width:30px;height:auto;display:block;margin-top:2px}.officePulse{position:absolute;left:0;top:0;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:#C4553A;opacity:.5;animation:officePulse 1.8s ease-out infinite;pointer-events:none}@keyframes officePulse{0%{transform:scale(.6);opacity:.55}100%{transform:scale(3.4);opacity:0}}@media (prefers-reduced-motion:reduce){.officePulse{animation:none;opacity:.25}}
+.officeHover{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translate(-50%,4px);white-space:nowrap;background:#FFFFFF;color:#C4553A;border:2px solid #C4553A;border-radius:999px;padding:6px 12px;font:800 13px/1 'Noto Sans KR',sans-serif;letter-spacing:-.2px;box-shadow:0 2px 6px rgba(0,0,0,.18);opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease}
+.officeHover:after{content:"";position:absolute;left:50%;top:100%;margin-left:-6px;border:6px solid transparent;border-top-color:#C4553A}
+.officePin:hover .officeHover{opacity:1;transform:translate(-50%,0)}
+.officeLbl{background:#C4553A;color:#FFFFFF;font:900 13px/1 'Noto Sans KR',sans-serif;letter-spacing:-.3px;padding:7px 11px;border-radius:999px;white-space:nowrap;margin-bottom:4px}.officeTip{width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:11px solid #C4553A;margin-top:-2px}
 .pop{width:270px;background:#fff;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.25);padding:12px 14px;font-size:13px;position:relative}
 .pop h4{margin:0 22px 2px 0;font-size:15px;letter-spacing:-.3px}.pop .dt{color:#6B757D;font-size:12px}
 .pop .pr{font-size:22px;font-weight:900;color:#C0533A;margin-top:4px}
@@ -277,6 +282,9 @@ body.dlFull .mapFullBtn{display:none}
   var PY = 3.3058;
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  var OFFICE_HTML = '<div class="pinWrap"><span class="officePulse"></span><div class="officePin" aria-label="부동산다움 사무소"><span class="officeHover">부동산다움 사무소</span><span class="officeDot"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDQgMTI0IiB3aWR0aD0iMjA4IiBoZWlnaHQ9IjI0OCI+PGRlZnM+CjxtYXNrIGlkPSJ0TCIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iMCIgeT0iMCIgd2lkdGg9IjEwNCIgaGVpZ2h0PSIxMjQiPjxyZWN0IHdpZHRoPSIxMDQiIGhlaWdodD0iMTI0IiBmaWxsPSIjZmZmIi8+PHJlY3QgeD0iMjEuNSIgeT0iMzgiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI0NCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjUwIiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iNTYiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI2MiIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjY4IiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iNzQiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI4MCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9Ijg2IiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iOTIiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI5OCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjEwNCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjwvbWFzaz4KPG1hc2sgaWQ9ImJMIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTA0IiBoZWlnaHQ9IjEyNCI+PHJlY3Qgd2lkdGg9IjEwNCIgaGVpZ2h0PSIxMjQiIGZpbGw9IiNmZmYiLz48cmVjdCB4PSI0OCIgeT0iNDQiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iNTgiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iNzIiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iODYiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iMTAwIiB3aWR0aD0iNTYiIGhlaWdodD0iMy40IiBmaWxsPSIjMDAwIi8+PC9tYXNrPgo8L2RlZnM+CjxyZWN0IHg9IjI2LjIiIHk9IjIiIHdpZHRoPSIxLjYiIGhlaWdodD0iMTMiIGZpbGw9IiNCRTk2NUMiLz4KPHBhdGggZD0iTTE4IDExMlYzMUwyNyAxNEwzNiAzMVYxMTJaIiBmaWxsPSIjQkU5NjVDIiBtYXNrPSJ1cmwoI3RMKSIvPgo8cGF0aCBkPSJNNDEgMzFINThDODMgMzEgOTggNTAgOTggNzEuNUM5OCA5MyA4MyAxMTIgNTggMTEySDQxWiIgZmlsbD0iIzFGMzY0NCIgbWFzaz0idXJsKCNiTCkiLz4KPHJlY3QgeD0iOCIgeT0iMTE2IiB3aWR0aD0iOTIiIGhlaWdodD0iMy4yIiBmaWxsPSIjMUYzNjQ0Ii8+PC9zdmc+" alt=""></span><span class="officeTip"></span></div></div>';
+  var OFFICE = { lat: 37.5259470, lng: 127.0276068 }, HOME_VIEW = { lat: 37.52549, lng: 127.02678 };
+  var OFFICE_POP = '<div class="pop"><button type="button" class="x" aria-label="닫기">✕</button><h4>부동산다움공인중개사사무소</h4><div class="dt">서울 강남구 논현로175길 11 일상빌딩 1층<br>(지번: 신사동 578-1) · 압구정역 5번출구</div><a class="ask" href="tel:025551165">02-555-1165 전화하기</a></div>';
   var ALL = [], VIEW = [], GEO = null, M = null, NM = null, objs = [], polys = [], iw = null, selKey = '', shown = 60;
   var F = { per: 60, gu: '', dong: '' };
 
@@ -412,6 +420,8 @@ body.dlFull .mapFullBtn{display:none}
     var fixSize = mapFit;
     setTimeout(fixSize, 50); setTimeout(fixSize, 600); window.addEventListener('resize', fixSize);
     NM.Event.addListener(M, 'dragstart', function () { lastFit = null; });
+    var office = new NM.Marker({ position: new NM.LatLng(OFFICE.lat, OFFICE.lng), map: M, zIndex: 1000, icon: { content: OFFICE_HTML, anchor: new NM.Point(0, 0) } });
+    NM.Event.addListener(office, 'click', function () { iw.setContent(OFFICE_POP); iw.open(M, office.getPosition()); var x = iw.getContentElement && iw.getContentElement().querySelector('.x'); if (x) x.onclick = function () { iw.close(); }; });
     draw(true);
   }
   function draw(fit) {
@@ -434,8 +444,8 @@ body.dlFull .mapFullBtn{display:none}
     markers();
     if (fit) {
       var pts = VIEW.filter(function (o) { return o.lat && !o.ap; });
-      if (!F.dong && !F.gu) pts = [{ lat: 37.532, lng: 127.000 }, { lat: 37.476, lng: 127.072 }];   // 첫 화면: 압구정~양재 · 반포~삼성 중심가
-      else if (!F.dong && GEO) { pts = []; Object.keys(GEO).forEach(function (k) { var g = k.split('|')[0]; if ((g === '강남구' || g === '서초구') && (!F.gu || g === F.gu)) { var r = bigRing(k); if (r) r.forEach(function (q, i) { if (i % 4 === 0) pts.push({ lat: q[1], lng: q[0] }); }); } }); }
+      if (!F.dong && !F.gu) { homeView(); return; }   // 첫 화면: 압구정역·사무소 주변
+      if (!F.dong && GEO) { pts = []; Object.keys(GEO).forEach(function (k) { var g = k.split('|')[0]; if ((g === '강남구' || g === '서초구') && (!F.gu || g === F.gu)) { var r = bigRing(k); if (r) r.forEach(function (q, i) { if (i % 4 === 0) pts.push({ lat: q[1], lng: q[0] }); }); } }); }
       if (F.dong && GEO) { var g0 = F.gu; if (!g0) ALL.some(function (x) { if (x.dong === F.dong) { g0 = x.gu; return true; } return false; }); var k = (g0 || '강남구') + '|' + F.dong; if (GEO[k]) pts = bigRing(k).map(function (q) { return { lat: q[1], lng: q[0] }; }); }   // 다른 구의 같은 이름 동(은평구 신사동 등)으로 가지 않게
       if (pts.length) { var b = new NM.LatLngBounds(new NM.LatLng(pts[0].lat, pts[0].lng), new NM.LatLng(pts[0].lat, pts[0].lng)); pts.forEach(function (p) { b.extend(new NM.LatLng(p.lat, p.lng)); }); M.fitBounds(b, { top: 30, right: 30, bottom: 30, left: 30 }); lastFit = b; setTimeout(function () { lastFit = null; }, 2500); }
     }
@@ -515,10 +525,11 @@ body.dlFull .mapFullBtn{display:none}
     m.style.height = h + 'px'; m.classList.add('fit');
   }
   var lastFit = null;
+  function homeView() { if (!M) return; var w = innerWidth; M.setCenter(new NM.LatLng(HOME_VIEW.lat, HOME_VIEW.lng)); M.setZoom(w < 760 ? 16 : 17, false); lastFit = 'home'; setTimeout(function () { if (lastFit === 'home') lastFit = null; }, 2500); markers(); }
   // 지도 크기를 감싸는 상자 크기에 맞춤 (네이버 지도가 남긴 고정 높이를 먼저 지워야 크게 보기에서 꽉 참)
   function mapFit() { if (!M) return; var el = $('map'), box = el.parentNode; el.style.width = ''; el.style.height = '';
     var w = box.clientWidth, h = box.clientHeight; if (w && h) { el.style.height = h + 'px'; try { M.setSize(new NM.Size(w, h)); } catch (e) { } } }
-  function mapRefresh() { if (M) setTimeout(function () { mapFit(); if (lastFit) M.fitBounds(lastFit, { top: 30, right: 30, bottom: 30, left: 30 }); markers(); }, 60); }
+  function mapRefresh() { if (M) setTimeout(function () { mapFit(); if (lastFit === 'home') { var w = innerWidth; M.setCenter(new NM.LatLng(HOME_VIEW.lat, HOME_VIEW.lng)); M.setZoom(w < 760 ? 16 : 17, false); } else if (lastFit) M.fitBounds(lastFit, { top: 30, right: 30, bottom: 30, left: 30 }); markers(); }, 60); }
   window.addEventListener('resize', function () { fitMain(); mapRefresh(); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitMain(); mapRefresh(); });
   setTimeout(function () { fitMain(); mapRefresh(); }, 50);
