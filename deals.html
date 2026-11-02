@@ -285,7 +285,7 @@ body.dlFull .mapFullBtn{display:none}
 <div class="mHead"><h2>동별 시장 지표</h2><span class="seg2 mkSeg" id="mkSeg" role="group" aria-label="지표 기간"><button type="button" data-m="12">1년</button><button type="button" data-m="24">2년</button><button type="button" data-m="36">3년</button><button type="button" data-m="48">4년</button><button type="button" data-m="60">5년</button></span><p class="rs" id="rankSub"></p></div>
 <div class="mTbl"><div class="mRow mTh"><span>법정동</span><span>대지 평당가 <em>실거래 중간값</em></span><span class="bx">시세 배수<em>평당가÷공시</em></span><span>평당 공시지가 <em>개별공시지가 중간값 (2026.1.1)</em></span><span>금액대별 거래 분포 <em class="bLeg"><i style="--c:#E3D3B4"></i>50억↓<i style="--c:#BC975E"></i>50~100<i style="--c:#8A6A35"></i>100~300<i style="--c:#294652"></i>300억↑</em></span><span class="thChg"><span class="thT"><b id="chgT">변화율</b></span><em id="chgLeg"></em></span></div>
 <div id="rank"></div><p class="mSwipe">← 옆으로 밀어서 금액대 분포·변화율 보기</p></div>
-<p class="note">※ 대지 평당가 = 거래금액 ÷ 대지면적(평), 동별 값은 거래들의 중간값입니다. 건물 상태·연식·층수·도로 조건에 따라 차이가 큽니다.<br>※ 국토교통부 「상업업무용 부동산 매매」 신고 자료 중 일반건물(통건물) 거래만 표시합니다. 신고 해제된 거래는 제외되며, 신고 후 공개까지 시차가 있습니다.<br>※ 공시지가는 국토교통부 토지특성정보(2026.1.1 기준)의 개별공시지가를 평당으로 환산한 동별 중간값입니다.<br>※ 지번은 공개된 대지·연면적·건축년도를 건축물대장과 대조해 추정한 것으로 실제와 다를 수 있습니다. 정확한 정보는 상담 시 등기부·대장으로 확인해 드립니다.<br>※ 변화율은 <b>최근 1년</b>과 <b>N년 전 1년</b>의 대지 평당가 중간값 비교입니다(실거래 자료가 5년치라 최대 4년). 두 기간 모두 거래 10건 이상일 때만 계산합니다.</p>
+<p class="note">※ 대지 평당가 = 거래금액 ÷ 대지면적(평), 동별 값은 거래들의 중간값입니다. 지분 거래는 모두 제외하고, 같은 날·같은 금액으로 여러 건 신고된 거래는 1건으로 합쳤습니다. 건물 상태·연식·층수·도로 조건에 따라 차이가 큽니다.<br>※ 국토교통부 「상업업무용 부동산 매매」 신고 자료 중 일반건물(통건물) 거래만 표시합니다. 신고 해제된 거래는 제외되며, 신고 후 공개까지 시차가 있습니다.<br>※ 공시지가는 국토교통부 토지특성정보(2026.1.1 기준)의 개별공시지가를 평당으로 환산한 동별 중간값입니다.<br>※ 지번은 공개된 대지·연면적·건축년도를 건축물대장과 대조해 추정한 것으로 실제와 다를 수 있습니다. 정확한 정보는 상담 시 등기부·대장으로 확인해 드립니다.<br>※ 변화율은 <b>최근 1년</b>과 <b>N년 전 1년</b>의 대지 평당가 중간값 비교입니다(실거래 자료가 5년치라 최대 4년). 두 기간 모두 거래 10건 이상일 때만 계산합니다.</p>
 </section>
 
 <section class="cta"><div><b>이 동네 빌딩, 지금 얼마일까요?</b>최근 거래 사례로 매입가·매도가를 비교 분석해 드립니다.</div><a href="/?ask=buy#consult">빌딩 매매 상담 받기</a></section>
@@ -348,6 +348,29 @@ body.dlFull .mapFullBtn{display:none}
   }
 
   /* ---------- 데이터 ---------- */
+  /* 자료 정리: ① 지분 거래는 대지면적이 지분만큼이라 평당가가 크게 틀어지므로 모두 제외
+     ② 같은 날·같은 동·같은 금액으로 2건 이상 신고된 거래는 한 계약으로 봄
+        - 면적이 거의 같으면 같은 거래가 필지별로 중복 신고된 것 → 1건만 남김 (지번 찾은 쪽 우선)
+        - 면적이 다르면 여러 필지·건물을 한꺼번에 산 거래 → 대지·연면적을 합쳐 1건으로 */
+  var DROP = { share: 0, dup: 0, merged: 0 };
+  function cleanDeals(L) {
+    DROP = { share: 0, dup: 0, merged: 0 };
+    L = L.filter(function (o) { if (o.share) { DROP.share++; return false; } return true; });
+    var g = {}, out = [];
+    L.forEach(function (o) { var k = [o.date, o.gu, o.dong, o.amt].join('|'); (g[k] = g[k] || []).push(o); });
+    Object.keys(g).forEach(function (k) {
+      var v = g[k]; if (v.length === 1) { out.push(v[0]); return; }
+      v.sort(function (a, b) { return (b.ok - a.ok) || (b.land - a.land); });
+      var a0 = v[0], same = v.every(function (x) { return Math.abs(x.land - a0.land) <= Math.max(1, a0.land * 0.02) && Math.abs(x.bld - a0.bld) <= Math.max(1, a0.bld * 0.02); });
+      if (same) { DROP.dup += v.length - 1; a0.alt = v.slice(1).filter(function (x) { return x.ok; }).map(function (x) { return x.jb; }); out.push(a0); return; }
+      var m = {}; for (var p in a0) m[p] = a0[p];
+      m.land = v.reduce(function (s, x) { return s + (+x.land || 0); }, 0); m.bld = v.reduce(function (s, x) { return s + (+x.bld || 0); }, 0);
+      m.multi = v.length; m.jb = a0.jb + ' 외 ' + (v.length - 1) + '건'; m.key = a0.key + '|m';
+      m.pp = m.land > 0 ? m.amt / py(m.land) : 0; m.bp = m.bld > 0 ? m.amt / py(m.bld) : 0;
+      DROP.merged += v.length - 1; out.push(m);
+    });
+    return out.sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
+  }
   function load() {
     var gj = fetch('dongs.json').then(function (r) { return r.json(); }).catch(function () { return {}; });
     var rt = fetch(SHEET_URL + '?deals=1').then(function (r) { return r.json(); });
@@ -362,6 +385,7 @@ body.dlFull .mapFullBtn{display:none}
         if (!(o.lat && o.lng)) { var rr = bigRing(o.gu + '|' + o.dong); if (rr) { var cc = center(rr); o.lat = cc[1]; o.lng = cc[0]; } o.ap = true; }
         return o;
       });
+      ALL = cleanDeals(ALL);
       if (d.updated) $('upd').textContent = '(' + new Date(d.updated).toLocaleDateString('ko-KR') + ' 기준)';
       var dongs = {}; ALL.forEach(function (o) { dongs[o.gu + '|' + o.dong] = 1; });
       var byGu = {}; Object.keys(dongs).forEach(function (k) { (byGu[k.split('|')[0]] = byGu[k.split('|')[0]] || []).push(k.split('|')[1]); });
@@ -565,10 +589,11 @@ body.dlFull .mapFullBtn{display:none}
     });
   }
   function popHtml(o) {
-    return '<div class="pop"><button type="button" class="x" aria-label="닫기">✕</button><h4>' + esc(o.gu + ' ' + o.dong + ' ' + o.jb) + (o.ok ? '' : ' 일대') + (o.share ? '<span class="tag">지분</span>' : '') + '</h4>' +
+    return '<div class="pop"><button type="button" class="x" aria-label="닫기">✕</button><h4>' + esc(o.gu + ' ' + o.dong + ' ' + o.jb) + (o.ok ? '' : ' 일대') + (o.share ? '<span class="tag">지분</span>' : '') + (o.multi ? '<span class="tag">' + o.multi + '건 합산</span>' : '') + '</h4>' +
       '<div class="dt">' + dotDate(o.date) + ' 계약 · ' + esc(o.gbn) + (o.zone ? ' · ' + esc(o.zone) : '') + '</div><div class="pr">' + eok(o.amt) + '</div>' +
       '<dl><dt>대지</dt><dd>' + py(o.land) + '평 (' + o.land + '㎡) · 평당 ' + eok(o.pp) + '</dd><dt>연면적</dt><dd>' + py(o.bld) + '평 · 평당 ' + eok(o.bp) + '</dd>' +
       (o.year ? '<dt>건축년도</dt><dd>' + o.year + '년</dd>' : '') + (o.use ? '<dt>건물 용도</dt><dd>' + esc(o.use) + '</dd>' : '') + '</dl>' +
+      (o.multi ? '<div class="dt">※ 같은 날 같은 금액으로 신고된 ' + o.multi + '건(여러 필지·건물)을 한 거래로 보고 대지·연면적을 합쳐 평당가를 계산했습니다.</div>' : '') + (o.alt && o.alt.length ? '<div class="dt">※ 같은 거래가 ' + esc(o.alt.join(', ')) + '(으)로도 신고되어 1건으로 정리했습니다.</div>' : '') +
       (o.ok ? '' : '<div class="dt">※ 국토부 공개자료에 지번이 일부만 나오고 건축물대장과도 일치하는 건물이 없어 ' + esc(o.dong) + ' 가운데에 표시했습니다. (지분 거래·신축·여러 필지 거래 등)</div>') +
       '<a class="ask" href="/?ask=buy&dong=' + encodeURIComponent(o.dong) + '#consult">이 주변 빌딩 상담 받기</a></div>';
   }
