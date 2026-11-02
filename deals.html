@@ -496,7 +496,7 @@ body.dlFull .mapFullBtn{background:#294652;color:#fff}body.dlFull .mapFullBtn sv
   function fitMain() {
     var m = document.querySelector('.main'); if (!m) return;
     if (document.body.classList.contains('dlFull') || innerWidth <= 1100) { m.style.height = ''; m.classList.remove('fit'); return; }
-    var top = m.getBoundingClientRect().top + window.scrollY, h = Math.max(440, Math.min(820, innerHeight - top - 14));
+    var h = 523;   // 매물 조회 지도와 같은 높이 (지도 521px + 테두리)
     m.style.height = h + 'px'; m.classList.add('fit');
   }
   function mapRefresh() { if (M) setTimeout(function () { var el = $('map'); try { M.setSize(new NM.Size(el.clientWidth, el.clientHeight)); } catch (e) { } markers(); }, 60); }
