@@ -63,7 +63,7 @@ button,input,select{font-family:inherit}
 .eyebrow{font:600 11px Inter,sans-serif;letter-spacing:2.2px;color:#9C7A47}
 h1{margin:6px 0 8px;font-size:clamp(24px,3vw,32px);font-weight:900;letter-spacing:-1px;line-height:1.3;color:#2A333C}
 .heroName{color:#A27D48;background:linear-gradient(180deg,#B8915A 0%,#94703C 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-1.2px;padding-right:2px}
-.mainNav a[aria-current="page"]{background:linear-gradient(transparent 50%,#E8D7B6 50%,#E8D7B6 84%,transparent 84%);padding:0 3px;margin:0 -3px}
+.mainNav a[aria-current="page"]{color:#14191F!important;background:linear-gradient(transparent 50%,#E8D7B6 50%,#E8D7B6 84%,transparent 84%);padding:0 3px;margin:0 -3px}
 .sub{color:#6B757D;font-size:14px;margin:0 0 18px;line-height:1.6}
 .flt{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px}
 .seg{display:flex;background:#fff;border:1px solid #D9D2C4;border-radius:999px;padding:3px}
@@ -205,7 +205,7 @@ body.dlFull .mapFullBtn{display:none}
 <nav class="mainNav" aria-label="주 메뉴" style="display: flex; flex-wrap: wrap; gap: 44px; font-size: 16px; font-weight: 700">
 <a href="/#map" style="color: #14191F">매물 조회</a>
 <a href="/#listings" style="color: #14191F">추천 매물</a>
-<a href="/deals.html" aria-current="page">빌딩 실거래</a>
+<a href="/deals.html" aria-current="page" style="color: #14191F">빌딩 실거래</a>
 <a href="/#clinic" style="color: #14191F">실무 가이드</a>
 </nav>
 <div class="headActs"><a href="/#intake" class="headIntake"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13"></path><path d="M12 11v6M9 14h6"></path></svg>매물 접수</a>
@@ -352,7 +352,7 @@ body.dlFull .mapFullBtn{display:none}
     $('rst').classList.toggle('on', !!on);
     $('rgP').classList.toggle('on', !!($('pMin').value || $('pMax').value)); $('rgL').classList.toggle('on', !!($('lMin').value || $('lMax').value));
     $('fDong').classList.toggle('on', !!(F.dong || F.gu));
-    kpi(); list(); rank(); draw(fit); fitMain();
+    kpi(); list(); rank(); fitMain(); if (M) { var el0 = $('map'); try { M.setSize(new NM.Size(el0.clientWidth, el0.clientHeight)); } catch (e) { } } draw(fit);
   }
 
   /* ---------- 요약 숫자 ---------- */
@@ -411,6 +411,7 @@ body.dlFull .mapFullBtn{display:none}
     NM.Event.addListener(M, 'zoom_changed', function () { var z = M.getZoom(); polys.forEach(function (p) { if (p.setOptions && p instanceof NM.Polygon) try { p.setOptions('fillOpacity', z >= 15 ? 0 : (p.__f || .08)); } catch (e) { } }); markers(); });
     var fixSize = function () { var el = $('map'); if (el.clientWidth && el.clientHeight) try { M.setSize(new NM.Size(el.clientWidth, el.clientHeight)); } catch (e) { } };
     setTimeout(fixSize, 50); setTimeout(fixSize, 600); window.addEventListener('resize', fixSize);
+    NM.Event.addListener(M, 'dragstart', function () { lastFit = null; });
     draw(true);
   }
   function draw(fit) {
@@ -433,9 +434,10 @@ body.dlFull .mapFullBtn{display:none}
     markers();
     if (fit) {
       var pts = VIEW.filter(function (o) { return o.lat && !o.ap; });
-      if (!F.dong && GEO) { pts = []; Object.keys(GEO).forEach(function (k) { var g = k.split('|')[0]; if ((g === '강남구' || g === '서초구') && (!F.gu || g === F.gu)) { var r = bigRing(k); if (r) r.forEach(function (q, i) { if (i % 4 === 0) pts.push({ lat: q[1], lng: q[0] }); }); } }); }
+      if (!F.dong && !F.gu) pts = [{ lat: 37.532, lng: 127.000 }, { lat: 37.476, lng: 127.072 }];   // 첫 화면: 압구정~양재 · 반포~삼성 중심가
+      else if (!F.dong && GEO) { pts = []; Object.keys(GEO).forEach(function (k) { var g = k.split('|')[0]; if ((g === '강남구' || g === '서초구') && (!F.gu || g === F.gu)) { var r = bigRing(k); if (r) r.forEach(function (q, i) { if (i % 4 === 0) pts.push({ lat: q[1], lng: q[0] }); }); } }); }
       if (F.dong && GEO) { var g0 = F.gu; if (!g0) ALL.some(function (x) { if (x.dong === F.dong) { g0 = x.gu; return true; } return false; }); var k = (g0 || '강남구') + '|' + F.dong; if (GEO[k]) pts = bigRing(k).map(function (q) { return { lat: q[1], lng: q[0] }; }); }   // 다른 구의 같은 이름 동(은평구 신사동 등)으로 가지 않게
-      if (pts.length) { var b = new NM.LatLngBounds(new NM.LatLng(pts[0].lat, pts[0].lng), new NM.LatLng(pts[0].lat, pts[0].lng)); pts.forEach(function (p) { b.extend(new NM.LatLng(p.lat, p.lng)); }); M.fitBounds(b, { top: 30, right: 30, bottom: 30, left: 30 }); }
+      if (pts.length) { var b = new NM.LatLngBounds(new NM.LatLng(pts[0].lat, pts[0].lng), new NM.LatLng(pts[0].lat, pts[0].lng)); pts.forEach(function (p) { b.extend(new NM.LatLng(p.lat, p.lng)); }); M.fitBounds(b, { top: 30, right: 30, bottom: 30, left: 30 }); lastFit = b; setTimeout(function () { lastFit = null; }, 2500); }
     }
   }
   function ym(d) { d = String(d || ''); return d.slice(0, 4) + '. ' + (+d.slice(5, 7)) + '.'; }
@@ -512,7 +514,8 @@ body.dlFull .mapFullBtn{display:none}
     h = Math.max(440, h);
     m.style.height = h + 'px'; m.classList.add('fit');
   }
-  function mapRefresh() { if (M) setTimeout(function () { var el = $('map'); try { M.setSize(new NM.Size(el.clientWidth, el.clientHeight)); } catch (e) { } markers(); }, 60); }
+  var lastFit = null;
+  function mapRefresh() { if (M) setTimeout(function () { var el = $('map'); try { M.setSize(new NM.Size(el.clientWidth, el.clientHeight)); } catch (e) { } if (lastFit) M.fitBounds(lastFit, { top: 30, right: 30, bottom: 30, left: 30 }); markers(); }, 60); }
   window.addEventListener('resize', function () { fitMain(); mapRefresh(); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitMain(); mapRefresh(); });
   setTimeout(function () { fitMain(); mapRefresh(); }, 50);
