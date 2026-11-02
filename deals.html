@@ -146,10 +146,20 @@ h1{margin:6px 0 8px;font-size:clamp(24px,3vw,32px);font-weight:900;letter-spacin
 .mapFullBtn{position:absolute;left:12px;top:12px;z-index:7;display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border:1.5px solid #294652;border-radius:999px;background:#fff;color:#294652;font:700 13.5px 'Noto Sans KR',sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(20,25,31,.18)}
 .mapFullBtn svg{color:#BC975E}.mapFullBtn:hover{background:#294652;color:#fff}
 body.dlFull{overflow:hidden}
-body.dlFull .main{position:fixed;inset:0;z-index:200;border-radius:0;border:0;height:100%!important;grid-template-columns:minmax(0,1fr) 340px}
-body.dlFull .mapBox{min-height:0}body.dlFull #map{min-height:0}body.dlFull .list{max-height:none;min-height:0;height:100%}
-body.dlFull .mapFullBtn{background:#294652;color:#fff}body.dlFull .mapFullBtn svg{color:#E8D7B6}
-@media (max-width:1100px){body.dlFull .main{grid-template-columns:1fr;grid-template-rows:1fr}body.dlFull .list{display:none}body.dlFull .mapBox{border:0}}
+.fullHead{display:none}
+body.dlFull .col{position:fixed;inset:0;z-index:200;background:#F7F3EC;padding:14px 22px 16px;display:flex;flex-direction:column;gap:0}
+body.dlFull .fullHead{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex:none}
+.fullHead .fe{font:600 11px Inter,sans-serif;letter-spacing:2.2px;color:#9C7A47}
+.fullHead h2{margin:0;font-size:22px;font-weight:900;letter-spacing:-.6px;color:#2A333C}.fullHead h2 span{color:#A27D48}
+.fullHead .fullClose{margin-left:auto;display:inline-flex;align-items:center;gap:6px;height:44px;padding:0 18px;border:0;border-radius:999px;background:#294652;color:#fff;font:700 14px 'Noto Sans KR',sans-serif;cursor:pointer}
+.fullHead .fullClose:hover{background:#335664}
+body.dlFull .col .flt{flex:none;margin-bottom:12px;flex-wrap:nowrap}@media (min-width:1101px){body.dlFull .col .flt .rng{flex:0 1 260px}}
+body.dlFull .main{flex:1 1 auto;min-height:0;height:auto!important;border-radius:18px;border:1px solid #E6E0D4;grid-template-columns:minmax(0,1fr) 360px}
+body.dlFull .mapBox{min-height:0}body.dlFull #map{min-height:0}body.dlFull .list{max-height:none;min-height:0}
+body.dlFull .mapFullBtn{display:none}
+@media (max-width:1100px){body.dlFull .col{padding:10px 10px calc(10px + env(safe-area-inset-bottom))}body.dlFull .fullHead h2{font-size:17px}body.dlFull .fullHead .fe{display:none}body.dlFull .fullHead .fullClose{height:38px;padding:0 14px;font-size:13px}
+ body.dlFull .col .flt{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}body.dlFull .col .flt>*{flex:none}body.dlFull .col .flt .rng{flex:0 0 190px}
+ body.dlFull .main{grid-template-columns:1fr;grid-template-rows:1fr}body.dlFull .list{display:none}body.dlFull .mapBox{border:0}}
 
 /* 매물 조회처럼: 왼쪽 소개·요약 / 오른쪽 검색·지도 */
 .top{display:block}
@@ -216,6 +226,7 @@ body.dlFull .mapFullBtn{background:#294652;color:#fff}body.dlFull .mapFullBtn sv
 <section class="miniRank" aria-label="동별 대지 평당가 상위"><h3>동별 대지 평당가 <small>상위 6곳</small></h3><div id="miniRank"></div><a href="#rankBox" class="more2">전체 순위 보기 ↓</a></section>
 </aside>
 <div class="col">
+<div class="fullHead"><span class="fe">BUILDING DEALS</span><h2>강남·서초 <span>빌딩 실거래가</span></h2><button type="button" class="fullClose" id="fullClose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button></div>
 <div class="flt" role="group" aria-label="검색 조건">
  <div class="seg" id="fPer" role="group" aria-label="기간"><button type="button" data-v="12">1년</button><button type="button" data-v="24">2년</button><button type="button" data-v="36">3년</button><button type="button" data-v="60" class="on">5년</button></div>
  <label class="sr" for="fDong">지역</label><select id="fDong" class="dsel"><option value="">강남·서초 전체</option></select>
@@ -496,7 +507,9 @@ body.dlFull .mapFullBtn{background:#294652;color:#fff}body.dlFull .mapFullBtn sv
   function fitMain() {
     var m = document.querySelector('.main'); if (!m) return;
     if (document.body.classList.contains('dlFull') || innerWidth <= 1100) { m.style.height = ''; m.classList.remove('fit'); return; }
-    var h = 523;   // 매물 조회 지도와 같은 높이 (지도 521px + 테두리)
+    m.style.height = '';   // 왼쪽(요약·동별 평당가) 아래 끝에 지도 아래 끝을 맞춤
+    var sd = document.querySelector('.side'), h = sd ? Math.round(sd.getBoundingClientRect().bottom - m.getBoundingClientRect().top) : 523;
+    h = Math.max(440, h);
     m.style.height = h + 'px'; m.classList.add('fit');
   }
   function mapRefresh() { if (M) setTimeout(function () { var el = $('map'); try { M.setSize(new NM.Size(el.clientWidth, el.clientHeight)); } catch (e) { } markers(); }, 60); }
@@ -509,6 +522,7 @@ body.dlFull .mapFullBtn{background:#294652;color:#fff}body.dlFull .mapFullBtn sv
     fitMain(); mapRefresh(); if (!on) $('fullBtn').blur();
   }
   $('fullBtn').addEventListener('click', function () { setFull(!document.body.classList.contains('dlFull')); });
+  $('fullClose').addEventListener('click', function () { setFull(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && document.body.classList.contains('dlFull')) setFull(false); });
   load();
 })();
