@@ -237,7 +237,7 @@ body.dlFull .mapFullBtn{display:none}
  <div class="mapBox"><div id="map" role="application" aria-label="실거래 지도"></div>
   <button type="button" class="mapFullBtn" id="fullBtn" aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"></path></svg><span>지도 크게 보기</span></button>
   <div class="leg" aria-hidden="true"><b>동별 대지 평당가</b><div class="bar"></div><div class="row"><span id="lg0">-</span><span id="lg1">-</span></div>
-   <div class="dots"><span><i style="background:#3B4650"></i>거래 위치</span><span><i style="background:#fff;border:1.5px dashed #7D96A0"></i>위치 확인 중</span></div></div>
+   <div class="dots"><span><i style="background:#3B4650"></i>거래 위치</span><span><i style="background:#fff;border:1.5px dashed #7D96A0"></i>지번 미확인(동 표시)</span></div></div>
   <div class="mapMsg" id="mapMsg">실거래 자료를 불러오는 중입니다…</div>
  </div>
  <div class="list"><div class="lh"><b><span id="cnt">0</span>건의 거래</b><button type="button" class="rst" id="rst"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg>검색 초기화</button><label class="sr" for="sort">정렬</label><select id="sort"><option value="d">최신순</option><option value="p">금액 높은순</option><option value="u">평당가 높은순</option></select></div><div id="list"></div></div>
@@ -456,7 +456,7 @@ body.dlFull .mapFullBtn{display:none}
     });
     Object.keys(ap).forEach(function (k) {
       if (z < 14 && !F.dong) return;   // 멀리서 볼 때는 숨김 (동 색깔로 충분)
-      var g = ap[k], m = new NM.Marker({ map: M, position: new NM.LatLng(g.o.lat, g.o.lng), zIndex: 5, icon: { content: '<div class="mkAp">' + esc(g.o.dong) + ' 위치 확인 중 <b>' + g.n + '건</b></div>', anchor: new NM.Point(0, 0) } });
+      var g = ap[k], m = new NM.Marker({ map: M, position: new NM.LatLng(g.o.lat, g.o.lng), zIndex: 5, icon: { content: '<div class="mkAp">' + esc(g.o.dong) + ' 지번 미확인 <b>' + g.n + '건</b></div>', anchor: new NM.Point(0, 0) } });
       NM.Event.addListener(m, 'click', function () { F.dong = g.o.dong; $('fDong').value = F.dong; apply(true); });
       objs.push(m);
     });
@@ -466,7 +466,7 @@ body.dlFull .mapFullBtn{display:none}
       '<div class="dt">' + dotDate(o.date) + ' 계약 · ' + esc(o.gbn) + (o.zone ? ' · ' + esc(o.zone) : '') + '</div><div class="pr">' + eok(o.amt) + '</div>' +
       '<dl><dt>대지</dt><dd>' + py(o.land) + '평 (' + o.land + '㎡) · 평당 ' + eok(o.pp) + '</dd><dt>연면적</dt><dd>' + py(o.bld) + '평 · 평당 ' + eok(o.bp) + '</dd>' +
       (o.year ? '<dt>건축년도</dt><dd>' + o.year + '년</dd>' : '') + (o.use ? '<dt>건물 용도</dt><dd>' + esc(o.use) + '</dd>' : '') + '</dl>' +
-      (o.ok ? '' : '<div class="dt">※ 정확한 지번을 확인 중인 거래라 ' + esc(o.dong) + ' 가운데에 표시했습니다.</div>') +
+      (o.ok ? '' : '<div class="dt">※ 국토부 공개자료에 지번이 일부만 나오고 건축물대장과도 일치하는 건물이 없어 ' + esc(o.dong) + ' 가운데에 표시했습니다. (지분 거래·신축·여러 필지 거래 등)</div>') +
       '<a class="ask" href="/#consult">이 주변 빌딩 상담 받기</a></div>';
   }
   function select(key, fromList) {
