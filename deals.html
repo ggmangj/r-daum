@@ -538,7 +538,7 @@ body.dlFull .mapFullBtn{display:none}
     setTimeout(fixSize, 50); setTimeout(fixSize, 600); window.addEventListener('resize', fixSize);
     NM.Event.addListener(M, 'dragstart', function () { lastFit = null; });
     var office = new NM.Marker({ position: new NM.LatLng(OFFICE.lat, OFFICE.lng), map: M, zIndex: 1000, icon: { content: OFFICE_HTML, anchor: new NM.Point(0, 0) } });
-    NM.Event.addListener(office, 'click', function () { iw.setContent(OFFICE_POP); iw.open(M, office.getPosition()); var x = iw.getContentElement && iw.getContentElement().querySelector('.x'); if (x) x.onclick = function () { iw.close(); }; });
+    NM.Event.addListener(office, 'click', function () { iw.setContent(OFFICE_POP); try { iw.setOptions('pixelOffset', new NM.Point(0, -66)); } catch (e) { } iw.open(M, office.getPosition()); var x = iw.getContentElement && iw.getContentElement().querySelector('.x'); if (x) x.onclick = function () { iw.close(); }; });
     draw(true);
   }
   function draw(fit) {
@@ -604,7 +604,7 @@ body.dlFull .mapFullBtn{display:none}
     if (M && o.lat) {
       if (fromList) M.morph(new NM.LatLng(o.lat, o.lng), Math.max(M.getZoom(), 15));
       setTimeout(function () {
-        markers(); iw.setContent(popHtml(o)); iw.open(M, new NM.LatLng(o.lat, o.lng));
+        markers(); iw.setContent(popHtml(o)); try { iw.setOptions('pixelOffset', new NM.Point(0, M.getZoom() >= 15 ? -54 : -20)); } catch (e) { } iw.open(M, new NM.LatLng(o.lat, o.lng));   // 금액 핀 위로 띄워서 핀이 가려지지 않게
         var x = iw.getContentElement && iw.getContentElement().querySelector('.x'); if (x) x.onclick = function () { iw.close(); selKey = ''; markers(); document.querySelectorAll('.it.on').forEach(function (b) { b.classList.remove('on'); }); };
       }, fromList ? 400 : 0);
     }
