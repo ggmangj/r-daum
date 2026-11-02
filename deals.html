@@ -125,7 +125,7 @@ h1{margin:6px 0 8px;font-size:clamp(24px,3vw,32px);font-weight:900;letter-spacin
 .empty{padding:40px 16px;text-align:center;color:#8A939A;font-size:14px}
 .mkt .mHead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}.mkt .mHead .rs{margin:0}
 .mGrid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:0 22px}
-.mRow{display:grid;grid-template-columns:58px minmax(0,1fr) minmax(0,1.15fr) minmax(0,1.45fr) 44px;gap:18px;align-items:center;font-size:12.5px;width:100%;border:0;background:none;padding:5px 6px;margin:0;text-align:left;border-radius:8px;cursor:pointer;font-family:inherit;color:inherit}
+.mRow{display:grid;grid-template-columns:96px repeat(4,minmax(0,1fr));gap:18px;align-items:center;font-size:12.5px;width:100%;border:0;background:none;padding:5px 6px;margin:0;text-align:left;border-radius:8px;cursor:pointer;font-family:inherit;color:inherit}
 .mRow:not(.mTh):hover{background:#F7F3EC}.mRow.sel{background:#F2EADB}.mRow b{font-weight:800;font-size:13px}
 .mTh{cursor:default;font-size:11.5px;font-weight:700;color:#4A545C;border-bottom:1px solid #EEE8DC;border-radius:0;padding-bottom:7px;margin-bottom:3px}.mTh em{display:block;font-style:normal;font-weight:400;color:#9AA2A8;font-size:10.5px}
 .bLeg i{display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--c);margin:0 2px 0 6px;vertical-align:0}.bLeg i:first-child{margin-left:0}
@@ -134,7 +134,9 @@ h1{margin:6px 0 8px;font-size:clamp(24px,3vw,32px);font-weight:900;letter-spacin
 .chg{display:grid;grid-template-columns:minmax(0,1fr) 48px;gap:6px;align-items:center}.chg span{text-align:right;font-weight:800;font-size:12px}.chg .up{color:#C0533A}.chg .dn{color:#2F6FA8}.chg .na{color:#B4BBC0;font-weight:400}
 .sb{display:flex;height:16px;border-radius:4px;overflow:hidden;background:#F2EEE6}.sb div{display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;color:#fff;min-width:0;overflow:hidden}
 .mRow{gap:0;padding-top:0;padding-bottom:0;border-radius:0}.mRow>*{padding:7px 14px;align-self:stretch;display:flex;align-items:center}.mRow>.cv{display:grid}
-.mRow>*:first-child,.mRow>*:last-child{padding-left:4px;padding-right:4px;white-space:nowrap}.mRow>*:last-child{justify-content:flex-end}
+.mRow>*:first-child{padding-left:4px;padding-right:4px;white-space:nowrap}.mRow>b small{font-weight:400;color:#9AA2A8;font-size:11px;margin-left:5px}
+.chg5 .up{color:#C0533A;font-weight:800}.chg5 .dn{color:#2F6FA8;font-weight:800}.chg5.na em{color:#B4BBC0;font-weight:400}.chg5 .cv2 em{font-weight:700;color:#4A545C}.mRow>.chg5{display:grid;grid-template-columns:minmax(0,1fr) 92px;gap:8px;align-items:center}.thChg .thT{display:flex;align-items:center;justify-content:space-between;gap:6px}.thChg b{font-size:11.5px}.thChg .seg2 button{padding:2px 7px;font-size:11px}#chgLeg{display:flex;gap:10px}#chgLeg i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#294652;margin-right:3px;vertical-align:0}#chgLeg i.o{background:#fff;border:1.5px solid #9AA2A8;width:6px;height:6px}
+.mRow>*:nth-child(5){background:#FBF7F4}.mTh>*:nth-child(5){background:#F5E9E4;border-radius:8px 8px 0 0}
 .mRow>.sb{display:flex;padding:0;margin:9px 14px;align-self:center;height:16px;background:transparent}.mRow>.sb>div{align-self:stretch}.mRow>.sb>div:first-child{border-radius:4px 0 0 4px}.mRow>.sb>div:last-child{border-radius:0 4px 4px 0}
 .mTh>*{display:block;padding:6px 14px}#rank{justify-content:flex-start}
 .mRow>*:nth-child(2){background:#FAF5EA}.mRow>*:nth-child(3){background:#F1F5F6}
@@ -165,7 +167,7 @@ h1{margin:6px 0 8px;font-size:clamp(24px,3vw,32px);font-weight:900;letter-spacin
  .flt{gap:6px}.seg button{padding:6px 10px;font-size:13px}.rng{flex:1 1 calc(50% - 3px);padding:0 10px}.rng input{width:100%;min-width:0}.rst{margin-left:0}
  .kpi{grid-template-columns:1fr 1fr;gap:8px}.k{padding:12px}.k b{font-size:19px}
  .mapBox{min-height:380px}#map{min-height:380px}.pop{width:236px;font-size:12.5px}.pop .pr{font-size:19px}
- .rank{padding:16px}.mGrid{grid-template-columns:1fr}.mSide{border-left:0;padding-left:0;border-top:1px solid #EEE8DC;padding-top:14px;margin-top:10px}.mTbl{overflow-x:auto}.mRow{min-width:560px}.mSwipe{display:block;font-size:11.5px;color:#9C7A47;margin:6px 0 0}
+ .rank{padding:16px}.mGrid{grid-template-columns:1fr}.mSide{border-left:0;padding-left:0;border-top:1px solid #EEE8DC;padding-top:14px;margin-top:10px}.mTbl{overflow-x:auto}.mRow{min-width:760px}.mSwipe{display:block;font-size:11.5px;color:#9C7A47;margin:6px 0 0}
  .cta{padding:18px}
 }
 
@@ -198,7 +200,7 @@ body.dlFull .mapFullBtn{display:none}
 /* 매물 조회처럼: 왼쪽 소개·요약 / 오른쪽 검색·지도 */
 .top{display:block}
 .side .sub{margin-top:10px}
-.miniRank{display:none}
+.miniRank{display:none}.qN{font-size:10.5px;color:#8A939A;margin:4px 0 0;line-height:1.5}#qChart svg{display:block;width:100%;height:auto}
 .lh .rst{margin-left:auto;height:30px;padding:0 9px;white-space:nowrap;flex:none}
 .lh{gap:6px;padding:12px 12px 12px 14px!important}.lh b{white-space:nowrap;flex:none}.lh select{flex:none;width:76px;padding:5px 2px;font-size:12px}.lh .rst svg{display:none}
 @media (min-width:1101px){
@@ -256,7 +258,7 @@ body.dlFull .mapFullBtn{display:none}
 <h1>강남·서초<br><span class="heroName">빌딩 매매 실거래가</span></h1>
 <p class="sub">국토교통부 실거래가 공개자료 기준 · 매일 자동 업데이트 <span id="upd"></span><br>지번은 건축물대장과 대조해 찾은 위치이며, 찾지 못한 거래는 국토부 공개 범위(예: 5**)까지만 표시합니다.</p>
 <section class="kpi" id="kpi" aria-label="요약"></section>
-<section class="miniRank" aria-label="동별 대지 평당가 상위"><h3>동별 대지 평당가 <small>상위 6곳</small></h3><div id="miniRank"></div><a href="#rankBox" class="more2">전체 순위 보기 ↓</a></section>
+<section class="miniRank qBox" aria-label="분기별 거래량"><h3>분기별 거래량 <small id="qSub"></small></h3><div id="qChart"></div><p class="qN">위 숫자는 연도별 합계 · 연한 막대는 신고가 덜 들어온 최근 분기 · *는 올해</p><a href="#rankBox" class="more2">동별 시장 지표 보기 ↓</a></section>
 </aside>
 <div class="col">
 <div class="fullHead"><span class="fe">BUILDING DEALS</span><h2>강남·서초 <span>빌딩 매매 실거래가</span></h2><button type="button" class="fullClose" id="fullClose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button></div>
@@ -280,9 +282,9 @@ body.dlFull .mapFullBtn{display:none}
 
 <section class="rank mkt" id="rankBox" aria-label="동별 시장 지표">
 <div class="mHead"><h2>동별 시장 지표</h2><p class="rs" id="rankSub"></p></div>
-<div class="mGrid"><div class="mLeft"><div class="mTbl"><div class="mRow mTh"><span>동</span><span>대지 평당가 <em>실거래 중간값</em></span><span>공시지가 <em>평당 · 실거래÷공시</em></span><span>금액대별 거래 분포 <em class="bLeg"><i style="--c:#E3D3B4"></i>50억↓<i style="--c:#BC975E"></i>50~100<i style="--c:#8A6A35"></i>100~300<i style="--c:#294652"></i>300억↑</em></span><span>거래</span></div>
-<div id="rank"></div><p class="mSwipe">← 옆으로 밀어서 금액대 분포 보기</p><button type="button" class="mMore" id="mMore" hidden></button></div><p class="note">※ 대지 평당가 = 거래금액 ÷ 대지면적(평), 동별 값은 거래들의 중간값입니다. 건물 상태·연식·층수·도로 조건에 따라 차이가 큽니다.<br>※ 국토교통부 「상업업무용 부동산 매매」 신고 자료 중 일반건물(통건물) 거래만 표시합니다. 신고 해제된 거래는 제외되며, 신고 후 공개까지 시차가 있습니다.<br>※ 공시지가는 국토교통부 토지특성정보(2026.1.1 기준)의 개별공시지가를 평당으로 환산한 동별 중간값입니다.<br>※ 지번은 공개된 대지·연면적·건축년도를 건축물대장과 대조해 추정한 것으로 실제와 다를 수 있습니다. 정확한 정보는 상담 시 등기부·대장으로 확인해 드립니다.</p></div>
-<aside class="mSide"><h3>분기별 거래량 <em id="qSub"></em></h3><div id="qChart"></div><p class="mS">위 숫자는 연도별 거래 합계 · 연한 막대는 신고가 아직 다 들어오지 않은 최근 분기 · *는 올해 (진행 중)</p><h3 class="h3b"><span id="chgT">1년 변화율</span><span class="seg2" id="chgSeg"><button type="button" data-n="1">1년</button><button type="button" data-n="2">2년</button><button type="button" data-n="3">3년</button><button type="button" data-n="4">4년</button></span></h3><p class="pBadgeW"><span class="pBadge" id="chgBadge"></span></p><div id="chgBox"></div><p class="mS"><b>최근 1년</b>과 <b>N년 전 1년</b>의 대지 평당가 중간값을 비교합니다(실거래 자료가 5년치라 최대 4년 전과 비교). 5년간 거래 80건 이상인 동만 고정해서 보여주며, 두 기간 모두 거래 10건 이상일 때만 계산합니다.</p></aside></div>
+<div class="mTbl"><div class="mRow mTh"><span>동</span><span>대지 평당가 <em>실거래 중간값</em></span><span>공시지가 <em>평당 · 실거래÷공시</em></span><span>금액대별 거래 분포 <em class="bLeg"><i style="--c:#E3D3B4"></i>50억↓<i style="--c:#BC975E"></i>50~100<i style="--c:#8A6A35"></i>100~300<i style="--c:#294652"></i>300억↑</em></span><span class="thChg"><span class="thT"><b id="chgT">변화율</b><span class="seg2" id="chgSeg"><button type="button" data-n="1">1년</button><button type="button" data-n="2">2년</button><button type="button" data-n="3">3년</button><button type="button" data-n="4">4년</button></span></span><em id="chgLeg"></em></span></div>
+<div id="rank"></div><p class="mSwipe">← 옆으로 밀어서 금액대 분포·변화율 보기</p></div>
+<p class="note">※ 대지 평당가 = 거래금액 ÷ 대지면적(평), 동별 값은 거래들의 중간값입니다. 건물 상태·연식·층수·도로 조건에 따라 차이가 큽니다.<br>※ 국토교통부 「상업업무용 부동산 매매」 신고 자료 중 일반건물(통건물) 거래만 표시합니다. 신고 해제된 거래는 제외되며, 신고 후 공개까지 시차가 있습니다.<br>※ 공시지가는 국토교통부 토지특성정보(2026.1.1 기준)의 개별공시지가를 평당으로 환산한 동별 중간값입니다.<br>※ 지번은 공개된 대지·연면적·건축년도를 건축물대장과 대조해 추정한 것으로 실제와 다를 수 있습니다. 정확한 정보는 상담 시 등기부·대장으로 확인해 드립니다.<br>※ 변화율은 <b>최근 1년</b>과 <b>N년 전 1년</b>의 대지 평당가 중간값 비교입니다(실거래 자료가 5년치라 최대 4년). 두 기간 모두 거래 10건 이상일 때만 계산합니다.</p>
 </section>
 
 <section class="cta"><div><b>이 동네 빌딩, 지금 얼마일까요?</b>최근 거래 사례로 매입가·매도가를 비교 분석해 드립니다.</div><a href="/?ask=buy#consult">빌딩 매매 상담 받기</a></section>
@@ -442,7 +444,7 @@ body.dlFull .mapFullBtn{display:none}
     // 1년 변화율: 기간 선택과 상관없이 최근 12개월 vs 그 전 12개월 (양쪽 10건 이상일 때만)
     var CN = chgN || Math.min(4, Math.round(F.per / 12)), mo = function (m) { var d = new Date(); d.setMonth(d.getMonth() - m); return d.toISOString().slice(0, 10); }, t1 = mo(12), t3 = mo(12 * CN), t2 = mo(12 * CN + 12);   // 최근 1년 vs N년 전 1년
     var ch = {}; filtered({ anyDong: true, allTime: true }).forEach(function (o) { if (!(o.pp > 0) || o.share || o.date < t2) return; var c = ch[o.gu + '|' + o.dong] || (ch[o.gu + '|' + o.dong] = [[], []]); if (o.date >= t1) c[0].push(o.pp); else if (o.date < t3) c[1].push(o.pp); });
-    document.querySelectorAll('#chgSeg button').forEach(function (b) { b.classList.toggle('on', +b.getAttribute('data-n') === CN); }); $('chgT').textContent = CN + '년 변화율'; $('chgBadge').textContent = '최근 1년 vs ' + (CN === 1 ? '그 전 1년' : CN + '년 전 1년');
+    document.querySelectorAll('#chgSeg button').forEach(function (b) { b.classList.toggle('on', +b.getAttribute('data-n') === CN); }); $('chgT').textContent = CN + '년 변화율';
     var rows = Object.keys(by).map(function (k) { var g = by[k], c = ch[k]; g.v = median(g.pp); g.j = JIGA[k] ? JIGA[k][0] : 0; g.c = c && c[0].length >= 10 && c[1].length >= 10 ? (median(c[0]) / median(c[1]) - 1) * 100 : null; return g; })
       .filter(function (g) { return g.v > 0; }).sort(function (a, b) { return b.v - a.v; });
     var pm = rows.length ? Math.max.apply(0, rows.map(function (g) { return Math.max(g.v, g.j); })) : 1, cm = Math.max.apply(0, [20].concat(rows.map(function (g) { return g.c == null ? 0 : Math.abs(g.c); })));
@@ -450,23 +452,23 @@ body.dlFull .mapFullBtn{display:none}
     var C4 = ['#E3D3B4', '#BC975E', '#8A6A35', '#294652'];
     var row = function (g) {
       var t = g.b[0] + g.b[1] + g.b[2] + g.b[3], c = g.c;
-      return '<button type="button" class="mRow' + (F.dong === g.dong ? ' sel' : '') + '" data-dong="' + esc(g.dong) + '"><b>' + esc(g.dong) + '</b>' +
+      return '<button type="button" class="mRow' + (F.dong === g.dong ? ' sel' : '') + '" data-dong="' + esc(g.dong) + '"><b>' + esc(g.dong) + '<small>' + g.n + '건</small></b>' +
         '<span class="cv"><em><i style="width:' + Math.max(3, g.v / pm * 100) + '%;background:#BC975E"></i></em><span>' + eok(g.v) + '</span></span>' +
         '<span class="cv cj">' + (g.j ? '<em><i style="width:' + Math.max(3, g.j / pm * 100) + '%;background:#7D96A0"></i></em><span style="color:#4A6470">' + eok(g.j) + '</span><small>' + (g.v / g.j).toFixed(1) + '배</small>' : '<em></em><span style="color:#B4BBC0;font-weight:400">-</span><small></small>') + '</span>' +
         '<span class="sb">' + g.b.map(function (x, i) { var p = t ? x / t * 100 : 0; return p ? '<div style="width:' + p + '%;background:' + C4[i] + (i ? '' : ';color:#5a4a2a') + '">' + (p >= 12 ? Math.round(p) : '') + '</div>' : ''; }).join('') + '</span>' +
-        '<span class="mN">' + g.n + '건</span></button>';
+        chgCell(g) + '</button>';
     };
-    var open = $('mMore').getAttribute('data-open') === '1';
-    $('rank').innerHTML = rows.length ? big.map(row).join('') + (open ? small.map(row).join('') : '') : '<div class="empty">거래가 없습니다.</div>';
-    $('mMore').hidden = !small.length; $('mMore').textContent = open ? '접기' : '거래 10건 미만 동 ' + small.length + '곳 더 보기';
-    // 거래가 많은 동(5년 80건 이상)만 왼쪽 표와 같은 순서로 고정 — 변화율 기간을 바꿔도 줄이 움직이지 않게
-    var all5 = {}; filtered({ anyDong: true, allTime: true }).forEach(function (o) { all5[o.gu + '|' + o.dong] = (all5[o.gu + '|' + o.dong] || 0) + 1; });
-    var cl = big.filter(function (g) { return (all5[g.k] || 0) >= 80; }); if (cl.length < 5) cl = big.slice().sort(function (a, b) { return (all5[b.k] || 0) - (all5[a.k] || 0); }).slice(0, 8).sort(function (a, b) { return b.v - a.v; });
-    var lo = Infinity, hi = 0; cl.forEach(function (g) { if (g.c == null) return; var c = ch[g.k]; g.cv = median(c[0]); g.pv = median(c[1]); lo = Math.min(lo, g.cv, g.pv); hi = Math.max(hi, g.cv, g.pv); });
+    // 변화율: 같은 동·같은 순서(왼쪽 열)로 고정, 막대 대신 두 점(N년 전 1년 ○ → 최근 1년 ●)
+    var lo = Infinity, hi = 0; big.forEach(function (g) { if (g.c == null) return; var c = ch[g.k]; g.cv = median(c[0]); g.pv = median(c[1]); lo = Math.min(lo, g.cv, g.pv); hi = Math.max(hi, g.cv, g.pv); });
     var pr = function (d, back) { var y = +d.slice(0, 4), m = +d.slice(5, 7); if (back) { m--; if (!m) { m = 12; y--; } } return String(y).slice(2) + '.' + (m < 10 ? '0' : '') + m; };
     var X = function (v) { return 4 + (v - lo) / ((hi - lo) || 1) * 92; };
-    $('chgBox').innerHTML = cl.length ? '<div class="dbLeg"><span><i class="o"></i>' + pr(t2) + '~' + pr(t3, 1) + '</span><span><i></i>' + pr(t1) + '~' + pr(new Date().toISOString().slice(0, 10)) + '</span><span class="dbR">최근 1년 평당가 · 변화율</span></div>' + cl.map(function (g) { if (g.c == null) return '<button type="button" class="cRow na" data-dong="' + esc(g.dong) + '" title="두 기간 중 한쪽 거래가 10건 미만"><b>' + esc(g.dong) + '</b><span class="db"></span><span class="cv2"><em>거래 부족</em><span>–</span></span></button>'; var up = g.c >= 0, a = X(Math.min(g.cv, g.pv)), b = X(Math.max(g.cv, g.pv));
-      return '<button type="button" class="cRow" data-dong="' + esc(g.dong) + '"><b>' + esc(g.dong) + '</b><span class="db"><s style="left:' + a + '%;width:' + (b - a) + '%;background:' + (up ? '#E9B4A6' : '#AFC6DA') + '"></s><i class="o" style="left:' + X(g.pv) + '%"></i><i style="left:' + X(g.cv) + '%;background:' + (up ? '#C0533A' : '#2F6FA8') + '"></i></span><span class="cv2"><em>' + eok(g.cv) + '</em><span class="' + (up ? 'up' : 'dn') + '">' + (Math.abs(g.c) < 0.05 ? '0.0' : (g.c > 0 ? '+' : '') + g.c.toFixed(1)) + '%</span></span></button>'; }).join('') : '<p class="mS">조건에 맞는 동이 없습니다.</p>';
+    $('chgLeg').innerHTML = '<span><i class="o"></i>' + pr(t2) + '~' + pr(t3, 1) + '</span><span><i></i>' + pr(t1) + '~' + pr(new Date().toISOString().slice(0, 10)) + '</span>';
+    var chgCell = function (g) {
+      if (g.c == null) return '<span class="chg5 na" title="두 기간 중 한쪽 거래가 10건 미만"><span class="db"></span><span class="cv2"><em>거래 부족</em></span></span>';
+      var up = g.c >= 0, a = X(Math.min(g.cv, g.pv)), b = X(Math.max(g.cv, g.pv));
+      return '<span class="chg5"><span class="db"><s style="left:' + a + '%;width:' + (b - a) + '%;background:' + (up ? '#E9B4A6' : '#AFC6DA') + '"></s><i class="o" style="left:' + X(g.pv) + '%"></i><i style="left:' + X(g.cv) + '%;background:' + (up ? '#C0533A' : '#2F6FA8') + '"></i></span><span class="cv2"><em>' + eok(g.cv) + '</em><span class="' + (up ? 'up' : 'dn') + '">' + (Math.abs(g.c) < 0.05 ? '0.0' : (g.c > 0 ? '+' : '') + g.c.toFixed(1)) + '%</span></span></span>';
+    };
+    $('rank').innerHTML = rows.length ? big.map(row).join('') : '<div class="empty">거래가 없습니다.</div>';
     quarter();
   }
   // 분기별 거래 건수 (선택한 구·동·금액 조건 반영, 기간은 5년 전체)
@@ -476,9 +478,7 @@ body.dlFull .mapFullBtn{display:none}
     var now = new Date(), ks = []; for (var i = 22; i >= 0; i--) { var d = new Date(now.getFullYear(), now.getMonth() - i * 3, 1); var k = d.getFullYear() + '.' + ((d.getMonth() / 3 | 0) + 1); if (ks.indexOf(k) < 0) ks.push(k); }
     // 오른쪽 칸이 왼쪽 표 높이만큼 꽉 차도록 그래프 높이를 맞춤 (컴퓨터 화면)
     // 표가 오른쪽보다 길면 그래프를 키워 오른쪽 아래 빈 곳을 채우고, 짧으면 표 줄 간격이 늘어나 맞춰짐
-    var Hfit = 150, tb = document.querySelector('.mLeft'), sd = document.querySelector('.mSide');
-    if (tb && sd && innerWidth > 760) { $('qChart').innerHTML = ''; var nat = 0; var tt = document.querySelector('.mTbl'); [].forEach.call(tt.children, function (c) { if (c.id === 'rank') [].forEach.call(c.children, function (r) { nat += r.offsetHeight; }); else nat += c.offsetHeight; }); [].forEach.call(tb.children, function (c) { if (c !== tt) nat += c.offsetHeight + parseFloat(getComputedStyle(c).marginTop) + parseFloat(getComputedStyle(c).marginBottom); });
-      var rest = 0; [].forEach.call(sd.children, function (c) { rest += c.offsetHeight + parseFloat(getComputedStyle(c).marginTop) + parseFloat(getComputedStyle(c).marginBottom); }); Hfit = Math.max(150, nat - rest - 20); }
+    var Hfit = 120;
     // 연도별로 색을 번갈아 칠하고(남색/골드), 위에 연도별 합계를 적어 한눈에 비교
     var mx = Math.max.apply(0, [1].concat(ks.map(function (k) { return q[k] || 0; }))), W = Math.max(240, $('qChart').clientWidth || 320), H = Hfit, T = 30, bw = W / ks.length, svg = '<svg viewBox="0 0 ' + W + ' ' + (H + 18) + '">';
     var y0 = String(now.getFullYear() - 4); ks = ks.filter(function (k) { return k.slice(0, 4) >= y0; });
@@ -596,10 +596,8 @@ body.dlFull .mapFullBtn{display:none}
   });
   $('sort').addEventListener('change', list);
   $('list').addEventListener('click', function (e) { if (e.target.id === 'more') { shown += 60; list(); return; } var b = e.target.closest('.it'); if (b) select(b.getAttribute('data-k'), true); });
-  $('chgSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; chgN = +b.getAttribute('data-n'); rank(); });
-  $('mMore').addEventListener('click', function () { this.setAttribute('data-open', this.getAttribute('data-open') === '1' ? '0' : '1'); rank(); });
-  $('miniRank').addEventListener('click', function (e) { var b = e.target.closest('[data-dong]'); if (!b) return; F.dong = b.getAttribute('data-dong'); F.gu = ''; $('fDong').value = F.dong; apply(true); });
-  ['rank','chgBox'].forEach(function(id){$(id).addEventListener('click', function (e) { var b = e.target.closest('[data-dong]'); if (!b) return; F.dong = b.getAttribute('data-dong'); F.gu = ''; $('fDong').value = F.dong; apply(true); $('map').scrollIntoView({ behavior: 'smooth', block: 'center' }); }); });
+  $('chgSeg').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; e.stopPropagation(); chgN = +b.getAttribute('data-n'); rank(); });
+  ['rank'].forEach(function(id){$(id).addEventListener('click', function (e) { var b = e.target.closest('[data-dong]'); if (!b) return; F.dong = b.getAttribute('data-dong'); F.gu = ''; $('fDong').value = F.dong; apply(true); $('map').scrollIntoView({ behavior: 'smooth', block: 'center' }); }); });
 
   var s = document.createElement('script');
   s.src = 'https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=' + encodeURIComponent(NAVER_KEY);
