@@ -241,6 +241,10 @@ body.dlFull .mapFullBtn{display:none}
  .mr em{font-style:normal;font-weight:800;color:#BC975E;font-size:12px}.mr b{color:#2A333C}.mr i{display:block;height:7px;border-radius:4px;background:#F1ECE2;overflow:hidden}.mr i s{display:block;height:100%;background:#BC975E;border-radius:4px}
  .mr span{text-align:right;font-weight:800;color:#294652;font-size:12.5px}.mr:hover b{color:#C0533A}
  .more2{display:block;text-align:right;font-size:12px;color:#8A6A35;margin-top:4px}
+ .qTabs{display:flex;margin:0 0 10px}.qTabs button{flex:1;font-size:12px;padding:4px 0}
+ .qPanes{display:grid}.qPane{grid-area:1/1;visibility:hidden}.qPane.on{visibility:visible}
+ #nChart svg{display:block;width:100%;height:auto;overflow:visible}#nChart circle{cursor:pointer}#nChart .nb:hover circle{fill-opacity:.4}
+ #nChart text{font-family:inherit}
  .col .flt{margin-bottom:12px;flex-wrap:nowrap}
  .col .flt .rng{flex:1 1 0;min-width:0}.col .flt .rng input{width:100%;min-width:0}
 }
@@ -282,9 +286,9 @@ body.dlFull .mapFullBtn{display:none}
 <aside class="side">
 <div class="eyebrow">BUILDING DEALS</div>
 <h1>강남·서초<br><span class="heroName">빌딩 매매 실거래가</span></h1>
-<p class="sub">국토교통부 실거래가 공개자료 기준 · 매일 자동 업데이트 <span id="upd"></span><br>지번은 건축물대장과 대조해 찾은 위치이며, 찾지 못한 거래는 국토부 공개 범위(예: 5**)까지만 표시합니다.</p>
+<p class="sub">국토부 실거래가 기준 · 매일 업데이트 <span id="upd"></span><br>지번 미확인 거래는 동 위치에만 표시</p>
 <section class="kpi" id="kpi" aria-label="요약"></section>
-<section class="miniRank qBox" aria-label="분기별 거래량"><h3>분기별 거래량 <small id="qSub"></small></h3><div id="qChart"></div><p class="qN">위 숫자는 연도별 합계 · 연한 막대는 신고가 덜 들어온 최근 분기 · *는 올해</p><a href="#rankBox" class="more2">동별 대지 평당가 및 거래 규모 보기 ↓</a></section>
+<section class="miniRank qBox" aria-label="분기별 거래량 · 동네 성격"><div class="seg2 qTabs" id="qTabs" role="tablist"><button type="button" class="on" data-t="q" role="tab">분기별 거래량</button><button type="button" data-t="n" role="tab">동네 성격</button></div><div class="qPanes"><div class="qPane on" data-p="q"><h3>분기별 거래량 <small id="qSub"></small></h3><div id="qChart"></div><p class="qN">위 숫자는 연도별 합계 · 연한 막대는 신고가 덜 들어온 최근 분기 · *는 올해</p></div><div class="qPane" data-p="n"><h3>동네 성격 지도 <small>건수 × 건당 평균금액 · 5년 누적</small></h3><div id="nChart"></div><p class="qN" id="nInfo">원 크기 = 총 거래금액 · 점선 = 동 평균<br>원을 누르면 지도에서 그 동 거래를 보여드려요</p></div></div><a href="#rankBox" class="more2">동별 대지 평당가 및 거래 규모 보기 ↓</a></section>
 </aside>
 <div class="col">
 <div class="fullHead"><span class="fe">BUILDING DEALS</span><h2>강남·서초 <span>빌딩 매매 실거래가</span></h2><button type="button" class="fullClose" id="fullClose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button></div>
@@ -432,7 +436,7 @@ body.dlFull .mapFullBtn{display:none}
         return o;
       });
       ALL = cleanDeals(ALL);
-      if (d.updated) $('upd').textContent = '(' + new Date(d.updated).toLocaleDateString('ko-KR') + ' 기준)';
+      if (d.updated) { var ud = new Date(d.updated); $('upd').textContent = '(' + ud.getFullYear() + '.' + (ud.getMonth() + 1) + '.' + ud.getDate() + ')'; }
       var dongs = {}; ALL.forEach(function (o) { dongs[o.gu + '|' + o.dong] = 1; });
       var byGu = {}; Object.keys(dongs).forEach(function (k) { (byGu[k.split('|')[0]] = byGu[k.split('|')[0]] || []).push(k.split('|')[1]); });
       $('fDong').innerHTML = '<option value="">강남·서초 전체</option><option value="gu:강남구">강남구 전체</option><option value="gu:서초구">서초구 전체</option>' +
@@ -562,7 +566,73 @@ body.dlFull .mapFullBtn{display:none}
       return '<span class="chg5"><span class="db"><s style="left:' + a + '%;width:' + (b - a) + '%;background:' + (up ? '#E9B4A6' : '#AFC6DA') + '"></s><i class="o" style="left:' + X(g.pv) + '%"></i>' + (X(g.pv) >= 22 ? '<u style="right:calc(' + (100 - X(g.pv)) + '% + 8px)">' : '<u style="left:calc(' + Math.max(X(g.pv), X(g.cv)) + '% + 9px)">') + eok(g.pv) + '</u><i style="left:' + X(g.cv) + '%;background:' + (up ? '#C0533A' : '#2F6FA8') + '"></i></span><span class="cv2"><em>' + eok(g.cv) + '</em><span class="' + (up ? 'up' : 'dn') + '">' + (Math.abs(g.c) < 0.05 ? '0.0' : (g.c > 0 ? '+' : '') + g.c.toFixed(1)) + '%</span></span></span>';
     };
     $('rank').innerHTML = big.length ? big.map(row).join('') : '<div class="empty">거래가 없습니다.</div>';
-    quarter();
+    if (!F.gu || !NDONG.length) NDONG = big.map(function (g) { return g.k; });
+    quarter(); nature();
+  }
+  // 동네 성격 지도: 표의 동(공시지가 순 고정 목록)을 5년 누적 거래 건수 × 건당 평균 거래금액으로 네 칸에 배치 (구·금액 조건과 무관하게 고정)
+  var NDONG = [];
+  function nature() {
+    var box = $('nChart'); if (!box) return;
+    var cut = (function () { var d = new Date(); d.setMonth(d.getMonth() - 60); return d.toISOString().slice(0, 10); })(), st = {};
+    NDONG.forEach(function (k) { st[k] = { k: k, dong: k.split('|')[1], n: 0, a: 0, b3: 0 }; });
+    ALL.forEach(function (o) { var g = st[o.gu + '|' + o.dong]; if (!g || o.share || o.date < cut) return; g.n++; g.a += o.amt; if (o.amt >= 3000000) g.b3++; });
+    var L = Object.keys(st).map(function (k) { return st[k]; }).filter(function (g) { return g.n > 0; });
+    if (!L.length) { box.innerHTML = ''; return; }
+    L.forEach(function (g) { g.av = g.a / g.n; });
+    var TN = 0, TA = 0; L.forEach(function (g) { TN += g.n; TA += g.a; }); var MN = TN / L.length, MA = TA / TN;
+    var W = Math.max(240, box.clientWidth || 262), H = 286, PL = 8, PR = 8, PT = 26, PB = 40, xm = Math.max.apply(0, L.map(function (g) { return g.n; })) * 1.08, ym = Math.max.apply(0, L.map(function (g) { return g.av; })) * 1.2, am = Math.max.apply(0, L.map(function (g) { return g.a; }));
+    var X = function (v) { return PL + v / xm * (W - PL - PR); }, Y = function (v) { return PT + (1 - v / ym) * (H - PT - PB); }, R = function (a) { return 3.5 + Math.sqrt(a / am) * 12; };
+    var C = function (g) { return g.av >= MA ? (g.n < MN ? '#B0452B' : '#8A6A35') : (g.n >= MN ? '#294652' : '#7D878E'); };
+    var x0 = X(MN), y0 = Y(MA), yb = H - PB, sv = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="동네 성격 지도">';
+    sv += '<rect x="' + PL + '" y="' + PT + '" width="' + (x0 - PL) + '" height="' + (y0 - PT) + '" fill="#FBF1E4"/><rect x="' + x0 + '" y="' + y0 + '" width="' + (W - PR - x0) + '" height="' + (yb - y0) + '" fill="#EEF3F5"/>';
+    sv += '<line x1="' + x0 + '" x2="' + x0 + '" y1="' + PT + '" y2="' + yb + '" stroke="#B9AE9C" stroke-dasharray="3 3"/><line x1="' + PL + '" x2="' + (W - PR) + '" y1="' + y0 + '" y2="' + y0 + '" stroke="#B9AE9C" stroke-dasharray="3 3"/><line x1="' + PL + '" x2="' + (W - PR) + '" y1="' + yb + '" y2="' + yb + '" stroke="#E3DCCF"/>';
+    var tq = function (x, y, t, c, an) { return '<text x="' + x + '" y="' + y + '" font-size="11" font-weight="800" fill="' + c + '" text-anchor="' + an + '">' + t + '</text>'; };
+    sv += tq(PL + 2, PT - 9, '고가 빌딩 위주', '#B0452B', 'start') + tq(W - PR - 2, PT - 9, '고가·거래 활발', '#5E4317', 'end') + tq(PL + 2, yb + 15, '소규모 거래', '#7D878E', 'start') + tq(W - PR - 2, yb + 15, '중소형 거래 활발', '#294652', 'end');
+    sv += '<text x="' + PL + '" y="' + (H - 3) + '" font-size="10" fill="#8A939A">← 거래 적음</text><text x="' + (W - PR) + '" y="' + (H - 3) + '" font-size="10" fill="#8A939A" text-anchor="end">거래 많음 →</text>';
+    // 원이 거의 겹치는 동은 이름을 하나로 묶음
+    L.forEach(function (g) { g.x = X(g.n); g.y = Y(g.av); g.r = R(g.a); g.c = C(g); });
+    var groups = [];
+    L.slice().sort(function (a, b) { return b.a - a.a; }).forEach(function (g) {
+      var hit = groups.filter(function (G) { return G.m.some(function (h) { return Math.hypot(h.x - g.x, h.y - g.y) < Math.max(h.r, g.r) + 6; }); })[0];
+      if (hit) hit.m.push(g); else groups.push({ m: [g] });
+    });
+    var circ = '';
+    L.forEach(function (g) {
+      var on = F.dong === g.dong;
+      circ += '<g class="nb" data-dong="' + esc(g.dong) + '"><circle cx="' + g.x.toFixed(1) + '" cy="' + g.y.toFixed(1) + '" r="' + g.r.toFixed(1) + '" fill="' + g.c + '" fill-opacity="' + (on ? .55 : .22) + '" stroke="' + g.c + '" stroke-width="' + (on ? 2.4 : 1.2) + '"><title>' + g.dong + ' · 5년 ' + g.n + '건 · 건당 평균 ' + eok(g.av) + ' · 합계 ' + eok(g.a) + '</title></circle></g>';
+    });
+    // 이름 자리 찾기: 원·다른 이름과 겹치지 않고 그 동이 속한 칸 안에 둠(오른쪽 → 왼쪽 → 위 → 아래 → 조금 더 떨어진 곳)
+    // 자리가 없으면 같은 칸의 가까운 작은 동과 이름을 묶어 다시 배치. 그래도 없으면 이름 생략 (원에 마우스를 올리면 보임)
+    var ctr = function (G) { var m = G.m; return [m.reduce(function (s, g) { return s + g.x; }, 0) / m.length, m.reduce(function (s, g) { return s + g.y; }, 0) / m.length]; };
+    var sum = function (G) { return G.m.reduce(function (s, g) { return s + g.a; }, 0); }, qd = function (G) { return (G.m[0].x < x0 ? 0 : 1) + (G.m[0].y < y0 ? 0 : 2); }, lab = '';
+    for (var tries = 0; tries < 4; tries++) {
+      var occ = L.map(function (g) { return [g.x - g.r, g.y - g.r, g.x + g.r, g.y + g.r]; }), fails = []; lab = '';
+      groups.forEach(function (G) {
+        var m = G.m.slice().sort(function (a, b) { return b.a - a.a; }), t = m.map(function (g) { return g.dong.replace(/동$/, ''); }).join('·'), c = m[0].c, w = t.length * 12 - (m.length - 1) * 7 + 2, h = 13;
+        var cc = ctr(G), cx = cc[0], cy = cc[1], r = Math.max.apply(0, m.map(function (g) { return g.r + Math.hypot(g.x - cx, g.y - cy); })), q = qd(G);
+        var bx = [q % 2 ? x0 + 1 : PL + 1, q < 2 ? PT : y0 + 1, q % 2 ? W - PR - 1 : x0 - 1, q < 2 ? y0 - 1 : yb];
+        var free = function (b) { if (b[0] < bx[0] || b[2] > bx[2] || b[1] < bx[1] || b[3] > bx[3]) return false; return !occ.some(function (o) { return b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]; }); };
+        var cl = function (x) { return Math.min(Math.max(x, bx[0]), bx[2] - w); }, cand = [[cx + r + 3, cy - h / 2], [cx - r - 3 - w, cy - h / 2], [cl(cx - w / 2), cy - r - 3 - h], [cl(cx - w / 2), cy + r + 3]];
+        [10, -10, 20, -20].forEach(function (d) { cand.push([cx + r + 3, cy - h / 2 + d], [cx - r - 3 - w, cy - h / 2 + d]); });
+        [14, 28].forEach(function (d) { cand.push([cl(cx - w / 2), cy + r + 3 + d], [cl(cx - w / 2), cy - r - 3 - h - d]); });
+        var p = cand.filter(function (k) { return free([k[0], k[1], k[0] + w, k[1] + h]); })[0];
+        if (!p) { fails.push(G); return; }
+        occ.push([p[0], p[1], p[0] + w, p[1] + h]);
+        lab += '<text x="' + p[0].toFixed(0) + '" y="' + (p[1] + 11).toFixed(0) + '" font-size="12" font-weight="800" fill="' + c + '" pointer-events="none">' + t + '</text>';
+      });
+      var merged = false;
+      fails.forEach(function (F0) {
+        if (F0.m.length >= 3 || groups.indexOf(F0) < 0) return;
+        var fc = ctr(F0), d = function (G) { var c = ctr(G); return Math.hypot(c[0] - fc[0], c[1] - fc[1]); };
+        var pool = groups.filter(function (G) { return G !== F0 && qd(G) === qd(F0) && d(G) <= 40 && G.m.length + F0.m.length <= 3; }).sort(function (a, b) { return (sum(a) - sum(b)) || (d(a) - d(b)); });
+        if (pool[0]) { pool[0].m = pool[0].m.concat(F0.m); groups.splice(groups.indexOf(F0), 1); merged = true; }
+      });
+      if (!merged) break;
+    }
+    box.innerHTML = sv + circ + lab + '</svg>';
+    var sel = L.filter(function (g) { return g.dong === F.dong; })[0];
+    $('nInfo').innerHTML = sel ? '<b style="color:' + sel.c + '">' + esc(sel.dong) + '</b> · 5년 ' + sel.n + '건 · 건당 평균 <b>' + eok(sel.av) + '</b> · 300억 이상 ' + Math.round(sel.b3 / sel.n * 100) + '%<br>원 크기 = 총 거래금액 · 점선 = 동 평균'
+      : '원 크기 = 총 거래금액 · 점선 = 동 평균<br>원을 누르면 지도에서 그 동 거래를 보여드려요';
   }
   // 분기별 거래 건수 (선택한 구·동·금액 조건 반영, 기간은 5년 전체)
   var chgN = 1;   // 변화율 비교 시점: 최근 1년 vs N년 전 1년 (처음엔 1년 전)
@@ -720,6 +790,8 @@ body.dlFull .mapFullBtn{display:none}
     var y = $('rankBox').getBoundingClientRect().top + pageYOffset - off - 12; scrollTo({ top: y, behavior: 'smooth' });
     setTimeout(function () { var hd2 = document.querySelector('.siteHead'), o2 = hd2 ? Math.max(0, hd2.getBoundingClientRect().bottom) : 0, t = $('rankBox').getBoundingClientRect().top; if (Math.abs(t - o2 - 12) > 4) scrollBy({ top: t - o2 - 12 }); }, 700);
   }); });
+  $('qTabs').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var t = b.getAttribute('data-t'); this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); }); document.querySelectorAll('.qPane').forEach(function (p) { p.classList.toggle('on', p.getAttribute('data-p') === t); }); if (t === 'n') nature(); });
+  $('nChart').addEventListener('click', function (e) { var g = e.target.closest('.nb'); if (!g) return; F.dong = g.getAttribute('data-dong'); F.gu = ''; $('fDong').value = F.dong; apply(true); });
   ['rank'].forEach(function(id){$(id).addEventListener('click', function (e) { var b = e.target.closest('[data-dong]'); if (!b) return; F.dong = b.getAttribute('data-dong'); F.gu = ''; $('fDong').value = F.dong; apply(true); $('map').scrollIntoView({ behavior: 'smooth', block: 'center' }); }); });
 
   var s = document.createElement('script');
@@ -741,7 +813,7 @@ body.dlFull .mapFullBtn{display:none}
   function mapFit() { if (!M) return; var el = $('map'), box = el.parentNode; el.style.width = ''; el.style.height = '';
     var w = box.clientWidth, h = box.clientHeight; if (w && h) { el.style.height = h + 'px'; try { M.setSize(new NM.Size(w, h)); } catch (e) { } } }
   function mapRefresh() { if (M) setTimeout(function () { mapFit(); if (lastFit === 'home') { var w = innerWidth; M.setCenter(new NM.LatLng(HOME_VIEW.lat, HOME_VIEW.lng)); M.setZoom(w < 760 ? 16 : 17, false); } else if (lastFit) M.fitBounds(lastFit, { top: 30, right: 30, bottom: 30, left: 30 }); markers(); }, 60); }
-  var qT; window.addEventListener('resize', function () { fitMain(); mapRefresh(); clearTimeout(qT); qT = setTimeout(function () { if (ALL.length) quarter(); }, 200); });
+  var qT; window.addEventListener('resize', function () { fitMain(); mapRefresh(); clearTimeout(qT); qT = setTimeout(function () { if (ALL.length) { quarter(); nature(); } }, 200); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitMain(); mapRefresh(); });
   setTimeout(function () { fitMain(); mapRefresh(); }, 50);
   function setFull(on) {
