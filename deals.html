@@ -397,11 +397,24 @@ body.dlFull .mapFullBtn{display:none}
     return out.sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
   }
   function load() {
+    // 이 브라우저에 저장해 둔 지난 실거래 자료(7일 이내)가 있으면 바로 그리고, 최신 자료가 도착해 바뀌었으면 다시 그림
+    var CK = 'daumDeals.v1', MAXAGE = 7 * 864e5, old = '';
+    try { var o = JSON.parse(localStorage.getItem(CK) || 'null'); if (o && Date.now() - o.t < MAXAGE) old = o.s; } catch (e) { }
     var gj = fetch('dongs.json').then(function (r) { return r.json(); }).catch(function () { return {}; });
-    var rt = fetch(SHEET_URL + '?deals=1').then(function (r) { return r.json(); });
+    var rt = fetch(SHEET_URL + '?deals=1').then(function (r) { return r.text(); });
+    var shown = false;
+    if (old) gj.then(function (g) { try { build(g, JSON.parse(old), false); shown = true; } catch (e) { } });
     Promise.all([gj, rt]).then(function (v) {
-      GEO = v[0] || {};
-      var d = v[1] || {};
+      var t = v[1] || '', d = JSON.parse(t);
+      if (!(d && d.rows && d.rows.length)) { if (shown) return; }
+      else { try { localStorage.setItem(CK, JSON.stringify({ t: Date.now(), s: t })); } catch (e) { } if (shown && t === old) return; }
+      build(v[0], d, shown);
+    }).catch(function () { if (!shown) $('mapMsg').textContent = '실거래 자료를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.'; });
+  }
+  function build(geo, d, soft) {   // soft: 저장본을 먼저 보여준 뒤 최신 자료로 바꿀 때 — 고른 동·지도 위치는 그대로 둠
+      GEO = geo || {};
+      d = d || {};
+      var keepDong = $('fDong').value;
       ALL = (d.rows || []).filter(function (r) { return !((r[8] > 0 && r[8] < 33) || (r[9] > 0 && r[9] < 33)); }).map(function (r) {   // 대지·연면적 10평 미만(호실 단위 거래)은 빌딩이 아니라서 제외
         var o = { date: r[0], gu: r[1], dong: r[2], jb: r[3], ok: !!r[4], zone: r[5], use: r[6], year: r[7], land: r[8], bld: r[9], amt: r[10], share: !!r[11], lat: r[12], lng: r[13], gbn: r[14] };
         o.key = [o.date, o.gu, o.dong, o.jb, o.amt, o.land].join('|');
@@ -418,10 +431,10 @@ body.dlFull .mapFullBtn{display:none}
         ['강남구', '서초구'].map(function (g) { return byGu[g] ? '<optgroup label="' + g + '">' + byGu[g].sort().map(function (d) { return '<option value="' + esc(d) + '">' + esc(d) + '</option>'; }).join('') + '</optgroup>' : ''; }).join('');
       if (0) $('fDong').innerHTML = Object.keys(dongs).sort(function (a, b) { return a.split('|')[0] === b.split('|')[0] ? (a < b ? -1 : 1) : (a.split('|')[0] === '강남구' ? -1 : 1); })
         .map(function (k) { return '<option value="' + esc(k.split('|')[1]) + '">' + esc(k.split('|')[1]) + ' (' + esc(k.split('|')[0]) + ')</option>'; }).join('');
+      if (keepDong && $('fDong').querySelector('option[value="' + keepDong + '"]')) $('fDong').value = keepDong;
       $('mapMsg').hidden = true;
       if (!ALL.length) { $('mapMsg').hidden = false; $('mapMsg').textContent = '실거래 자료를 준비 중입니다. 잠시 후 다시 확인해 주세요.'; }
-      apply(true);
-    }).catch(function () { $('mapMsg').textContent = '실거래 자료를 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.'; });
+      apply(!soft);
   }
 
   /* ---------- 거르기 ---------- */
@@ -558,7 +571,8 @@ body.dlFull .mapFullBtn{display:none}
     $('map').addEventListener('mouseenter', function () { M.setOptions('scrollWheel', true); });
     $('map').addEventListener('mouseleave', function () { M.setOptions('scrollWheel', false); });
     iw = new NM.InfoWindow({ content: '', borderWidth: 0, backgroundColor: 'transparent', disableAnchor: true, pixelOffset: new NM.Point(0, -12) });
-    NM.Event.addListener(M, 'zoom_changed', function () { var z = M.getZoom(); polys.forEach(function (p) { if (p.setOptions && p instanceof NM.Polygon) try { p.setOptions('fillOpacity', z >= 15 ? 0 : (p.__f || .08)); } catch (e) { } }); markers(); });
+    NM.Event.addListener(M, 'zoom_changed', function () { var z = M.getZoom(); polys.forEach(function (p) { if (p.setOptions && p instanceof NM.Polygon) try { p.setOptions('fillOpacity', z >= 15 ? 0 : (p.__f || .08)); } catch (e) { } }); });
+    var mkT = 0; NM.Event.addListener(M, 'idle', function () { clearTimeout(mkT); mkT = setTimeout(markers, 30); });   // 확대·이동이 끝나면 보이는 범위의 핀을 다시 그림
     var fixSize = mapFit;
     setTimeout(fixSize, 50); setTimeout(fixSize, 600); window.addEventListener('resize', fixSize);
     NM.Event.addListener(M, 'dragstart', function () { lastFit = null; });
@@ -597,6 +611,10 @@ body.dlFull .mapFullBtn{display:none}
     if (!M) return;
     objs.forEach(function (o) { o.setMap(null); }); objs = [];
     var z = M.getZoom(), lab = z >= 15, ap = {};
+    // 화면(+여유 50%) 안의 핀만 만듦 — 핀 1,000여 개를 한꺼번에 만들면 2~3초 걸려서. 지도를 옮기면(idle) 다시 그림
+    var bd = M.getBounds(), b0 = bd.getMin ? bd.getMin() : bd.getSW(), b1 = bd.getMax ? bd.getMax() : bd.getNE();
+    var y0 = typeof b0.lat === 'function' ? b0.lat() : b0.y, y1 = typeof b1.lat === 'function' ? b1.lat() : b1.y, x0 = typeof b0.lng === 'function' ? b0.lng() : b0.x, x1 = typeof b1.lng === 'function' ? b1.lng() : b1.x;
+    var py0 = (y1 - y0) * 0.5, px0 = (x1 - x0) * 0.5, inB = function (o) { return o.lat >= y0 - py0 && o.lat <= y1 + py0 && o.lng >= x0 - px0 && o.lng <= x1 + px0; };
     // 같은 지번에서 여러 번 거래된 건물은 핀 하나로 묶고(최근 거래 표시 + 「N회」), 누르면 거래 이력을 함께 보여줌
     var lots = {}, order = [];
     VIEW.forEach(function (o) {
@@ -606,6 +624,7 @@ body.dlFull .mapFullBtn{display:none}
     });
     order.forEach(function (lk) {
       var L = lots[lk].sort(function (a, b) { return a.date < b.date ? 1 : -1; }), sel = L.filter(function (x) { return x.key === selKey; })[0], o = sel || L[0];
+      if (!sel && !inB(o)) return;
       var on = !!sel, big = lab || on;
       var html = big ? '<div class="mk' + (on ? ' on' : '') + '"><i>' + String(o.date).slice(2, 4) + '.' + String(o.date).slice(5, 7) + '</i><b>' + eok(o.amt) + '</b>' + (L.length > 1 ? '<s>' + L.length + '회</s>' : '') + '</div>' : '<div class="mkDot' + (L.length > 1 ? ' multi' : '') + '"></div>';
       var m = new NM.Marker({ map: M, position: new NM.LatLng(o.lat, o.lng), zIndex: on ? 1000 : 20 + Math.round(+o.date.slice(0, 4) - 2000), icon: { content: html, anchor: new NM.Point(0, 0) } });

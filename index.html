@@ -2159,15 +2159,15 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     s = s.replace(/01[016789][-\s.]?\d{3,4}[-\s.]?\d{4}/g, '').replace(/,\s*$/gm, '');   // 휴대폰 번호 제거
     return s.replace(/[ \t]+$/gm, '').trim();
   }
-  function load(items, live, updated) {
+  function load(items, live, updated, soft) {   // soft: 저장본을 먼저 보여준 뒤 최신 데이터로 바꿀 때 — 지도 위치·열린 화면은 그대로 둠
     items.forEach(function (it) { ['title', 'point', 'desc', 'options', 'station'].forEach(function (k) { if (it[k]) it[k] = scrubTxt(it[k]); }); });
     ITEMS = items; LIVE = !!live;
     refreshDongs();
     $('mapUpdated').textContent = live && updated ? '업데이트 ' + new Date(updated).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
     $('demoNote').textContent = live ? '' : '(현재 예시 매물 표시 중 · 매물장 연결 전)';
     renderFeatured();
-    applyFilters(true);
-    route(false);
+    applyFilters(!soft);
+    if (!soft) route(false);
   }
 
 
@@ -2229,8 +2229,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   }
 
   // 공실매물관(현장 미확인) 매물: 본 목록을 먼저 보여준 뒤 따로 불러와 합침
-  function loadGs() {
-    fetch(SHEET_URL + (SHEET_URL.indexOf('?') < 0 ? '?' : '&') + 'gs=1').then(function (r) { return r.json(); }).then(function (d) {
+  function mergeGs(d, soft) {
       if (!d || !d.rows || !d.rows.length) return;
       var have = {}; ITEMS.forEach(function (i) { have[i.id] = 1; });
       var add = d.rows.filter(function (r) { return !have[r[0]]; }).map(function (r) {
@@ -2242,8 +2241,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       ITEMS = ITEMS.concat(add);
       refreshDongs();
       applyFilters(false);
-      if (/^#item\/G/i.test(location.hash)) route(false);
-    }).catch(function () { });
+      if (!soft && /^#item\/G/i.test(location.hash)) route(false);
   }
 
   /* ================= 상단 매물검색 → 지도 검색 ================= */
@@ -3212,9 +3210,29 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   /* ---------- 시작 ---------- */
   ccInit(); bind(); initMap();
   if (SHEET_URL) {
-    fetch(SHEET_URL).then(function (r) { return r.json(); })
-      .then(function (d) { if (d && d.items && d.items.length) { load(d.items, true, d.updated); loadGs(); } else load(DEMO, false); })
-      .catch(function () { load(DEMO, false); });
+    // 1) 이 브라우저에 저장해 둔 지난 데이터가 있으면 바로 그림 (7일 이내, 공개 데이터만)
+    // 2) 매물 목록과 공실매물관 목록을 동시에 요청하고, 도착하면 바뀐 경우에만 다시 그림
+    var CK = 'daumFeed.v1', CKG = 'daumGs.v1', MAXAGE = 7 * 864e5;
+    var rd = function (k) { try { var o = JSON.parse(localStorage.getItem(k) || 'null'); return o && Date.now() - o.t < MAXAGE ? o.s : ''; } catch (e) { return ''; } };
+    var wr = function (k, txt) { try { localStorage.setItem(k, JSON.stringify({ t: Date.now(), s: txt })); } catch (e) { } };
+    var par = function (t) { try { return JSON.parse(t); } catch (e) { return null; } };
+    var oldF = rd(CK), oldG = rd(CKG), shown = false;
+    if (oldF) { var od = par(oldF); if (od && od.items && od.items.length) { load(od.items, true, od.updated); mergeGs(par(oldG)); shown = true; } }
+    var qs = SHEET_URL.indexOf('?') < 0 ? '?' : '&';
+    var pF = fetch(SHEET_URL).then(function (r) { return r.text(); }).catch(function () { return ''; });
+    var pG = fetch(SHEET_URL + qs + 'gs=1').then(function (r) { return r.text(); }).catch(function () { return ''; });
+    pF.then(function (tF) {
+      var d = par(tF);
+      if (!(d && d.items && d.items.length)) { if (!shown) load(DEMO, false); return; }
+      wr(CK, tF);
+      var fChanged = tF !== oldF;
+      if (fChanged) load(d.items, true, d.updated, shown);
+      pG.then(function (tG) {
+        var g = par(tG); if (g && g.rows) wr(CKG, tG);
+        if (fChanged) mergeGs(g, shown);
+        else if (tG && tG !== oldG) { load(par(tF).items, true, d.updated, true); mergeGs(g, true); }
+      });
+    });
   } else load(DEMO, false);
 
   $('mapSearchBar').addEventListener('click', function (e) { if (e.target.closest('.msReset')) resetSearch(); });
