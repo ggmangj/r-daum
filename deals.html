@@ -223,6 +223,30 @@ body.dlFull .mapFullBtn{display:none}
  .col .flt .rng{flex:1 1 0;min-width:0}.col .flt .rng input{width:100%;min-width:0}
 }
 </style>
+<!-- 방문 통계 (Google Analytics 4). 사무소 직원은 r-daum.com/?staff=1 로 한 번 접속하면 그 브라우저는 통계에서 빠짐 (?staff=0 으로 해제) -->
+<script>
+(function () {
+  var ID = 'G-WPBH093KHG', staff = false;
+  try {
+    if (/[?&]staff=1\b/.test(location.search)) localStorage.setItem('daumStaff', '1');
+    if (/[?&]staff=0\b/.test(location.search)) localStorage.removeItem('daumStaff');
+    staff = localStorage.getItem('daumStaff') === '1';
+  } catch (e) { }
+  window.daumTrack = function () { };
+  if (staff) return;
+  var g = document.createElement('script'); g.async = true; g.src = 'https://www.googletagmanager.com/gtag/js?id=' + ID; document.head.appendChild(g);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { window.dataLayer.push(arguments); };
+  window.gtag('js', new Date()); window.gtag('config', ID);
+  window.daumTrack = function (name, p) { try { window.gtag('event', name, p || {}); } catch (e) { } };
+  document.addEventListener('click', function (e) {   // 전화 버튼·매물 접수 버튼 클릭 수
+    var t = e.target && e.target.closest ? e.target : null; if (!t) return;
+    var a = t.closest('a[href^="tel:"]'); if (a) window.daumTrack('click_call', { page: location.pathname });
+    if (t.closest('[data-intake]')) window.daumTrack('open_intake', { page: location.pathname });
+    var c = t.closest('a[href*="#consult"]'); if (c) window.daumTrack('click_consult', { page: location.pathname });
+  }, true);
+})();
+</script>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; width: 100%; letter-spacing: -0.2px">

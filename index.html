@@ -1131,6 +1131,30 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
  @page{@bottom-left{content:"부동산다움공인중개사사무소 · 02-555-1165 · r-daum.com";font-size:8pt;color:#8A939A}@bottom-right{content:counter(page) " / " counter(pages);font-size:8pt;color:#8A939A}}
 }
 </style>
+<!-- 방문 통계 (Google Analytics 4). 사무소 직원은 r-daum.com/?staff=1 로 한 번 접속하면 그 브라우저는 통계에서 빠짐 (?staff=0 으로 해제) -->
+<script>
+(function () {
+  var ID = 'G-WPBH093KHG', staff = false;
+  try {
+    if (/[?&]staff=1\b/.test(location.search)) localStorage.setItem('daumStaff', '1');
+    if (/[?&]staff=0\b/.test(location.search)) localStorage.removeItem('daumStaff');
+    staff = localStorage.getItem('daumStaff') === '1';
+  } catch (e) { }
+  window.daumTrack = function () { };
+  if (staff) return;
+  var g = document.createElement('script'); g.async = true; g.src = 'https://www.googletagmanager.com/gtag/js?id=' + ID; document.head.appendChild(g);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { window.dataLayer.push(arguments); };
+  window.gtag('js', new Date()); window.gtag('config', ID);
+  window.daumTrack = function (name, p) { try { window.gtag('event', name, p || {}); } catch (e) { } };
+  document.addEventListener('click', function (e) {   // 전화 버튼·매물 접수 버튼 클릭 수
+    var t = e.target && e.target.closest ? e.target : null; if (!t) return;
+    var a = t.closest('a[href^="tel:"]'); if (a) window.daumTrack('click_call', { page: location.pathname });
+    if (t.closest('[data-intake]')) window.daumTrack('open_intake', { page: location.pathname });
+    var c = t.closest('a[href*="#consult"]'); if (c) window.daumTrack('click_consult', { page: location.pathname });
+  }, true);
+})();
+</script>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; background: #FFFFFF; width: 100%; letter-spacing: -0.2px">
@@ -2771,6 +2795,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
         .then(function (r) { return r.json(); })
         .then(function (res) {
           if (!res || !res.ok) { msg.textContent = (res && res.error) || '접수에 실패했습니다. 전화로 문의해 주세요.'; return; }
+          window.daumTrack && window.daumTrack('generate_lead', { form: '매물 문의', item_id: it.id });
           f.innerHTML = '<div class="dtDone"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#294652" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M7 12.5l3.2 3.2L17 9"></path></svg><b>문의가 접수되었습니다</b><span>' + esc(nm) + '님, 당일 중 연락드리겠습니다.<br>급하시면 02-555-1165로 전화 주세요.</span></div>';
         })
         .catch(function () { msg.textContent = '네트워크 오류로 접수하지 못했습니다. 전화로 문의해 주세요.'; })
@@ -3248,6 +3273,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       .then(function(r){ return r.json(); })
       .then(function(res){
         if(!res||!res.ok){ msg.textContent=(res&&res.error)||'접수에 실패했습니다. 전화로 문의해 주세요.'; if(res&&res.field&&f.elements[res.field]){ mark(f.elements[res.field],true); f.elements[res.field].focus(); } return; }
+        window.daumTrack && window.daumTrack('generate_lead', { form: '상담 신청' });
         f.querySelector('.qfWho').textContent=data.name+'님 ('+data.phone.replace(/(\d{3,4})-?(\d{4})$/,'****-$2')+')';
         done.hidden=false; if(card) card.classList.add('flipped','done');
         f.reset(); f.elements.listing.value=''; openedAt=Date.now();
@@ -3309,9 +3335,11 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 <p>사무소는 귀하의 개인정보를 위 목적 외로 이용하거나 제3자에게 제공하지 않습니다. 다만 귀하가 요청하거나 동의한 매물의 임대인·매도인 등 거래 상대방에게 상담 진행에 필요한 범위에서 알릴 경우에는 사전에 별도로 동의를 받습니다.</p>
 <h3>정보주체의 권리</h3>
 <p>귀하는 언제든지 본인 개인정보의 열람, 정정, 삭제, 처리정지를 요청할 수 있으며, 사무소는 지체 없이 조치합니다.</p>
+<h3>홈페이지 방문 통계</h3>
+<p>사무소는 홈페이지 개선을 위해 Google Analytics로 방문 페이지, 접속 기기, 유입 경로 등 이용 통계를 수집합니다. 이 정보는 쿠키를 통해 수집되며 이름·연락처 등 개인을 알아볼 수 있는 정보는 포함하지 않습니다. 브라우저 설정에서 쿠키 저장을 거부하면 수집되지 않습니다.</p>
 <h3>개인정보 보호책임자 및 문의</h3>
 <p>부동산다움공인중개사사무소 · 개업공인중개사 안혁준<br>서울특별시 강남구 신사동 578-1 일상빌딩 1층<br>전화 02-555-1165 · 이메일 airbbb@naver.com</p>
-<p class="pvNote">시행일: 2026년 10월 22일</p>
+<p class="pvNote">시행일: 2026년 11월 3일</p>
 </div>
 <div class="pvFoot">
 <button type="button" class="pvClose">닫기</button>
@@ -3545,6 +3573,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       .then(function(r){ return r.json(); })
       .then(function(res){
         if(!res||!res.ok){ msg.textContent=(res&&res.error)||'접수에 실패했습니다. 전화(02-555-1165)로 문의해 주세요.'; return; }
+        window.daumTrack && window.daumTrack('generate_lead', { form: '매물 접수' });
         d.classList.add('isDone'); done.hidden=false; f.querySelector('.ikOk').focus();
       })
       .catch(function(){ msg.textContent='네트워크 오류로 접수하지 못했습니다. 잠시 후 다시 시도하거나 전화로 문의해 주세요.'; })
