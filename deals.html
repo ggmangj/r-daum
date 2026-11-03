@@ -242,7 +242,10 @@ body.dlFull .mapFullBtn{display:none}
  .mr span{text-align:right;font-weight:800;color:#294652;font-size:12.5px}.mr:hover b{color:#C0533A}
  .more2{display:block;text-align:right;font-size:12px;color:#8A6A35;margin-top:4px}
  .qLg i{display:inline-block;margin:0 3px 0 7px;vertical-align:1px}.qLg .b{width:7px;height:9px;background:#294652;border-radius:1px;vertical-align:-1px}.qLg .l{width:12px;height:2px;background:#C0533A}
- .qTabs{display:flex;margin:0 0 10px}.qTabs button{flex:1;font-size:12px;padding:4px 0}
+ .qTabs{display:flex;margin:0 0 10px}
+ body{overflow-x:clip}.top{position:relative;padding-bottom:69px}.top:after{content:"";position:absolute;bottom:0;left:calc(50% - 50vw);width:100vw;height:1px;background:#E6E0D4}   /* 첫 화면과 아래 내용 사이 구분선 (상가·사무실 임대와 같은 위치) */
+ .top+.rank{margin-top:40px}body.dlFull .top{padding-bottom:0}body.dlFull .top:after{display:none}
+.qTabs button{flex:1;font-size:12px;padding:4px 0}
  .qPanes{display:grid}.qPane{grid-area:1/1;visibility:hidden}.qPane.on{visibility:visible}
  #nChart svg{display:block;width:100%;height:auto;overflow:visible}#nChart circle{cursor:pointer}#nChart .nb:hover circle{fill-opacity:.4}
  #nChart text{font-family:inherit}
@@ -571,7 +574,7 @@ body.dlFull .mapFullBtn{display:none}
     nature(); quarter();
   }
   // 동네 성격 지도: 표의 동(공시지가 순 고정 목록)을 5년 누적 거래 건수 × 건당 평균 거래금액으로 네 칸에 배치 (구·금액 조건과 무관하게 고정)
-  var NDONG = [];
+  var NDONG = [], FIT_BOTTOM = 868;   // 상가·사무실 임대(index) 첫 화면의 지도 아래 끝 위치(페이지 맨 위에서 px) — 두 페이지 첫 화면 하단을 같게
   function nature() {
     var box = $('nChart'); if (!box) return;
     var cut = (function () { var d = new Date(); d.setMonth(d.getMonth() - 60); return d.toISOString().slice(0, 10); })(), st = {};
@@ -582,7 +585,9 @@ body.dlFull .mapFullBtn{display:none}
     L.forEach(function (g) { g.av = g.a / g.n; });
     var TN = 0, TA = 0; L.forEach(function (g) { TN += g.n; TA += g.a; }); var MN = TN / L.length, MA = TA / TN;
     // 그래프 밖: 왼쪽 세로축(저가 ↔ 고가), 아래 가로축(거래 적음 ↔ 거래 많음) / 그래프 안: 네 칸 색 블록 + 칸 모서리에 칸 이름
-    var W = Math.max(240, box.clientWidth || 262), H = 272, PL = 20, PR = 2, PT = 2, PB = 20, IT = 22, IB = 20, yb = H - PB;
+    // 컴퓨터 화면: 왼쪽 열 아래 끝이 FIT_BOTTOM(상가·사무실 임대 첫 화면 지도 아래 끝)에 오도록 그래프 높이를 맞춤
+    var H = 272; if (innerWidth > 1100 && !document.body.classList.contains('dlFull')) { var qb = document.querySelector('.qBox'), tail = qb ? qb.getBoundingClientRect().bottom - box.getBoundingClientRect().bottom : 30; H = Math.round(Math.max(210, Math.min(320, FIT_BOTTOM - (box.getBoundingClientRect().top + scrollY) - tail))); }
+    var W = Math.max(240, box.clientWidth || 262), PL = 20, PR = 2, PT = 2, PB = 20, IT = 22, IB = 20, yb = H - PB;
     var xm = Math.max.apply(0, L.map(function (g) { return g.n; })) * 1.08, ym = Math.max.apply(0, L.map(function (g) { return g.av; })) * 1.06, am = Math.max.apply(0, L.map(function (g) { return g.a; }));
     var X = function (v) { return PL + 6 + v / xm * (W - PL - PR - 6); }, Y = function (v) { return PT + IT + (1 - v / ym) * (yb - PT - IT - IB); }, R = function (a) { return 3.5 + Math.sqrt(a / am) * 12; };
     var C = function (g) { return g.av >= MA ? (g.n < MN ? '#B0452B' : '#8A6A35') : (g.n >= MN ? '#294652' : '#7D878E'); };
@@ -829,8 +834,11 @@ body.dlFull .mapFullBtn{display:none}
   function mapFit() { if (!M) return; var el = $('map'), box = el.parentNode; el.style.width = ''; el.style.height = '';
     var w = box.clientWidth, h = box.clientHeight; if (w && h) { el.style.height = h + 'px'; try { M.setSize(new NM.Size(w, h)); } catch (e) { } } }
   function mapRefresh() { if (M) setTimeout(function () { mapFit(); if (lastFit === 'home') { var w = innerWidth; M.setCenter(new NM.LatLng(HOME_VIEW.lat, HOME_VIEW.lng)); M.setZoom(w < 760 ? 16 : 17, false); } else if (lastFit) M.fitBounds(lastFit, { top: 30, right: 30, bottom: 30, left: 30 }); markers(); }, 60); }
-  var qT; window.addEventListener('resize', function () { fitMain(); mapRefresh(); clearTimeout(qT); qT = setTimeout(function () { if (ALL.length) { nature(); quarter(); } }, 200); });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitMain(); mapRefresh(); });
+  var qT; window.addEventListener('resize', function () { fitMain(); mapRefresh(); clearTimeout(qT); qT = setTimeout(function () { if (ALL.length) { nature(); quarter(); fitMain(); } }, 200); });
+  // 글꼴이 늦게 적용되면 왼쪽 열 높이가 바뀌므로 그래프 높이·지도 높이를 다시 맞춤
+  var refit = function () { if (ALL.length && NDONG.length) { nature(); quarter(); } fitMain(); mapRefresh(); };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(refit);
+  setTimeout(refit, 1200);
   setTimeout(function () { fitMain(); mapRefresh(); }, 50);
   function setFull(on) {
     document.body.classList.toggle('dlFull', on); $('fullBtn').setAttribute('aria-pressed', on ? 'true' : 'false');
