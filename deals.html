@@ -288,7 +288,7 @@ body.dlFull .mapFullBtn{display:none}
 <h1>강남·서초<br><span class="heroName">빌딩 매매 실거래가</span></h1>
 <p class="sub">국토부 실거래가 기준 · 매일 업데이트 <span id="upd"></span><br>지번 미확인 거래는 동 위치에만 표시</p>
 <section class="kpi" id="kpi" aria-label="요약"></section>
-<section class="miniRank qBox" aria-label="분기별 거래량 · 동네 성격"><div class="seg2 qTabs" id="qTabs" role="tablist"><button type="button" class="on" data-t="q" role="tab">분기별 거래량</button><button type="button" data-t="n" role="tab">동네 성격</button></div><div class="qPanes"><div class="qPane on" data-p="q"><h3>분기별 거래량 <small id="qSub"></small></h3><div id="qChart"></div><p class="qN">위 숫자는 연도별 합계 · 연한 막대는 신고가 덜 들어온 최근 분기 · *는 올해</p></div><div class="qPane" data-p="n"><h3>동네 성격 지도 <small>건수 × 건당 평균금액 · 5년 누적</small></h3><div id="nChart"></div><p class="qN" id="nInfo">원 크기 = 총 거래금액 · 점선 = 동 평균<br>원을 누르면 지도에서 그 동 거래를 보여드려요</p></div></div><a href="#rankBox" class="more2">동별 대지 평당가 및 거래 규모 보기 ↓</a></section>
+<section class="miniRank qBox" aria-label="분기별 거래량 · 동네 성격"><div class="seg2 qTabs" id="qTabs" role="tablist"><button type="button" class="on" data-t="q" role="tab">분기별 거래량</button><button type="button" data-t="n" role="tab">동네 성격</button></div><div class="qPanes"><div class="qPane on" data-p="q"><h3>분기별 거래량 <small id="qSub"></small></h3><div id="qChart"></div><p class="qN">위 숫자는 연도별 합계 · 연한 막대는 신고가 덜 들어온 최근 분기 · *는 올해</p></div><div class="qPane" data-p="n"><h3>동네 성격 지도 <small>건수 × 건당 평균금액 · 5년 누적</small></h3><div id="nChart"></div></div></div><a href="#rankBox" class="more2">동별 대지 평당가 및 거래 규모 보기 ↓</a></section>
 </aside>
 <div class="col">
 <div class="fullHead"><span class="fe">BUILDING DEALS</span><h2>강남·서초 <span>빌딩 매매 실거래가</span></h2><button type="button" class="fullClose" id="fullClose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button></div>
@@ -567,7 +567,7 @@ body.dlFull .mapFullBtn{display:none}
     };
     $('rank').innerHTML = big.length ? big.map(row).join('') : '<div class="empty">거래가 없습니다.</div>';
     if (!F.gu || !NDONG.length) NDONG = big.map(function (g) { return g.k; });
-    quarter(); nature();
+    nature(); quarter();
   }
   // 동네 성격 지도: 표의 동(공시지가 순 고정 목록)을 5년 누적 거래 건수 × 건당 평균 거래금액으로 네 칸에 배치 (구·금액 조건과 무관하게 고정)
   var NDONG = [];
@@ -580,7 +580,7 @@ body.dlFull .mapFullBtn{display:none}
     if (!L.length) { box.innerHTML = ''; return; }
     L.forEach(function (g) { g.av = g.a / g.n; });
     var TN = 0, TA = 0; L.forEach(function (g) { TN += g.n; TA += g.a; }); var MN = TN / L.length, MA = TA / TN;
-    var W = Math.max(240, box.clientWidth || 262), H = 286, PL = 8, PR = 8, PT = 26, PB = 40, xm = Math.max.apply(0, L.map(function (g) { return g.n; })) * 1.08, ym = Math.max.apply(0, L.map(function (g) { return g.av; })) * 1.2, am = Math.max.apply(0, L.map(function (g) { return g.a; }));
+    var W = Math.max(240, box.clientWidth || 262), H = 272, PL = 8, PR = 8, PT = 26, PB = 22, xm = Math.max.apply(0, L.map(function (g) { return g.n; })) * 1.08, ym = Math.max.apply(0, L.map(function (g) { return g.av; })) * 1.2, am = Math.max.apply(0, L.map(function (g) { return g.a; }));
     var X = function (v) { return PL + v / xm * (W - PL - PR); }, Y = function (v) { return PT + (1 - v / ym) * (H - PT - PB); }, R = function (a) { return 3.5 + Math.sqrt(a / am) * 12; };
     var C = function (g) { return g.av >= MA ? (g.n < MN ? '#B0452B' : '#8A6A35') : (g.n >= MN ? '#294652' : '#7D878E'); };
     var x0 = X(MN), y0 = Y(MA), yb = H - PB, sv = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="동네 성격 지도">';
@@ -588,7 +588,6 @@ body.dlFull .mapFullBtn{display:none}
     sv += '<line x1="' + x0 + '" x2="' + x0 + '" y1="' + PT + '" y2="' + yb + '" stroke="#B9AE9C" stroke-dasharray="3 3"/><line x1="' + PL + '" x2="' + (W - PR) + '" y1="' + y0 + '" y2="' + y0 + '" stroke="#B9AE9C" stroke-dasharray="3 3"/><line x1="' + PL + '" x2="' + (W - PR) + '" y1="' + yb + '" y2="' + yb + '" stroke="#E3DCCF"/>';
     var tq = function (x, y, t, c, an) { return '<text x="' + x + '" y="' + y + '" font-size="11" font-weight="800" fill="' + c + '" text-anchor="' + an + '">' + t + '</text>'; };
     sv += tq(PL + 2, PT - 9, '고가 빌딩 위주', '#B0452B', 'start') + tq(W - PR - 2, PT - 9, '고가·거래 활발', '#5E4317', 'end') + tq(PL + 2, yb + 15, '소규모 거래', '#7D878E', 'start') + tq(W - PR - 2, yb + 15, '중소형 거래 활발', '#294652', 'end');
-    sv += '<text x="' + PL + '" y="' + (H - 3) + '" font-size="10" fill="#8A939A">← 거래 적음</text><text x="' + (W - PR) + '" y="' + (H - 3) + '" font-size="10" fill="#8A939A" text-anchor="end">거래 많음 →</text>';
     // 원이 거의 겹치는 동은 이름을 하나로 묶음
     L.forEach(function (g) { g.x = X(g.n); g.y = Y(g.av); g.r = R(g.a); g.c = C(g); });
     var groups = [];
@@ -630,9 +629,6 @@ body.dlFull .mapFullBtn{display:none}
       if (!merged) break;
     }
     box.innerHTML = sv + circ + lab + '</svg>';
-    var sel = L.filter(function (g) { return g.dong === F.dong; })[0];
-    $('nInfo').innerHTML = sel ? '<b style="color:' + sel.c + '">' + esc(sel.dong) + '</b> · 5년 ' + sel.n + '건 · 건당 평균 <b>' + eok(sel.av) + '</b> · 300억 이상 ' + Math.round(sel.b3 / sel.n * 100) + '%<br>원 크기 = 총 거래금액 · 점선 = 동 평균'
-      : '원 크기 = 총 거래금액 · 점선 = 동 평균<br>원을 누르면 지도에서 그 동 거래를 보여드려요';
   }
   // 분기별 거래 건수 (선택한 구·동·금액 조건 반영, 기간은 5년 전체)
   var chgN = 1;   // 변화율 비교 시점: 최근 1년 vs N년 전 1년 (처음엔 1년 전)
@@ -642,7 +638,8 @@ body.dlFull .mapFullBtn{display:none}
     var now = new Date(), ks = []; for (var i = 22; i >= 0; i--) { var d = new Date(now.getFullYear(), now.getMonth() - i * 3, 1); var k = d.getFullYear() + '.' + ((d.getMonth() / 3 | 0) + 1); if (ks.indexOf(k) < 0) ks.push(k); }
     // 오른쪽 칸이 왼쪽 표 높이만큼 꽉 차도록 그래프 높이를 맞춤 (컴퓨터 화면)
     // 표가 오른쪽보다 길면 그래프를 키워 오른쪽 아래 빈 곳을 채우고, 짧으면 표 줄 간격이 늘어나 맞춰짐
-    var Hfit = 120;
+    // 분기별 그래프를 옆 탭(동네 성격) 높이만큼 키워 카드 아래가 비지 않게 함
+    var nc = $('nChart'), qn = document.querySelector('.qPane[data-p="q"] .qN'), Hfit = Math.max(120, (nc ? nc.offsetHeight : 0) - (qn ? qn.offsetHeight : 0) - 22);
     // 연도별로 색을 번갈아 칠하고(남색/골드), 위에 연도별 합계를 적어 한눈에 비교
     var mx = Math.max.apply(0, [1].concat(ks.map(function (k) { return q[k] || 0; }))), W = Math.max(240, $('qChart').clientWidth || 320), H = Hfit, T = 30, bw = W / ks.length, svg = '<svg viewBox="0 0 ' + W + ' ' + (H + 18) + '">';
     var y0 = String(now.getFullYear() - 4); ks = ks.filter(function (k) { return k.slice(0, 4) >= y0; });
@@ -813,7 +810,7 @@ body.dlFull .mapFullBtn{display:none}
   function mapFit() { if (!M) return; var el = $('map'), box = el.parentNode; el.style.width = ''; el.style.height = '';
     var w = box.clientWidth, h = box.clientHeight; if (w && h) { el.style.height = h + 'px'; try { M.setSize(new NM.Size(w, h)); } catch (e) { } } }
   function mapRefresh() { if (M) setTimeout(function () { mapFit(); if (lastFit === 'home') { var w = innerWidth; M.setCenter(new NM.LatLng(HOME_VIEW.lat, HOME_VIEW.lng)); M.setZoom(w < 760 ? 16 : 17, false); } else if (lastFit) M.fitBounds(lastFit, { top: 30, right: 30, bottom: 30, left: 30 }); markers(); }, 60); }
-  var qT; window.addEventListener('resize', function () { fitMain(); mapRefresh(); clearTimeout(qT); qT = setTimeout(function () { if (ALL.length) { quarter(); nature(); } }, 200); });
+  var qT; window.addEventListener('resize', function () { fitMain(); mapRefresh(); clearTimeout(qT); qT = setTimeout(function () { if (ALL.length) { nature(); quarter(); } }, 200); });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitMain(); mapRefresh(); });
   setTimeout(function () { fitMain(); mapRefresh(); }, 50);
   function setFull(on) {
