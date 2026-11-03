@@ -965,10 +965,13 @@ body.mapFull .mapTools .mapFullBtn{display:none}
 })();
 </script>
 <style id="heatCss">
-.heatBtn{display:none;position:absolute;top:60px;left:10px;z-index:30;align-items:center;gap:7px;height:42px;padding:0 18px 0 15px;border:2px solid #FFFFFF;border-radius:999px;background:#FFFFFF;color:#294652;font:800 15px 'Noto Sans KR',sans-serif;letter-spacing:-.3px;white-space:nowrap;cursor:pointer;box-shadow:0 3px 10px rgba(20,25,31,.2)}
-.heatBtn i{flex:none;width:14px;height:14px;border-radius:4px;border:2px solid #C0533A;background:#fff;position:relative;box-sizing:border-box}.heatBtn.on{background:#294652;color:#fff;border-color:#FFFFFF}.heatBtn.on i{background:#C0533A;border-color:#C0533A}.heatBtn.on i:after{content:"";position:absolute;left:3px;top:0;width:4px;height:7px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
-@media (max-width:760px){.heatBtn{top:56px;height:38px;font-size:14px}}
+.heatBtn{display:none;position:relative;vertical-align:top;align-items:center;gap:6px;height:42px;padding:0 17px 0 13px;border:2px solid #FFFFFF;border-left:0;border-radius:0 999px 999px 0;background:#C7A774;color:#FFFFFF;font:800 15px 'Noto Sans KR',sans-serif;letter-spacing:-.3px;white-space:nowrap;cursor:pointer;box-shadow:4px 3px 10px rgba(20,25,31,.2)}
+.heatBtn:before{content:"";position:absolute;left:0;top:11px;bottom:11px;width:1px;background:rgba(255,255,255,.6)}
+.heatBtn svg{flex:none;width:17px;height:17px}.heatBtn:hover{background:#BA9862}.heatBtn.on,.heatBtn.on:hover{background:#9C6F2E}.heatBtn.on:before{opacity:0}
 body.mapFull .heatBtn{display:inline-flex}.heatBtn[hidden]{display:none!important}
+body.mapFull .dongPick.dpGrp .dpBtn{vertical-align:top;border-right:0;border-radius:999px 0 0 999px;padding-right:13px}
+body.mapFull .dongPick.dpGrp .dpBtn:after{border-radius:999px 0 0 999px}
+@media (max-width:760px){.heatBtn{height:38px;font-size:14px}}
 .heatPanel{position:absolute;left:10px;bottom:12px;z-index:30;width:300px;background:#fff;border-radius:14px;box-shadow:0 4px 16px rgba(20,25,31,.18);padding:12px 14px;font:12px/1.5 'Noto Sans KR',sans-serif;color:#46515B}.heatPanel[hidden]{display:none}
 .hpTitle{font:800 14px 'Noto Sans KR',sans-serif;color:#14191F;margin-bottom:8px}.hpTitle span{color:#8A5A1E;font-size:12.5px;margin-left:4px}
 .hpRow{display:flex;gap:4px;margin-bottom:8px}.hpRow button{flex:1;border:0;background:#EFEAE0;color:#5B6670;border-radius:999px;padding:6px 0;font:700 12.5px 'Noto Sans KR',sans-serif;cursor:pointer;white-space:nowrap}.hpRow button.on{background:#294652;color:#fff}
@@ -1896,13 +1899,16 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     var box = $('leafletMap'); if (!box) return; var wrap = box.parentNode, btn = $('heatBtn'), pn = $('heatPanel');
     if (!btn) {
       btn = document.createElement('button'); btn.type = 'button'; btn.id = 'heatBtn'; btn.className = 'heatBtn';
-      btn.innerHTML = '<i></i><span>임대평단가</span>';
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5l8.2 4.75v9.5L12 21.5l-8.2-4.75v-9.5z"></path><path d="M12 7.5l4 2.3v4.4L12 16.5l-4-2.3V9.8z" fill="currentColor" opacity=".5" stroke="none"></path></svg><span>임대평단가</span>';
+      btn.setAttribute('aria-pressed', 'false');
       btn.onclick = function () { heatSet(!HEAT.on); };
-      wrap.appendChild(btn);
+      var dp = $('dongPick');   // 법정동 버튼 바로 옆에 붙여 하나의 버튼처럼 보이게
+      if (dp && $('dpPanel')) dp.insertBefore(btn, $('dpPanel')); else wrap.appendChild(btn);
       pn = document.createElement('div'); pn.id = 'heatPanel'; pn.className = 'heatPanel'; wrap.appendChild(pn);
       pn.addEventListener('click', function (e) { var b = e.target.closest('[data-hf]'); if (!b) return; HEAT.fl = b.dataset.hf; drawMap(); });
     }
-    var act = !!heatActive(); btn.classList.toggle('on', act); btn.hidden = !(M && M.kind === 'naver'); pn.hidden = !act;
+    var act = !!heatActive(); btn.classList.toggle('on', act); btn.setAttribute('aria-pressed', act ? 'true' : 'false'); btn.hidden = !(M && M.kind === 'naver'); pn.hidden = !act;
+    if ($('dongPick')) $('dongPick').classList.toggle('dpGrp', !btn.hidden);
     if (!act) return;
     var S = HEAT.stat || { n: 0, cells: 0 }, f1 = function (v) { return (Math.round(v * 10) / 10).toLocaleString('ko-KR'); }, chip = function (v, t) { return '<button type="button" data-hf="' + v + '"' + (HEAT.fl === v ? ' class="on"' : '') + '>' + t + '</button>'; };
     pn.innerHTML = '<div class="hpTitle">임대 평단가 <span>' + ({ all: '전체 층', '1': '1층', up: '2층 이상', b: '지하' })[HEAT.fl] + '</span></div>' +
