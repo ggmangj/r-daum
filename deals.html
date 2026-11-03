@@ -308,9 +308,9 @@ body.dlFull .mapFullBtn{display:none}
 
 <section class="rank mkt" id="rankBox" aria-label="동별 시장 지표">
 <div class="mHead"><h2>동별 시장 지표</h2><span class="mkLab">누적 기간</span><span class="seg2 mkSeg" id="mkSeg" role="group" aria-label="누적 기간"><button type="button" data-m="12">1년</button><button type="button" data-m="24">2년</button><button type="button" data-m="36">3년</button><button type="button" data-m="48">4년</button><button type="button" data-m="60">5년</button></span><span class="mkLab">· 대지 평당가·금액대 분포에 적용</span><p class="rs" id="rankSub"></p></div>
-<div class="mTbl"><div class="mRow mTh"><span>법정동 <em>거래건수</em></span><span class="jgH"><span class="jgT">평당 공시지가<em>개별공시지가 중간값</em></span><b class="jgY">2026.1.1 공시</b></span><span class="bx">시세 배수<em>평당가÷공시</em></span><span>대지 평당가 <em id="ppSub"></em></span><span>금액대별 거래 분포(%) <b class="nY" id="dsN"></b><em class="bLeg"><i style="--c:#E3D3B4"></i>50억↓<i style="--c:#BC975E"></i>50~100<i style="--c:#8A6A35"></i>100~300<i style="--c:#294652"></i>300억↑</em></span><span class="thChg chC"><span class="chT"><b id="chgT">평단가 변화율</b><span class="nseg" id="chgSeg" role="group" aria-label="몇 년 전과 비교할지"><button type="button" data-n="4">4</button><button type="button" data-n="3">3</button><button type="button" data-n="2">2</button><button type="button" data-n="1">1</button></span><small>년전</small></span><em id="chgLeg"></em></span></div>
+<div class="mTbl"><div class="mRow mTh"><span>법정동 <em>거래건수</em></span><span class="jgH"><span class="jgT">평당 공시지가<em>개별공시지가 중간값</em></span><b class="jgY">2026.1.1 공시</b></span><span class="bx">시세 배수<em id="bxSub">평당가÷공시</em></span><span>대지 평당가 <em id="ppSub"></em></span><span>금액대별 거래 분포(%) <b class="nY" id="dsN"></b><em class="bLeg"><i style="--c:#E3D3B4"></i>50억↓<i style="--c:#BC975E"></i>50~100<i style="--c:#8A6A35"></i>100~300<i style="--c:#294652"></i>300억↑</em></span><span class="thChg chC"><span class="chT"><b id="chgT">평단가 변화율</b><span class="nseg" id="chgSeg" role="group" aria-label="몇 년 전과 비교할지"><button type="button" data-n="4">4</button><button type="button" data-n="3">3</button><button type="button" data-n="2">2</button><button type="button" data-n="1">1</button></span><small>년전</small></span><em id="chgLeg"></em></span></div>
 <div id="rank"></div><p class="mSwipe">← 옆으로 밀어서 금액대 분포·변화율 보기</p></div>
-<p class="note">※ 대지 평당가 = 거래금액 ÷ 대지면적(평), 동별 값은 거래들의 <b>중간값</b>입니다. 지분 거래는 모두 제외하고, 같은 날·같은 금액으로 여러 건 신고된 거래와 1년 안에 같은 지번·같은 금액으로 다시 신고된 거래는 1건으로 합쳤습니다. 건물 상태·연식·층수·도로 조건에 따라 차이가 큽니다.<br>※ 국토교통부 「상업업무용 부동산 매매」 신고 자료 중 <b>일반건물(통건물) 거래만</b> 표시합니다. 신고 해제된 거래는 제외되며, 신고 후 공개까지 시차가 있습니다.<br>※ 공시지가는 국토교통부 토지특성정보(2026.1.1 기준)의 개별공시지가를 평당으로 환산한 동별 중간값입니다. 기간 선택과 상관없이 같은 값입니다. 시세 배수는 누적 기간 선택과 상관없이 <b>최근 1년</b> 대지 평당가 ÷ 이 공시지가입니다(최근 1년 거래가 적은 동은 몇 건만으로 계산되니 참고용으로 보세요).<br>※ 지번은 공개된 대지·연면적·건축년도를 건축물대장과 대조해 <b>추정한 것으로 실제와 다를 수 있습니다</b>. 정확한 정보는 상담 시 등기부·대장으로 확인해 드립니다.<br>※ 변화율은 <b>최근 1년</b>과 <b>N년 전 1년</b>의 대지 평당가 중간값 비교입니다(실거래 자료가 5년치라 최대 4년). 두 기간 모두 거래 10건 이상일 때만 계산합니다. 꺾은선은 해마다(1년 단위) 중간값이며 거래 5건 이상인 해만 점으로 찍습니다.<br><b style="color:#8A6A35">※ 중간값 해석 주의</b> · 중간값은 그 기간에 실제로 거래된 건물만으로 계산합니다. 거래가 적은 동이나 대형 빌딩(수백~수천억 원) 거래가 몇 건 섞인 해에는 실제 시세 변화와 관계없이 값이 크게 오르내릴 수 있습니다(<b style="color:#C0533A">예: 테헤란로 대형 업무빌딩과 이면 중소형 빌딩이 함께 거래되는 삼성동</b>). 동별 흐름은 참고용으로 보시고, 정확한 시세는 상담 시 개별 거래 사례로 안내해 드립니다.</p>
+<p class="note">※ 대지 평당가 = 거래금액 ÷ 대지면적(평)의 동별 <b>중간값</b>입니다. 국토부 신고 자료 중 <b>일반건물(통건물) 거래만</b> 집계하며, 지분 거래와 중복 신고는 제외했으며, 신고 후 공개까지 시차가 있습니다. 같은 동이라도 건물 상태·연식·층수·도로 조건에 따라 차이가 큽니다.<br>※ 공시지가는 2026.1.1 개별공시지가의 동별 중간값이고, 시세 배수 = <b>최근 1년</b> 대지 평당가 ÷ 공시지가입니다(공시지가와 시점을 맞추기 위해 누적 기간 <b>1년</b>을 고를 때만 표시).<br>※ 변화율은 최근 1년과 N년 전 1년의 중간값 비교이며, 두 기간 모두 거래 10건 이상일 때만 표시합니다.<br>※ 지번은 건축물대장과 대조해 <b>추정한 것으로 실제와 다를 수 있습니다</b>.<br><b style="color:#8A6A35">※ 중간값 해석 주의</b> · 거래가 적거나 대형 빌딩 거래가 섞인 해에는 시세와 관계없이 값이 크게 오르내릴 수 있습니다(<b style="color:#C0533A">예: 테헤란로 대형 업무빌딩과 이면 중소형 빌딩이 함께 거래되는 삼성동</b>). 정확한 시세는 상담 시 개별 거래 사례로 안내해 드립니다.</p>
 </section>
 
 <section class="cta"><div><b>이 동네 빌딩, 지금 얼마일까요?</b>최근 거래 사례로 매입가·매도가를 비교 분석해 드립니다.</div><a href="/?ask=buy#consult">빌딩 매매 상담 받기</a></section>
@@ -525,7 +525,7 @@ body.dlFull .mapFullBtn{display:none}
     var pr = function (d, back) { var y = +d.slice(0, 4), m = +d.slice(5, 7); if (back) { m--; if (!m) { m = 12; y--; } } return String(y).slice(2) + '.' + (m < 10 ? '0' : '') + m; };
     document.querySelectorAll('#chgSeg button').forEach(function (b) { var n = +b.getAttribute('data-n'); b.title = n + '년 전(' + pr(cut[n + 1]) + '~' + pr(cut[n], 1) + ')과 비교'; });
     $('chgLeg').innerHTML = '<span><i class="o"></i>' + pr(cut[CN + 1]) + '~' + pr(cut[CN], 1) + '</span><span><i></i>' + pr(cut[1]) + '~' + pr(cut[0]) + '</span>';
-    $('ppSub').innerHTML = '<b class="nY">' + (MP / 12) + '년 누적</b> 중간값'; $('dsN').textContent = (MP / 12) + '년 누적';
+    $('bxSub').textContent = MP === 12 ? '평당가÷공시' : '1년 선택 시 표시'; $('ppSub').innerHTML = '<b class="nY">' + (MP / 12) + '년 누적</b> 중간값'; $('dsN').textContent = (MP / 12) + '년 누적';
     var rows = Object.keys(by).map(function (k) { var g = by[k]; g.v = median(g.pp); g.j = JIGA[k] ? JIGA[k][0] : 0; return g; })
       .filter(function (g) { return g.v > 0; }).sort(function (a, b) { return b.v - a.v; });
     var pm = rows.length ? Math.max.apply(0, rows.map(function (g) { return Math.max(g.v, g.j); })) : 1, cm = Math.max.apply(0, [20].concat(rows.map(function (g) { return g.c == null ? 0 : Math.abs(g.c); })));
@@ -548,7 +548,7 @@ body.dlFull .mapFullBtn{display:none}
       var t = g.b[0] + g.b[1] + g.b[2] + g.b[3], c = g.c;
       return '<button type="button" class="mRow' + (F.dong === g.dong ? ' sel' : '') + '" data-dong="' + esc(g.dong) + '"><b>' + esc(g.dong) + '<small>' + g.n + '건</small></b>' +
         '<span class="cv">' + (g.j ? '<em><i style="width:' + Math.max(3, g.j / jm * 100) + '%;background:#7D96A0"></i></em><span style="color:#4A6470">' + eok(g.j) + '</span>' : '<em></em><span style="color:#B4BBC0;font-weight:400">-</span>') + '</span>' +
-        '<span class="bx">' + (g.j && g.r1 ? '<b title="최근 1년 대지 평당가 ' + eok(g.r1) + '(' + g.r1n + '건) ÷ 공시지가 ' + eok(g.j) + '">' + (g.r1 / g.j).toFixed(1) + '배</b>' : '<span style="color:#B4BBC0" title="최근 1년 거래 5건 미만">-</span>') + '</span>' +
+        '<span class="bx">' + (MP !== 12 ? '' : g.j && g.r1 ? '<b title="최근 1년 대지 평당가 ' + eok(g.r1) + '(' + g.r1n + '건) ÷ 공시지가 ' + eok(g.j) + '">' + (g.r1 / g.j).toFixed(1) + '배</b>' : '<span style="color:#B4BBC0" title="최근 1년 거래 5건 미만">-</span>') + '</span>' +
         '<span class="cv">' + (g.v ? '<em><i style="width:' + Math.max(3, g.v / pm * 100) + '%;background:#BC975E"></i></em><span>' + eok(g.v) + '</span>' : '<em></em><span style="color:#B4BBC0;font-weight:400">-</span>') + '</span>' +
         (t ? '<span class="sbc"><span class="sb">' + g.b.map(function (x, i) { var p = t ? x / t * 100 : 0; return p ? '<div style="width:' + p + '%;background:' + C4[i] + (i ? '' : ';color:#5a4a2a') + '">' + (p >= 12 ? Math.round(p) : '') + '</div>' : ''; }).join('') + '</span></span>' : '<span class="sbc" style="color:#B4BBC0;font-size:11px">거래 없음</span>') +
         chgCell(g) + '</button>';
@@ -565,7 +565,7 @@ body.dlFull .mapFullBtn{display:none}
     quarter();
   }
   // 분기별 거래 건수 (선택한 구·동·금액 조건 반영, 기간은 5년 전체)
-  var chgN = 3;   // 변화율 비교 시점: 최근 1년 vs N년 전 1년 (처음엔 3년 전)
+  var chgN = 1;   // 변화율 비교 시점: 최근 1년 vs N년 전 1년 (처음엔 1년 전)
   var mkPer = 12;   // 처음엔 최근 1년 누적(시세 배수가 보이도록)   // 0 = 위쪽 기간 버튼을 따라감, 숫자 = 지표 상자에서 직접 고른 기간(개월)   // 0 = 위쪽 기간 버튼(1·2·3·5년)을 따라감
   function quarter() {
     var q = {}; filtered({ allTime: true }).forEach(function (o) { var y = +o.date.slice(0, 4), m = +o.date.slice(5, 7); var k = y + '.' + (((m - 1) / 3 | 0) + 1); q[k] = (q[k] || 0) + 1; });
