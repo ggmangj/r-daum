@@ -241,6 +241,7 @@ body.dlFull .mapFullBtn{display:none}
  .mr em{font-style:normal;font-weight:800;color:#BC975E;font-size:12px}.mr b{color:#2A333C}.mr i{display:block;height:7px;border-radius:4px;background:#F1ECE2;overflow:hidden}.mr i s{display:block;height:100%;background:#BC975E;border-radius:4px}
  .mr span{text-align:right;font-weight:800;color:#294652;font-size:12.5px}.mr:hover b{color:#C0533A}
  .more2{display:block;text-align:right;font-size:12px;color:#8A6A35;margin-top:4px}
+ .qLg i{display:inline-block;margin:0 3px 0 7px;vertical-align:1px}.qLg .b{width:7px;height:9px;background:#294652;border-radius:1px;vertical-align:-1px}.qLg .l{width:12px;height:2px;background:#C0533A}
  .qTabs{display:flex;margin:0 0 10px}.qTabs button{flex:1;font-size:12px;padding:4px 0}
  .qPanes{display:grid}.qPane{grid-area:1/1;visibility:hidden}.qPane.on{visibility:visible}
  #nChart svg{display:block;width:100%;height:auto;overflow:visible}#nChart circle{cursor:pointer}#nChart .nb:hover circle{fill-opacity:.4}
@@ -288,7 +289,7 @@ body.dlFull .mapFullBtn{display:none}
 <h1>강남·서초<br><span class="heroName">빌딩 매매 실거래가</span></h1>
 <p class="sub">국토부 실거래가 기준 · 매일 업데이트 <span id="upd"></span><br>지번 미확인 거래는 동 위치에만 표시</p>
 <section class="kpi" id="kpi" aria-label="요약"></section>
-<section class="miniRank qBox" aria-label="분기별 거래량 · 동네 성격"><div class="seg2 qTabs" id="qTabs" role="tablist"><button type="button" class="on" data-t="q" role="tab">분기별 거래량</button><button type="button" data-t="n" role="tab">동네 성격</button></div><div class="qPanes"><div class="qPane on" data-p="q"><h3>분기별 거래량 <small id="qSub"></small></h3><div id="qChart"></div><p class="qN">위 숫자는 연도별 합계 · 연한 막대는 신고가 덜 들어온 최근 분기 · *는 올해</p></div><div class="qPane" data-p="n"><h3>동네 성격 지도 <small>건수 × 건당 평균금액 · 5년 누적</small></h3><div id="nChart"></div></div></div><a href="#rankBox" class="more2">동별 대지 평당가 및 거래 규모 보기 ↓</a></section>
+<section class="miniRank qBox" aria-label="분기별 거래량 · 동네 성격"><div class="seg2 qTabs" id="qTabs" role="tablist"><button type="button" class="on" data-t="q" role="tab">분기별 거래량</button><button type="button" data-t="n" role="tab">동네 성격</button></div><div class="qPanes"><div class="qPane on" data-p="q"><h3>분기별 거래량 <small class="qLg"><i class="b"></i>건수<i class="l"></i>금액</small></h3><div id="qChart"></div><p class="qN"><span id="qSub"></span> · 위 숫자는 연도별 건수·금액 합계 · 연한 막대·점선은 신고가 덜 들어온 최근 분기</p></div><div class="qPane" data-p="n"><h3>동네 성격 지도 <small>건수 × 건당 평균금액 · 5년 누적</small></h3><div id="nChart"></div></div></div><a href="#rankBox" class="more2">동별 대지 평당가 및 거래 규모 보기 ↓</a></section>
 </aside>
 <div class="col">
 <div class="fullHead"><span class="fe">BUILDING DEALS</span><h2>강남·서초 <span>빌딩 매매 실거래가</span></h2><button type="button" class="fullClose" id="fullClose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button></div>
@@ -640,25 +641,37 @@ body.dlFull .mapFullBtn{display:none}
   var chgN = 1;   // 변화율 비교 시점: 최근 1년 vs N년 전 1년 (처음엔 1년 전)
   var mkPer = 12;   // 처음엔 최근 1년 누적(시세 배수가 보이도록)   // 0 = 위쪽 기간 버튼을 따라감, 숫자 = 지표 상자에서 직접 고른 기간(개월)   // 0 = 위쪽 기간 버튼(1·2·3·5년)을 따라감
   function quarter() {
-    var q = {}; filtered({ allTime: true }).forEach(function (o) { var y = +o.date.slice(0, 4), m = +o.date.slice(5, 7); var k = y + '.' + (((m - 1) / 3 | 0) + 1); q[k] = (q[k] || 0) + 1; });
+    // 분기별 거래 건수(막대, 아래)와 거래금액(꺾은선, 위 띠) — 선택한 구·동·금액 조건 반영, 기간은 최근 5개 연도
+    var q = {}; filtered({ allTime: true }).forEach(function (o) { var y = +o.date.slice(0, 4), m = +o.date.slice(5, 7); var k = y + '.' + (((m - 1) / 3 | 0) + 1); var e = q[k] || (q[k] = { n: 0, a: 0 }); e.n++; e.a += o.amt; });
     var now = new Date(), ks = []; for (var i = 22; i >= 0; i--) { var d = new Date(now.getFullYear(), now.getMonth() - i * 3, 1); var k = d.getFullYear() + '.' + ((d.getMonth() / 3 | 0) + 1); if (ks.indexOf(k) < 0) ks.push(k); }
-    // 오른쪽 칸이 왼쪽 표 높이만큼 꽉 차도록 그래프 높이를 맞춤 (컴퓨터 화면)
-    // 표가 오른쪽보다 길면 그래프를 키워 오른쪽 아래 빈 곳을 채우고, 짧으면 표 줄 간격이 늘어나 맞춰짐
-    // 분기별 그래프를 옆 탭(동네 성격) 높이만큼 키워 카드 아래가 비지 않게 함
-    var nc = $('nChart'), qn = document.querySelector('.qPane[data-p="q"] .qN'), Hfit = Math.max(120, (nc ? nc.offsetHeight : 0) - (qn ? qn.offsetHeight : 0) - 22);
-    // 연도별로 색을 번갈아 칠하고(남색/골드), 위에 연도별 합계를 적어 한눈에 비교
-    var mx = Math.max.apply(0, [1].concat(ks.map(function (k) { return q[k] || 0; }))), W = Math.max(240, $('qChart').clientWidth || 320), H = Hfit, T = 30, bw = W / ks.length, svg = '<svg viewBox="0 0 ' + W + ' ' + (H + 18) + '">';
     var y0 = String(now.getFullYear() - 4); ks = ks.filter(function (k) { return k.slice(0, 4) >= y0; });
-    var yrs = [], yi = {}; ks.forEach(function (k, i) { var y = k.slice(0, 4); if (!(y in yi)) { yi[y] = yrs.length; yrs.push({ y: y, a: i, b: i, n: 0 }); } var Y = yrs[yi[y]]; Y.b = i; Y.n += q[k] || 0; });
-    var PAL = [['#294652', '#A9BAC2'], ['#BC975E', '#E6D6B8']];
-    yrs.forEach(function (Y, j) { var x0 = Y.a * bw, x1 = (Y.b + 1) * bw; if (j % 2) svg += '<rect x="' + x0 + '" y="0" width="' + (x1 - x0) + '" height="' + H + '" fill="#F7F3EC"/>';
-      svg += '<text x="' + ((x0 + x1) / 2) + '" y="12" font-size="10.5" font-weight="800" text-anchor="middle" fill="' + PAL[j % 2][0] + '">' + Y.n + '건</text>' +
-        '<text x="' + ((x0 + x1) / 2) + '" y="' + (H + 13) + '" font-size="10" font-weight="700" text-anchor="middle" fill="#6B757D">' + Y.y.slice(2) + '년' + (+Y.y === now.getFullYear() ? '*' : '') + '</text>'; });
-    ks.forEach(function (k, i) { var v = q[k] || 0, h = v / mx * (H - T - 4), x = i * bw + 2, part = i >= ks.length - 2, c = PAL[yi[k.slice(0, 4)] % 2];
-      svg += '<rect x="' + x + '" y="' + (H - h) + '" width="' + (bw - 4) + '" height="' + h + '" rx="2" fill="' + (part ? c[1] : c[0]) + '"><title>' + k.replace('.', '년 ') + '분기 ' + v + '건</title></rect>'; });
+    var N = function (k) { return q[k] ? q[k].n : 0; }, A = function (k) { return q[k] ? q[k].a : 0; };
+    var jo = function (m) { return m >= 1e8 ? (m / 1e8).toFixed(1) + '조' : eok(m); };   // 만원 → 10.4조 / 8,500억
+    // 분기별 그래프를 옆 탭(동네 성격) 높이만큼 키워 카드 아래가 비지 않게 함
+    var nc = $('nChart'), qn = document.querySelector('.qPane[data-p="q"] .qN'), Hfit = Math.max(150, (nc ? nc.offsetHeight : 0) - (qn ? qn.offsetHeight : 0) - 22);
+    var W = Math.max(240, $('qChart').clientWidth || 320), H = Hfit, T = 32, bw = W / ks.length, svg = '<svg viewBox="0 0 ' + W + ' ' + (H + 18) + '">';
+    var lTop = T + 17, lBot = T + Math.round((H - T) * 0.36), bTop = lBot + 14;   // 위 띠 = 금액 선, 아래 = 건수 막대
+    var mx = Math.max.apply(0, [1].concat(ks.map(N))), ma = Math.max.apply(0, [1].concat(ks.map(A)));
+    var yrs = [], yi = {}; ks.forEach(function (k, i) { var y = k.slice(0, 4); if (!(y in yi)) { yi[y] = yrs.length; yrs.push({ y: y, a: i, b: i, n: 0, m: 0 }); } var Y = yrs[yi[y]]; Y.b = i; Y.n += N(k); Y.m += A(k); });
+    var PAL = [['#294652', '#A9BAC2'], ['#BC975E', '#E6D6B8']], LC = '#C0533A';
+    yrs.forEach(function (Y, j) { var x0 = Y.a * bw, x1 = (Y.b + 1) * bw, cx = (x0 + x1) / 2; if (j % 2) svg += '<rect x="' + x0 + '" y="0" width="' + (x1 - x0) + '" height="' + H + '" fill="#F7F3EC"/>';
+      svg += '<text x="' + cx + '" y="11" font-size="10.5" font-weight="800" text-anchor="middle" fill="' + PAL[j % 2][0] + '">' + Y.n + '건</text>' +
+        '<text x="' + cx + '" y="24" font-size="10" font-weight="800" text-anchor="middle" fill="' + LC + '">' + (Y.m ? jo(Y.m) : '') + '</text>' +
+        '<text x="' + cx + '" y="' + (H + 13) + '" font-size="10" font-weight="700" text-anchor="middle" fill="#6B757D">' + Y.y.slice(2) + '년' + (+Y.y === now.getFullYear() ? '*' : '') + '</text>'; });
+    svg += '<line x1="0" x2="' + W + '" y1="' + (lBot + 7) + '" y2="' + (lBot + 7) + '" stroke="#E9E2D4" stroke-dasharray="2 3"/>';
+    ks.forEach(function (k, i) { var v = N(k), h = v / mx * (H - bTop), x = i * bw + 2, part = i >= ks.length - 2, c = PAL[yi[k.slice(0, 4)] % 2];
+      svg += '<rect x="' + x + '" y="' + (H - h) + '" width="' + (bw - 4) + '" height="' + h + '" rx="2" fill="' + (part ? c[1] : c[0]) + '"><title>' + k.replace('.', '년 ') + '분기 ' + v + '건 · ' + jo(A(k)) + '</title></rect>'; });
     svg += '<line x1="0" x2="' + W + '" y1="' + H + '" y2="' + H + '" stroke="#D8D0C0"/>';
+    var P = ks.map(function (k, i) { return [i * bw + bw / 2, lBot - A(k) / ma * (lBot - lTop)]; }), pt = function (a) { return a.map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' '); }, nP = P.length;
+    if (nP > 1) {
+      svg += '<polyline points="' + pt(P.slice(0, nP - 2)) + '" fill="none" stroke="' + LC + '" stroke-width="1.8" stroke-linejoin="round"/>';
+      svg += '<polyline points="' + pt(P.slice(nP - 3)) + '" fill="none" stroke="' + LC + '" stroke-width="1.6" stroke-dasharray="3 2" opacity=".55"/>';
+      P.forEach(function (p, i) { svg += '<circle cx="' + p[0].toFixed(1) + '" cy="' + p[1].toFixed(1) + '" r="2.3" fill="#fff" stroke="' + LC + '" stroke-width="1.4"' + (i >= nP - 2 ? ' opacity=".55"' : '') + '><title>' + ks[i].replace('.', '년 ') + '분기 ' + jo(A(ks[i])) + ' · ' + N(ks[i]) + '건</title></circle>'; });
+      var im = 0; ks.forEach(function (k, i) { if (A(k) > A(ks[im])) im = i; });
+      if (A(ks[im])) svg += '<text x="' + Math.min(W - 16, Math.max(16, P[im][0])).toFixed(1) + '" y="' + (P[im][1] - 6).toFixed(1) + '" font-size="9.5" font-weight="800" text-anchor="middle" fill="' + LC + '">' + jo(A(ks[im])) + '</text>';
+    }
     $('qChart').innerHTML = svg + '</svg>';
-    $('qSub').textContent = (F.dong || F.gu || '강남·서초') + ' · 최근 5년';
+    $('qSub').textContent = (F.dong || F.gu || '강남·서초') + ' 최근 5년';
   }
 
 
