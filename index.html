@@ -964,6 +964,15 @@ body.mapFull .mapTools .mapFullBtn{display:none}
   if(window.ResizeObserver){var f=document.querySelector('.heroCard .flipFront');if(f)new ResizeObserver(function(){requestAnimationFrame(tall)}).observe(f);}
 })();
 </script>
+<style id="heatCss">
+.heatBtn{display:none;position:absolute;top:60px;left:10px;z-index:30;align-items:center;gap:7px;height:38px;padding:0 14px 0 12px;border:2px solid #FFFFFF;border-radius:999px;background:#FFFFFF;color:#294652;font:800 13.5px 'Noto Sans KR',sans-serif;cursor:pointer;box-shadow:0 3px 10px rgba(20,25,31,.18)}
+.heatBtn i{width:18px;height:18px;border-radius:5px;border:2px solid #C0533A;background:#fff;position:relative}.heatBtn.on{background:#294652;color:#fff;border-color:#294652}.heatBtn.on i{background:#C0533A}.heatBtn.on i:after{content:"";position:absolute;left:4px;top:0;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+body.mapFull .heatBtn{display:inline-flex}.heatBtn[hidden]{display:none!important}
+.heatPanel{position:absolute;left:10px;bottom:12px;z-index:30;width:300px;background:#fff;border-radius:14px;box-shadow:0 4px 16px rgba(20,25,31,.18);padding:12px 14px;font:12px/1.5 'Noto Sans KR',sans-serif;color:#46515B}.heatPanel[hidden]{display:none}
+.hpRow{display:flex;gap:4px;margin-bottom:6px}.hpRow button{flex:1;border:0;background:#EFEAE0;color:#5B6670;border-radius:999px;padding:5px 0;font:700 12.5px 'Noto Sans KR',sans-serif;cursor:pointer}.hpRow button.on{background:#294652;color:#fff}.hpAge button{font-size:11px;padding:4px 0}.hpAge button.on{background:#8A6A35}
+.hpBar{height:10px;border-radius:5px;margin-top:4px;background:linear-gradient(90deg,#FFF3C4,#FBD38D,#F6A15B,#E0663D,#B23A2B)}.hpTick{display:flex;justify-content:space-between;font-size:10.5px;color:#6B757D;margin-top:2px}
+.hpRange{margin-top:6px;font-size:12.5px;color:#294652}.hpRange b{font-weight:800}.hpRange b.hi{color:#B23A2B}.hpNote{font-size:10.5px;color:#8A939A;margin-top:3px}
+</style>
 <style id="mapFullCss">
 .mapFullBtn,.mapFullClose{display:inline-flex;align-items:center;gap:6px;height:44px;padding:0 16px;border:1px solid #294652;border-radius:999px;background:#FFFFFF;color:#294652;font:700 14px 'Noto Sans KR',sans-serif;cursor:pointer;white-space:nowrap}
 .mapFullBtn:hover{background:#294652;color:#FFFFFF}.mapFullBtn svg{color:#BC975E}
@@ -1725,7 +1734,8 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       resize: function () { if (!el.clientWidth || !el.clientHeight) return; try { map.setSize(new nm.Size(el.clientWidth, el.clientHeight)); } catch (e) { } try { map.refresh(true); } catch (e) { } },   // 숨겨진 동안(상세 화면)엔 크기를 0으로 바꾸지 않음
       center: function () { var c = map.getCenter(); return { lat: c.lat(), lng: c.lng() }; },
       set: function (p, z) { map.setCenter(ll(p)); map.setZoom(z, false); },
-      onChange: function (fn) { nm.Event.addListener(map, 'idle', fn); }
+      onChange: function (fn) { nm.Event.addListener(map, 'idle', fn); },
+      raw: map
     };
   }
 
@@ -1811,12 +1821,107 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   function openItem(it, noPan) { var redraw = focusId !== it.id; focusId = it.id; if (redraw) drawMap(); bindPopup(M.popup(it, itemPopup(it), noPan)); highlight(it.id); }
 
   var drawT = 0;
+  /* ---------- 임대 평단가 열지도 (지도 크게 보기에서만) ----------
+     평당 임대료 = 월세 ÷ 전용평 (만원). 층(1층·2층 이상·지하)과 건물 연식으로 나눠 보고,
+     주변 매물을 거리에 따라 섞어 색을 칠함. 범례에는 보이는 범위의 실제 최저~최고 값을 적음 */
+  var HEAT = { on: false, fl: '1', age: 'all', layer: null };
+  var HCOL = [[255, 243, 196], [251, 211, 141], [246, 161, 91], [224, 102, 61], [178, 58, 43]];
+  function heatActive() { return HEAT.on && document.body.classList.contains('mapFull') && M && M.kind === 'naver' && M.raw; }
+  function heatYear(s) { var m = String(s || '').match(/(19|20)\d{2}/); return m ? +m[0] : 0; }
+  function heatFloor(f) { f = String(f || ''); return /지하|^\s*B\d/i.test(f) ? 'b' : /^\s*1\s*층|^\s*1F/i.test(f) ? '1' : 'up'; }
+  function heatPoints() {
+    var now = new Date().getFullYear();
+    return ITEMS.filter(function (it) {
+      if (!(it.lat && it.lng)) return false;
+      var a = +it.area, r = manOf(it.rent, it.rentText); if (!(a >= 3) || !(r > 0)) return false;
+      if (heatFloor(it.floor) !== HEAT.fl) return false;
+      if (HEAT.age !== 'all') { var y = heatYear(it.approval); if (!y) return false; var g = now - y; if (HEAT.age === 'n' && g > 10) return false; if (HEAT.age === 'm' && (g <= 10 || g > 30)) return false; if (HEAT.age === 'o' && g <= 30) return false; }
+      return true;
+    }).map(function (it) { return { lat: it.lat, lng: it.lng, v: manOf(it.rent, it.rentText) / +it.area }; });
+  }
+  function heatQ(a, p) { if (!a.length) return 0; var i = (a.length - 1) * p, lo = Math.floor(i), hi = Math.ceil(i); return a[lo] + (a[hi] - a[lo]) * (i - lo); }
+  function heatColor(v, st) {   // st: 5개 기준값(10·30·50·70·90%) 사이를 이어서 색을 섞음
+    var i = 0; while (i < 4 && v > st[i + 1]) i++;
+    var t = v <= st[0] ? 0 : v >= st[4] ? 1 : (v - st[i]) / ((st[i + 1] - st[i]) || 1), a = HCOL[i], b = HCOL[Math.min(4, i + (v <= st[0] || v >= st[4] ? 0 : 1))];
+    if (v <= st[0]) return HCOL[0]; if (v >= st[4]) return HCOL[4];
+    return [0, 1, 2].map(function (k) { return Math.round(a[k] + (b[k] - a[k]) * t); });
+  }
+  function heatLayerClass() {
+    var nm = naver.maps;
+    function L(map) { this.c = document.createElement('canvas'); this.c.className = 'heatCv'; this.c.style.cssText = 'position:absolute;left:0;top:0;pointer-events:none'; this.setMap(map); }
+    L.prototype = new nm.OverlayView();
+    L.prototype.onAdd = function () { this.getPanes().overlayLayer.appendChild(this.c); };
+    L.prototype.onRemove = function () { if (this.c.parentNode) this.c.parentNode.removeChild(this.c); };
+    L.prototype.draw = function () { heatPaint(this); };
+    return L;
+  }
+  var HeatLayer = null;
+  function heatDraw() {
+    var map = M.raw; if (!map) return;
+    if (!HeatLayer) HeatLayer = heatLayerClass();
+    if (!HEAT.layer) HEAT.layer = new HeatLayer(map); else { if (!HEAT.layer.getMap()) HEAT.layer.setMap(map); heatPaint(HEAT.layer); }
+    heatUi();
+  }
+  function heatHide() { if (HEAT.layer && HEAT.layer.getMap()) HEAT.layer.setMap(null); heatUi(); }
+  function heatPaint(ly) {
+    var nm = naver.maps, map = ly.getMap(), pr = ly.getProjection(); if (!map || !pr) return;
+    var sz = map.getSize(), W = Math.round(sz.width), H = Math.round(sz.height), b = map.getBounds(), mn = b.getMin ? b.getMin() : b.getSW(), mx = b.getMax ? b.getMax() : b.getNE();
+    var lat1 = typeof mx.lat === 'function' ? mx.lat() : mx.y, lng0 = typeof mn.lng === 'function' ? mn.lng() : mn.x;
+    var o = pr.fromCoordToOffset(new nm.LatLng(lat1, lng0)), c = ly.c; c.style.left = o.x + 'px'; c.style.top = o.y + 'px'; c.width = W; c.height = H; c.style.width = W + 'px'; c.style.height = H + 'px';
+    var ctx = c.getContext('2d'); ctx.clearRect(0, 0, W, H);
+    // 지도 1px이 몇 m인지
+    var cen = map.getCenter(), cl = cen.lat(), cg = cen.lng(), p1 = pr.fromCoordToOffset(new nm.LatLng(cl, cg)), p2 = pr.fromCoordToOffset(new nm.LatLng(cl, cg + 0.001)), mpp = 0.001 * 111000 * Math.cos(cl * Math.PI / 180) / Math.max(1e-6, Math.abs(p2.x - p1.x));
+    var z = map.getZoom(), sigM = z >= 18 ? 45 : z >= 17 ? 65 : z >= 16 ? 95 : z >= 15 ? 140 : 220, sg = sigM / mpp, R = sg * 3;
+    var P = heatPoints().map(function (p) { var q = pr.fromCoordToOffset(new nm.LatLng(p.lat, p.lng)); return { x: q.x - o.x, y: q.y - o.y, v: p.v, lv: Math.log(p.v) }; })
+      .filter(function (p) { return p.x > -R && p.y > -R && p.x < W + R && p.y < H + R; });
+    var inView = P.filter(function (p) { return p.x >= 0 && p.y >= 0 && p.x <= W && p.y <= H; }).map(function (p) { return p.v; }).sort(function (a, b) { return a - b; });
+    HEAT.stat = { n: inView.length, min: inView[0] || 0, max: inView[inView.length - 1] || 0, st: [0.1, 0.3, 0.5, 0.7, 0.9].map(function (q) { return heatQ(inView, q); }) };
+    if (inView.length < 3) { heatUi(); return; }
+    // 가까운 매물만 찾도록 칸으로 나눠 둠
+    var B = {}, bk = function (x, y) { return Math.floor(x / R) + '|' + Math.floor(y / R); };
+    P.forEach(function (p) { (B[bk(p.x, p.y)] = B[bk(p.x, p.y)] || []).push(p); });
+    var g = 5, gw = Math.ceil(W / g), gh = Math.ceil(H / g), sc = document.createElement('canvas'); sc.width = gw; sc.height = gh;
+    var sx = sc.getContext('2d'), img = sx.createImageData(gw, gh), d = img.data, s2 = 2 * sg * sg, st = HEAT.stat.st;
+    for (var j = 0; j < gh; j++) for (var i = 0; i < gw; i++) {
+      var x = (i + 0.5) * g, y = (j + 0.5) * g, bx = Math.floor(x / R), by = Math.floor(y / R), ws = 0, vs = 0;
+      for (var dy = -1; dy <= 1; dy++) for (var dx = -1; dx <= 1; dx++) { var L = B[(bx + dx) + '|' + (by + dy)]; if (!L) continue;
+        for (var k = 0; k < L.length; k++) { var e = (L[k].x - x) * (L[k].x - x) + (L[k].y - y) * (L[k].y - y); if (e > R * R) continue; var w = Math.exp(-e / s2); ws += w; vs += w * L[k].lv; } }
+      if (ws < 0.35) continue;
+      var col = heatColor(Math.exp(vs / ws), st), a = Math.min(1, (ws - 0.35) / 1.2), q = (j * gw + i) * 4;
+      d[q] = col[0]; d[q + 1] = col[1]; d[q + 2] = col[2]; d[q + 3] = Math.round(70 + 105 * a);
+    }
+    sx.putImageData(img, 0, 0); ctx.imageSmoothingEnabled = true; ctx.drawImage(sc, 0, 0, W, H);
+    heatUi();
+  }
+  function heatSet(on) { HEAT.on = !!on; if (M && M.closePopup) M.closePopup(); drawMap(); }
+  function heatUi() {
+    var box = $('leafletMap'); if (!box) return; var wrap = box.parentNode, btn = $('heatBtn'), pn = $('heatPanel');
+    if (!btn) {
+      btn = document.createElement('button'); btn.type = 'button'; btn.id = 'heatBtn'; btn.className = 'heatBtn';
+      btn.innerHTML = '<i></i><span>임대 평단가 보기</span>';
+      btn.onclick = function () { heatSet(!HEAT.on); };
+      wrap.appendChild(btn);
+      pn = document.createElement('div'); pn.id = 'heatPanel'; pn.className = 'heatPanel'; wrap.appendChild(pn);
+      pn.addEventListener('click', function (e) { var b = e.target.closest('[data-hf],[data-ha]'); if (!b) return; if (b.dataset.hf) HEAT.fl = b.dataset.hf; if (b.dataset.ha) HEAT.age = b.dataset.ha; drawMap(); });
+    }
+    var act = !!heatActive(); btn.classList.toggle('on', act); btn.hidden = !(M && M.kind === 'naver'); pn.hidden = !act;
+    if (!act) return;
+    var S = HEAT.stat || { n: 0 }, f1 = function (v) { return (Math.round(v * 10) / 10).toLocaleString('ko-KR'); }, chip = function (k, v, t, on) { return '<button type="button" data-' + k + '="' + v + '"' + (on ? ' class="on"' : '') + '>' + t + '</button>'; };
+    pn.innerHTML = '<div class="hpRow">' + chip('hf', '1', '1층', HEAT.fl === '1') + chip('hf', 'up', '2층 이상', HEAT.fl === 'up') + chip('hf', 'b', '지하', HEAT.fl === 'b') + '</div>' +
+      '<div class="hpRow hpAge">' + chip('ha', 'all', '전체 연식', HEAT.age === 'all') + chip('ha', 'n', '10년 이내', HEAT.age === 'n') + chip('ha', 'm', '11~30년', HEAT.age === 'm') + chip('ha', 'o', '30년 넘음', HEAT.age === 'o') + '</div>' +
+      (S.n >= 3 ? '<div class="hpBar"></div><div class="hpTick">' + S.st.map(function (v) { return '<span>' + f1(v) + '</span>'; }).join('') + '</div>' +
+        '<div class="hpRange">이 화면 실제 범위 <b>최저 ' + f1(S.min) + '만</b> ~ <b class="hi">최고 ' + f1(S.max) + '만</b></div>' +
+        '<div class="hpNote">평당 월세(만원/전용평) · 매물 ' + S.n + '건 · 색 기준은 화면 안 매물의 10·30·50·70·90% 값 · 호가 기준</div>'
+        : '<div class="hpNote">이 화면에 조건에 맞는 매물이 부족합니다. 지도를 넓혀 보거나 조건을 바꿔 주세요.</div>');
+  }
   function drawMap() {   // 지도 이동·확대가 연달아 일어나면 마지막 한 번만 다시 그림
     clearTimeout(drawT); drawT = setTimeout(drawMap0, 60);
   }
   function drawMap0() {
     if (!M) return;
     M.clear();
+    if (heatActive()) { heatDraw(); return; }   // 임대 평단가 열지도를 켜면 매물 핀은 숨김
+    heatHide();
     var z = M.zoom();
     clusters(VIEW).forEach(function (g) {
       if (g.items.length === 1) {
@@ -2264,7 +2369,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   function mapRefit() { if (!M) return; [60, 350].forEach(function (ms) { setTimeout(function () { if (M.resize) M.resize(); drawMap(); }, ms); }); }
   function canFull() { return innerWidth > 760; }
   function openFullMap() { if (!canFull() || document.body.classList.contains('mapFull')) return; document.body.classList.add('mapFull'); mapRefit(); }
-  function closeFullMap() { if (!document.body.classList.contains('mapFull')) return; document.body.classList.remove('mapFull'); mapRefit(); var sec = $('map'); if (sec) setTimeout(function () { sec.scrollIntoView(); }, 80); }
+  function closeFullMap() { if (!document.body.classList.contains('mapFull')) return; heatSet(false); document.body.classList.remove('mapFull'); mapRefit(); var sec = $('map'); if (sec) setTimeout(function () { sec.scrollIntoView(); }, 80); }
   window.bdMapFull = { open: openFullMap, close: closeFullMap };
   (function () {
     var b = $('mapFullBtn'), x = $('mapFullClose');
