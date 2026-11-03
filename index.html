@@ -965,8 +965,9 @@ body.mapFull .mapTools .mapFullBtn{display:none}
 })();
 </script>
 <style id="heatCss">
-.heatBtn{display:none;position:absolute;top:60px;left:10px;z-index:30;align-items:center;gap:7px;height:38px;padding:0 14px 0 12px;border:2px solid #FFFFFF;border-radius:999px;background:#FFFFFF;color:#294652;font:800 13.5px 'Noto Sans KR',sans-serif;cursor:pointer;box-shadow:0 3px 10px rgba(20,25,31,.18)}
-.heatBtn i{width:18px;height:18px;border-radius:5px;border:2px solid #C0533A;background:#fff;position:relative}.heatBtn.on{background:#294652;color:#fff;border-color:#294652}.heatBtn.on i{background:#C0533A}.heatBtn.on i:after{content:"";position:absolute;left:4px;top:0;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.heatBtn{display:none;position:absolute;top:60px;left:10px;z-index:30;align-items:center;gap:7px;height:42px;padding:0 18px 0 15px;border:2px solid #FFFFFF;border-radius:999px;background:#FFFFFF;color:#294652;font:800 15px 'Noto Sans KR',sans-serif;letter-spacing:-.3px;white-space:nowrap;cursor:pointer;box-shadow:0 3px 10px rgba(20,25,31,.2)}
+.heatBtn i{flex:none;width:14px;height:14px;border-radius:4px;border:2px solid #C0533A;background:#fff;position:relative;box-sizing:border-box}.heatBtn.on{background:#294652;color:#fff;border-color:#FFFFFF}.heatBtn.on i{background:#C0533A;border-color:#C0533A}.heatBtn.on i:after{content:"";position:absolute;left:3px;top:0;width:4px;height:7px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+@media (max-width:760px){.heatBtn{top:56px;height:38px;font-size:14px}}
 body.mapFull .heatBtn{display:inline-flex}.heatBtn[hidden]{display:none!important}
 .heatPanel{position:absolute;left:10px;bottom:12px;z-index:30;width:300px;background:#fff;border-radius:14px;box-shadow:0 4px 16px rgba(20,25,31,.18);padding:12px 14px;font:12px/1.5 'Noto Sans KR',sans-serif;color:#46515B}.heatPanel[hidden]{display:none}
 .hpTitle{font:800 14px 'Noto Sans KR',sans-serif;color:#14191F;margin-bottom:8px}.hpTitle span{color:#8A5A1E;font-size:12.5px;margin-left:4px}
@@ -1841,7 +1842,9 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       .filter(function (p) { return p.v >= 2 && p.v <= 100; });   // 평당 2만 미만·100만 초과는 면적·금액 입력 오류로 보고 제외
   }
   function heatQ(a, p) { if (!a.length) return 0; var i = (a.length - 1) * p, lo = Math.floor(i), hi = Math.ceil(i); return a[lo] + (a[hi] - a[lo]) * (i - lo); }
-  function heatMed(a) { a = a.slice().sort(function (x, y) { return x - y; }); return heatQ(a, 0.5); }
+  function heatMed(a) {   // 칸 평균: 가장 비싼 1건과 가장 싼 1건을 빼고 나머지 평균 (3건이면 가운데 값)
+    a = a.slice().sort(function (x, y) { return x - y; }).slice(1, -1); var t = 0; a.forEach(function (v) { t += v; }); return t / a.length;
+  }
   function heatCol(t) {
     t = Math.max(0, Math.min(1, t)); var k = t * 3, i = Math.min(2, Math.floor(k)), f = k - i, a = HCOL[i], b = HCOL[i + 1];
     return 'rgb(' + [0, 1, 2].map(function (j) { return Math.round(a[j] + (b[j] - a[j]) * f); }).join(',') + ')';
@@ -1893,7 +1896,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     var box = $('leafletMap'); if (!box) return; var wrap = box.parentNode, btn = $('heatBtn'), pn = $('heatPanel');
     if (!btn) {
       btn = document.createElement('button'); btn.type = 'button'; btn.id = 'heatBtn'; btn.className = 'heatBtn';
-      btn.innerHTML = '<i></i><span>임대 평단가 보기</span>';
+      btn.innerHTML = '<i></i><span>임대평단가</span>';
       btn.onclick = function () { heatSet(!HEAT.on); };
       wrap.appendChild(btn);
       pn = document.createElement('div'); pn.id = 'heatPanel'; pn.className = 'heatPanel'; wrap.appendChild(pn);
@@ -1907,7 +1910,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       (S.cells ? '<div class="hpBar"></div><div class="hpTick"><span>' + f1(S.lo) + '만</span><span>' + f1(S.hi) + '만</span></div>' +
         '<div class="hpRange">이 화면 실제 범위 <b>최저 ' + f1(S.min) + '만</b> ~ <b class="hi">최고 ' + f1(S.max) + '만</b></div>' +
         '<div class="hpLeg"><i class="hpTop">00만</i> 평당가 높은 상위 6곳</div>' +
-        '<div class="hpNote">평당 월세(만원/전용평) · 칸 안 매물 3건 이상 중간값 · 매물 ' + S.n + '건 · 호가 기준 · 입력 오류로 보이는 값 제외</div>'
+        '<div class="hpNote">평당 월세(만원/전용평) · 칸 안 매물 3건 이상, 최고·최저 1건씩 빼고 평균 · 매물 ' + S.n + '건 · 호가 기준 · 입력 오류로 보이는 값 제외</div>'
         : '<div class="hpNote">이 화면에 조건에 맞는 매물이 부족합니다. 지도를 넓혀 보거나 층을 바꿔 주세요.</div>');
   }
   function drawMap() {   // 지도 이동·확대가 연달아 일어나면 마지막 한 번만 다시 그림
