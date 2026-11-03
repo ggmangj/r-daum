@@ -944,7 +944,7 @@ body.mapFull .mapTools .mapFullBtn{display:none}
  .headRow{padding-top:10px!important;padding-bottom:10px!important}
  .heroSplit{padding-top:22px!important;padding-bottom:40px!important}
  .heroMap #mapList{height:470px!important}
- .heroMap #leafletMap{height:100%!important;min-height:521px}   /* 왼쪽 목록 높이에 맞춰 지도를 끝까지 채움 (네이버 로고 잘림 방지) */
+ body:not(.mapFull) .heroMap #leafletMap{position:absolute!important;top:0;left:0;right:0;bottom:0;height:auto!important}   /* 왼쪽 목록 높이에 맞춰 지도를 끝까지 채움 (네이버 로고 잘림 방지) */
  .heroMap .autoSearch{padding:10px 14px 10px;margin-bottom:10px}.heroMap .asHead{margin-bottom:8px}.heroMap .asRow input,.heroMap .asRow button{height:42px}
  .heroMap .mapTools{margin-bottom:10px!important}.heroMap .mapSel{height:40px!important}
  .heroMapHead{margin-bottom:10px!important}
@@ -1765,7 +1765,10 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
         map.fitBounds(b, { top: 40, right: 40, bottom: 40, left: 40 });
       },
       go: function (p, z) { map.morph(ll(p), z); },
-      resize: function () { if (!el.clientWidth || !el.clientHeight) return; try { map.setSize(new nm.Size(el.clientWidth, el.clientHeight)); } catch (e) { } try { map.refresh(true); } catch (e) { } },   // 숨겨진 동안(상세 화면)엔 크기를 0으로 바꾸지 않음
+      resize: function () {   // 네이버 지도가 안쪽 상자에 px 크기를 박아 두므로, 바깥 지도 칸(#leafletMap) 크기를 기준으로 다시 맞춤 (크게 보기 닫은 뒤 늘어난 채로 남는 문제 방지)
+        var P = el.parentNode && el.parentNode.clientHeight ? el.parentNode : el, W = P.clientWidth, H = P.clientHeight; if (!W || !H) return;
+        el.style.width = W + 'px'; el.style.height = H + 'px';
+        try { map.setSize(new nm.Size(W, H)); } catch (e) { } try { map.refresh(true); } catch (e) { } },   // 숨겨진 동안(상세 화면)엔 크기를 0으로 바꾸지 않음
       center: function () { var c = map.getCenter(); return { lat: c.lat(), lng: c.lng() }; },
       set: function (p, z) { map.setCenter(ll(p)); map.setZoom(z, false); },
       onChange: function (fn) { nm.Event.addListener(map, 'idle', fn); },
