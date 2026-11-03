@@ -944,7 +944,7 @@ body.mapFull .mapTools .mapFullBtn{display:none}
  .headRow{padding-top:10px!important;padding-bottom:10px!important}
  .heroSplit{padding-top:22px!important;padding-bottom:40px!important}
  .heroMap #mapList{height:470px!important}
- .heroMap #leafletMap{height:521px!important}
+ .heroMap #leafletMap{height:100%!important;min-height:521px}   /* 왼쪽 목록 높이에 맞춰 지도를 끝까지 채움 (네이버 로고 잘림 방지) */
  .heroMap .autoSearch{padding:10px 14px 10px;margin-bottom:10px}.heroMap .asHead{margin-bottom:8px}.heroMap .asRow input,.heroMap .asRow button{height:42px}
  .heroMap .mapTools{margin-bottom:10px!important}.heroMap .mapSel{height:40px!important}
  .heroMapHead{margin-bottom:10px!important}
@@ -988,12 +988,12 @@ body.mapFull .mapTools .mapFullBtn{display:none}
 })();
 </script>
 <style id="heatCss">
-.heatBtn{display:none;position:relative;vertical-align:top;align-items:center;gap:6px;height:42px;padding:0 17px 0 13px;border:2px solid #FFFFFF;border-left:0;border-radius:0 999px 999px 0;background:#C7A774;color:#FFFFFF;font:800 15px 'Noto Sans KR',sans-serif;letter-spacing:-.3px;white-space:nowrap;cursor:pointer;box-shadow:4px 3px 10px rgba(20,25,31,.2)}
+.heatBtn{display:inline-flex;position:relative;vertical-align:top;align-items:center;gap:6px;height:42px;padding:0 17px 0 13px;border:2px solid #FFFFFF;border-left:0;border-radius:0 999px 999px 0;background:#C7A774;color:#FFFFFF;font:800 15px 'Noto Sans KR',sans-serif;letter-spacing:-.3px;white-space:nowrap;cursor:pointer;box-shadow:4px 3px 10px rgba(20,25,31,.2)}
 .heatBtn:before{content:"";position:absolute;left:0;top:11px;bottom:11px;width:1px;background:rgba(255,255,255,.6)}
 .heatBtn svg{flex:none;width:17px;height:17px}.heatBtn:hover{background:#BA9862}.heatBtn.on,.heatBtn.on:hover{background:#9C6F2E}.heatBtn.on:before{opacity:0}.heatBtn.on .hbDot{fill:#E5452B;opacity:1}
-body.mapFull .heatBtn{display:inline-flex}.heatBtn[hidden]{display:none!important}
-body.mapFull .dongPick.dpGrp .dpBtn{vertical-align:top;border-right:0;border-radius:999px 0 0 999px;padding-right:13px}
-body.mapFull .dongPick.dpGrp .dpBtn:after{border-radius:999px 0 0 999px}
+.heatBtn[hidden]{display:none!important}
+.dongPick.dpGrp .dpBtn{vertical-align:top;border-right:0;border-radius:999px 0 0 999px;padding-right:13px}
+.dongPick.dpGrp .dpBtn:after{border-radius:999px 0 0 999px}
 @media (max-width:760px){.heatBtn{height:38px;font-size:14px}}
 .heatPanel{position:absolute;left:10px;bottom:12px;z-index:30;width:300px;background:#fff;border-radius:14px;box-shadow:0 4px 16px rgba(20,25,31,.18);padding:12px 14px;font:12px/1.5 'Noto Sans KR',sans-serif;color:#46515B}.heatPanel[hidden]{display:none}
 .hpTitle{font:800 14px 'Noto Sans KR',sans-serif;color:#14191F;margin-bottom:8px}.hpTitle span{color:#8A5A1E;font-size:12.5px;margin-left:4px}
@@ -1002,7 +1002,8 @@ body.mapFull .dongPick.dpGrp .dpBtn:after{border-radius:999px 0 0 999px}
 .hpRange{margin-top:6px;font-size:12.5px;color:#294652}.hpRange b{font-weight:800}.hpRange b.hi{color:#8A5A1E}.hpNote{font-size:10.5px;color:#8A939A;margin-top:3px}
 .hpTop{display:inline-block;transform:translate(-50%,-50%);font:800 11.5px 'Noto Sans KR',sans-serif;font-style:normal;color:#fff;background:#8A5A1E;border:1.5px solid #fff;border-radius:999px;padding:2px 8px;white-space:nowrap;box-shadow:0 2px 5px rgba(0,0,0,.2)}
 .hpLeg{margin-top:5px;font-size:11px;color:#8A5A1E;font-weight:700;display:flex;align-items:center;gap:6px}.hpLeg .hpTop{transform:none;font-size:10px;padding:1px 6px;box-shadow:none}
-@media(max-width:560px){.heatPanel{width:auto;right:10px}}
+body:not(.mapFull) .heatPanel{width:250px;padding:10px 12px}body:not(.mapFull) .hpTitle{margin-bottom:6px;font-size:13px}body:not(.mapFull) .hpRow{margin-bottom:6px}body:not(.mapFull) .hpRow button{padding:5px 0;font-size:12px}body:not(.mapFull) .hpNote,body:not(.mapFull) .hpLeg{display:none}   /* 메인 지도에서는 범례를 작게 */
+@media(max-width:560px){.heatPanel,body:not(.mapFull) .heatPanel{width:auto;right:10px;bottom:30px;padding:10px 12px}.hpTitle{margin-bottom:6px;font-size:13px}.hpRow{margin-bottom:6px}.hpRow button{padding:5px 0;font-size:12px}.hpNote,.hpLeg{display:none}}
 </style>
 <style id="mapFullCss">
 .mapFullBtn,.mapFullClose{display:inline-flex;align-items:center;gap:6px;height:44px;padding:0 16px;border:1px solid #294652;border-radius:999px;background:#FFFFFF;color:#294652;font:700 14px 'Noto Sans KR',sans-serif;cursor:pointer;white-space:nowrap}
@@ -1853,12 +1854,12 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   function openItem(it, noPan) { var redraw = focusId !== it.id; focusId = it.id; if (redraw) drawMap(); bindPopup(M.popup(it, itemPopup(it), noPan)); highlight(it.id); }
 
   var drawT = 0;
-  /* ---------- 임대 평단가 지도 (지도 크게 보기에서만) ----------
+  /* ---------- 임대 평단가 지도 (메인 지도·크게 보기 모두) ----------
      평당 임대료 = 월세 ÷ 전용평 (만원). 지도를 육각형 칸으로 나눠 칸 안 매물 평균으로 색칠(1건이라도 있으면 표시).
      색·반투명·흰 테두리는 빌딩 매매 실거래가 지도와 같은 방식. 숫자는 화면 안 평당가 상위 6곳(매물 3건 이상 칸)만 표시 */
   var HEAT = { on: false, fl: 'all', objs: [] };
   var HCOL = [[243, 233, 214], [217, 185, 127], [156, 111, 46], [90, 58, 16]];
-  function heatActive() { return HEAT.on && document.body.classList.contains('mapFull') && M && M.kind === 'naver' && M.raw; }
+  function heatActive() { return HEAT.on && M && M.kind === 'naver' && M.raw; }
   function heatFloor(f) { f = String(f || ''); return /지하|^\s*B\d/i.test(f) ? 'b' : /^\s*1\s*층|^\s*1F/i.test(f) ? '1' : 'up'; }
   function heatPoints() {
     return ITEMS.filter(function (it) {
@@ -2398,7 +2399,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
   function mapRefit() { if (!M) return; [60, 350].forEach(function (ms) { setTimeout(function () { if (M.resize) M.resize(); drawMap(); }, ms); }); }
   function canFull() { return innerWidth > 760; }
   function openFullMap() { if (!canFull() || document.body.classList.contains('mapFull')) return; document.body.classList.add('mapFull'); mapRefit(); }
-  function closeFullMap() { if (!document.body.classList.contains('mapFull')) return; heatSet(false); document.body.classList.remove('mapFull'); mapRefit(); var sec = $('map'); if (sec) setTimeout(function () { sec.scrollIntoView(); }, 80); }
+  function closeFullMap() { if (!document.body.classList.contains('mapFull')) return; document.body.classList.remove('mapFull'); mapRefit(); var sec = $('map'); if (sec) setTimeout(function () { sec.scrollIntoView(); }, 80); }
   window.bdMapFull = { open: openFullMap, close: closeFullMap };
   (function () {
     var b = $('mapFullBtn'), x = $('mapFullClose');
