@@ -1830,8 +1830,8 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 
   var drawT = 0;
   /* ---------- 임대 평단가 지도 (지도 크게 보기에서만) ----------
-     평당 임대료 = 월세 ÷ 전용평 (만원). 지도를 육각형 칸으로 나눠 칸 안 매물(3건 이상)의 중간값으로 색칠.
-     색·반투명·흰 테두리는 빌딩 매매 실거래가 지도와 같은 방식. 숫자는 화면 안 평당가 상위 6곳만 표시 */
+     평당 임대료 = 월세 ÷ 전용평 (만원). 지도를 육각형 칸으로 나눠 칸 안 매물 평균으로 색칠(1건이라도 있으면 표시).
+     색·반투명·흰 테두리는 빌딩 매매 실거래가 지도와 같은 방식. 숫자는 화면 안 평당가 상위 6곳(매물 3건 이상 칸)만 표시 */
   var HEAT = { on: false, fl: 'all', objs: [] };
   var HCOL = [[243, 233, 214], [217, 185, 127], [156, 111, 46], [90, 58, 16]];
   function heatActive() { return HEAT.on && document.body.classList.contains('mapFull') && M && M.kind === 'naver' && M.raw; }
@@ -1845,8 +1845,8 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       .filter(function (p) { return p.v >= 2 && p.v <= 100; });   // 평당 2만 미만·100만 초과는 면적·금액 입력 오류로 보고 제외
   }
   function heatQ(a, p) { if (!a.length) return 0; var i = (a.length - 1) * p, lo = Math.floor(i), hi = Math.ceil(i); return a[lo] + (a[hi] - a[lo]) * (i - lo); }
-  function heatMed(a) {   // 칸 평균: 가장 비싼 1건과 가장 싼 1건을 빼고 나머지 평균 (3건이면 가운데 값)
-    a = a.slice().sort(function (x, y) { return x - y; }).slice(1, -1); var t = 0; a.forEach(function (v) { t += v; }); return t / a.length;
+  function heatMed(a) {   // 칸 평균: 칸 안 매물 전부의 단순 평균
+    var t = 0; a.forEach(function (v) { t += v; }); return t / a.length;
   }
   function heatCol(t) {
     t = Math.max(0, Math.min(1, t)); var k = t * 3, i = Math.min(2, Math.floor(k)), f = k - i, a = HCOL[i], b = HCOL[i + 1];
@@ -1873,7 +1873,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       (C[best] = C[best] || []).push(p.v);
     });
     vals.sort(function (x, y) { return x - y; });
-    var cells = Object.keys(C).filter(function (k) { return C[k].length >= 3; }).map(function (k) {
+    var cells = Object.keys(C).filter(function (k) { return C[k].length >= 1; }).map(function (k) {
       var rc = k.split('|'), r = +rc[0], c = +rc[1], cy = r * h, cx = c * w + (r & 1) * w / 2;
       return { cy: cy, cx: cx, v: heatMed(C[k]), n: C[k].length, la: cy / mLat, lo: cx / mLng };
     });
@@ -1884,7 +1884,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       var path = []; for (var k = 0; k < 6; k++) { var an = Math.PI / 180 * (60 * k + 30); path.push(new nm.LatLng((o.cy + R * Math.sin(an)) / mLat, (o.cx + R * Math.cos(an)) / mLng)); }
       HEAT.objs.push(new nm.Polygon({ map: map, paths: [path], fillColor: heatCol((Math.log(o.v) - L0) / ((L1 - L0) || 1)), fillOpacity: 0.38, strokeColor: '#FFFFFF', strokeOpacity: 0.95, strokeWeight: 1.5, clickable: false }));
     });
-    vis.filter(function (o) { return o.n >= 5; }).sort(function (a, b) { return b.v - a.v; }).slice(0, 6).forEach(function (o) {
+    vis.filter(function (o) { return o.n >= 3; }).sort(function (a, b) { return b.v - a.v; }).slice(0, 6).forEach(function (o) {
       HEAT.objs.push(new nm.Marker({ map: map, position: new nm.LatLng(o.la, o.lo), clickable: false, zIndex: 50,
         icon: { content: '<div class="hpTop">' + Math.round(o.v) + '만</div>', anchor: new nm.Point(0, 0) } }));
     });
@@ -1916,7 +1916,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       (S.cells ? '<div class="hpBar"></div><div class="hpTick"><span>' + f1(S.lo) + '만</span><span>' + f1(S.hi) + '만</span></div>' +
         '<div class="hpRange">이 화면 실제 범위 <b>최저 ' + f1(S.min) + '만</b> ~ <b class="hi">최고 ' + f1(S.max) + '만</b></div>' +
         '<div class="hpLeg"><i class="hpTop">00만</i> 평당가 높은 상위 6곳</div>' +
-        '<div class="hpNote">평당 월세(만원/전용평) · 칸 안 매물 3건 이상, 최고·최저 1건씩 빼고 평균 · 매물 ' + S.n + '건 · 호가 기준 · 입력 오류로 보이는 값 제외</div>'
+        '<div class="hpNote">평당 월세(만원/전용평) · 칸 안 매물 전체 평균 · 매물 ' + S.n + '건 · 호가 기준 · 입력 오류로 보이는 값 제외</div>'
         : '<div class="hpNote">이 화면에 조건에 맞는 매물이 부족합니다. 지도를 넓혀 보거나 층을 바꿔 주세요.</div>');
   }
   function drawMap() {   // 지도 이동·확대가 연달아 일어나면 마지막 한 번만 다시 그림
