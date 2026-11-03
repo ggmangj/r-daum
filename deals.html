@@ -580,14 +580,20 @@ body.dlFull .mapFullBtn{display:none}
     if (!L.length) { box.innerHTML = ''; return; }
     L.forEach(function (g) { g.av = g.a / g.n; });
     var TN = 0, TA = 0; L.forEach(function (g) { TN += g.n; TA += g.a; }); var MN = TN / L.length, MA = TA / TN;
-    var W = Math.max(240, box.clientWidth || 262), H = 272, PL = 8, PR = 8, PT = 26, PB = 22, xm = Math.max.apply(0, L.map(function (g) { return g.n; })) * 1.08, ym = Math.max.apply(0, L.map(function (g) { return g.av; })) * 1.2, am = Math.max.apply(0, L.map(function (g) { return g.a; }));
-    var X = function (v) { return PL + v / xm * (W - PL - PR); }, Y = function (v) { return PT + (1 - v / ym) * (H - PT - PB); }, R = function (a) { return 3.5 + Math.sqrt(a / am) * 12; };
+    // 그래프 밖: 왼쪽 세로축(저가 ↔ 고가), 아래 가로축(거래 적음 ↔ 거래 많음) / 그래프 안: 네 칸 색 블록 + 칸 모서리에 칸 이름
+    var W = Math.max(240, box.clientWidth || 262), H = 272, PL = 20, PR = 2, PT = 2, PB = 20, IT = 22, IB = 20, yb = H - PB;
+    var xm = Math.max.apply(0, L.map(function (g) { return g.n; })) * 1.08, ym = Math.max.apply(0, L.map(function (g) { return g.av; })) * 1.06, am = Math.max.apply(0, L.map(function (g) { return g.a; }));
+    var X = function (v) { return PL + 6 + v / xm * (W - PL - PR - 6); }, Y = function (v) { return PT + IT + (1 - v / ym) * (yb - PT - IT - IB); }, R = function (a) { return 3.5 + Math.sqrt(a / am) * 12; };
     var C = function (g) { return g.av >= MA ? (g.n < MN ? '#B0452B' : '#8A6A35') : (g.n >= MN ? '#294652' : '#7D878E'); };
-    var x0 = X(MN), y0 = Y(MA), yb = H - PB, sv = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="동네 성격 지도">';
-    sv += '<rect x="' + PL + '" y="' + PT + '" width="' + (x0 - PL) + '" height="' + (y0 - PT) + '" fill="#FBF1E4"/><rect x="' + x0 + '" y="' + y0 + '" width="' + (W - PR - x0) + '" height="' + (yb - y0) + '" fill="#EEF3F5"/>';
-    sv += '<line x1="' + x0 + '" x2="' + x0 + '" y1="' + PT + '" y2="' + yb + '" stroke="#B9AE9C" stroke-dasharray="3 3"/><line x1="' + PL + '" x2="' + (W - PR) + '" y1="' + y0 + '" y2="' + y0 + '" stroke="#B9AE9C" stroke-dasharray="3 3"/><line x1="' + PL + '" x2="' + (W - PR) + '" y1="' + yb + '" y2="' + yb + '" stroke="#E3DCCF"/>';
-    var tq = function (x, y, t, c, an) { return '<text x="' + x + '" y="' + y + '" font-size="11" font-weight="800" fill="' + c + '" text-anchor="' + an + '">' + t + '</text>'; };
-    sv += tq(PL + 2, PT - 9, '고가 빌딩 위주', '#B0452B', 'start') + tq(W - PR - 2, PT - 9, '고가·거래 활발', '#5E4317', 'end') + tq(PL + 2, yb + 15, '소규모 거래', '#7D878E', 'start') + tq(W - PR - 2, yb + 15, '중소형 거래 활발', '#294652', 'end');
+    var x0 = X(MN), y0 = Y(MA), sv = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="동네 성격 지도"><defs><marker id="nAr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L8,4L0,8z" fill="#9AA2A8"/></marker></defs>';
+    var blk = function (x1, y1, x2, y2, c) { return '<rect x="' + x1 + '" y="' + y1 + '" width="' + (x2 - x1) + '" height="' + (y2 - y1) + '" fill="' + c + '"/>'; };
+    sv += blk(PL, PT, x0, y0, '#FBF1E4') + blk(x0, PT, W - PR, y0, '#F7F3EA') + blk(PL, y0, x0, yb, '#F4F4F2') + blk(x0, y0, W - PR, yb, '#EEF3F5');
+    sv += '<line x1="' + x0 + '" x2="' + x0 + '" y1="' + PT + '" y2="' + yb + '" stroke="#fff" stroke-width="2"/><line x1="' + PL + '" x2="' + (W - PR) + '" y1="' + y0 + '" y2="' + y0 + '" stroke="#fff" stroke-width="2"/>';
+    var QB = [], tq = function (x, y, t, c, an) { var w = t.length * 11 - 4; QB.push([an === 'end' ? x - w : x, y - 11, an === 'end' ? x : x + w, y + 2]); return '<text x="' + x + '" y="' + y + '" font-size="11" font-weight="800" fill="' + c + '" text-anchor="' + an + '">' + t + '</text>'; };
+    sv += tq(PL + 6, PT + 15, '고가 빌딩 위주', '#B0452B', 'start') + tq(W - PR - 6, PT + 15, '고가·거래 활발', '#5E4317', 'end') + tq(PL + 6, yb - 6, '소규모 거래', '#6B757D', 'start') + tq(W - PR - 6, yb - 6, '중소형 거래 활발', '#294652', 'end');
+    var ax = function (x, y, t, an, rot) { return '<text x="' + x + '" y="' + y + '" font-size="10.5" font-weight="700" fill="#6B757D" text-anchor="' + an + '"' + (rot ? ' transform="rotate(-90 ' + x + ' ' + y + ')"' : '') + '>' + t + '</text>'; };
+    sv += ax(PL, H - 5, '거래 적음', 'start') + ax(W - PR, H - 5, '거래 많음', 'end') + '<line x1="' + (PL + 54) + '" x2="' + (W - PR - 56) + '" y1="' + (H - 9) + '" y2="' + (H - 9) + '" stroke="#9AA2A8" stroke-width="1.2" marker-start="url(#nAr)" marker-end="url(#nAr)"/>';
+    sv += ax(13, PT, '고가', 'end', 1) + ax(13, yb, '저가', 'start', 1) + '<line x1="9" x2="9" y1="' + (yb - 30) + '" y2="' + (PT + 30) + '" stroke="#9AA2A8" stroke-width="1.2" marker-start="url(#nAr)" marker-end="url(#nAr)"/>';
     // 원이 거의 겹치는 동은 이름을 하나로 묶음
     L.forEach(function (g) { g.x = X(g.n); g.y = Y(g.av); g.r = R(g.a); g.c = C(g); });
     var groups = [];
@@ -605,11 +611,11 @@ body.dlFull .mapFullBtn{display:none}
     var ctr = function (G) { var m = G.m; return [m.reduce(function (s, g) { return s + g.x; }, 0) / m.length, m.reduce(function (s, g) { return s + g.y; }, 0) / m.length]; };
     var sum = function (G) { return G.m.reduce(function (s, g) { return s + g.a; }, 0); }, qd = function (G) { return (G.m[0].x < x0 ? 0 : 1) + (G.m[0].y < y0 ? 0 : 2); }, lab = '';
     for (var tries = 0; tries < 4; tries++) {
-      var occ = L.map(function (g) { return [g.x - g.r, g.y - g.r, g.x + g.r, g.y + g.r]; }), fails = []; lab = '';
+      var occ = L.map(function (g) { return [g.x - g.r, g.y - g.r, g.x + g.r, g.y + g.r]; }).concat(QB), fails = []; lab = '';
       groups.forEach(function (G) {
         var m = G.m.slice().sort(function (a, b) { return b.a - a.a; }), t = m.map(function (g) { return g.dong.replace(/동$/, ''); }).join('·'), c = m[0].c, w = t.length * 12 - (m.length - 1) * 7 + 2, h = 13;
         var cc = ctr(G), cx = cc[0], cy = cc[1], r = Math.max.apply(0, m.map(function (g) { return g.r + Math.hypot(g.x - cx, g.y - cy); })), q = qd(G);
-        var bx = [q % 2 ? x0 + 1 : PL + 1, q < 2 ? PT : y0 + 1, q % 2 ? W - PR - 1 : x0 - 1, q < 2 ? y0 - 1 : yb];
+        var bx = [q % 2 ? x0 + 2 : PL + 2, q < 2 ? PT + 1 : y0 + 2, q % 2 ? W - PR - 2 : x0 - 2, q < 2 ? y0 - 2 : yb - 1];
         var free = function (b) { if (b[0] < bx[0] || b[2] > bx[2] || b[1] < bx[1] || b[3] > bx[3]) return false; return !occ.some(function (o) { return b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]; }); };
         var cl = function (x) { return Math.min(Math.max(x, bx[0]), bx[2] - w); }, cand = [[cx + r + 3, cy - h / 2], [cx - r - 3 - w, cy - h / 2], [cl(cx - w / 2), cy - r - 3 - h], [cl(cx - w / 2), cy + r + 3]];
         [10, -10, 20, -20].forEach(function (d) { cand.push([cx + r + 3, cy - h / 2 + d], [cx - r - 3 - w, cy - h / 2 + d]); });
