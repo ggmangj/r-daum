@@ -381,6 +381,13 @@ body.dlFull .mapFullBtn{display:none}
   function cleanDeals(L) {
     DROP = { share: 0, dup: 0, merged: 0 };
     L = L.filter(function (o) { if (o.share) { DROP.share++; return false; } return true; });
+    // 같은 지번·같은 금액·같은 대지면적이 1년 안에 두 번 신고된 경우(해제 후 재신고·정정 등)는 같은 거래로 보고 최근 신고 1건만 남김
+    var seen = {}; DROP.redup = 0;
+    L = L.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; }).filter(function (o) {
+      var k = [o.gu, o.dong, o.jb, o.amt, Math.round(+o.land || 0)].join('|'), t = Date.parse(o.date);
+      if (seen[k] && seen[k] - t <= 365 * 864e5) { DROP.redup++; return false; }
+      seen[k] = t; return true;
+    });
     var g = {}, out = [];
     L.forEach(function (o) { var k = [o.date, o.gu, o.dong, o.amt].join('|'); (g[k] = g[k] || []).push(o); });
     Object.keys(g).forEach(function (k) {
