@@ -1001,7 +1001,7 @@ body.mapFull .mapTools .mapFullBtn{display:none}
 .hpBar{height:10px;border-radius:5px;margin-top:2px;background:linear-gradient(90deg,rgb(243,233,214),rgb(217,185,127),rgb(156,111,46),rgb(90,58,16));opacity:.85}.hpTick{display:flex;justify-content:space-between;font-size:10.5px;color:#6B757D;margin-top:2px}
 .hpRange{margin-top:6px;font-size:12.5px;color:#294652}.hpRange b{font-weight:800}.hpRange b.hi{color:#8A5A1E}.hpNote{font-size:10.5px;color:#8A939A;margin-top:3px}
 .hpTop{display:inline-block;transform:translate(-50%,-50%);font:800 11.5px 'Noto Sans KR',sans-serif;font-style:normal;color:#fff;background:#8A5A1E;border:1.5px solid #fff;border-radius:999px;padding:2px 8px;white-space:nowrap;box-shadow:0 2px 5px rgba(0,0,0,.2)}
-.hpTop.mid{background:#294652}.hpTop.lo{background:#FFFFFF;color:#5B6670;border-color:#C9CED2}
+.hpTop.mid{background:#294652}.hpTop.few{font-size:10px;padding:1px 6px;opacity:.85}.hpTop.lo{background:#FFFFFF;color:#5B6670;border-color:#C9CED2}
 .hpLeg{margin-top:6px;font-size:10.5px;color:#46515B;font-weight:700;display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px}.hpLeg span{display:inline-flex;align-items:center;gap:4px;white-space:nowrap}.hpLeg .hpTop{transform:none;font-size:10px;padding:1px 6px;box-shadow:none}
 body:not(.mapFull) .heatPanel{width:250px;padding:10px 12px}body:not(.mapFull) .hpTitle{margin-bottom:6px;font-size:13px}body:not(.mapFull) .hpRow{margin-bottom:6px}body:not(.mapFull) .hpRow button{padding:5px 0;font-size:12px}body:not(.mapFull) .hpNote{display:none}   /* 메인 지도에서는 범례를 작게 */
 @media(max-width:560px){.heatPanel,body:not(.mapFull) .heatPanel{width:auto;right:10px;bottom:30px;padding:10px 12px}.hpTitle{margin-bottom:6px;font-size:13px}.hpRow{margin-bottom:6px}.hpRow button{padding:5px 0;font-size:12px}.hpNote{display:none}}
@@ -1918,10 +1918,12 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     });
     // 숫자: 매물 3건 이상인 칸 중 매물이 많은 순으로 (크게 보기 10곳, 메인 지도 7곳).
     // 층 전체 기준 상위 25% 이상 = 상위(갈색), 하위 25% 이하 = 하위(흰색), 그 사이 = 평균권(남색)
-    var cap = document.body.classList.contains('mapFull') ? 10 : 7;
-    vis.filter(function (o) { return o.n >= 3; }).sort(function (a, b) { return b.n - a.n; }).slice(0, cap).forEach(function (o) {
-      var k = o.v >= G.q3 ? 'hi' : o.v <= G.q1 ? 'lo' : 'mid';
-      HEAT.objs.push(new nm.Marker({ map: map, position: new nm.LatLng(o.la, o.lo), clickable: false, zIndex: k === 'hi' ? 52 : 50,
+    // 칸이 화면에서 충분히 크면(폭 52px 이상) 모든 칸에 숫자, 작으면 겹치지 않게 매물 많은 칸 위주로 일부만
+    var pr = map.getProjection(), c0 = map.getCenter(), pa = pr.fromCoordToOffset(c0), pb = pr.fromCoordToOffset(new nm.LatLng(c0.lat(), c0.lng() + w / mLng)), pxW = Math.abs(pb.x - pa.x);
+    var lab = pxW >= 52 ? vis.slice() : vis.filter(function (o) { return o.n >= 3; }).sort(function (a, b) { return b.n - a.n; }).slice(0, document.body.classList.contains('mapFull') ? 10 : 7);
+    lab.forEach(function (o) {
+      var k = (o.v >= G.q3 ? 'hi' : o.v <= G.q1 ? 'lo' : 'mid') + (o.n < 3 ? ' few' : '');
+      HEAT.objs.push(new nm.Marker({ map: map, position: new nm.LatLng(o.la, o.lo), clickable: false, zIndex: k.indexOf('hi') === 0 ? 52 : 50,
         icon: { content: '<div class="hpTop ' + k + '">' + Math.round(o.v) + '만</div>', anchor: new nm.Point(0, 0) } }));
     });
     heatUi();
@@ -1952,7 +1954,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       (S.cells ? '<div class="hpBar"></div><div class="hpTick"><span>' + f1(S.lo) + '만</span><span>' + f1(S.hi) + '만</span></div>' +
         '<div class="hpRange">이 화면 실제 범위 <b>최저 ' + f1(S.min) + '만</b> ~ <b class="hi">최고 ' + f1(S.max) + '만</b></div>' +
         '<div class="hpLeg"><span><i class="hpTop hi">상위</i>' + f1(S.q3) + '만↑</span><span><i class="hpTop mid">평균권</i>' + f1(S.q1) + '~' + f1(S.q3) + '만</span><span><i class="hpTop lo">하위</i>' + f1(S.q1) + '만↓</span></div>' +
-        '<div class="hpNote">평당 월세(만원/전용평) · 칸 안 매물 평균 · 색 기준은 강남·서초 전체 매물 기준(확대해도 고정) · 이 화면 매물 ' + S.n + '건 · 호가 기준 · 입력 오류로 보이는 값 제외</div>'
+        '<div class="hpNote">평당 월세(만원/전용평) · 칸 안 매물 평균 · 작은 숫자는 매물 1~2건 칸 · 색 기준은 강남·서초 전체 매물 기준(확대해도 고정) · 이 화면 매물 ' + S.n + '건 · 호가 기준 · 입력 오류로 보이는 값 제외</div>'
         : '<div class="hpNote">이 화면에 조건에 맞는 매물이 부족합니다. 지도를 넓혀 보거나 층을 바꿔 주세요.</div>');
   }
   function drawMap() {   // 지도 이동·확대가 연달아 일어나면 마지막 한 번만 다시 그림
