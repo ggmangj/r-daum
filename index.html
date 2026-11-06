@@ -1176,7 +1176,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 .flvHd{height:26px;font-size:11.5px;color:#6B757D;border-bottom:1px solid #E6E0D4}.flvHd b{font-weight:600}
 .flvHd em,.flvR em{text-align:right;font-style:normal}
 .flvR{border-bottom:1px solid #F0EBE2;font-size:13px;box-sizing:border-box}.flvR b{font-weight:700;white-space:nowrap}
-.flvR span{color:#33414B;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.flvR span{color:#33414B;font-size:12px;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;word-break:keep-all;overflow-wrap:anywhere}
 .flvR em{font-weight:700;font-size:12.5px;line-height:1.15}.flvR em small{display:block;font-weight:400;color:#8A939A;font-size:11px}
 .flvR.me{background:#FBEDEA;box-shadow:inset 3px 0 #B0452B}.flvR.me b{color:#B0452B}.flvR.ad{background:#FDF5E2;box-shadow:inset 3px 0 #E0A82E}.flvR.gl{border-top:1.6px solid #8A6A35}
 .flvD{display:flex;justify-content:center;background:#fff}.flvSvg{display:block;max-width:100%;height:auto}
@@ -1188,10 +1188,10 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 @keyframes evPop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.flvD .evCar,.flvD .evPop{animation:none}}
 .flvLg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:#4A545C;margin:8px 0 0}.flvLg i{display:inline-block;width:14px;height:9px;margin-right:5px;border:2px dashed;vertical-align:-1px}
-@media (max-width:900px){.flv{grid-template-columns:1fr}.flvD{order:-1;border-bottom:1px solid #EFEAE0}.flvT{border-right:0}.flvT>div[style*="height:4px"]{display:none}.flvR{height:auto!important;min-height:40px;padding-top:4px;padding-bottom:4px}}
+@media (max-width:900px){.flv{grid-template-columns:1fr}.flvD{order:-1;border-bottom:1px solid #EFEAE0}.flvT{border-right:0}.flvT>div[style*="height:4px"]{display:none}.flvR{height:auto!important;min-height:40px;padding-top:4px;padding-bottom:4px}.flvR span{display:block}}
 /* 본문 칸이 좁으면(700px 미만, 예: 1024px 화면) 표가 눌리지 않도록 입체도 위 · 표 아래로 */
 .dtFlv{container-type:inline-size}
-@container (max-width:700px){.flv{grid-template-columns:1fr}.flvD{order:-1;border-bottom:1px solid #EFEAE0}.flvT{border-right:0}.flvT>div[style*="height:4px"]{display:none}.flvR{height:auto!important;min-height:40px;padding-top:4px;padding-bottom:4px}}
+@container (max-width:700px){.flv{grid-template-columns:1fr}.flvD{order:-1;border-bottom:1px solid #EFEAE0}.flvT{border-right:0}.flvT>div[style*="height:4px"]{display:none}.flvR{height:auto!important;min-height:40px;padding-top:4px;padding-bottom:4px}.flvR span{display:block}}
 @media (max-width:760px){.dtI2{grid-template-columns:max-content minmax(0,1fr);font-size:14px}.dtI2 dt{padding:10px 12px}.dtI2 dd{padding:10px 12px}.dtI2 .pad{display:none}.dtNo{font-size:14px}}
 @media print{.dtI2 dt,.dtI2 dd{padding-top:7px;padding-bottom:7px}.flvD .evCar,.flvD .evPop{animation:none}.flv{break-inside:avoid}}
 </style>
@@ -2574,7 +2574,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       var withPct = function (area, p) { return area ? a(area) + (p ? ' (' + pct(p) + ')' : '') : ''; };
       var rows = [
         ['대장 종류', reg.kind], ['주용도', (reg.purp || '') + (reg.etc && reg.etc !== reg.purp ? ' (' + reg.etc + ')' : '')],
-        ['층수', (reg.grnd ? '지상 ' + reg.grnd + '층' : '') + (reg.ugrnd ? ' / 지하 ' + reg.ugrnd + '층' : '')], ['사용승인일', reg.apr],
+        ['층수', (reg.grnd ? '지상 ' + reg.grnd + '층' : '') + (reg.ugrnd ? ' / 지하 ' + reg.ugrnd + '층' : '')], ['용도지역', zoneTxt(reg.zone)],
         ['건축면적 (건폐율)', withPct(reg.arch, reg.bc)], ['연면적 (용적률)', withPct(reg.tot, reg.vl)],
         ['승강기', cnt([['승용', reg.elR], ['비상용', reg.elE]]) || (/^(O|Y|유|있)/i.test(it.elev || '') ? '있음 (대장에 대수 미기재)' : '')],
         ['주차장', cnt([['옥내 자주식', reg.pkIA], ['옥내 기계식', reg.pkIM], ['옥외 자주식', reg.pkOA], ['옥외 기계식', reg.pkOM]])],
@@ -3007,6 +3007,11 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
    * - 엘리베이터: 대장에 승강기가 있을 때만 건물 왼쪽에 승강로를 그리고, 카가 움직이다 이 매물의 가장 윗층에 멈춤
    * - 지반선(G.L) 아래는 흙색, 이 매물은 빨간 점선 · 같은 건물 추가임대는 노란 점선(누르면 그 매물로)
    * - 지하가 지상 단일층의 2배를 넘으면 지상 기준으로 그리고 지하는 지상층의 최대 1.3배까지만 */
+  // 용도지역: 지역·지구 목록에서 「○○지역」만 (도시지역 제외)  예) 제2종일반주거지역 · 일반상업지역
+  function zoneTxt(z) {
+    var a = String(z || '').split(/\s*,\s*/).filter(function (v, i, l) { return /지역$/.test(v) && v !== '도시지역' && l.indexOf(v) === i; });
+    return a.join(' · ');
+  }
   function flvHtml(it) {
     var rows = floorRows(it.reg); if (!rows.length) return '';
     var PY = 3.3058, n = rows.length, RH = n > 14 ? 32 : 40, TOP = 30, X0 = 96, MAXW = 200, DX = 22, DY = 12;
@@ -3061,13 +3066,19 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
         '<rect x="' + (ix + 2) + '" y="' + (iy + 44) + '" width="48" height="2.5" fill="#4A5A66"/></g>';
     }
     // 워터마크 (사진과 같은 로고 + 부동산다움)
-    var lg = document.querySelector('.siteFoot .dmMark'), src = lg ? lg.getAttribute('src') : '', cx = X0 + MAXW / 2 + 10, cyw = H / 2;
-    s += '<g opacity=".11" transform="translate(' + cx + ',' + cyw + ') rotate(-18)" pointer-events="none">' + (src ? '<image href="' + esc(src) + '" x="-104" y="-26" width="30" height="34" preserveAspectRatio="xMidYMid meet"/>' : '') +
-      '<text x="' + (src ? 12 : 0) + '" text-anchor="middle" font-size="30" font-weight="900" fill="#294652">부동산다움</text><text x="' + (src ? 12 : 0) + '" y="20" text-anchor="middle" font-size="11.5" font-weight="700" fill="#294652">r-daum.com · 02-555-1165</text></g>';
+    var lg = document.querySelector('.siteFoot .dmMark'), src = lg ? lg.getAttribute('src') : '', cx = W / 2 + (src ? 22 : 0), cyw = (TOP + n * RH) / 2 + 6;
+    try { if (/^data:image\/svg\+xml;base64,/.test(src)) src = 'data:image/svg+xml;base64,' + btoa(atob(src.split(',')[1]).replace(/#F6F2EA/gi, '#294652')); } catch (e) { }   // 밝은 바탕용: 로고 흰 부분을 남색으로
+    s += '<g class="flvWm" opacity=".3" pointer-events="none">' + (src ? '<image href="' + esc(src) + '" x="' + (cx - 168) + '" y="' + (cyw - 34) + '" width="40" height="56" preserveAspectRatio="xMidYMid meet"/>' : '') +
+      '<text x="' + cx + '" y="' + (cyw + 6) + '" text-anchor="middle" font-size="44" font-weight="900" letter-spacing="4" fill="#294652" stroke="#fff" stroke-width="3" paint-order="stroke">부동산다움</text>' +
+      '<text x="' + cx + '" y="' + (cyw + 30) + '" text-anchor="middle" font-size="16" font-weight="800" letter-spacing="5" fill="#294652" stroke="#fff" stroke-width="2.5" paint-order="stroke">02-555-1165</text></g>' +
+      '<defs><linearGradient id="flvBand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0F1920" stop-opacity="0"/><stop offset="1" stop-color="#0F1920" stop-opacity=".62"/></linearGradient></defs>' +
+      '<rect x="0" y="' + (H - 26) + '" width="' + W + '" height="26" fill="url(#flvBand)" pointer-events="none"/>' +
+      '<rect x="10" y="' + (H - 16) + '" width="3.4" height="9" fill="#C9A46A"/><path d="M14.6 ' + (H - 16) + 'h1.6a4.5 4.5 0 0 1 0 9h-1.6z" fill="#fff"/>' +
+      '<text x="22" y="' + (H - 8) + '" font-size="11" font-weight="700" fill="#fff">부동산다움 · r-daum.com</text><text x="' + (W - 10) + '" y="' + (H - 8) + '" text-anchor="end" font-size="11" font-weight="600" fill="#fff">02-555-1165</text>';
     var svg = '<svg class="flvSvg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="층별 현황 입체도">' + s + '</svg>';
     var m2t = function (v) { return Number(v).toLocaleString('ko-KR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
     var tbl = rows.map(function (r, i) {
-      var use = r.segs.map(function (x) { return x.label; }).join(' · '), full = r.segs.map(function (x) { return x.full + ' ' + m2t(x.area) + '㎡'; }).join(' / ');
+      var use = r.segs.map(function (x) { return x.full; }).filter(function (v, k, l) { return v && l.indexOf(v) === k; }).join(' · ') || '-', full = r.segs.map(function (x) { return x.full + ' ' + m2t(x.area) + '㎡'; }).join(' / ');
       return '<div class="flvR' + (r.here ? ' me' : '') + (r.add ? ' ad' : '') + (i === gi ? ' gl' : '') + '" style="height:' + RH + 'px" title="' + esc(full) + '"><b>' + esc(r.label) + '</b><span>' + esc(use) + '</span><em>' + m2t(r.tot) + '㎡<small>' + (r.tot / PY).toFixed(2) + '평</small></em></div>';
     }).join('');
     return '<section class="dtSec dtFlv"><h2>층별 현황</h2><div class="flv"><div class="flvT"><div class="flvHd"><b>층</b><span>건축물대장상 용도</span><em>층 합계 면적</em></div><div style="height:' + (TOP - 26) + 'px"></div>' + tbl + '</div><div class="flvD">' + svg + '</div></div>' +
