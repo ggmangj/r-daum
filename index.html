@@ -3018,7 +3018,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       var key = String(f[0]).replace(/\s+/g, '');
       if (!groups[key]) { groups[key] = { name: f[0], segs: [] }; order.push(key); }
       var full = String(f[2] || ''), cat = useCat(full), sh = useShort(full) || FCAT[cat][0];
-      var prev = groups[key].segs.filter(function (s) { return s.label === sh; })[0];
+      var prev = groups[key].segs.filter(function (s) { return s.full === full; })[0];   // 대장 용도 문구가 같을 때만 합침
       if (prev) prev.area += area; else groups[key].segs.push({ cat: cat, label: sh, full: full, area: area });
     });
     var rows = order.map(function (k) { return groups[k]; }).sort(function (a, b) { return floorKey(b.name) - floorKey(a.name); });
@@ -3035,6 +3035,9 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     var a = String(z || '').split(/\s*,\s*/).filter(function (v, i, l) { return /지역$/.test(v) && v !== '도시지역' && l.indexOf(v) === i; });
     return a.join(' · ');
   }
+  // 건축물대장 출력본의 층별 「용도」 칸 = 기타용도 문구 (주용도 코드는 계단실·기계실 등 공용부분도 건물 주된 용도로 잡혀 있음)
+  //   예) 「사무소 (기계실/전기실)」 → 기계실/전기실, 「사진관 (제2종근린생활시설(사진관))」 → 제2종근린생활시설(사진관), 기타용도가 없으면 주용도
+  function regUse(t) { var m = /^(.*?) \((.*)\)$/.exec(String(t || '').trim()); return m ? m[2].trim() : String(t || '').trim(); }
   function flvHtml(it) {
     var rows = floorRows(it.reg); if (!rows.length) return '';
     var PY = 3.3058, n = rows.length, RH = n > 16 ? 40 : 46, TOP = 30, X0 = 96, MAXW = 200, DX = 22, DY = 12;
@@ -3100,7 +3103,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     var svg = '<svg class="flvSvg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="층별 현황 입체도">' + s + '</svg>';
     var m2t = function (v) { return Number(v).toLocaleString('ko-KR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
     var tbl = rows.map(function (r, i) {
-      var use = r.segs.map(function (x) { return x.full; }).filter(function (v, k, l) { return v && l.indexOf(v) === k; }).join(' · ') || '-', full = r.segs.map(function (x) { return x.full + ' ' + m2t(x.area) + '㎡'; }).join(' / ');
+      var use = r.segs.slice().sort(function (p, q) { return q.area - p.area; }).map(function (x) { return regUse(x.full); }).filter(function (v, k, l) { return v && l.indexOf(v) === k; }).join(' · ') || '-', full = r.segs.map(function (x) { return x.full + ' ' + m2t(x.area) + '㎡'; }).join(' / ');
       return '<div class="flvR' + (r.here ? ' me' : '') + (r.add ? ' ad' : '') + (i === gi ? ' gl' : '') + '" style="height:' + RH + 'px" title="' + esc(full) + '"><b>' + esc(r.label) + '</b><span>' + esc(use) + '</span><em>' + m2t(r.tot) + '㎡<small>' + (r.tot / PY).toFixed(2) + '평</small></em></div>';
     }).join('');
     return '<section class="dtSec dtFlv"><h2>층별 현황</h2><div class="flv"><div class="flvT"><div class="flvHd"><b>층</b><span>건축물대장상 용도</span><em>층 합계 면적</em></div><div style="height:' + (TOP - 26) + 'px"></div>' + tbl + '</div><div class="flvD">' + svg + '</div></div>' +
