@@ -258,6 +258,18 @@ body.dlFull .mapFullBtn{display:none}
 
 <style id="fullWide">/* 넓은 화면(1400px 이상)에서는 가운데 1280px 제한 없이 화면 가득 (좌우 여백 48px) */
 @media (min-width:1400px){.wrap,[style*="max-width: 1280px"]{max-width:none!important;padding-left:48px!important;padding-right:48px!important}}</style>
+<style id="lsTogCss">
+/* 넓은 화면: 거래 목록은 한 줄에 들어가는 폭(450px)으로 고정, 넘치면 … */
+@media (min-width:1400px){.main,body.dlFull .main{grid-template-columns:minmax(0,1fr) 450px}.it .t,.it .m{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+/* 거래 목록 열고 닫기: 지도와 목록 경계의 손잡이 */
+.lsTog{position:absolute;right:0;top:50%;transform:translateY(-50%);z-index:6;width:28px;height:76px;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:0;border-radius:12px 0 0 12px;background:#294652;color:#FFFFFF;cursor:pointer;box-shadow:-2px 0 6px rgba(41,70,82,.15);font:700 10.5px/1.1 'Noto Sans KR',sans-serif;writing-mode:vertical-rl;letter-spacing:1px}
+.lsTog svg{writing-mode:horizontal-tb;color:#C9A46A;transition:transform .2s}.lsTog:hover{background:#1E3540}
+.main.listOff,body.dlFull .main.listOff{grid-template-columns:minmax(0,1fr)!important}
+.main.listOff .list{display:none!important}.main.listOff .mapBox{border-right:0}
+.main.listOff .lsTog svg{transform:rotate(180deg)}
+@media (max-width:1100px){.lsTog{display:none}}
+@media print{.lsTog{display:none}}
+</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; width: 100%; letter-spacing: -0.2px">
@@ -312,6 +324,7 @@ body.dlFull .mapFullBtn{display:none}
   <div class="leg" aria-hidden="true"><b>동별 대지 평당가</b><div class="bar"></div><div class="row"><span id="lg0">-</span><span id="lg1">-</span></div>
    <div class="dots"><span><i style="background:#3B4650"></i>거래 위치</span><span><i style="background:#fff;border:1.5px dashed #7D96A0"></i>지번 미확인(동 표시)</span></div></div>
   <div class="mapMsg" id="mapMsg">실거래 자료를 불러오는 중입니다…</div>
+  <button type="button" class="lsTog" id="lsTog" aria-controls="list" aria-expanded="true" title="거래 목록 닫기"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18l6-6-6-6"></path></svg><span>목록</span></button>
  </div>
  <div class="list"><div class="lh"><b><span id="cnt">0</span>건의 거래</b><button type="button" class="rst" id="rst"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg>검색 초기화</button><label class="sr" for="sort">정렬</label><select id="sort"><option value="d">최신순</option><option value="p">금액 높은순</option><option value="u">평당가 높은순</option></select></div><div id="list"></div></div>
 </section>
@@ -851,6 +864,17 @@ body.dlFull .mapFullBtn{display:none}
     fitMain(); mapRefresh(); setTimeout(mapRefresh, 250); if (!on) $('fullBtn').blur();
   }
   $('fullBtn').addEventListener('click', function () { setFull(!document.body.classList.contains('dlFull')); });
+  // 거래 목록 열고 닫기 (닫으면 지도를 가로로 넓게, 같은 컴퓨터에서는 다음에도 기억)
+  (function () {
+    var b = $('lsTog'), m = document.querySelector('.main'); if (!b || !m) return;
+    var set = function (off, save) {
+      m.classList.toggle('listOff', off); b.setAttribute('aria-expanded', off ? 'false' : 'true'); b.title = off ? '거래 목록 열기' : '거래 목록 닫기';
+      if (save) { try { localStorage.setItem('dlListOff', off ? '1' : ''); } catch (e) { } }
+      mapRefresh();
+    };
+    try { if (localStorage.getItem('dlListOff') === '1' && innerWidth > 1100) set(true); } catch (e) { }
+    b.addEventListener('click', function () { set(!m.classList.contains('listOff'), true); });
+  })();
   $('fullClose').addEventListener('click', function () { setFull(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && document.body.classList.contains('dlFull')) setFull(false); });
   load();
