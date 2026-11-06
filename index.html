@@ -943,7 +943,7 @@ body.mapFull .mapTools .mapFullBtn{display:none}
 @media (min-width:1101px){
  .headRow{padding-top:10px!important;padding-bottom:10px!important}
  .heroSplit{padding-top:22px!important;padding-bottom:40px!important}
- .heroMap #mapList{height:470px!important}
+ .heroMap #mapList{height:574px!important}
  body:not(.mapFull) .heroMap #leafletMap{position:absolute!important;top:0;left:0;right:0;bottom:0;height:auto!important}   /* 왼쪽 목록 높이에 맞춰 지도를 끝까지 채움 (네이버 로고 잘림 방지) */
  .heroMap .autoSearch{padding:10px 14px 10px;margin-bottom:10px}.heroMap .asHead{margin-bottom:8px}.heroMap .asRow input,.heroMap .asRow button{height:42px}
  .heroMap .mapTools{margin-bottom:10px!important}.heroMap .mapSel{height:40px!important}
@@ -1195,6 +1195,18 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 @media (max-width:760px){.dtI2{grid-template-columns:max-content minmax(0,1fr);font-size:14px}.dtI2 dt{padding:10px 12px}.dtI2 dd{padding:10px 12px}.dtI2 .pad{display:none}.dtNo{font-size:14px}}
 @media print{.dtI2 dt,.dtI2 dd{padding-top:7px;padding-bottom:7px}.flvD .evCar,.flvD .evPop{animation:none}.flv{break-inside:avoid}}
 </style>
+<style id="mlTogCss">
+/* 매물 목록 열고 닫기: 목록과 지도 경계의 손잡이 */
+.mlTog{position:absolute;left:0;top:50%;transform:translateY(-50%);z-index:6;width:28px;height:76px;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:0;border-radius:0 12px 12px 0;background:#294652;color:#FFFFFF;cursor:pointer;box-shadow:2px 0 6px rgba(41,70,82,.12);font:700 10.5px/1.1 'Noto Sans KR',sans-serif;writing-mode:vertical-rl;letter-spacing:1px}
+.mlTog svg{writing-mode:horizontal-tb;transition:transform .2s}
+.mlTog:hover{background:#1E3540}.mlTog svg{color:#C9A46A}
+#map.listOff .mlCol,body.mapFull #map.listOff .elev>.mlCol{flex:0 0 0!important;width:0;overflow:hidden;border-right:0!important}
+#map.listOff .mlTog svg{transform:rotate(180deg)}
+@media (max-width:760px){.mlTog{display:none}}
+@media print{.mlTog{display:none}}
+</style>
+<style id="fullWide">/* 넓은 화면(1400px 이상)에서는 가운데 1280px 제한 없이 화면 가득 (좌우 여백 48px) */
+@media (min-width:1400px){[style*="max-width: 1280px"],.headRow,.heroSplit,.guideTabsWrap,.sectorBody,.procBand{max-width:none!important;padding-left:48px!important;padding-right:48px!important}}</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; background: #FFFFFF; width: 100%; letter-spacing: -0.2px">
@@ -1290,7 +1302,6 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 <h2 class="heroMapTitle"><span>MAP SEARCH</span>지도로 매물 찾기</h2><div id="mapSearchBar" class="msBar" hidden></div>
 <form class="noSearch" id="noSearch" role="search"><label class="sr" for="noInput">매물번호 검색</label><input id="noInput" type="search" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="12" placeholder="매물번호 검색 (예: D5B531F)"><button type="submit" aria-label="매물번호로 찾기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></button></form><button type="button" class="mapFullClose" id="mapFullClose" aria-label="크게 보기 닫기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button>
 </div>
-<form class="autoSearch" id="autoSearch" autocomplete="off"><div class="asHead"><b>매물 자동 검색</b><span>원하는 조건을 문장으로 적으면 맞는 매물을 찾아 드려요 <em>예) 압구정역 도보5분, 월세 300만원 이하로 2층 매물 찾아줘</em></span></div><div class="asRow"><label class="sr" for="asInput">매물 자동 검색</label><input id="asInput" type="search" maxlength="120" placeholder="예) 강남역 도보 5분, 2층 이상, 50평 이하, 보증금 5,000만원 이하, 월세 500만원 이하"><button type="submit">찾기</button></div></form>
 <div class="mapTools" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
 <div class="rng" id="rgArea"><span class="rgL">면적</span><input id="mapAreaMin" type="text" inputmode="decimal" autocomplete="off" maxlength="7" placeholder="최소" aria-label="면적 최소"><i>~</i><input id="mapAreaMax" type="text" inputmode="decimal" autocomplete="off" maxlength="7" placeholder="최대" aria-label="면적 최대"><span class="rgU">평</span></div>
 <div class="rng" id="rgFloor" title="지하층은 B1 또는 -1 로 입력"><span class="rgL">층</span><input id="mapFloorMin" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최저" aria-label="층 최소"><i>~</i><input id="mapFloorMax" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최고" aria-label="층 최대"><span class="rgU">층</span></div>
@@ -1299,14 +1310,15 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 <button type="button" class="mapFullBtn" id="mapFullBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"></path></svg>지도 크게 보기</button>
 </div>
 <div class="elev" style="display: flex; flex-wrap: wrap; gap: 0; border: 1px solid #E6E0D4; border-radius: 18px; overflow: hidden; background: #FFFFFF">
-<div style="flex: 1 1 250px; min-width: 0; display: flex; flex-direction: column; border-right: 1px solid #E6E0D4">
+<div class="mlCol" style="flex: 1 1 250px; min-width: 0; display: flex; flex-direction: column; border-right: 1px solid #E6E0D4">
 <div style="padding: 16px 18px; border-bottom: 1px solid #EFEAE0; display: flex; justify-content: space-between; align-items: center; font-size: 14px">
 <span><b id="mapCount" style="color: #294652">0</b>건의 매물 <span id="mapScope" style="color: #6B757D; font-size: 12px; margin-left: 4px"></span></span>
 <span id="mapUpdated" hidden></span><button type="button" class="mapReset" id="mapReset" title="검색 조건 모두 지우기"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg>검색 초기화</button>
 </div>
 <div id="mapList" style="overflow-y: auto; height: 520px"></div>
 </div>
-<div style="flex: 999 1 400px; min-width: 0; position: relative">
+<div class="mmCol" style="flex: 999 1 400px; min-width: 0; position: relative">
+<button type="button" class="mlTog" id="mlTog" aria-controls="mapList" aria-expanded="true" title="매물 목록 닫기"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg><span>목록</span></button>
 <div id="leafletMap" style="height: 571px; width: 100%; overflow: hidden; position: relative; background: #ECE6DA"></div>
 <div class="dongPick" id="dongPick"><select id="mapDong" class="sr" tabindex="-1" aria-hidden="true"><option value="">전체 지역</option></select><button type="button" class="dpBtn" id="dpBtn" aria-expanded="false" aria-controls="dpPanel"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"></path><circle cx="12" cy="9.5" r="2.5"></circle></svg><span id="dpLabel">법정동</span><b class="dpCaret" aria-hidden="true">▾</b><i class="dpX" role="button" aria-label="법정동 선택 해제" title="법정동 선택 해제">✕</i></button><div class="dpPanel" id="dpPanel" hidden></div></div>
 </div>
@@ -2480,6 +2492,18 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     window.addEventListener('resize', function () { if (document.body.classList.contains('mapFull') && !canFull()) { document.body.classList.remove('mapFull'); } if (M && M.resize) M.resize(); });
   })();
 
+  /* ---------- 매물 목록 열고 닫기 (목록 닫으면 지도를 가로로 넓게) ---------- */
+  (function () {
+    var b = $('mlTog'), sec = $('map'); if (!b || !sec) return;
+    var set = function (off, save) {
+      sec.classList.toggle('listOff', off); b.setAttribute('aria-expanded', off ? 'false' : 'true'); b.title = off ? '매물 목록 열기' : '매물 목록 닫기';
+      if (save) { try { localStorage.setItem('bdListOff', off ? '1' : ''); } catch (e) { } }
+      mapRefit();
+    };
+    try { if (localStorage.getItem('bdListOff') === '1') set(true); } catch (e) { }
+    b.addEventListener('click', function () { set(!sec.classList.contains('listOff'), true); });
+  })();
+
   /* ================= 매물 상세 페이지 (#item/매물번호) ================= */
   var OFFICE_INFO = [['상호', '부동산다움공인중개사사무소'], ['대표', '개업공인중개사 안혁준'], ['등록번호', '제11680-2021-00537호'],
     ['사업자번호', '415-16-62854'], ['소재지', '서울특별시 강남구 신사동 578-1 일상빌딩 1층'], ['전화', '02-555-1165']];
@@ -2578,7 +2602,6 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
         ['건축면적 (건폐율)', withPct(reg.arch, reg.bc)], ['연면적 (용적률)', withPct(reg.tot, reg.vl)],
         ['승강기', cnt([['승용', reg.elR], ['비상용', reg.elE]]) || (/^(O|Y|유|있)/i.test(it.elev || '') ? '있음 (대장에 대수 미기재)' : '')],
         ['주차장', cnt([['옥내 자주식', reg.pkIA], ['옥내 기계식', reg.pkIM], ['옥외 자주식', reg.pkOA], ['옥외 기계식', reg.pkOM]])],
-        ['세대 / 가구 / 호', [reg.hhld ? reg.hhld + '세대' : '', reg.fmly ? reg.fmly + '가구' : '', reg.ho ? reg.ho + '호' : ''].filter(Boolean).join(' / ')],
         ['부속건축물', reg.atch ? reg.atch + '동' + (reg.atchA ? ' (' + a(reg.atchA) + ')' : '') : '']
       ].filter(function (r) { return nz(r[1]); });
       regHtml = '<section class="dtSec"><h2>건축물정보</h2>' +
