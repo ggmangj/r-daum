@@ -1157,6 +1157,41 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 }
 </style>
 
+<style id="flvCss">
+/* 매물 정보 · 건축물정보 표: 두 열, 항목 이름 칸은 글자 길이에 맞춤(줄바꿈 없음) */
+.dtI2{display:grid;grid-template-columns:max-content minmax(0,1fr) max-content minmax(0,1fr);border-top:2px solid #294652;margin:0;font-size:14.5px}
+.dtI2>div{display:contents}
+.dtI2 dt{background:#FAF7F1;color:#46515B;font-weight:600;padding:12px 16px;white-space:nowrap;border-bottom:1px solid #EFEAE0}
+.dtI2 dd{margin:0;padding:12px 14px;color:#14191F;word-break:keep-all;border-bottom:1px solid #EFEAE0}
+.dtI2 dd.muted{color:#9AA1A8}
+.dtH2r{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}.dtH2r h2{margin:0!important}
+.dtNo{display:inline-flex;align-items:center;gap:8px;background:#294652;color:#fff;border-radius:999px;padding:5px 6px 5px 14px;font-size:15px}
+.dtNo small{font-size:11px;font-weight:600;color:#C7A774}.dtNo b{font-weight:800;letter-spacing:.5px}
+.dtNoCp{border:0;background:#C7A774;color:#14191F;border-radius:999px;font-size:11.5px;font-weight:700;padding:4px 10px;cursor:pointer}
+/* 층별 현황: 표 + 입체도 */
+.flvH{margin:22px 0 8px;font-size:15.5px;color:#294652}
+.flv{display:grid;grid-template-columns:minmax(0,1fr) auto;border-top:2px solid #294652;background:#FBFAF7}
+.flvT{border-right:1px solid #EFEAE0;min-width:0}
+.flvHd,.flvR{display:grid;grid-template-columns:62px minmax(0,1fr) 92px;align-items:center;padding:0 10px;gap:6px}
+.flvHd{height:26px;font-size:11.5px;color:#6B757D;border-bottom:1px solid #E6E0D4}.flvHd b{font-weight:600}
+.flvHd em,.flvR em{text-align:right;font-style:normal}
+.flvR{border-bottom:1px solid #F0EBE2;font-size:13px;box-sizing:border-box}.flvR b{font-weight:700;white-space:nowrap}
+.flvR span{color:#33414B;font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.flvR em{font-weight:700;font-size:12.5px;line-height:1.15}.flvR em small{display:block;font-weight:400;color:#8A939A;font-size:11px}
+.flvR.me{background:#FBEDEA;box-shadow:inset 3px 0 #B0452B}.flvR.me b{color:#B0452B}.flvR.ad{background:#FDF5E2;box-shadow:inset 3px 0 #E0A82E}.flvR.gl{border-top:1.6px solid #8A6A35}
+.flvD{display:flex;justify-content:center;background:#fff}.flvSvg{display:block;max-width:100%;height:auto}
+.flvD .flAdd{cursor:pointer}
+.flvD .evCar{animation:evMove 2.6s cubic-bezier(.45,0,.25,1) .2s both;animation-play-state:paused}
+.flvD .evPop{animation:evPop .5s 2.8s both;animation-play-state:paused;transform-box:fill-box;transform-origin:right center}
+.flvD.go .evCar,.flvD.go .evPop{animation-play-state:running}
+@keyframes evMove{from{transform:translateY(var(--d))}to{transform:none}}
+@keyframes evPop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.flvD .evCar,.flvD .evPop{animation:none}}
+.flvLg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:#4A545C;margin:8px 0 0}.flvLg i{display:inline-block;width:14px;height:9px;margin-right:5px;border:2px dashed;vertical-align:-1px}
+@media (max-width:900px){.flv{grid-template-columns:1fr}.flvD{order:-1;border-bottom:1px solid #EFEAE0}.flvT{border-right:0}.flvT>div[style*="height:4px"]{display:none}.flvR{height:auto!important;min-height:40px;padding-top:4px;padding-bottom:4px}}
+@media (max-width:760px){.dtI2{grid-template-columns:max-content minmax(0,1fr);font-size:14px}.dtI2 dt{padding:10px 12px}.dtI2 dd{padding:10px 12px}.dtI2 .pad{display:none}.dtNo{font-size:14px}}
+@media print{.dtI2 dt,.dtI2 dd{padding-top:7px;padding-bottom:7px}.flvD .evCar,.flvD .evPop{animation:none}.flv{break-inside:avoid}}
+</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; background: #FFFFFF; width: 100%; letter-spacing: -0.2px">
@@ -2503,27 +2538,28 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     var kindTxt = usageTxt ? usageTxt.replace(/(제[12]종)(근린)/, '$1 $2') + (/위반/.test(usageTxt) ? '' : '') : '';
     var parkTxt = [nz(it.parkTotal) ? '건축물대장 ' + nz(it.parkTotal) : '', nz(it.parking) ? '실제 사용 가능 ' + nz(it.parking) : ''].filter(Boolean).join(' / ');
     var dirTxt = nz(it.direction) ? (/기준/.test(it.direction) ? it.direction : it.direction + ' (주된 출입구 기준)') : '';
-    var info = '<dl class="dtInfo one">' +
-      infoRow('매물번호', it.id) +
+    // 두 열(왼쪽·오른쪽) 7줄: 소재지|가격 · 거래 형태|관리비 · 해당층|권리금 · 전용면적|주차대수 · 종류|엘리베이터 · 방향|화장실 · 사용승인일|입주가능일
+    var info = '<dl class="dtI2">' +
       infoRow('소재지', (it.gu || '강남구') + ' ' + (it.dong || '') + (it.floor ? ' · ' + it.floor : '')) +
-      infoRow('거래 형태', '임대차 (월세)') +
       infoRow('가격', '보증금 ' + (it.depText || '문의') + ' / 월세 ' + (it.rentText || '문의')) +
-      infoRow('중개대상물 종류', kindTxt ? '건축물 · ' + kindTxt : '건축물 · ' + (it.catLabel || '')) +
-      infoRow('전용면적', m2(it.area)) +
-      infoRow('해당층 / 총 층수', floorTxt) +
-      infoRow('사용승인일', it.approval) +
-      infoRow('주차대수', it.parking) +
+      infoRow('거래 형태', '임대차 (월세)') +
       infoRow('관리비', it.mgmt) +
+      infoRow('해당층 / 총 층수', floorTxt) +
+      infoRow('권리금', it.premium === '무권리' ? '없음' : (it.unv && !it.premium ? '' : '유선문의')) +
+      infoRow('전용면적', m2(it.area)) +
+      infoRow('주차대수', it.parking) +
+      infoRow('중개대상물 종류', kindTxt ? '건축물 · ' + kindTxt : '건축물 · ' + (it.catLabel || '')) +
       infoRow('엘리베이터', elev) +
       infoRow('방향', dirTxt) +
+      infoRow('화장실', it.toilet) +
+      infoRow('사용승인일', it.approval) +
       infoRow('입주가능일', it.moveIn, false, '협의 (문의)') +
-      infoRow('욕실(화장실)', it.toilet) +
-      infoRow('권리금', it.premium === '무권리' ? '없음' : (it.unv && !it.premium ? '' : '유선문의')) +
       '</dl>';
     var feat = (nz(it.point) ? '<p class="dtPoint"><b>POINT</b>&nbsp; ' + esc(it.point) + '</p>' : '') +
       (opts.length ? '<div class="dtChips">' + opts.map(function (o) { return '<span>' + esc(o) + '</span>'; }).join('') + '</div>' : '');
     var hasFl = !!(it.reg && it.reg.fl && it.reg.fl.length);
-    var floorBox = hasFl ? '<div class="dtFloorBox"><h3>층별 현황</h3><div id="dtFloor" class="dtFloor"></div><p class="dtFloorNote">※ 건축물대장상 용도로, 실제 업종과 다를 수 있습니다.</p></div>' : '';
+    var floorBox = '';   // 층별 현황은 건축물정보 안의 표 + 입체도로 옮김
+    var floorBoxOld = hasFl ? '<div class="dtFloorBox"><h3>층별 현황</h3><div id="dtFloor" class="dtFloor"></div><p class="dtFloorNote">※ 건축물대장상 용도로, 실제 업종과 다를 수 있습니다.</p></div>' : '';
     // ── 건축물대장 (표제부·층별현황·지역지구) ──
     var reg = it.reg, regHtml = '';
     var bldMsg = !it.unv || reg ? '' : !it.bldDone ? '<p class="dtBldMsg" id="dtBldMsg"><span class="spin" aria-hidden="true"></span>건축물대장(층별 현황·건축물정보)을 불러오는 중입니다…</p>'
@@ -2543,8 +2579,8 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
         ['부속건축물', reg.atch ? reg.atch + '동' + (reg.atchA ? ' (' + a(reg.atchA) + ')' : '') : '']
       ].filter(function (r) { return nz(r[1]); });
       regHtml = '<section class="dtSec"><h2>건축물정보</h2>' +
-        '<dl class="dtInfo">' + rows.map(function (r) { return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>'; }).join('') + (rows.length % 2 ? '<div class="pad"><dt></dt><dd></dd></div>' : '') +
-        (function () {   // 층별 현황 (글자): 건축물대장 표기 그대로 (층 이름·용도·㎡), 지하 가장 낮은 층 → 옥탑, 같은 층은 오른쪽으로 나열
+        '<dl class="dtI2">' + rows.map(function (r) { return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>'; }).join('') + (rows.length % 2 ? '<div class="pad"><dt></dt><dd></dd></div>' : '') + '</dl>' + flvHtml(it) +
+        (function () { return ''; /* 예전 층별 현황 글자 목록 (표 + 입체도로 바뀜) */ // 건축물대장 표기 그대로 (층 이름·용도·㎡), 지하 가장 낮은 층 → 옥탑, 같은 층은 오른쪽으로 나열
           var fl = (reg.fl || []).filter(function (f) { return +f[3] > 0; }); if (!fl.length) return '';
           var by = {}, keys = [];
           fl.forEach(function (f) { var k = String(f[0]).replace(/\s+/g, ''); if (!by[k]) { by[k] = { name: f[0], items: [] }; keys.push(k); } by[k].items.push(f); });
@@ -2554,7 +2590,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
             return '<li><b>' + esc(g.name) + '</b><span class="flUses">' +
               g.items.map(function (f) { return '<span class="flUse"><span>' + esc(f[2] || '-') + '</span><em>' + m2(f[3]) + '</em></span>'; }).join('') + '</span></li>';
           }).join('') + '</ul></dd></div>';
-        })() + '</dl>' +
+        })() +
         '<p class="dtNote">※ 국토교통부 건축HUB 건축물대장(표제부·층별개요) 기준 (소유자·변동·구조·인증·관리 현황 제외). 계약 전 건축물대장 원본으로 다시 확인해 드립니다.</p></section>';
     }
     var office = '<div class="dtOffice">' + OFFICE_INFO.map(function (o) { return '<div><b>' + o[0] + '</b><span>' + o[1] + '</span></div>'; }).join('') + '</div>';
@@ -2582,11 +2618,11 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       '<div class="dtTools"><button type="button" class="dtTool" data-act="share"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"></path></svg><span>링크 복사</span></button>' +
       '<button type="button" class="dtTool dtPdf" data-act="pdf"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5M12 11v6M9 14l3 3 3-3"></path></svg><span>PDF 저장</span></button></div></div>' +
       '<div class="dtGrid"><div class="dtMain">' + gal + price +
-      '<section class="dtSec"><h2>매물 정보</h2>' + bldMsg + '<div class="dtInfoGrid' + (hasFl ? '' : ' solo') + '">' + info + floorBox + '</div>' +
+      '<section class="dtSec"><div class="dtH2r"><h2>매물 정보</h2><span class="dtNo"><small>매물번호</small><b>' + esc(it.id) + '</b><button type="button" class="dtNoCp" onclick="var b=this;try{navigator.clipboard.writeText(\'' + esc(it.id) + '\').then(function(){b.textContent=\'복사됨\';setTimeout(function(){b.textContent=\'복사\'},1500)})}catch(e){}">복사</button></span></div>' + bldMsg + '<div class="dtInfoGrid solo">' + info + '</div>' +
       '<p class="dtNote">※ 「중개대상물의 표시·광고 명시사항 세부기준」에 따른 표시입니다. 소재지는 동까지만 표시하며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
       addHtml(it) +
       '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
-      regHtml + shopsHtml(it) +
+      regHtml +
       '<section class="dtSec"><h2>중개사무소 정보</h2>' + office + '</section>' +
       '</div>' + side + '</div>' +
       '</div>';
@@ -2844,8 +2880,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     document.title = it.title + ' | 부동산다움';
     paintDetail(it);
     window.scrollTo(0, 0);
-    if (it.unv && !it.bldDone) loadGsBld(it);
-    loadShops(it);
+    if (it.unv && !it.bldDone) loadGsBld(it);   // 업종현황은 표시하지 않음
   }
   /* ---------- 업종현황 (소상공인시장진흥공단 상가업소 정보) ---------- */
   function shopsInner(it) {
@@ -2963,6 +2998,82 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     rows.forEach(function (r) { r.tot = r.segs.reduce(function (s, x) { return s + x.area; }, 0); r.label = floorNameKo(r.name); });
     return rows;
   }
+
+  /* ===== 층별 현황: 왼쪽 표(층·대장 용도·층 합계 면적) + 오른쪽 입체도 =====
+   * - 엘리베이터: 대장에 승강기가 있을 때만 건물 왼쪽에 승강로를 그리고, 카가 움직이다 이 매물의 가장 윗층에 멈춤
+   * - 지반선(G.L) 아래는 흙색, 이 매물은 빨간 점선 · 같은 건물 추가임대는 노란 점선(누르면 그 매물로)
+   * - 지하가 지상 단일층의 2배를 넘으면 지상 기준으로 그리고 지하는 지상층의 최대 1.3배까지만 */
+  function flvHtml(it) {
+    var rows = floorRows(it.reg); if (!rows.length) return '';
+    var PY = 3.3058, n = rows.length, RH = n > 14 ? 32 : 40, TOP = 30, X0 = 96, MAXW = 200, DX = 22, DY = 12;
+    var isRoof = function (r) { return /옥탑|탑층/.test(r.name); }, isUnder = function (r) { return /^(지하|지\d|B\d)/i.test(String(r.name).replace(/\s+/g, '')); };
+    rows.forEach(function (r) { r.roof = isRoof(r); r.under = isUnder(r); r.here = isHereFloor(r.name, it.floor); r.cat = r.segs.slice().sort(function (a, b) { return b.area - a.area; })[0].cat; });
+    var xs = sameBldg(it);
+    rows.forEach(function (r) { if (r.here) return; var o = xs.filter(function (x) { return isHereFloor(r.name, x.floor); })[0]; if (o) r.add = o; });
+    var g = rows.filter(function (r) { return !r.under && !r.roof; }), b = rows.filter(function (r) { return r.under; });
+    var gMax = Math.max.apply(null, g.map(function (r) { return r.tot; }).concat([1])), bMax = Math.max.apply(null, b.map(function (r) { return r.tot; }).concat([0]));
+    var shrink = g.length && bMax > gMax * 2, CAP = gMax * 1.3, scale = MAXW / (shrink ? CAP : Math.max(gMax, bMax));
+    var wOf = function (r) { return Math.max(26, (shrink && r.under ? Math.min(r.tot, CAP) : r.tot) * scale); };
+    var gi = rows.findIndex(function (r) { return r.under; }); if (gi < 0) gi = n;
+    var y = function (i) { return TOP + i * RH; }, gy = y(gi), H = TOP + n * RH + 30, W = X0 + MAXW + DX + 90;
+    var C = { med: ['#C7D6E2', '#A9BCCB', '#E3ECF2'], sale: ['#EDE0C8', '#D8C6A6', '#F6EEDF'], food: ['#EBD6CB', '#D3B7A8', '#F5EAE4'], office: ['#D6DEE4', '#B9C6CF', '#ECF0F3'], edu: ['#D6E0CF', '#BCCAB2', '#EBF0E7'],
+      life: ['#E2D9E3', '#C9BCCB', '#F0EBF1'], sport: ['#E9E1BE', '#D2C79C', '#F4F0DE'], house: ['#E6DECF', '#CFC3AE', '#F2EEE6'], park: ['#E4E1DA', '#CBC7BE', '#F1EFEA'], mech: ['#CDD1D5', '#B3B8BD', '#E5E7E9'], etc: ['#E6E1D6', '#CFC8B9', '#F3F0EA'] };
+    var ST = ' stroke="#7F8E99" stroke-width=".8"', s = '';
+    if (gi < n) s += '<rect x="0" y="' + gy + '" width="' + W + '" height="' + (H - gy) + '" fill="#F3ECDF"/><line x1="0" x2="' + W + '" y1="' + gy + '" y2="' + gy + '" stroke="#8A6A35" stroke-width="1.6"/>' +
+      '<text x="4" y="' + (gy + 13) + '" font-size="10" fill="#8A6A35" font-weight="700">▲ 지반선 (G.L)</text>';
+    for (var i = n - 1; i >= 0; i--) {   // 아래층부터 그려서 위층이 덮도록
+      var r = rows[i], w = wOf(r), x = X0, yy = y(i) + 3, h = RH - 6, c = C[r.cat] || C.etc;
+      s += '<polygon points="' + x + ',' + yy + ' ' + (x + DX) + ',' + (yy - DY) + ' ' + (x + w + DX) + ',' + (yy - DY) + ' ' + (x + w) + ',' + yy + '" fill="' + c[2] + '"' + ST + '/>' +
+        '<polygon points="' + (x + w) + ',' + yy + ' ' + (x + w + DX) + ',' + (yy - DY) + ' ' + (x + w + DX) + ',' + (yy + h - DY) + ' ' + (x + w) + ',' + (yy + h) + '" fill="' + c[1] + '"' + ST + '/>' +
+        '<rect x="' + x + '" y="' + yy + '" width="' + w + '" height="' + h + '" fill="' + c[0] + '"' + ST + '/>';
+      if (!r.roof && w >= 52) s += '<text x="' + (x + 8) + '" y="' + (yy + h / 2 + 4) + '" font-size="11.5" font-weight="700" fill="#33414B">' + (r.tot / PY).toFixed(1) + '평</text>';
+    }
+    var lx = X0 + MAXW + DX + 12;
+    rows.forEach(function (r, i) {
+      if (!r.add) return; var yy = y(i) + 3, o = r.add, ttl = '추가임대 · ' + (o.floor || '') + (o.area ? ' ' + Math.round(o.area) + '평' : '') + ' · 보증금 ' + (o.depText || '문의') + ' / 월세 ' + (o.rentText || '문의');
+      s += '<a href="#item/' + encodeURIComponent(o.id) + '" class="flAdd"><title>' + esc(ttl) + '</title><rect x="' + (X0 - 3) + '" y="' + (yy - DY - 3) + '" width="' + (wOf(r) + DX + 6) + '" height="' + (RH - 6 + DY + 6) + '" fill="#E0A82E" fill-opacity=".08" stroke="#E0A82E" stroke-width="2" stroke-dasharray="6 4" rx="3"/>' +
+        '<rect x="' + lx + '" y="' + (yy + (RH - 6) / 2 - 10) + '" width="62" height="20" rx="10" fill="#E0A82E"/><text x="' + (lx + 31) + '" y="' + (yy + (RH - 6) / 2 + 4) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">추가임대</text></a>';
+    });
+    var here = rows.map(function (r, i) { return r.here ? i : -1; }).filter(function (i) { return i >= 0; });
+    if (here.length) {
+      var a = here[0], z = here[here.length - 1], ww = Math.max.apply(null, here.map(function (i) { return wOf(rows[i]); })), my = (y(a) + y(z) + RH) / 2;
+      s += '<rect x="' + (X0 - 3) + '" y="' + (y(a) + 3 - DY - 3) + '" width="' + (ww + DX + 6) + '" height="' + ((z - a + 1) * RH - 6 + DY + 6) + '" fill="none" stroke="#C0392B" stroke-width="2" stroke-dasharray="6 4" rx="3"/>' +
+        '<rect x="' + lx + '" y="' + (my - 10) + '" width="56" height="20" rx="10" fill="#B0452B"/><text x="' + (lx + 28) + '" y="' + (my + 4) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">이 매물</text>';
+    }
+    var reg = it.reg || {}, ev = (+reg.elR || 0) + (+reg.elE || 0) > 0;
+    if (ev) {   // 엘리베이터: 승강로 + 카(이 매물의 가장 윗층에서 멈춤) + 문 열린 엘리베이터 그림
+      var EVX = X0 - 26, top = rows.findIndex(function (r) { return !r.roof; }), t0 = y(top) + 3, t1 = y(n - 1) + RH - 3;
+      var stop = here.length ? here[0] : top, CH = RH - 10, cy = y(stop) + 5, from = (gi > 0 && gi - 1 > stop) ? gi - 1 : (stop === top ? n - 1 : top), d = y(from) - y(stop);
+      s += '<rect x="' + EVX + '" y="' + t0 + '" width="20" height="' + (t1 - t0) + '" fill="#F7F8F9"' + ST + '/><line x1="' + (EVX + 10) + '" x2="' + (EVX + 10) + '" y1="' + t0 + '" y2="' + t1 + '" stroke="#D3D8DC" stroke-width=".8"/>' +
+        '<text x="' + (EVX + 10) + '" y="' + (t0 - 6) + '" text-anchor="middle" font-size="9.5" font-weight="800" fill="#294652">E/V</text>' +
+        '<g class="evCar" style="--d:' + d + 'px"><rect x="' + (EVX + 2) + '" y="' + cy + '" width="16" height="' + CH + '" rx="2" fill="#294652"/><rect x="' + (EVX + 4) + '" y="' + (cy + 3) + '" width="5.5" height="' + (CH - 6) + '" fill="#7D96A6"/><rect x="' + (EVX + 10.5) + '" y="' + (cy + 3) + '" width="5.5" height="' + (CH - 6) + '" fill="#7D96A6"/></g>';
+      var ix = EVX - 62, iy = cy + CH / 2 - 23;
+      s += '<g class="evPop"><line x1="' + (ix + 52) + '" y1="' + (iy + 22) + '" x2="' + (EVX + 2) + '" y2="' + (cy + CH / 2) + '" stroke="#294652" stroke-width="1" stroke-dasharray="2 2"/>' +
+        '<rect x="' + ix + '" y="' + iy + '" width="52" height="46" rx="5" fill="#2F6FA6"/><rect x="' + (ix + 6) + '" y="' + (iy + 4) + '" width="40" height="7" rx="2" fill="#16334A"/>' +
+        '<path d="M' + (ix + 20) + ' ' + (iy + 9.5) + ' l2.5 -3.5 l2.5 3.5z M' + (ix + 29) + ' ' + (iy + 6) + ' l2.5 3.5 l2.5 -3.5z" fill="#3DDC84"/>' +
+        '<rect x="' + (ix + 8) + '" y="' + (iy + 13) + '" width="36" height="31" fill="#C9D5DE"/><rect x="' + (ix + 11) + '" y="' + (iy + 15) + '" width="30" height="29" fill="#E9EEF2"/>' +
+        '<rect x="' + (ix + 8) + '" y="' + (iy + 13) + '" width="5" height="31" fill="#9FB3C2"/><rect x="' + (ix + 39) + '" y="' + (iy + 13) + '" width="5" height="31" fill="#9FB3C2"/>' +
+        '<circle cx="' + (ix + 26) + '" cy="' + (iy + 21) + '" r="3.4" fill="#5B4636"/><path d="M' + (ix + 20.5) + ' ' + (iy + 38) + ' v-8 q0 -5 5.5 -5 q5.5 0 5.5 5 v8z" fill="#E8B53A"/><rect x="' + (ix + 22) + '" y="' + (iy + 38) + '" width="3.2" height="6" fill="#2D4A5C"/><rect x="' + (ix + 26.8) + '" y="' + (iy + 38) + '" width="3.2" height="6" fill="#2D4A5C"/>' +
+        '<rect x="' + (ix + 2) + '" y="' + (iy + 44) + '" width="48" height="2.5" fill="#4A5A66"/></g>';
+    }
+    // 워터마크 (사진과 같은 로고 + 부동산다움)
+    var lg = document.querySelector('.siteFoot .dmMark'), src = lg ? lg.getAttribute('src') : '', cx = X0 + MAXW / 2 + 10, cyw = H / 2;
+    s += '<g opacity=".11" transform="translate(' + cx + ',' + cyw + ') rotate(-18)" pointer-events="none">' + (src ? '<image href="' + esc(src) + '" x="-104" y="-26" width="30" height="34" preserveAspectRatio="xMidYMid meet"/>' : '') +
+      '<text x="' + (src ? 12 : 0) + '" text-anchor="middle" font-size="30" font-weight="900" fill="#294652">부동산다움</text><text x="' + (src ? 12 : 0) + '" y="20" text-anchor="middle" font-size="11.5" font-weight="700" fill="#294652">r-daum.com · 02-555-1165</text></g>';
+    var svg = '<svg class="flvSvg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="층별 현황 입체도">' + s + '</svg>';
+    var m2t = function (v) { return Number(v).toLocaleString('ko-KR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+    var tbl = rows.map(function (r, i) {
+      var use = r.segs.map(function (x) { return x.label; }).join(' · '), full = r.segs.map(function (x) { return x.full + ' ' + m2t(x.area) + '㎡'; }).join(' / ');
+      return '<div class="flvR' + (r.here ? ' me' : '') + (r.add ? ' ad' : '') + (i === gi ? ' gl' : '') + '" style="height:' + RH + 'px" title="' + esc(full) + '"><b>' + esc(r.label) + '</b><span>' + esc(use) + '</span><em>' + m2t(r.tot) + '㎡<small>' + (r.tot / PY).toFixed(2) + '평</small></em></div>';
+    }).join('');
+    var lgd = '<span><i style="border-color:#C0392B"></i>이 매물</span>' + (rows.some(function (r) { return r.add; }) ? '<span><i style="border-color:#E0A82E"></i>추가임대 (누르면 그 매물로)</span>' : '') + (ev ? '<span>E/V: 엘리베이터 (이 매물 층에 멈춤)</span>' : '');
+    return '<h3 class="flvH">층별 현황</h3><div class="flv"><div class="flvT"><div class="flvHd"><b>층</b><span>건축물대장상 용도</span><em>층 합계 면적</em></div><div style="height:' + (TOP - 26) + 'px"></div>' + tbl + '</div><div class="flvD">' + svg + '</div></div>' +
+      '<div class="flvLg">' + lgd + '</div><p class="dtNote">※ 건축물대장상 용도로, 실제 업종과 다를 수 있습니다. 입체도는 층별 면적 비율로 그린 개념도입니다.' +
+      (shrink ? '<br>※ 지하층은 지상층보다 훨씬 넓은 경우 지상층의 최대 1.3배까지로 표시됩니다. 실제 면적은 왼쪽 표를 확인하세요.' : '') + '</p>';
+  }
+  // 층별 현황 입체도가 화면에 보이면 엘리베이터가 움직이기 시작
+  var flvIO = window.IntersectionObserver ? new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('go'); flvIO.unobserve(e.target); } }); }, { threshold: 0.35 }) : null;
+  function flvWatch() { if (!DT.el) return; DT.el.querySelectorAll('.flvD:not(.go)').forEach(function (el) { if (flvIO) flvIO.observe(el); else el.classList.add('go'); }); }
   function floorSvg(it, targetH) {
     var rows = floorRows(it.reg); if (!rows.length) return '';
     var PY = 3.3058, whole = /통|전층|전체|건물/.test(String(it.floor || ''));
@@ -3113,6 +3224,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     });
   }
   function renderFloors() {
+    flvWatch();
     var box = DT.el && DT.el.querySelector('#dtFloor'); if (!box || !DT.it) return;
     var tbl = DT.el.querySelector('.dtInfoGrid .dtInfo.one'), stacked = window.matchMedia('(max-width:1100px)').matches;
     var target = stacked ? 0 : (tbl ? tbl.getBoundingClientRect().height - 50 : 380);
