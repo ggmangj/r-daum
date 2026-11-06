@@ -1760,7 +1760,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       '</div><button type="button" class="mpopClose" aria-label="닫기">×</button></div>';
   }
   function pinHtml(it) {
-    var fl = String(it.floor || '').replace(/\s+/g, '').replace(/^연층\((.*)\)$/, '$1');   // 층 | 평
+    var fl = String(it.floor || '').replace(/\s+/g, '').replace(/^연층\((.*)\)$/, '$1').replace(/^통임대\(.*\)$/, '통임대');   // 층 | 평 (통임대(지하1층~5층) → 통임대)
     var area = it.area ? Math.round(it.area) + '평' : '';
     var main = area || it.catLabel || '';
     return '<div class="pinWrap"><span class="pinLabel' + (it.unv ? ' unv' : '') + (it.id === focusId ? ' on' : '') + '">' + (fl ? '<span class="pinArea">' + esc(fl) + '</span>' : '') + esc(main) + '</span></div>';
@@ -2060,7 +2060,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       if (SEARCH.auto && !autoMatch(it, SEARCH.auto)) return false;
       if (dong && it.dong !== dong) return false;
       if (!inRange(it.area ? +it.area : null, ar)) return false;
-      if (!inRange(floorVal(it.floor), fl)) return false;
+      if (fl && !floorsOf(it.floor).some(function (v) { return v === '*' || inRange(v, fl); })) return false;   // 연층·통임대는 한 층이라도 맞으면
       if (!inRange(manOf(it.dep, it.depText), dp)) return false;
       if (!inRange(manOf(it.rent, it.rentText), rt)) return false;
       return isFinite(it.lat) && isFinite(it.lng) && it.lat && it.lng;
@@ -2110,6 +2110,16 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     t = String(t || '').replace(/\s+/g, '').replace(/^연층\((.*)\)$/, '$1'); if (!t) return null;
     var m = /^(?:지하|B)(\d*)/i.exec(t); if (m) return -(+m[1] || 1);
     m = /(\d+)/.exec(t); return m ? +m[1] : null;
+  }
+  // 층 표기 → 층 번호 목록: 3층 · 지하1층 · 연층(지하1층~2층) · 통임대(지하1층~5층) → 범위 전체, 범위 없는 통임대 → ['*']
+  function floorsOf(t) {
+    t = String(t || '').replace(/\s+/g, ''); if (!t) return [];
+    var par = /\(([^)]*\d[^)]*)\)/.exec(t); if (par) t = par[1]; else if (/통임대|전층|건물전체/.test(t)) return ['*'];
+    t = t.replace(/^(연층|복층|통임대)/, '').replace(/지상/g, '');
+    var one = function (x) { var m = /^(?:지하|B)(\d*)/i.exec(x); if (m) return -(+m[1] || 1); m = /(\d+)/.exec(x); return m ? +m[1] : null; };
+    var r = /^((?:지하|B)?\d+)층?[~∼\-]((?:지하|B)?\d+)층?/i.exec(t);
+    if (r) { var a = one(r[1]), b = one(r[2]), o = []; if (a != null && b != null) for (var k = Math.min(a, b); k <= Math.max(a, b); k++) if (k) o.push(k); return o; }
+    var f = floorVal(t); return f == null ? [] : [f];
   }
   function setRange(k, lo, hi) {
     var a = $('map' + k + 'Min'), b = $('map' + k + 'Max'); if (!a) return;
