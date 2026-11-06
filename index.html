@@ -1189,6 +1189,9 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 @media (prefers-reduced-motion:reduce){.flvD .evCar,.flvD .evPop{animation:none}}
 .flvLg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:#4A545C;margin:8px 0 0}.flvLg i{display:inline-block;width:14px;height:9px;margin-right:5px;border:2px dashed;vertical-align:-1px}
 @media (max-width:900px){.flv{grid-template-columns:1fr}.flvD{order:-1;border-bottom:1px solid #EFEAE0}.flvT{border-right:0}.flvT>div[style*="height:4px"]{display:none}.flvR{height:auto!important;min-height:40px;padding-top:4px;padding-bottom:4px}}
+/* 본문 칸이 좁으면(700px 미만, 예: 1024px 화면) 표가 눌리지 않도록 입체도 위 · 표 아래로 */
+.dtFlv{container-type:inline-size}
+@container (max-width:700px){.flv{grid-template-columns:1fr}.flvD{order:-1;border-bottom:1px solid #EFEAE0}.flvT{border-right:0}.flvT>div[style*="height:4px"]{display:none}.flvR{height:auto!important;min-height:40px;padding-top:4px;padding-bottom:4px}}
 @media (max-width:760px){.dtI2{grid-template-columns:max-content minmax(0,1fr);font-size:14px}.dtI2 dt{padding:10px 12px}.dtI2 dd{padding:10px 12px}.dtI2 .pad{display:none}.dtNo{font-size:14px}}
 @media print{.dtI2 dt,.dtI2 dd{padding-top:7px;padding-bottom:7px}.flvD .evCar,.flvD .evPop{animation:none}.flv{break-inside:avoid}}
 </style>
@@ -2573,13 +2576,13 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
         ['대장 종류', reg.kind], ['주용도', (reg.purp || '') + (reg.etc && reg.etc !== reg.purp ? ' (' + reg.etc + ')' : '')],
         ['층수', (reg.grnd ? '지상 ' + reg.grnd + '층' : '') + (reg.ugrnd ? ' / 지하 ' + reg.ugrnd + '층' : '')], ['사용승인일', reg.apr],
         ['건축면적 (건폐율)', withPct(reg.arch, reg.bc)], ['연면적 (용적률)', withPct(reg.tot, reg.vl)],
-        ['승강기', cnt([['승용', reg.elR], ['비상용', reg.elE]])],
+        ['승강기', cnt([['승용', reg.elR], ['비상용', reg.elE]]) || (/^(O|Y|유|있)/i.test(it.elev || '') ? '있음 (대장에 대수 미기재)' : '')],
         ['주차장', cnt([['옥내 자주식', reg.pkIA], ['옥내 기계식', reg.pkIM], ['옥외 자주식', reg.pkOA], ['옥외 기계식', reg.pkOM]])],
         ['세대 / 가구 / 호', [reg.hhld ? reg.hhld + '세대' : '', reg.fmly ? reg.fmly + '가구' : '', reg.ho ? reg.ho + '호' : ''].filter(Boolean).join(' / ')],
         ['부속건축물', reg.atch ? reg.atch + '동' + (reg.atchA ? ' (' + a(reg.atchA) + ')' : '') : '']
       ].filter(function (r) { return nz(r[1]); });
       regHtml = '<section class="dtSec"><h2>건축물정보</h2>' +
-        '<dl class="dtI2">' + rows.map(function (r) { return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>'; }).join('') + (rows.length % 2 ? '<div class="pad"><dt></dt><dd></dd></div>' : '') + '</dl>' + flvHtml(it) +
+        '<dl class="dtI2">' + rows.map(function (r) { return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>'; }).join('') + (rows.length % 2 ? '<div class="pad"><dt></dt><dd></dd></div>' : '') + '</dl>' +
         (function () { return ''; /* 예전 층별 현황 글자 목록 (표 + 입체도로 바뀜) */ // 건축물대장 표기 그대로 (층 이름·용도·㎡), 지하 가장 낮은 층 → 옥탑, 같은 층은 오른쪽으로 나열
           var fl = (reg.fl || []).filter(function (f) { return +f[3] > 0; }); if (!fl.length) return '';
           var by = {}, keys = [];
@@ -2620,6 +2623,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       '<div class="dtGrid"><div class="dtMain">' + gal + price +
       '<section class="dtSec"><div class="dtH2r"><h2>매물 정보</h2><span class="dtNo"><small>매물번호</small><b>' + esc(it.id) + '</b><button type="button" class="dtNoCp" onclick="var b=this;try{navigator.clipboard.writeText(\'' + esc(it.id) + '\').then(function(){b.textContent=\'복사됨\';setTimeout(function(){b.textContent=\'복사\'},1500)})}catch(e){}">복사</button></span></div>' + bldMsg + '<div class="dtInfoGrid solo">' + info + '</div>' +
       '<p class="dtNote">※ 「중개대상물의 표시·광고 명시사항 세부기준」에 따른 표시입니다. 소재지는 동까지만 표시하며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
+      (it.reg ? flvHtml(it) : '') +
       addHtml(it) +
       '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
       regHtml +
@@ -3040,7 +3044,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       s += '<rect x="' + (X0 - 3) + '" y="' + (y(a) + 3 - DY - 3) + '" width="' + (ww + DX + 6) + '" height="' + ((z - a + 1) * RH - 6 + DY + 6) + '" fill="none" stroke="#C0392B" stroke-width="2" stroke-dasharray="6 4" rx="3"/>' +
         '<rect x="' + lx + '" y="' + (my - 10) + '" width="56" height="20" rx="10" fill="#B0452B"/><text x="' + (lx + 28) + '" y="' + (my + 4) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">이 매물</text>';
     }
-    var reg = it.reg || {}, ev = (+reg.elR || 0) + (+reg.elE || 0) > 0;
+    var reg = it.reg || {}, ev = (+reg.elR || 0) + (+reg.elE || 0) > 0 || /^(O|Y|유|있)/i.test(it.elev || '');
     if (ev) {   // 엘리베이터: 승강로 + 카(이 매물의 가장 윗층에서 멈춤) + 문 열린 엘리베이터 그림
       var EVX = X0 - 26, top = rows.findIndex(function (r) { return !r.roof; }), t0 = y(top) + 3, t1 = y(n - 1) + RH - 3;
       var stop = here.length ? here[0] : top, CH = RH - 10, cy = y(stop) + 5, from = (gi > 0 && gi - 1 > stop) ? gi - 1 : (stop === top ? n - 1 : top), d = y(from) - y(stop);
@@ -3066,10 +3070,9 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
       var use = r.segs.map(function (x) { return x.label; }).join(' · '), full = r.segs.map(function (x) { return x.full + ' ' + m2t(x.area) + '㎡'; }).join(' / ');
       return '<div class="flvR' + (r.here ? ' me' : '') + (r.add ? ' ad' : '') + (i === gi ? ' gl' : '') + '" style="height:' + RH + 'px" title="' + esc(full) + '"><b>' + esc(r.label) + '</b><span>' + esc(use) + '</span><em>' + m2t(r.tot) + '㎡<small>' + (r.tot / PY).toFixed(2) + '평</small></em></div>';
     }).join('');
-    var lgd = '<span><i style="border-color:#C0392B"></i>이 매물</span>' + (rows.some(function (r) { return r.add; }) ? '<span><i style="border-color:#E0A82E"></i>추가임대 (누르면 그 매물로)</span>' : '') + (ev ? '<span>E/V: 엘리베이터 (이 매물 층에 멈춤)</span>' : '');
-    return '<h3 class="flvH">층별 현황</h3><div class="flv"><div class="flvT"><div class="flvHd"><b>층</b><span>건축물대장상 용도</span><em>층 합계 면적</em></div><div style="height:' + (TOP - 26) + 'px"></div>' + tbl + '</div><div class="flvD">' + svg + '</div></div>' +
-      '<div class="flvLg">' + lgd + '</div><p class="dtNote">※ 건축물대장상 용도로, 실제 업종과 다를 수 있습니다. 입체도는 층별 면적 비율로 그린 개념도입니다.' +
-      (shrink ? '<br>※ 지하층은 지상층보다 훨씬 넓은 경우 지상층의 최대 1.3배까지로 표시됩니다. 실제 면적은 왼쪽 표를 확인하세요.' : '') + '</p>';
+    return '<section class="dtSec dtFlv"><h2>층별 현황</h2><div class="flv"><div class="flvT"><div class="flvHd"><b>층</b><span>건축물대장상 용도</span><em>층 합계 면적</em></div><div style="height:' + (TOP - 26) + 'px"></div>' + tbl + '</div><div class="flvD">' + svg + '</div></div>' +
+      '<p class="dtNote">※ 건축물대장상 용도로, 실제 업종과 다를 수 있습니다. 입체도는 층별 면적 비율로 그린 개념도입니다.' +
+      (shrink ? '<br>※ 지하층은 지상층보다 훨씬 넓은 경우 지상층의 최대 1.3배까지로 표시됩니다. 실제 면적은 왼쪽 표를 확인하세요.' : '') + '</p></section>';
   }
   // 층별 현황 입체도가 화면에 보이면 엘리베이터가 움직이기 시작
   var flvIO = window.IntersectionObserver ? new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('go'); flvIO.unobserve(e.target); } }); }, { threshold: 0.35 }) : null;
