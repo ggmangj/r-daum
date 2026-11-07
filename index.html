@@ -358,6 +358,42 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 .dtMainImg{position:relative;aspect-ratio:16/10;border-radius:16px;overflow:hidden;background:#ECE6DA;cursor:zoom-in;border:0;padding:0;width:100%;display:block}
 .dtMainImg img{width:100%;height:100%;object-fit:cover;display:block}
 .dtCount{position:absolute;right:14px;bottom:14px;background:rgba(20,25,31,.66);color:#FFFFFF;font-size:12px;font-weight:700;padding:6px 11px;border-radius:999px}
+.faOv{position:fixed;inset:0;z-index:3000;background:#F6F2EA;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.faOv[hidden]{display:none}body.faOpen{overflow:hidden}
+.faIn{max-width:1840px;margin:0 auto;padding:22px 40px 60px}
+.faHead{position:sticky;top:0;z-index:5;background:#F6F2EA;display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;padding:6px 0 14px;margin-bottom:4px}
+.faHead h2{font-size:26px;line-height:1.32;font-weight:900;color:#2A333C;letter-spacing:-1px;margin:0;white-space:nowrap}
+.faHead h2 .heroName{letter-spacing:-1.5px}.faHead h2 .faMk{background:linear-gradient(transparent 62%,#E8D7B6 62%)}
+.faCnt{font-size:14px;color:#5B6470;white-space:nowrap}.faCnt b{color:#14191F;font-size:16px}
+.faSub{flex:1 1 auto;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:flex-end}
+.faTabs{display:flex;gap:4px;background:#fff;border:1px solid #E6E0D4;border-radius:999px;padding:4px}
+.faTabs button{border:0;background:transparent;border-radius:999px;padding:8px 16px;font:inherit;font-size:13.5px;font-weight:600;color:#46515B;cursor:pointer}
+.faTabs button.on{background:#294652;color:#fff;font-weight:700}
+.faCk{display:flex;align-items:center;gap:6px;font-size:13.5px;color:#3A424B;cursor:pointer}.faCk input{width:16px;height:16px;accent-color:#294652}
+.faRst{height:38px;border:1px solid #D9D2C4;background:#fff;border-radius:999px;padding:0 14px;font:inherit;font-size:13px;font-weight:700;color:#3A424B;cursor:pointer}
+.faSel{height:40px;border:1px solid #D9D2C4;border-radius:999px;padding:0 34px 0 16px;font:inherit;font-size:13.5px;font-weight:700;color:#14191F;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23294652' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center;-webkit-appearance:none;appearance:none;cursor:pointer}
+.faClose{height:40px;border:0;background:#294652;color:#fff;border-radius:999px;padding:0 18px;font:inherit;font-size:14px;font-weight:800;display:flex;align-items:center;gap:6px;cursor:pointer}
+.faClose:hover{background:#1d3640}
+.faBar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:18px}
+.faBar .faSel{height:44px}
+.faRng{display:flex;align-items:center;gap:6px;height:44px;border:1px solid #D9D2C4;border-radius:999px;padding:0 14px;background:#fff}
+.faRng.on{border-color:#294652;box-shadow:0 0 0 2px rgba(41,70,82,.1)}
+.faRng b{font-size:13.5px;font-weight:800;color:#14191F;margin-right:4px;white-space:nowrap}
+.faRng input{width:64px;border:0;border-bottom:1px solid #E6E0D4;outline:0;font:inherit;font-size:13.5px;text-align:center;padding:2px 0;background:transparent}
+.faRng span{font-size:12px;color:#8A8F96}
+.faQ{flex:1 1 220px;display:flex;align-items:center;height:44px;border:1px solid #D9D2C4;border-radius:999px;padding:0 6px 0 16px;background:#fff;min-width:200px}
+.faQ input{flex:1;min-width:0;border:0;outline:0;font:inherit;font-size:14px;background:transparent}
+.faQ button{width:34px;height:34px;border-radius:50%;border:0;background:#294652;display:grid;place-items:center;cursor:pointer}
+.faQ svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.4}
+.faGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
+.faGrid .listing{transition:box-shadow .15s,transform .15s}.faGrid .listing:hover{box-shadow:0 10px 24px rgba(20,25,31,.1);transform:translateY(-2px)}
+.faGrid .lPhoto img{width:100%;height:100%;object-fit:cover;display:block}
+.faEmpty{grid-column:1/-1;text-align:center;padding:60px 20px;color:#5B6470;background:#fff;border:1px dashed #D9D2C4;border-radius:14px}
+.faMore{display:block;margin:28px auto 0;height:48px;padding:0 36px;border:1px solid #294652;background:#fff;color:#294652;border-radius:999px;font:inherit;font-size:15px;font-weight:800;cursor:pointer}
+@media (max-width:1399px){.faGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:1100px){.faGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:760px){.faHead{position:static}.faIn{padding:12px 16px 40px}.faHead h2{font-size:22px}.faSub{justify-content:flex-start;flex-basis:100%}.faTabs{overflow-x:auto;max-width:100%;scrollbar-width:none}.faTabs button{white-space:nowrap;padding:8px 12px}
+ .faClose{position:fixed;right:12px;bottom:76px;z-index:6;box-shadow:0 4px 14px rgba(0,0,0,.25)}.faSel{flex:1}.faBar .faSel{flex:1 1 100%}.faRng{flex:1 1 calc(50% - 4px);min-width:0;padding:0 10px}.faRng input{width:100%;min-width:0}.faQ{flex:1 1 100%;order:-1}.faGrid{grid-template-columns:1fr;gap:14px}}
 .dtMainWrap{position:relative}
 .dtNav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.88);box-shadow:0 2px 10px rgba(0,0,0,.18);display:grid;place-items:center;cursor:pointer;z-index:3;opacity:.85;transition:opacity .15s,background .15s}
 .dtNav:hover{opacity:1;background:#fff}.dtNav svg{width:22px;height:22px;fill:none;stroke:#294652;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
@@ -1429,7 +1465,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 <button type="button" role="tab" data-tab="building" class="tabBtn" style="padding: 10px 18px; min-height: 40px; border: 0; border-radius: 999px; background: transparent; color: #46515B; font-size: 14px; font-weight: 500; cursor: pointer">사옥·통임대</button>
 
 </div>
-<a href="listings.html" target="_blank" rel="noopener" class="featAll">추천 매물 전체 보기 <span aria-hidden="true">→</span></a>
+<a href="#listings" class="featAll" data-fa>추천 매물 전체 보기 <span aria-hidden="true">→</span></a>
 </div>
 </div>
 
@@ -2292,7 +2328,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     $('mapList').addEventListener('click', function (e) { var b = e.target.closest('.mapItem'); if (b) focusItem(b.getAttribute('data-id')); });
     if ($('mapSort')) $('mapSort').addEventListener('change', function () { renderList(); $('mapList').scrollTop = 0; });
     document.querySelectorAll('.tabBtn').forEach(function (b) {
-      b.addEventListener('click', function () { featTab = b.getAttribute('data-tab'); renderFeatured(); var fa = document.querySelector('.featAll'); if (fa) fa.href = 'listings.html' + (featTab && featTab !== 'all' ? '?cat=' + featTab : ''); });
+      b.addEventListener('click', function () { featTab = b.getAttribute('data-tab'); renderFeatured(); });
     });
   }
 
@@ -3494,6 +3530,82 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     cs.forEach(function (c) { c.style.height = h + 'px'; });
   }
   window.addEventListener('resize', function () { clearTimeout(equalCards.t); equalCards.t = setTimeout(equalCards, 150); });
+
+  /* ---------- 추천 매물 전체 보기: 사진 크게 보기처럼 화면 위에 열고 「닫기」로 돌아옴 ---------- */
+  var FA = { cat: 'all', shown: 24, built: false };
+  function faEl(id) { return document.getElementById(id); }
+  function faBuild() {
+    if (FA.built) return; FA.built = true;
+    var d = document.createElement('div'); d.id = 'faOv'; d.className = 'faOv'; d.hidden = true; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-label', '추천 매물 전체 보기');
+    d.innerHTML = '<div class="faIn"><div class="faHead"><h2>강남 · 서초 <span class="heroName">추천</span> <span class="faMk">매물</span></h2><span class="faCnt" id="faCnt"></span>' +
+      '<div class="faSub"><div class="faTabs" id="faTabs"><button type="button" data-c="all">전체</button><button type="button" data-c="clinic">병의원</button><button type="button" data-c="office">사무실</button><button type="button" data-c="shop">상가</button><button type="button" data-c="building">사옥·통임대</button></div>' +
+      '<label class="faCk"><input type="checkbox" id="faNp"> 무권리만</label><button type="button" class="faRst" id="faRst">↺ 초기화</button>' +
+      '<select class="faSel" id="faSort" aria-label="정렬"><option value="f">추천순</option><option value="d">최신순</option><option value="ra">월세 낮은순</option><option value="rd">월세 높은순</option><option value="a">면적 넓은순</option></select>' +
+      '<button type="button" class="faClose" id="faClose" aria-label="닫기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>닫기</button></div></div>' +
+      '<div class="faBar"><select class="faSel" id="faDong" aria-label="지역"><option value="">강남·서초 전체</option></select>' +
+      ['A:면적:평', 'F:층:층', 'D:보증금:만', 'R:월세:만'].map(function (x) { var k = x.split(':'); return '<label class="faRng" id="faR' + k[0] + '"><b>' + k[1] + '</b><input id="fa' + k[0] + '0" inputmode="numeric" placeholder="' + (k[0] === 'F' ? '최저' : '최소') + '">~<input id="fa' + k[0] + '1" inputmode="numeric" placeholder="' + (k[0] === 'F' ? '최고' : '최대') + '"><span>' + k[2] + '</span></label>'; }).join('') +
+      '<form class="faQ" id="faQf" autocomplete="off"><input id="faQ" type="search" placeholder="매물번호·동·키워드 검색 (예: D5B531F, 신사동)" aria-label="검색"><button type="submit" aria-label="검색"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button></form></div>' +
+      '<div class="faGrid" id="faGrid"></div><button type="button" class="faMore" id="faMore" hidden></button></div>';
+    document.body.appendChild(d);
+    faEl('faTabs').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; FA.cat = b.getAttribute('data-c'); faRender(); });
+    ['faDong', 'faSort', 'faNp'].forEach(function (id) { faEl(id).addEventListener('change', function () { faRender(); }); });
+    var t; d.querySelectorAll('.faRng input,#faQ').forEach(function (x) { x.addEventListener('input', function () { clearTimeout(t); t = setTimeout(faRender, 250); }); });
+    faEl('faQf').addEventListener('submit', function (e) { e.preventDefault(); faRender(); faEl('faQ').blur(); });
+    faEl('faMore').addEventListener('click', function () { FA.shown += 24; faRender(true); });
+    faEl('faRst').addEventListener('click', function () { d.querySelectorAll('.faRng input,#faQ').forEach(function (x) { x.value = ''; }); faEl('faDong').value = ''; faEl('faSort').value = 'f'; faEl('faNp').checked = false; FA.cat = 'all'; faRender(); });
+    faEl('faClose').addEventListener('click', function () { faClose(); });
+    // 카드를 누르면 창을 닫고 그 매물 상세로
+    faEl('faGrid').addEventListener('click', function (e) { var a = e.target.closest('a.listing'); if (a) faClose(true); });
+  }
+  function faPool() { return ITEMS.filter(function (it) { return it.featured; }).sort(function (a, b) { return (a.featOrder || 0) - (b.featOrder || 0); }); }
+  function faNum(v) { v = String(v || '').replace(/[^\d.]/g, ''); return v === '' ? null : +v; }
+  function faDk(d) { var m = /(\d{4})\D+(\d{1,2})\D+(\d{1,2})/.exec(String(d || '')); return m ? +m[1] * 10000 + +m[2] * 100 + +m[3] : 0; }
+  function faRender(keep) {
+    if (!keep) FA.shown = 24;
+    var v = function (id) { return faNum(faEl(id).value); }, a0 = v('faA0'), a1 = v('faA1'), f0 = v('faF0'), f1 = v('faF1'), d0 = v('faD0'), d1 = v('faD1'), m0 = v('faR0'), m1 = v('faR1');
+    var dong = faEl('faDong').value, q = faEl('faQ').value.trim().toLowerCase().replace(/\s+/g, ''), np = faEl('faNp').checked;
+    ['A', 'F', 'D', 'R'].forEach(function (k) { faEl('faR' + k).classList.toggle('on', v('fa' + k + '0') != null || v('fa' + k + '1') != null); });
+    faEl('faTabs').querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-c') === FA.cat); });
+    var L = faPool().filter(function (it) {
+      if (FA.cat !== 'all' && (it.cats || []).indexOf(FA.cat) < 0) return false;
+      if (dong && (dong.indexOf('gu:') === 0 ? it.gu !== dong.slice(3) : it.dong !== dong)) return false;
+      if (np && it.premium !== '무권리') return false;
+      var ar = +it.area || 0; if (a0 != null && ar < a0) return false; if (a1 != null && (!ar || ar > a1)) return false;
+      var fl = floorNum(it.floor); if (f0 != null && (fl == null || fl < f0)) return false; if (f1 != null && (fl == null || fl > f1)) return false;
+      var dp = manOf(it.dep, it.depText), rt = manOf(it.rent, it.rentText);
+      if (d0 != null && (dp == null || dp < d0)) return false; if (d1 != null && (dp == null || dp > d1)) return false;
+      if (m0 != null && (rt == null || rt < m0)) return false; if (m1 != null && (rt == null || rt > m1)) return false;
+      if (q && (String(it.id) + (it.gu || '') + (it.dong || '') + (it.title || '') + (it.catLabel || '') + (it.point || '') + (it.floor || '')).toLowerCase().replace(/\s+/g, '').indexOf(q) < 0) return false;
+      return true;
+    });
+    var so = faEl('faSort').value, R = function (it) { return manOf(it.rent, it.rentText); };
+    if (so === 'ra') L.sort(function (a, b) { return (R(a) == null ? 1e12 : R(a)) - (R(b) == null ? 1e12 : R(b)); });
+    else if (so === 'rd') L.sort(function (a, b) { return (R(b) || -1) - (R(a) || -1); });
+    else if (so === 'a') L.sort(function (a, b) { return (+b.area || 0) - (+a.area || 0); });
+    else if (so === 'd') L.sort(function (a, b) { return faDk(b.date) - faDk(a.date); });
+    faEl('faCnt').innerHTML = '<b>' + L.length + '</b>건의 추천 매물';
+    faEl('faGrid').innerHTML = L.length ? L.slice(0, FA.shown).map(card).join('') : '<div class="faEmpty"><b>조건에 맞는 추천 매물이 없어요</b><br>조건을 넓히거나 02-555-1165 로 문의 주세요.</div>';
+    faEl('faMore').hidden = L.length <= FA.shown; faEl('faMore').textContent = '더 보기 (남은 ' + (L.length - FA.shown) + '건)';
+  }
+  function faDongs() {
+    var by = {}; faPool().forEach(function (it) { if (it.dong) (by[it.gu || '강남구'] = by[it.gu || '강남구'] || {})[it.dong] = 1; });
+    faEl('faDong').innerHTML = '<option value="">강남·서초 전체</option><option value="gu:강남구">강남구 전체</option><option value="gu:서초구">서초구 전체</option>' +
+      ['강남구', '서초구'].map(function (g) { return by[g] ? '<optgroup label="' + g + '">' + Object.keys(by[g]).sort().map(function (dn) { return '<option value="' + esc(dn) + '">' + esc(dn) + '</option>'; }).join('') + '</optgroup>' : ''; }).join('');
+  }
+  function faOpen() {
+    faBuild(); FA.cat = featTab || 'all'; faDongs(); faRender();
+    var d = faEl('faOv'); d.hidden = false; d.scrollTop = 0; document.body.classList.add('faOpen');
+    try { history.pushState({ fa: 1 }, '', location.pathname + location.search + '#listings'); } catch (e) { }
+    setTimeout(function () { faEl('faClose').focus({ preventScroll: true }); }, 30);
+  }
+  function faClose(toItem) {
+    var d = faEl('faOv'); if (!d || d.hidden) return;
+    d.hidden = true; document.body.classList.remove('faOpen');
+    if (!toItem && history.state && history.state.fa) { FA.skipPop = true; history.back(); }
+  }
+  window.addEventListener('popstate', function () { if (FA.skipPop) { FA.skipPop = false; return; } var d = faEl('faOv'); if (d && !d.hidden) { d.hidden = true; document.body.classList.remove('faOpen'); } });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { var d = faEl('faOv'); if (d && !d.hidden) faClose(); } });
+  document.addEventListener('click', function (e) { var a = e.target.closest('a[data-fa]'); if (!a) return; e.preventDefault(); faOpen(); });
 
   /* ---------- 시작 ---------- */
   ccInit(); bind(); initMap();
