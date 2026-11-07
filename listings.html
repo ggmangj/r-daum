@@ -299,10 +299,10 @@ body.dlFull .mapFullBtn{display:none}
 </style>
 <style id="lsCss">
 .lsMain{padding-top:24px}
-.lsHead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin:0 0 16px}
+.lsHead{display:flex;align-items:center;gap:10px 14px;flex-wrap:wrap;margin:0 0 16px}
 .lsHead h1{font-size:26px;line-height:1.32;font-weight:900;color:#2A333C;letter-spacing:-1px;margin:0;white-space:nowrap}
 .lsHead h1 .heroName{letter-spacing:-1.5px}.lsHead h1 .lsMk{background:linear-gradient(transparent 62%,#E8D7B6 62%)}
-.lsCnt{font-size:14px;color:#5B6470}.lsCnt b{color:#14191F;font-size:16px}
+.lsCnt{font-size:14px;color:#5B6470;white-space:nowrap}.lsCnt b{color:#14191F;font-size:16px}
 .lsBar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
 .lsSel{height:44px;border:1px solid #D9D2C4;border-radius:999px;padding:0 34px 0 16px;font:inherit;font-size:14px;font-weight:700;color:#14191F;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23294652' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 14px center;-webkit-appearance:none;appearance:none;cursor:pointer}
 .lsRng{display:flex;align-items:center;gap:6px;height:44px;border:1px solid #D9D2C4;border-radius:999px;padding:0 14px;background:#fff}
@@ -316,7 +316,8 @@ body.dlFull .mapFullBtn{display:none}
 .lsQ input{flex:1;min-width:0;border:0;outline:0;font:inherit;font-size:14px;background:transparent}
 .lsQ button{width:34px;height:34px;border-radius:50%;border:0;background:#294652;display:grid;place-items:center;cursor:pointer}
 .lsQ svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.4}
-.lsSub{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:18px}
+.lsSub{flex:1 1 auto;display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-left:12px}
+.lsBar{margin-bottom:18px}
 .lsTabs{display:flex;gap:4px;background:#fff;border:1px solid #E6E0D4;border-radius:999px;padding:4px}
 .lsTabs button{border:0;background:transparent;border-radius:999px;padding:8px 16px;font:inherit;font-size:13.5px;font-weight:600;color:#46515B;cursor:pointer}
 .lsTabs button.on{background:#294652;color:#fff;font-weight:700}
@@ -340,6 +341,7 @@ body.dlFull .mapFullBtn{display:none}
  .lsBar{gap:6px}.lsSel{flex:1 1 100%}.lsRng{flex:1 1 calc(50% - 3px);padding:0 10px;min-width:0}.lsRng input{width:100%;min-width:0}.lsQ{flex:1 1 100%;order:-1}
  .lsTabs{overflow-x:auto;max-width:100%;scrollbar-width:none}.lsTabs button{white-space:nowrap;padding:8px 12px}
  .lsSort{margin-left:0;flex:1}
+ .lsSub{margin-left:0;flex-basis:100%}
  .lsGrid{grid-template-columns:1fr;gap:14px}
 }
 </style>
@@ -374,7 +376,14 @@ body.dlFull .mapFullBtn{display:none}
 
 
 <main class="wrap lsMain">
-<div class="lsHead"><h1>강남 · 서초 <span class="heroName">전체</span> <span class="lsMk">매물</span></h1><span class="lsCnt" id="cnt">매물을 불러오는 중…</span></div>
+<div class="lsHead"><h1>강남 · 서초 <span class="heroName">전체</span> <span class="lsMk">매물</span></h1><span class="lsCnt" id="cnt">매물을 불러오는 중…</span>
+<div class="lsSub">
+ <div class="lsTabs" id="tabs" role="tablist"><button type="button" data-c="all" class="on">전체</button><button type="button" data-c="clinic">병의원</button><button type="button" data-c="office">사무실</button><button type="button" data-c="shop">상가</button><button type="button" data-c="building">사옥·통임대</button></div>
+ <label class="lsCk"><input type="checkbox" id="noPrem"> 무권리만</label>
+ <label class="lsCk"><input type="checkbox" id="withGs"> 추가 매물 포함 <span style="color:#8A8F96;font-size:12px">(사진 없음)</span></label>
+ <button type="button" class="lsReset" id="rst">↺ 초기화</button>
+ <select class="lsSel lsSort" id="sort" aria-label="정렬"><option value="d">최신순</option><option value="ra">월세 낮은순</option><option value="rd">월세 높은순</option><option value="a">면적 넓은순</option><option value="p">사진 많은순</option></select>
+</div></div>
 <div class="lsBar">
  <select class="lsSel" id="fDong" aria-label="지역"><option value="">강남·서초 전체</option></select>
  <label class="lsRng" id="rA"><b>면적</b><input id="aMin" inputmode="numeric" placeholder="최소">~<input id="aMax" inputmode="numeric" placeholder="최대"><span>평</span></label>
@@ -382,13 +391,6 @@ body.dlFull .mapFullBtn{display:none}
  <label class="lsRng" id="rD"><b>보증금</b><input id="dMin" inputmode="numeric" placeholder="최소">~<input id="dMax" inputmode="numeric" placeholder="최대"><span>만</span></label>
  <label class="lsRng" id="rR"><b>월세</b><input id="mMin" inputmode="numeric" placeholder="최소">~<input id="mMax" inputmode="numeric" placeholder="최대"><span>만</span></label>
  <form class="lsQ" id="qf" autocomplete="off"><input id="q" type="search" placeholder="매물번호·동·키워드 검색 (예: D5B531F, 신사동)" aria-label="검색"><button type="submit" aria-label="검색"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button></form>
-</div>
-<div class="lsSub">
- <div class="lsTabs" id="tabs" role="tablist"><button type="button" data-c="all" class="on">전체</button><button type="button" data-c="clinic">병의원</button><button type="button" data-c="office">사무실</button><button type="button" data-c="shop">상가</button><button type="button" data-c="building">사옥·통임대</button></div>
- <label class="lsCk"><input type="checkbox" id="noPrem"> 무권리만</label>
- <label class="lsCk"><input type="checkbox" id="withGs"> 추가 매물 포함 <span style="color:#8A8F96;font-size:12px">(사진 없음)</span></label>
- <button type="button" class="lsReset" id="rst">↺ 초기화</button>
- <select class="lsSel lsSort" id="sort" aria-label="정렬"><option value="d">최신순</option><option value="ra">월세 낮은순</option><option value="rd">월세 높은순</option><option value="a">면적 넓은순</option><option value="p">사진 많은순</option></select>
 </div>
 <div class="lsGrid" id="grid"></div>
 <button type="button" class="lsMore" id="more" hidden>더 보기</button>
