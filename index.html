@@ -358,6 +358,12 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 .dtMainImg{position:relative;aspect-ratio:16/10;border-radius:16px;overflow:hidden;background:#ECE6DA;cursor:zoom-in;border:0;padding:0;width:100%;display:block}
 .dtMainImg img{width:100%;height:100%;object-fit:cover;display:block}
 .dtCount{position:absolute;right:14px;bottom:14px;background:rgba(20,25,31,.66);color:#FFFFFF;font-size:12px;font-weight:700;padding:6px 11px;border-radius:999px}
+.dtMainWrap{position:relative}
+.dtNav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.88);box-shadow:0 2px 10px rgba(0,0,0,.18);display:grid;place-items:center;cursor:pointer;z-index:3;opacity:.85;transition:opacity .15s,background .15s}
+.dtNav:hover{opacity:1;background:#fff}.dtNav svg{width:22px;height:22px;fill:none;stroke:#294652;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.dtNav.prev{left:14px}.dtNav.next{right:14px}
+@media (max-width:760px){.dtNav{width:36px;height:36px}.dtNav.prev{left:6px}.dtNav.next{right:6px}}
+@media print{.dtNav{display:none!important}}
 .dtThumbs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
 .dtThumbs::-webkit-scrollbar{display:none}
 .dtThumbs button{flex:none;width:96px;height:66px;border-radius:8px;overflow:hidden;border:2px solid transparent;padding:0;background:#ECE6DA;cursor:pointer;opacity:.75;transition:opacity .15s,border-color .15s}
@@ -1423,7 +1429,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 <button type="button" role="tab" data-tab="building" class="tabBtn" style="padding: 10px 18px; min-height: 40px; border: 0; border-radius: 999px; background: transparent; color: #46515B; font-size: 14px; font-weight: 500; cursor: pointer">사옥·통임대</button>
 
 </div>
-<a href="#map" class="featAll">전체 매물 보기 <span aria-hidden="true">→</span></a>
+<a href="listings.html" target="_blank" rel="noopener" class="featAll">전체 매물 보기 <span aria-hidden="true">→</span></a>
 </div>
 </div>
 
@@ -2286,7 +2292,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     $('mapList').addEventListener('click', function (e) { var b = e.target.closest('.mapItem'); if (b) focusItem(b.getAttribute('data-id')); });
     if ($('mapSort')) $('mapSort').addEventListener('change', function () { renderList(); $('mapList').scrollTop = 0; });
     document.querySelectorAll('.tabBtn').forEach(function (b) {
-      b.addEventListener('click', function () { featTab = b.getAttribute('data-tab'); renderFeatured(); });
+      b.addEventListener('click', function () { featTab = b.getAttribute('data-tab'); renderFeatured(); var fa = document.querySelector('.featAll'); if (fa) fa.href = 'listings.html' + (featTab && featTab !== 'all' ? '?cat=' + featTab : ''); });
     });
   }
 
@@ -2660,7 +2666,8 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     var badges = '<span class="dtBadge">' + esc(it.catLabel) + '</span>' + (it.premium === '무권리' ? '<span class="dtBadge gold">무권리</span>' : '') +
       (it.featured ? '<span class="dtBadge line">추천 매물</span>' : '');
     var gal = photos.length
-      ? '<div class="dtGal"><button type="button" class="dtMainImg" aria-label="사진 크게 보기"><img src="' + photoUrl(photos[0], 1600) + '" alt="' + esc(it.title) + ' 대표 사진" referrerpolicy="no-referrer">' + wmHtml() + '<span class="dtCount">1 / ' + photos.length + '</span></button>' +
+      ? '<div class="dtGal"><div class="dtMainWrap"><button type="button" class="dtMainImg" aria-label="사진 크게 보기"><img src="' + photoUrl(photos[0], 1600) + '" alt="' + esc(it.title) + ' 대표 사진" referrerpolicy="no-referrer">' + wmHtml() + '<span class="dtCount">1 / ' + photos.length + '</span></button>' +
+        (photos.length > 1 ? '<button type="button" class="dtNav prev" aria-label="이전 사진"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button type="button" class="dtNav next" aria-label="다음 사진"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>' : '') + '</div>' +
         (photos.length > 1 ? '<div class="dtThumbs dtThumb5" role="list">' + photos.map(function (p, i) { return p ? '<button type="button" role="listitem" data-i="' + i + '" class="' + (i ? '' : 'on') + '" aria-label="' + (i + 1) + '번째 사진"><img src="' + photoUrl(p, 400) + '" alt="" loading="lazy" referrerpolicy="no-referrer"></button>' : '<span class="dtThumbEmpty" aria-hidden="true"></span>'; }).join('') + '</div>' : '') + '</div>'
       : '<div class="dtNoPhoto" id="dtNoPhoto"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#BC975E" stroke-width="1.5" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><path d="M21 16l-5-5-8 8"></path></svg><b>현장 사진 준비 중</b><span>실제 내부 사진과 도면은 상담 시 바로 보내드립니다.<br>02-555-1165</span></div>';
     var price = '<div class="dtPrice"><div><small>보증금</small><b>' + esc(it.depText || '문의') + '</b></div><div class="rent"><small>월세</small><b>' + esc(it.rentText || '문의') + '</b></div>' +
@@ -2960,7 +2967,15 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   function bindDetail(it) {
     var el = DT.el;
     el.querySelector('.dtBack').addEventListener('click', closeByUser);
-    var mi = el.querySelector('.dtMainImg'); if (mi) mi.addEventListener('click', function () { lightbox(DT.idx); });
+    var mi = el.querySelector('.dtMainImg'), swiped = false;
+    if (mi) mi.addEventListener('click', function () { if (swiped) { swiped = false; return; } lightbox(DT.idx); });
+    // 큰 사진: 좌우 화살표 · 손가락으로 밀기
+    var stepPh = function (d) { var n = (DT.it.photos || []).length; if (n > 1) setPhoto((DT.idx + d + n) % n); };
+    el.querySelectorAll('.dtNav').forEach(function (b) { b.addEventListener('click', function (e) { e.stopPropagation(); stepPh(b.classList.contains('prev') ? -1 : 1); }); });
+    if (mi) { var sx = null, sy = 0;
+      mi.addEventListener('touchstart', function (e) { var t = e.touches[0]; sx = t.clientX; sy = t.clientY; }, { passive: true });
+      mi.addEventListener('touchend', function (e) { if (sx == null) return; var t = e.changedTouches[0], dx = t.clientX - sx, dy = t.clientY - sy; sx = null; if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { swiped = true; stepPh(dx < 0 ? 1 : -1); setTimeout(function () { swiped = false; }, 400); } });
+    }
     var th = el.querySelector('.dtThumbs'); if (th) th.addEventListener('click', function (e) { var b = e.target.closest('button[data-i]'); if (b) setPhoto(+b.getAttribute('data-i')); });
     el.querySelectorAll('.dtTool').forEach(function (b) {
       b.addEventListener('click', function () {
@@ -3226,7 +3241,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     var m2t = function (v) { return Number(v).toLocaleString('ko-KR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
     var tbl = rows.map(function (r, i) {
       var use = r.segs.slice().sort(function (p, q) { return q.area - p.area; }).map(function (x) { return regUse(x.full); }).filter(function (v, k, l) { return v && l.indexOf(v) === k; }).join(' · ') || '-', full = r.segs.map(function (x) { return x.full + ' ' + m2t(x.area) + '㎡'; }).join(' / ');
-      return '<div class="flvR' + (r.here ? ' me' : '') + (r.add ? ' ad' : '') + (i === gi ? ' gl' : '') + '" style="height:' + RH + 'px" title="' + esc(full) + '"><b>' + esc(r.label) + '</b><span>' + esc(use) + '</span><em>' + m2t(r.tot) + '㎡<small>' + (r.tot / PY).toFixed(2) + '평</small></em></div>';
+      return '<div class="flvR' + (r.here ? ' me' : '') + (r.add ? ' ad' : '') + (i === gi ? ' gl' : '') + '" style="height:' + RH + 'px" title="' + esc(full) + '"><b>' + esc(r.label) + '</b><span>' + esc(use) + '</span><em>' + (r.tot / PY).toFixed(2) + '평<small>' + m2t(r.tot) + '㎡</small></em></div>';
     }).join('');
     return '<section class="dtSec dtFlv"><h2>층별 현황</h2><div class="flv"><div class="flvT"><div class="flvHd"><b>층</b><span>건축물대장상 용도</span><em>층 합계 면적</em></div><div style="height:' + (TOP - 26) + 'px"></div>' + tbl + '</div><div class="flvD">' + svg + '</div></div>' +
       '<p class="dtNote">※ 건축물대장상 용도로, 실제 업종과 다를 수 있습니다. 입체도는 층별 면적 비율로 그린 개념도입니다.' +
