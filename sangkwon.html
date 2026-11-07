@@ -346,7 +346,13 @@ body.dlFull .mapFullBtn{display:none}
 .saMapBox{position:relative;border-radius:16px;overflow:hidden;border:1px solid #E6E0D4;background:#EFEBE3;min-height:520px}
 #map{position:absolute!important;inset:0;width:auto!important;height:auto!important}
 .saMapTop{position:absolute;left:12px;top:12px;z-index:5;display:flex;gap:8px}
-.saMine{order:2}.saMine.on{background:#294652;color:#fff;border-color:#294652}
+.saWork{order:1}.saWork.on{background:#294652;color:#fff;border-color:#294652}.saMine{order:2}
+.saWl{background:rgba(255,255,255,.95);border:1px solid #294652;border-radius:8px;padding:3px 8px;font-size:11.5px;font-weight:700;color:#14191F;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;box-shadow:0 1px 4px rgba(0,0,0,.15);text-align:center;line-height:1.35;cursor:pointer}
+.saWl b{display:block;color:#8A6A33;font-size:11px}
+.saChips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}.saChips button{border:1px solid #D9D2C4;background:#fff;border-radius:999px;padding:5px 11px;font:inherit;font-size:12.5px;font-weight:700;color:#5B6470;cursor:pointer}.saChips button.on{background:#294652;border-color:#294652;color:#fff}
+.saRank{display:grid;grid-template-columns:26px 1fr auto;gap:2px 8px;align-items:center;padding:8px 4px;border-bottom:1px solid #F1ECE2;cursor:pointer;font-size:13px}
+.saRank:hover{background:#FBF8F2}.saRank i{font-style:normal;font-family:Inter,sans-serif;font-weight:800;color:#8A6A33;text-align:center}.saRank b{color:#14191F;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.saRank b small{font-weight:600;color:#8A8F96;margin-left:4px}.saRank span{font-weight:800;color:#14191F;white-space:nowrap}
+.saRank .rb{grid-column:2/4;height:6px;background:#F1ECE2;border-radius:3px;overflow:hidden}.saRank .rb u{display:block;height:100%;text-decoration:none}.saMine.on{background:#294652;color:#fff;border-color:#294652}
 .saPill{background:#fff;border:1px solid #D9D2C4;border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;font-weight:700;color:#14191F;box-shadow:0 2px 6px rgba(0,0,0,.08);cursor:pointer;display:flex;align-items:center;gap:6px}
 .saTip{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:5;background:rgba(20,25,31,.82);color:#fff;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:999px;white-space:nowrap;pointer-events:none}
 .saLeg{position:absolute;left:12px;bottom:12px;z-index:5;background:#fff;border:1px solid #E6E0D4;border-radius:12px;padding:8px 12px;display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;font-weight:600;color:#3A424B;box-shadow:0 2px 8px rgba(0,0,0,.08);max-width:calc(100% - 90px)}
@@ -495,7 +501,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
 <div class="saMapCol">
 <div class="saMapBox">
  <div id="map"></div>
- <div class="saMapTop"><button type="button" class="saPill saMine" id="mineBtn" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>다움 매물 보기</span></button><button type="button" class="saPill" id="fullBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>지도 크게 보기</span></button></div>
+ <div class="saMapTop"><button type="button" class="saPill saWork" id="workBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 21V7l6-3v17M10 21V9l10 3v9M2 21h20M7 10h0M7 14h0M14 14h2M14 17h2"/></svg><span>사무실 밀집도</span></button><button type="button" class="saPill saMine" id="mineBtn" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>다움 매물 보기</span></button><button type="button" class="saPill" id="fullBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>지도 크게 보기</span></button></div>
  <div class="saTip" id="tip" hidden></div>
  <div class="saLeg" id="leg" hidden></div>
  <div class="saMsg" id="mapMsg">지도를 불러오는 중…</div>
@@ -776,6 +782,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
   }
   function run() {
     if (!M) return;
+    if (WK.on) wSet(false);
     var u = SHEET_URL + '?sa=1';
     if (S.mode === 'zone') { if (!S.zone) { tip('먼저 점선 상권을 눌러 고르세요'); return; } u += '&zone=' + encodeURIComponent(S.zone.no); }
     else if (S.mode === 'poly') { if (S.poly.length < 3) { $('pHint').textContent = '지도를 눌러 꼭짓점을 3개 이상 찍어 주세요'; $('pHint').classList.add('err'); return; } u += '&poly=' + encodeURIComponent(S.poly.map(function (p) { return p[0].toFixed(6) + ',' + p[1].toFixed(6); }).join('|')); }
@@ -902,7 +909,8 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
       h += '<div class="saTA"><div class="n">' + esc(z.nm) + '<em>' + esc(z.se) + '</em><small>' + (z.in ? '범위 안' : '중심까지 ' + fmtN(z.d) + 'm') + '</small></div><dl>' +
         '<div><dt>월 추정매출</dt><dd>' + (z.amt ? won(z.amt) : '–') + '</dd></div>' +
         '<div><dt>일평균 유동인구</dt><dd>' + (day ? fmtN(day) + '명' : '–') + '</dd></div>' +
-        '<div><dt>개업 / 폐업률</dt><dd>' + (z.st ? pct(z.op, z.st) + ' / ' + pct(z.cl, z.st) + '%' : '–') + '</dd></div></dl>' +
+        '<div><dt>개업 / 폐업률</dt><dd>' + (z.st ? pct(z.op, z.st) + ' / ' + pct(z.cl, z.st) + '%' : '–') + '</dd></div>' +
+        (z.wp ? '<div><dt>직장인구</dt><dd>' + fmtN(z.wp) + '명</dd></div>' : '') + '</dl>' +
         (z.amt ? '<div class="tp">매출이 많은 시간 <b>' + (TZ[pk] || '–') + '</b> · 주 고객 <b>' + (AGE[ag] || '–') + '</b> · 주말 비중 ' + pct(z.wk, z.amt) + '%' +
           (z.top && z.top.length ? '<br>매출 상위 업종: ' + z.top.slice(0, 3).map(function (t) { return esc(t[0]); }).join(' · ') : '') + '</div>' : '') +
         (function () { if (!sv) return ''; var se = (z.sel || {})[sv], so = (z.sto || {})[sv], nm = (se || so || [''])[0]; if (!nm) return '<div class="my">이 상권에는 ' + esc(NAME[code] || '') + ' 매출 자료가 없어요</div>'; return '<div class="my">이 상권 <b>' + esc(nm) + '</b> · 월 추정매출 ' + (se && se[1] ? won(se[1]) : '–') + (so ? ' · 점포 ' + so[1] + '곳 (분기 개업 ' + so[2] + ' · 폐업 ' + so[3] + ')' : '') + '</div>'; })() +
@@ -937,6 +945,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
   /* ---------- 초기화: 조회 결과(점·매물·상권 경계·리포트)를 지우고 처음 상태로 ---------- */
   var EMPTY = $('repB').innerHTML, EMPTY_T = document.querySelector('#rep .saRepH .t').innerHTML, EMPTY_S = $('repSub').textContent;
   $('resetBtn').addEventListener('click', function () {
+    if (WK.on) wSet(false);
     if (OV.dots) { OV.dots.setMap(null); OV.dots = null; }
     clear(OV.res); OV.res = []; clear(OV.mine); OV.mine = []; RES = null; S.showMine = false; $('mineBtn').hidden = true; mineUi();
     $('leg').hidden = true; $('leg').innerHTML = '';
@@ -949,6 +958,66 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
     $('mode').querySelector('[data-m="r"]').click();
     if (M) { M.setZoom(16); M.panTo(ll(S.lat, S.lng)); }
   });
+
+  /* ---------- 사무실 밀집도 (서울시 상권별 직장인구) ---------- */
+  var WK = { on: false, rows: null, q: '', age: 'all', gu: '', objs: [] };
+  var WCOL = ['#F3E9D6', '#E2C99B', '#C9A063', '#9C6F2E', '#5A3A10'];
+  function wVal(r) { var a = r[9] || []; return WK.age === 'all' ? r[8] : WK.age === '20' ? a[1] : WK.age === '30' ? a[2] : WK.age === '40' ? a[3] : (a[4] || 0) + (a[5] || 0); }
+  function wList() { return (WK.rows || []).filter(function (r) { return !WK.gu || r[3] === WK.gu; }).map(function (r) { return { r: r, v: wVal(r) || 0 }; }).filter(function (x) { return x.v > 0; }).sort(function (a, b) { return b.v - a.v; }); }
+  function wClear() { WK.objs.forEach(function (o) { o.setMap(null); }); WK.objs = []; }
+  function wDraw() {
+    wClear(); if (!WK.on || !M) return;
+    var L = wList(), n = L.length;
+    L.slice().reverse().forEach(function (x, i) {
+      var k = n - 1 - i, step = Math.min(4, Math.floor((1 - k / Math.max(1, n)) * 5)), r = x.r;
+      var c = new NM.Circle({ map: M, center: ll(r[5], r[6]), radius: Math.round(25 + Math.sqrt(x.v) * 0.7), strokeColor: '#fff', strokeWeight: 1.5, fillColor: WCOL[step], fillOpacity: .62, clickable: true, zIndex: 30 + step });
+      NM.Event.addListener(c, 'click', function () { wPick(r); });
+      WK.objs.push(c);
+    });
+    L.slice(0, 15).forEach(function (x, i) {
+      var m = new NM.Marker({ map: M, position: ll(x.r[5], x.r[6]), zIndex: 150 - i, icon: { content: '<div class="saWl">' + (i + 1) + '. ' + esc(x.r[1].replace(/\(.*\)/, '')) + '<b>' + wTxt(x.v) + '</b></div>', anchor: new NM.Point(40, 18) } });
+      NM.Event.addListener(m, 'click', function () { wPick(x.r); });
+      WK.objs.push(m);
+    });
+    $('leg').hidden = false;
+    $('leg').innerHTML = '<span>직장인구 적음</span>' + WCOL.map(function (c) { return '<i style="width:16px;height:10px;border-radius:2px;background:' + c + ';margin:0"></i>'; }).join('') + '<span>많음 · 원 크기 = 직장인구</span>';
+  }
+  function wTxt(v) { return v >= 10000 ? (Math.round(v / 1000) / 10).toLocaleString('ko-KR') + '만명' : fmtN(v) + '명'; }
+  function wPick(r) {
+    M.setZoom(16); setCenter(r[5], r[6], true);
+    hint('「' + r[1] + '」 중심으로 옮겼어요. 「분석하기」로 이 자리를 분석할 수 있어요');
+  }
+  function wReport() {
+    var L = wList(), mx = L.length ? L[0].v : 1, AG = [['all', '전체'], ['20', '20대'], ['30', '30대'], ['40', '40대'], ['50', '50대 이상']], GU = [['', '강남·서초'], ['강남구', '강남구'], ['서초구', '서초구']];
+    document.querySelector('#rep .saRepH .t').innerHTML = '사무실 밀집도' + (WK.q ? '<small>직장인구 ' + qTxt(WK.q) + '</small>' : '');
+    $('repSub').textContent = '서울시 상권별 직장인구 순위 · 이름을 누르면 그 위치로 이동해요';
+    $('repB').innerHTML = '<div class="saChips" id="wGu">' + GU.map(function (g) { return '<button type="button" data-g="' + g[0] + '"' + (WK.gu === g[0] ? ' class="on"' : '') + '>' + g[1] + '</button>'; }).join('') + '</div>' +
+      '<div class="saChips" id="wAge">' + AG.map(function (g) { return '<button type="button" data-a="' + g[0] + '"' + (WK.age === g[0] ? ' class="on"' : '') + '>' + g[1] + '</button>'; }).join('') + '</div>' +
+      (L.length ? L.slice(0, 40).map(function (x, i) {
+        var r = x.r, st = Math.min(4, Math.floor((1 - i / Math.max(1, L.length)) * 5));
+        return '<div class="saRank" data-i="' + i + '"><i>' + (i + 1) + '</i><b>' + esc(r[1]) + '<small>' + esc(r[4]) + ' · ' + esc(r[2]) + '</small></b><span>' + wTxt(x.v) + '</span><div class="rb"><u style="width:' + Math.max(2, x.v / mx * 100) + '%;background:' + WCOL[st] + '"></u></div></div>';
+      }).join('') : '<div class="saNone">직장인구 자료를 준비 중이에요</div>') +
+      '<div class="saNote" style="margin-top:12px">· 직장인구 = 그 상권(배후지)에 있는 직장에 다니는 사람 수 (서울시 상권분석서비스 추정). 사무실이 몰린 정도를 보는 참고 지표예요.<br>· 상권 중심점 기준 표시이며, 원이 클수록 직장인이 많아요.</div>';
+    $('wGu').onclick = function (e) { var b = e.target.closest('button'); if (!b) return; WK.gu = b.getAttribute('data-g'); wDraw(); wReport(); };
+    $('wAge').onclick = function (e) { var b = e.target.closest('button'); if (!b) return; WK.age = b.getAttribute('data-a'); wDraw(); wReport(); };
+    $('repB').querySelectorAll('.saRank').forEach(function (el) { el.onclick = function () { wPick(L[+el.getAttribute('data-i')].r); }; });
+  }
+  function wSet(on) {
+    WK.on = on; $('workBtn').classList.toggle('on', on); $('workBtn').querySelector('span').textContent = on ? '밀집도 닫기' : '사무실 밀집도';
+    if (on) {
+      if (OV.dots) OV.dots.setMap(null); OV.mine.forEach(function (m) { m.setMap(null); }); OV.res.forEach(function (o) { o.setMap(null); });
+      if (M && M.getZoom() > 14) M.setZoom(14);
+      $('repB').innerHTML = '<div class="saLoad"><div class="saSpin"></div>직장인구 자료를 불러오는 중이에요</div>';
+      var go = function () { if (!WK.on) return; wDraw(); wReport(); };
+      if (WK.rows) go();
+      else fetch(SHEET_URL + '?sa=work').then(function (r) { return r.json(); }).then(function (d) { WK.rows = d && d.rows || []; WK.q = d && d.q || ''; go(); }).catch(function () { WK.rows = null; $('repB').innerHTML = '<div class="saEmpty"><b>자료를 불러오지 못했어요</b><br>잠시 후 다시 눌러 주세요.</div>'; });
+    } else {
+      wClear();
+      if (RES) { OV.dots = new SaDots(RES.pts || []); OV.res.forEach(function (o) { o.setMap(M); }); OV.mine.forEach(function (m) { m.setMap(S.showMine ? M : null); }); report(RES); legend(); }
+      else { $('repB').innerHTML = EMPTY; document.querySelector('#rep .saRepH .t').innerHTML = EMPTY_T; $('repSub').textContent = EMPTY_S; $('leg').hidden = true; }
+    }
+  }
+  $('workBtn').addEventListener('click', function () { wSet(!WK.on); });
 
   $('mineBtn').addEventListener('click', function () { S.showMine = !S.showMine; OV.mine.forEach(function (m) { m.setMap(S.showMine ? M : null); }); mineUi(); legend(); });
 
