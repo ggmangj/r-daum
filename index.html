@@ -1258,6 +1258,20 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
  .mlSort{display:none}   /* 모바일은 목록을 숨기므로 정렬도 숨김 */
 }
 </style>
+<style id="fullRowCss">
+/* 지도 크게 보기(컴퓨터 화면): 제목 · 검색 줄 · 닫기를 한 줄에, 그만큼 지도를 위로 키움 */
+@media (min-width:1101px){
+ body.mapFull #map{display:grid!important;grid-template-columns:auto minmax(0,1fr) auto;grid-template-rows:auto minmax(0,1fr);column-gap:16px;align-items:center}
+ body.mapFull #map .heroMapHead{display:contents!important}
+ body.mapFull #map .heroMapTitle{grid-column:1;grid-row:1;margin:0!important;white-space:nowrap}
+ body.mapFull #map #mapSearchBar{display:none!important}
+ body.mapFull #map .mapTools{grid-column:2;grid-row:1;margin:0!important;flex-wrap:nowrap!important;min-width:0}
+ body.mapFull #map .mapTools .rng{flex:1 1 0!important;min-width:0}
+ body.mapFull #map .mapTools .noSearch{flex:0 1 240px;min-width:160px}
+ body.mapFull #map .mapFullClose{grid-column:3;grid-row:1}
+ body.mapFull #map .elev{grid-column:1/-1;grid-row:2;align-self:stretch;margin-top:12px;min-height:0;height:auto!important}
+}
+</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; background: #FFFFFF; width: 100%; letter-spacing: -0.2px">
@@ -1346,7 +1360,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 </div>
 <div id="map" class="heroMap">
 <div class="heroMapHead">
-<h2 class="heroMapTitle"><span>MAP SEARCH</span>지도로 매물 찾기</h2><div id="mapSearchBar" class="msBar" hidden></div>
+<h2 class="heroMapTitle"><span>MAP SEARCH</span>상가·사무실 임대</h2><div id="mapSearchBar" class="msBar" hidden></div>
 <button type="button" class="mapFullClose" id="mapFullClose" aria-label="크게 보기 닫기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button>
 </div>
 <div class="mapTools" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
