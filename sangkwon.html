@@ -723,15 +723,50 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
   }
 
   /* ---------- 위치 찾기 ---------- */
-  var FEED = null;
+  /* ---------- 다움 매물·실거래 자료: 페이지를 열자마자 미리 받아 둠 (다른 페이지와 같은 저장본을 함께 씀) ---------- */
+  var LOC = { items: null, gs: null, rt: null };
+  function lsRd(k) { try { var o = JSON.parse(localStorage.getItem(k) || 'null'); return o && Date.now() - o.t < 7 * 864e5 ? o.s : ''; } catch (e) { return ''; } }
+  function lsWr(k, t) { try { localStorage.setItem(k, JSON.stringify({ t: Date.now(), s: t })); } catch (e) { } }
+  function pj(t) { try { return JSON.parse(t); } catch (e) { return null; } }
+  function grab(k, u, set) {   // 저장본이 있으면 바로 쓰고, 새 자료가 오면 바꿈
+    var old = pj(lsRd(k)); if (old) set(old);
+    return fetch(u).then(function (r) { return r.text(); }).then(function (t) { var d = pj(t); if (d && (d.items || d.rows)) { lsWr(k, t); set(d); } }).catch(function () { });
+  }
+  var LOADED = Promise.all([
+    grab('daumFeed.v1', SHEET_URL, function (d) { LOC.items = d.items || []; }),
+    grab('daumGs.v1', SHEET_URL + '?gs=1', function (d) { LOC.gs = d.rows || []; }),
+    grab('daumDeals.v1', SHEET_URL + '?deals=1', function (d) { LOC.rt = d.rows || []; })
+  ]);
   function feed() {
-    if (FEED) return FEED;
-    var j = function (u) { return fetch(u).then(function (r) { return r.json(); }).catch(function () { return {}; }); };
-    return (FEED = Promise.all([j(SHEET_URL), j(SHEET_URL + '?gs=1')]).then(function (v) {
-      var a = {}; (v[0].items || []).forEach(function (it) { if (it.lat && it.lng) a[String(it.id).toUpperCase()] = [+it.lat, +it.lng]; });
-      (v[1].rows || []).forEach(function (r) { if (r[19] && r[20]) a[String(r[0]).toUpperCase()] = [+r[19], +r[20]]; });
+    return (LOC.items && LOC.gs ? Promise.resolve() : LOADED).then(function () {
+      var a = {}; (LOC.items || []).forEach(function (it) { if (it.lat && it.lng) a[String(it.id).toUpperCase()] = [+it.lat, +it.lng]; });
+      (LOC.gs || []).forEach(function (r) { if (r[19] && r[20]) a[String(r[0]).toUpperCase()] = [+r[19], +r[20]]; });
       return a;
-    }));
+    });
+  }
+  function inPoly(lat, lng, P) { var c = false; for (var i = 0, j = P.length - 1; i < P.length; j = i++) { var yi = P[i][0], xi = P[i][1], yj = P[j][0], xj = P[j][1]; if (((yi > lat) !== (yj > lat)) && (lng < (xj - xi) * (lat - yi) / (yj - yi) + xi)) c = !c; } return c; }
+  function localStats(A) {   // 범위 안 다움 매물 · 임대 평단가 · 빌딩 매매 (브라우저에서 바로 계산)
+    var inside = A.poly ? function (a, b) { return inPoly(a, b, A.poly); } : function (a, b) { return dist(A.lat, A.lng, a, b) <= A.r; };
+    var items = (LOC.items || []).map(function (it) { return { id: it.id, cat: it.catLabel, title: it.title, dong: it.dong, floor: it.floor, area: +it.area || 0, rent: +it.rent || 0, depText: it.depText, rentText: it.rentText, lat: +it.lat, lng: +it.lng, date: it.date }; })
+      .concat((LOC.gs || []).map(function (r) { return { id: r[0], cat: r[2], title: r[3], dong: r[5], floor: r[6], area: +r[7] || 0, rent: +r[9] || 0, depText: r[10], rentText: r[11], lat: +r[19], lng: +r[20], date: r[18] }; }));
+    var grp = function (f) { f = String(f || ''); return /지하|^\s*B\d/i.test(f) ? 'b' : /^\s*1\s*층|^\s*1F/i.test(f) ? '1' : 'up'; };
+    var rin = { '1': [], up: [], b: [] }, rall = { '1': [], up: [], b: [] }, mine = [];
+    items.forEach(function (it) {
+      var v = it.area >= 3 && it.rent > 0 ? it.rent / it.area : 0, ok = v >= 2 && v <= 100, g = grp(it.floor);
+      if (ok) rall[g].push(v);
+      if (!(it.lat && it.lng) || !inside(it.lat, it.lng)) return;
+      if (ok) rin[g].push(v); mine.push(it);
+    });
+    var st = function (a) { if (!a.length) return { n: 0 }; var t = 0; a.forEach(function (v) { t += v; }); return { n: a.length, avg: Math.round(t / a.length * 10) / 10 }; };
+    var rent = {}, ref = {}; ['1', 'up', 'b'].forEach(function (g) { rent[g] = st(rin[g]); ref[g] = st(rall[g]); });
+    var lim = new Date(); lim.setFullYear(lim.getFullYear() - 3); var ls = lim.toISOString().slice(0, 10), deals = [];
+    (LOC.rt || []).forEach(function (r) {
+      var la = +r[12], ln = +r[13], land = +r[8], bld = +r[9];
+      if (!(la && ln) || String(r[0]) < ls || r[11] || (land > 0 && land < 33) || (bld > 0 && bld < 33) || !inside(la, ln)) return;
+      deals.push([r[0], r[2], r[6], Math.round(land / 3.3058 * 10) / 10, Math.round(bld / 3.3058 * 10) / 10, +r[10], la, ln]);
+    });
+    deals.sort(function (a, b) { return a[0] < b[0] ? 1 : -1; });
+    return { mine: mine, mineN: mine.length, rent: rent, rentRef: ref, deals: deals.slice(0, 40), dealsN: deals.length };
   }
   function hint(t, err) { $('qHint').textContent = t; $('qHint').classList.toggle('err', !!err); }
   function search(q) {
@@ -821,18 +856,19 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
   function run() {
     if (!M) return;
     if (WK.on) wSet(false);
-    var u = SHEET_URL + '?sa=1';
+    var u = SHEET_URL + '?sa=1&lite=1';
     if (S.mode === 'zone') { if (!S.zone) { tip('먼저 점선 상권을 눌러 고르세요'); return; } u += '&zone=' + encodeURIComponent(S.zone.no); }
     else if (S.mode === 'poly') { if (S.poly.length >= 3 && !S.pDone) polyDone(); if (S.poly.length < 3) { $('pHint').textContent = '지도를 눌러 꼭짓점을 3개 이상 찍어 주세요'; $('pHint').classList.add('err'); return; } u += '&poly=' + encodeURIComponent(S.poly.map(function (p) { return p[0].toFixed(6) + ',' + p[1].toFixed(6); }).join('|')); }
     else u += '&lat=' + S.lat.toFixed(6) + '&lng=' + S.lng.toFixed(6) + '&r=' + S.r;
     $('go').disabled = true; $('go').textContent = '분석 중…';
     $('repSub').textContent = (S.label ? S.label + ' · ' : '') + areaText() + (S.code ? ' · ' + NAME[S.code] : '');
-    $('repB').innerHTML = '<div class="saLoad"><div class="saSpin"></div>상가업소·상권 자료를 모으는 중이에요<br><small>' + (S.mode === 'r' && S.r >= 1000 ? '반경 1km는 20~40초 걸릴 수 있어요' : '보통 5~15초 걸려요') + '</small></div>';
+    $('repB').innerHTML = '<div class="saLoad"><div class="saSpin"></div>상가업소·상권 자료를 모으는 중이에요<br><small>' + (S.mode === 'r' && S.r >= 1000 ? '반경 1km는 20~40초 걸릴 수 있어요' : '보통 3~8초 걸려요 · 같은 범위는 다음부터 바로 나와요') + '</small></div>';
     if (innerWidth <= 1280) setTimeout(function () { $('rep').scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 50);
     fetch(u).then(function (r) { return r.json(); }).then(function (d) {
       $('go').disabled = false; $('go').textContent = '분석하기';
       if (!d || !d.ok) { $('repB').innerHTML = '<div class="saEmpty"><b>분석하지 못했어요</b><br>' + esc(d && d.error || '잠시 후 다시 시도해 주세요') + '</div>'; return; }
-      RES = d; drawRes(d); report(d);
+      var fin = function () { var L = localStats(d.area); for (var k in L) d[k] = L[k]; RES = d; drawRes(d); report(d); };
+      if (LOC.items && LOC.gs && LOC.rt) fin(); else LOADED.then(fin);
       try { window.daumTrack && daumTrack('sa_run', { mode: S.mode, code: S.code || '-' }); } catch (e) { }
     }).catch(function () {
       $('go').disabled = false; $('go').textContent = '분석하기';
