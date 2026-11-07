@@ -916,7 +916,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 .mapTools .mapFullBtn:hover{background:#294652!important;color:#FFFFFF!important}
 .heroMapHead .noSearch{margin-left:auto!important}
 @media (min-width:761px) and (max-width:1100px){.heroMap .mapSel{height:40px!important}.mapTools .mapFullBtn{height:40px}}
-@media (max-width:760px){.mapTools .mapFullBtn{display:none!important}}
+@media (max-width:760px){.mapTools .mapFullBtn{grid-column:1/-1;justify-content:center;width:100%}#map{scroll-margin-top:118px}}   /* 모바일: 필터 아래 한 줄 전체 */
 body.mapFull .mapTools .mapFullBtn{display:none}
 </style>
 <style id="thumb5">
@@ -969,7 +969,7 @@ body.mapFull .mapTools .mapFullBtn{display:none}
 @media (min-width:761px){.heroMapHead{flex-wrap:nowrap!important}}
 .heroMapHead .noSearch,.heroMapHead .mapFullBtn,.heroMapHead .mapFullClose{flex:none}
 @media (min-width:761px){body:not(.mapFull) .heroMapHead:has(#mapSearchBar:not([hidden])) .heroMapTitle span{display:none}body:not(.mapFull) .heroMapHead:has(#mapSearchBar:not([hidden])) .noSearch input{width:120px}body:not(.mapFull) .heroMapHead:has(#mapSearchBar:not([hidden])) .mapFullBtn{padding:0 12px}.heroMapHead #mapSearchBar .msLbl{font-size:12.5px}}
-@media (max-width:760px){.heroMapHead .mapFullBtn{display:none!important}.heroMapHead .noSearch{flex:1 1 100%!important;margin-left:0!important}.asHead span{font-size:0!important}.asHead em{font-size:12.5px!important;margin:0!important}.heroMapHead #mapSearchBar{order:3;flex:1 1 100%}.heroMapHead #mapSearchBar[hidden]{display:none!important}}
+@media (max-width:760px){.heroMapHead .noSearch{flex:1 1 100%!important;margin-left:0!important}.asHead span{font-size:0!important}.asHead em{font-size:12.5px!important;margin:0!important}.heroMapHead #mapSearchBar{order:3;flex:1 1 100%}.heroMapHead #mapSearchBar[hidden]{display:none!important}}
 /* 카드가 길어지면 로고를 가운데 크게 */
 .heroCard .flipFront.tall .hcBrand{flex:1 1 auto;justify-content:center;align-items:center;margin:0}
 .heroCard .flipFront.tall .hcLock{flex-direction:column;gap:14px}
@@ -1029,6 +1029,7 @@ body.mapFull #mapList{height:auto!important;flex:1 1 auto;min-height:0}
 body.mapFull #leafletMap{height:100%!important}
 body.mapFull #map>p{display:none}
 body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-flex}
+body.mapFull:not(.detailMode) .ccNav{visibility:hidden}   /* 추천 매물 화살표가 크게 보기 지도 위로 비치지 않게 */
 @media (max-width:760px){
  .mapFullBtn{height:40px;padding:0 12px;font-size:13px}
  .asRow button{padding:0 16px}.asEx button{font-size:12px}
@@ -2485,7 +2486,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
 
   /* ---------- 지도 크게 보기 (전체 화면) ---------- */
   function mapRefit() { if (!M) return; [60, 350].forEach(function (ms) { setTimeout(function () { if (M.resize) M.resize(); drawMap(); }, ms); }); }
-  function canFull() { return innerWidth > 760; }
+  function canFull() { return true; }   // 모바일도 지도 크게 보기 (빌딩 매매 실거래가와 같게)
   function openFullMap() { if (!canFull() || document.body.classList.contains('mapFull')) return; document.body.classList.add('mapFull'); mapRefit(); }
   function closeFullMap() { if (!document.body.classList.contains('mapFull')) return; document.body.classList.remove('mapFull'); mapRefit(); var sec = $('map'); if (sec) setTimeout(function () { sec.scrollIntoView(); }, 80); }
   window.bdMapFull = { open: openFullMap, close: closeFullMap };
@@ -2496,7 +2497,7 @@ body.mapFull .mapFullBtn{display:none}body.mapFull .mapFullClose{display:inline-
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && document.body.classList.contains('mapFull') && !document.body.classList.contains('detailMode')) closeFullMap(); });
     // 상단 메뉴 '매물 조회' → 크게 보기
     document.querySelectorAll('.mainNav a[href="#map"]').forEach(function (a) {
-      a.addEventListener('click', function (e) { if (!canFull()) return; document.body.classList.add('mapFull'); if (!document.body.classList.contains('detailMode')) { e.preventDefault(); mapRefit(); } });
+      a.addEventListener('click', function (e) { if (innerWidth <= 760) return; /* 모바일 메뉴는 지도 위치로 이동만 */ document.body.classList.add('mapFull'); if (!document.body.classList.contains('detailMode')) { e.preventDefault(); mapRefit(); } });
     });
     window.addEventListener('resize', function () { if (document.body.classList.contains('mapFull') && !canFull()) { document.body.classList.remove('mapFull'); } if (M && M.resize) M.resize(); });
   })();
