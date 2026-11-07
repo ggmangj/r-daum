@@ -335,6 +335,7 @@ body.dlFull .mapFullBtn{display:none}
 .saSel{width:100%;height:44px;border:1px solid #D9D2C4;border-radius:10px;padding:0 10px;font:inherit;font-size:14px;color:#14191F;background:#fff}
 .saSel:disabled{color:#9AA3AD;background:#F8F5EF}
 .saModeBox{min-height:62px}
+#pHint{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .saGoRow{display:flex;gap:8px}
 .saReset{flex:0 0 76px;height:50px;border:1px solid #D9D2C4;border-radius:12px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:inherit;font-size:11.5px;font-weight:700;color:#3A424B;cursor:pointer}
 .saReset svg{width:18px;height:18px;fill:none;stroke:#294652;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
@@ -370,6 +371,7 @@ body.dlFull .mapFullBtn{display:none}
 .saZl{background:#fff;border:1px solid #9C7A3E;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700;color:#14191F;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;box-shadow:0 1px 4px rgba(0,0,0,.12)}
 .saZl.on{background:#294652;color:#fff;border-color:#294652}
 .saVx{width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid #294652}
+.saVx.end{width:18px;height:18px;background:#BC975E;border-color:#fff;box-shadow:0 0 0 2px #294652;cursor:pointer}
 .saRep{background:#fff;border:1px solid #E6E0D4;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-height:520px}
 .saRepH{padding:18px 20px 14px;border-bottom:1px solid #EFEAE0}
 .saRepH .t{font-size:18px;font-weight:900;color:#14191F;display:flex;align-items:center;gap:8px}
@@ -493,7 +495,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
   <div class="saModeBox">
   <div id="mR" class="saRad"><button type="button" data-r="100">100m</button><button type="button" data-r="300" class="on">300m</button><button type="button" data-r="500">500m</button><button type="button" data-r="1000">1km</button></div>
   <div id="mZ" hidden><div class="saZoneNm none" id="zoneNm">지도에서 상권(점선)을 눌러 고르세요</div></div>
-  <div id="mP" hidden><div class="saPolyAct"><button type="button" id="pUndo">한 점 지우기</button><button type="button" id="pClear">다시 그리기</button></div><p class="saHint" id="pHint">지도를 눌러 꼭짓점을 3개 이상 찍으세요</p></div>
+  <div id="mP" hidden><div class="saPolyAct"><button type="button" id="pUndo">한 점 지우기</button><button type="button" id="pClear">다시 그리기</button></div><p class="saHint" id="pHint">지도에 점을 찍고 오른쪽 클릭으로 완성하세요</p></div>
   </div>
  </div>
  <div class="saStep"><h3><em>3</em>업종<small>고르지 않아도 돼요</small></h3>
@@ -601,7 +603,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
     this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
     S.mode = b.getAttribute('data-m');
     $('mR').hidden = S.mode !== 'r'; $('mZ').hidden = S.mode !== 'zone'; $('mP').hidden = S.mode !== 'poly';
-    if (S.mode === 'poly' && S.poly.length < 3) tip('지도를 눌러 영역의 꼭짓점을 찍으세요'); else if (S.mode === 'zone') tip('점선 상권을 눌러 고르세요'); else tip('');
+    if (S.mode === 'poly' && !S.pDone) tip('지도를 눌러 꼭짓점을 찍고, 오른쪽 클릭으로 완성하세요'); else if (S.mode === 'zone') tip('점선 상권을 눌러 고르세요'); else tip('');
     drawArea(); if (S.mode === 'zone') loadZones(true);
     if (window.saFitH) window.saFitH();
   });
@@ -610,8 +612,15 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
     this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
     S.r = +b.getAttribute('data-r'); drawArea(true);
   });
-  $('pUndo').onclick = function () { S.poly.pop(); drawArea(); };
-  $('pClear').onclick = function () { S.poly = []; drawArea(); };
+  $('pUndo').onclick = function () { if (S.pDone) S.pDone = false; else S.poly.pop(); drawArea(); };
+  $('pClear').onclick = function () { S.poly = []; S.pDone = false; drawArea(); };
+  function polyDone() {   // 직접 그리기 마무리
+    if (S.mode !== 'poly' || S.pDone) return;
+    if (S.poly.length < 3) { $('pHint').textContent = '점을 3개 이상 찍어야 완성돼요 (' + S.poly.length + '/3)'; $('pHint').classList.add('err'); return; }
+    S.pDone = true; rubber(null); drawArea();
+  }
+  $('map').addEventListener('contextmenu', function (e) { if (S.mode === 'poly') { e.preventDefault(); polyDone(); } });
+  document.addEventListener('keydown', function (e) { if (S.mode !== 'poly') return; if (e.key === 'Enter' && document.activeElement === document.body) polyDone(); });
   function tip(t) { $('tip').hidden = !t; $('tip').textContent = t || ''; }
 
   /* ---------- 지도 ---------- */
@@ -628,8 +637,9 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
     defineDots(); [0, 300, 1200].forEach(function (t) { setTimeout(window.saFitH || function () { }, t); });
     NM.Event.addListener(M, 'mousemove', function (e) { if (S.mode === 'poly' && S.poly.length) rubber(e.coord); });
     NM.Event.addListener(M, 'mouseout', function () { rubber(null); });
+    NM.Event.addListener(M, 'rightclick', function () { if (S.mode === 'poly') polyDone(); });
     NM.Event.addListener(M, 'click', function (e) {
-      if (S.mode === 'poly') { if (S.poly.length >= 40) return; S.poly.push([e.coord.lat(), e.coord.lng()]); drawArea(); return; }
+      if (S.mode === 'poly') { if (S.pDone || S.poly.length >= 40) return; S.poly.push([e.coord.lat(), e.coord.lng()]); drawArea(); return; }
       if (S.mode === 'r') { setCenter(e.coord.lat(), e.coord.lng()); }
     });
     NM.Event.addListener(M, 'idle', function () { if (OV.dots) OV.dots.draw(); if (S.mode === 'zone') loadZones(false); });
@@ -650,11 +660,18 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
       NM.Event.addListener(OV.ctr, 'dragend', function () { var p = OV.ctr.getPosition(); setCenter(p.lat(), p.lng()); });
       if (fit) { var z = S.r >= 1000 ? 14 : S.r >= 500 ? 15 : S.r >= 300 ? 16 : 17; if (M.getZoom() > z || S.r >= 500) M.setZoom(z); M.panTo(ll(S.lat, S.lng)); }
     } else if (S.mode === 'poly') {
-      if (S.poly.length >= 2) OV.poly = new NM.Polygon({ map: M, paths: [S.poly.map(function (p) { return ll(p[0], p[1]); })], strokeColor: '#294652', strokeWeight: 2.5, fillColor: '#294652', fillOpacity: S.poly.length >= 3 ? .08 : 0, clickable: false });
-      OV.vx = S.poly.map(function (p) { return new NM.Marker({ map: M, position: ll(p[0], p[1]), clickable: false, icon: { content: '<div class="saVx"></div>', anchor: new NM.Point(6, 6) } }); });
-      $('pHint').textContent = S.poly.length >= 3 ? '꼭짓점 ' + S.poly.length + '개 · 지도를 눌러 더 찍을 수 있어요' : '지도를 눌러 꼭짓점을 3개 이상 찍으세요 (' + S.poly.length + '/3)';
+      var path = S.poly.map(function (p) { return ll(p[0], p[1]); });
+      if (S.pDone) OV.poly = new NM.Polygon({ map: M, paths: [path], strokeColor: '#294652', strokeWeight: 2.5, fillColor: '#294652', fillOpacity: .1, clickable: false });
+      else if (S.poly.length >= 2) OV.poly = new NM.Polyline({ map: M, path: path, strokeColor: '#294652', strokeWeight: 2.5, clickable: false });
+      OV.vx = S.poly.map(function (p, i) {
+        var first = i === 0 && !S.pDone && S.poly.length >= 3;
+        var mk = new NM.Marker({ map: M, position: ll(p[0], p[1]), clickable: first, zIndex: first ? 250 : 240, icon: { content: '<div class="saVx' + (first ? ' end' : '') + '"' + (first ? ' title="눌러서 완성"' : '') + '></div>', anchor: first ? new NM.Point(9, 9) : new NM.Point(6, 6) } });
+        if (first) NM.Event.addListener(mk, 'click', polyDone);
+        return mk;
+      });
+      $('pHint').textContent = S.pDone ? '영역 완성 ✓ 「분석하기」를 누르세요' : S.poly.length >= 3 ? '점 ' + S.poly.length + '개 · 오른쪽 클릭이나 첫 점 클릭으로 완성' : '점을 3개 이상 찍어 주세요 (' + S.poly.length + '/3)';
       $('pHint').classList.remove('err');
-      if (S.poly.length >= 3) tip('');
+      if (S.pDone) tip(''); else if (S.poly.length >= 3) tip('오른쪽 클릭(또는 첫 점 클릭)하면 영역이 완성돼요');
     }
     zoneStyle();
   }
@@ -662,7 +679,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
   // 직접 그리기: 마지막 점에서 마우스까지 선이 따라오고, 첫 점으로 닫히는 선도 흐리게
   function rubber(c) {
     if (!M) return;
-    if (!c || S.mode !== 'poly' || !S.poly.length) { if (OV.rb) { OV.rb.setMap(null); OV.rb2.setMap(null); } return; }
+    if (!c || S.mode !== 'poly' || !S.poly.length || S.pDone) { if (OV.rb) { OV.rb.setMap(null); OV.rb2.setMap(null); } return; }
     var last = S.poly[S.poly.length - 1], first = S.poly[0];
     if (!OV.rb) {
       OV.rb = new NM.Polyline({ map: M, path: [], strokeColor: '#294652', strokeWeight: 2.5, strokeStyle: 'solid', strokeOpacity: .9, clickable: false, zIndex: 60 });
@@ -747,7 +764,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
     } catch (e) { clearTimeout(tm); server(); }
   }
   function goTo(a, b) {
-    if (S.mode === 'poly') { S.poly = []; }
+    if (S.mode === 'poly') { S.poly = []; S.pDone = false; }
     if (S.mode !== 'r') { $('mode').querySelector('[data-m="r"]').click(); }
     setCenter(a, b, true); if (M.getZoom() < 15) M.setZoom(16);
   }
@@ -806,7 +823,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
     if (WK.on) wSet(false);
     var u = SHEET_URL + '?sa=1';
     if (S.mode === 'zone') { if (!S.zone) { tip('먼저 점선 상권을 눌러 고르세요'); return; } u += '&zone=' + encodeURIComponent(S.zone.no); }
-    else if (S.mode === 'poly') { if (S.poly.length < 3) { $('pHint').textContent = '지도를 눌러 꼭짓점을 3개 이상 찍어 주세요'; $('pHint').classList.add('err'); return; } u += '&poly=' + encodeURIComponent(S.poly.map(function (p) { return p[0].toFixed(6) + ',' + p[1].toFixed(6); }).join('|')); }
+    else if (S.mode === 'poly') { if (S.poly.length >= 3 && !S.pDone) polyDone(); if (S.poly.length < 3) { $('pHint').textContent = '지도를 눌러 꼭짓점을 3개 이상 찍어 주세요'; $('pHint').classList.add('err'); return; } u += '&poly=' + encodeURIComponent(S.poly.map(function (p) { return p[0].toFixed(6) + ',' + p[1].toFixed(6); }).join('|')); }
     else u += '&lat=' + S.lat.toFixed(6) + '&lng=' + S.lng.toFixed(6) + '&r=' + S.r;
     $('go').disabled = true; $('go').textContent = '분석 중…';
     $('repSub').textContent = (S.label ? S.label + ' · ' : '') + areaText() + (S.code ? ' · ' + NAME[S.code] : '');
@@ -974,7 +991,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
     // 업종·범위 선택도 처음으로 (위치는 그대로)
     $('ics').querySelectorAll('.saIc').forEach(function (x) { x.classList.remove('on'); });
     S.code = ''; $('sub').disabled = true; $('sub').innerHTML = '<option value="">업종 아이콘을 먼저 고르세요</option>';
-    S.poly = []; S.zone = null; S.r = 300;
+    S.poly = []; S.pDone = false; S.zone = null; S.r = 300;
     $('mR').querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-r') === '300'); });
     $('mode').querySelector('[data-m="r"]').click();
     if (M) { M.setZoom(16); M.panTo(ll(S.lat, S.lng)); }
