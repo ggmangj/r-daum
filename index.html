@@ -2041,26 +2041,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       var path = []; for (var k = 0; k < 6; k++) { var an = Math.PI / 180 * (60 * k + 30); path.push(new nm.LatLng((o.cy + R * Math.sin(an)) / mLat, (o.cx + R * Math.cos(an)) / mLng)); }
       HEAT.objs.push(new nm.Polygon({ map: map, paths: [path], fillColor: heatCol(heatStep(o.v, G) / 4), fillOpacity: 0.38, strokeColor: '#FFFFFF', strokeOpacity: 0.95, strokeWeight: 1.5, clickable: false }));
     });
-    // 숫자: 법정동마다 상위 2 · 중위 3 · 하위 1칸 (매물 2건 이상 칸 중에서, 그 동 안에서 비교)
-    // 지도를 멀리 보면 칸이 작아 겹치므로 동마다 개수를 줄임 (칸 폭 52px 미만: 상·중·하 1개씩, 36px 미만: 중위 1개)
-    var pr = map.getProjection(), c0 = map.getCenter(), pa = pr.fromCoordToOffset(c0), pb = pr.fromCoordToOffset(new nm.LatLng(c0.lat(), c0.lng() + w / mLng)), pxW = Math.abs(pb.x - pa.x);
-    var nHi = pxW >= 52 ? 2 : pxW >= 36 ? 1 : 0, nMid = pxW >= 52 ? 3 : 1, nLo = pxW >= 36 ? 1 : 0, byDong = {};
-    vis.forEach(function (o) { if (o.n >= 2 && o.dong) (byDong[o.dong] = byDong[o.dong] || []).push(o); });
-    Object.keys(byDong).forEach(function (dg) {
-      var L = byDong[dg].sort(function (a, b) { return a.v - b.v; }), pick = [], used = {};
-      var take = function (o, k) { if (!o || used[o.cy + '|' + o.cx]) return; used[o.cy + '|' + o.cx] = 1; pick.push([o, k]); };
-      if (L.length >= 3) {
-        for (var i = 0; i < nLo; i++) take(L[i], 'lo');
-        for (var j = 0; j < nHi; j++) take(L[L.length - 1 - j], 'hi');
-      }
-      var md = heatQ(L.map(function (o) { return o.v; }), 0.5);
-      L.slice().sort(function (a, b) { return Math.abs(a.v - md) - Math.abs(b.v - md) || b.n - a.n; }).forEach(function (o) { if (pick.filter(function (x) { return x[1] === 'mid'; }).length < nMid) take(o, 'mid'); });
-      pick.forEach(function (x) {
-        var o = x[0], k = x[1];
-        HEAT.objs.push(new nm.Marker({ map: map, position: new nm.LatLng(o.la, o.lo), clickable: false, zIndex: k === 'hi' ? 52 : 50,
-          icon: { content: '<div class="hpTop ' + k + '">' + Math.round(o.v) + '만</div>', anchor: new nm.Point(0, 0) } }));
-      });
-    });
+    // 지도에는 금액 숫자를 쓰지 않고 육각형 색으로만 구분
     heatUi();
   }
   function heatSet(on) {   // 켤 때 너무 가까이 있으면 동네가 보이도록 한 단계 멀리
@@ -2080,17 +2061,16 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       pn = document.createElement('div'); pn.id = 'heatPanel'; pn.className = 'heatPanel'; wrap.appendChild(pn);
       pn.addEventListener('click', function (e) { var b = e.target.closest('[data-hf]'); if (!b) return; HEAT.fl = b.dataset.hf; drawMap(); });
     }
-    var act = !!heatActive(); btn.classList.toggle('on', act); btn.setAttribute('aria-pressed', act ? 'true' : 'false'); btn.hidden = !(M && M.kind === 'naver'); pn.hidden = !act;
+    var act = !!heatActive(); btn.classList.toggle('on', act); btn.setAttribute('aria-pressed', act ? 'true' : 'false'); btn.hidden = !(M && M.kind === 'naver'); pn.hidden = !(M && M.kind === 'naver');   // 안내판은 처음부터 항상
     if ($('dongPick')) $('dongPick').classList.toggle('dpGrp', !btn.hidden);
-    if (!act) return;
-    var S = HEAT.stat || { n: 0, cells: 0 }, f1 = function (v) { return (Math.round(v * 10) / 10).toLocaleString('ko-KR'); }, chip = function (v, t) { return '<button type="button" data-hf="' + v + '"' + (HEAT.fl === v ? ' class="on"' : '') + '>' + t + '</button>'; };
+    if (pn.hidden) return;
+    var S = act ? (HEAT.stat || { n: 0, cells: 0 }) : (function () { var q = heatScale().qs || []; return { n: 0, cells: q.some(function (v) { return v > 0; }) ? 1 : 0, qs: q, pins: 1 }; })(), f1 = function (v) { return (Math.round(v * 10) / 10).toLocaleString('ko-KR'); }, chip = function (v, t) { return '<button type="button" data-hf="' + v + '"' + (HEAT.fl === v ? ' class="on"' : '') + '>' + t + '</button>'; };
     pn.innerHTML = '<div class="hpTitle">임대 평단가 <span>' + ({ all: '전체 층', '1': '1층', up: '2층 이상', b: '지하' })[HEAT.fl] + '</span></div>' +
       '<div class="hpRow">' + chip('all', '전체') + chip('1', '1층') + chip('up', '2층 이상') + chip('b', '지하') + '</div>' +
       (S.cells ? '<div class="hpBar">' + [0, 1, 2, 3, 4].map(function (i) { return '<i style="background:' + heatCol(i / 4) + '"></i>'; }).join('') + '</div>' +
         '<div class="hpTick"><span>하위 20%</span>' + S.qs.map(function (q) { return '<span>' + f1(q) + '만</span>'; }).join('') + '<span>상위 20%</span></div>' +
-        '<div class="hpRange">이 화면 실제 범위 <b>최저 ' + f1(S.min) + '만</b> ~ <b class="hi">최고 ' + f1(S.max) + '만</b></div>' +
-        '<div class="hpLeg"><b>법정동마다</b><span><i class="hpTop hi">상위</i>2곳</span><span><i class="hpTop mid">중위</i>3곳</span><span><i class="hpTop lo">하위</i>1곳</span></div>' +
-        '<div class="hpNote">평당 월세(만원/전용평) · 칸 안 매물 평균 · 숫자는 매물 2건 이상 칸 · 색은 이 층 매물을 싼 순서로 줄 세운 5단계(각 20%, 확대해도 고정) · 이 화면 매물 ' + S.n + '건 · 호가 기준 · 입력 오류로 보이는 값 제외</div>'
+        (S.pins ? '' : '<div class="hpRange">이 화면 실제 범위 <b>최저 ' + f1(S.min) + '만</b> ~ <b class="hi">최고 ' + f1(S.max) + '만</b></div>') +
+        '<div class="hpNote">평당 월세(만원/전용평) · 칸 안 매물 평균 · 색은 이 층 매물을 싼 순서로 줄 세운 5단계(각 20%, 확대해도 고정)' + (S.pins ? '' : ' · 이 화면 매물 ' + S.n + '건') + ' · 호가 기준 · 입력 오류로 보이는 값 제외</div>'
         : '<div class="hpNote">이 화면에 조건에 맞는 매물이 부족합니다. 지도를 넓혀 보거나 층을 바꿔 주세요.</div>');
   }
   function drawMap() {   // 지도 이동·확대가 연달아 일어나면 마지막 한 번만 다시 그림
