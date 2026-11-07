@@ -1232,15 +1232,8 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 #map .mlCol>div:first-child{padding:12px 12px 12px 16px!important;gap:8px;flex-wrap:nowrap}
 #map .mlCol>div:first-child>span:first-child{white-space:nowrap;font-size:13.5px}
 #mapScope{display:none}
-/* 목록 한 줄 (빌딩 매매 실거래가와 같은 모양) */
-.mapItem.mi2{display:grid!important;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px!important;padding:12px 16px!important;flex-direction:initial}
-.mi2 .t{font-weight:800;font-size:14.5px;color:#14191F;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mi2 .t small{font-weight:500;color:#6B757D;margin-left:6px;font-size:12px}
-.mi2 .m{font-size:12.5px;color:#6B757D;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.mi2 .p{grid-row:1/3;grid-column:2;text-align:right;align-self:center}
-.mi2 .p b{display:block;font-size:16px;font-weight:900;color:#C0392B;white-space:nowrap}
-.mi2 .p em{display:block;font-style:normal;font-size:12px;color:#9C7A47;font-weight:700;white-space:nowrap}
-.mapItem.mi2.on{background:#F6F2EA;box-shadow:inset 3px 0 0 #294652}
+/* 목록: 제목·가격 줄이 다음 줄로 넘어가지 않게 (폭은 가장 긴 줄에 맞춤) */
+#mapList .mapItem .miTitle,#mapList .mapItem .miMeta{white-space:nowrap}
 @media (min-width:761px){
  #map .elev{flex-direction:row-reverse!important;flex-wrap:nowrap!important}
  #map .mlCol{flex:0 0 var(--lw,420px)!important;max-width:46%;border-right:0!important;border-left:1px solid #E6E0D4}
@@ -2134,21 +2127,16 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     var h = esc(noPrem(t));
     return h.replace(/(\d+(?:\.\d+)?평)\s+(?=\S)/, '$1<span class="miSep" aria-hidden="true"></span>');
   }
-  // 목록 한 줄: 제목(동·층·면적) + 종류 / 보증금·관리비·권리금 한 줄 / 오른쪽에 월세와 평당 월세
-  function miParts(it) {
-    var t = noPrem(it.title).replace(/통임대\([^)]*\)/, '통임대').replace(/연층\(\s*([^)~]*?)\s*~\s*([^)]*?)\s*\)/, function (x, a, b) { return '연층 ' + a.replace(/^지하\s*/, 'B').replace(/층$/, '') + '~' + b.replace(/^지하\s*/, 'B'); });   // 목록에서는 짧게: 통임대(지하1층~5층) → 통임대, 연층(지하1층~2층) → 연층 B1~2층
-    var m = /^(.*?\d+(?:\.\d+)?평)\s*(.*)$/.exec(t), main = m ? m[1] : t, sub = m ? m[2] : (it.catLabel || '');
-    var rent = manOf(it.rent, it.rentText), ar = +it.area, pp = rent && ar > 0 ? rent / ar : 0;
-    var prem = String(it.premium || '').trim(), pr = !prem ? '' : /무권리|없음/.test(prem) ? '무권리' : /권리금/.test(prem) ? prem : '권 ' + prem;
-    return { main: main, sub: sub, meta: '보 ' + (it.depText || '-') + ' · 관 ' + (it.mgmt || '문의') + (pr ? ' · ' + pr : ''),
-      rent: it.rentText ? '월 ' + it.rentText : '월세 문의', pp: pp ? '평당 ' + (pp >= 10 ? Math.round(pp).toLocaleString('ko-KR') : Math.round(pp * 10) / 10) + '만' : '' };
+  // 목록: 종류·동 / 제목 / 보증금·월세·관리비 세 줄 (긴 층 표기는 목록에서만 짧게: 통임대(지하1층~5층) → 통임대, 연층(지하1층~2층) → 연층(B1~2층))
+  function miTitleText(it) {
+    return noPrem(it.title).replace(/통임대\([^)]*\)/, '통임대').replace(/연층\(\s*([^)~]*?)\s*~\s*([^)]*?)\s*\)/, function (x, a, b) { return '연층(' + a.replace(/^지하\s*/, 'B').replace(/층$/, '') + '~' + b.replace(/^지하\s*/, 'B') + ')'; });
   }
   function miHtml(it) {
-    var o = miParts(it);
-    return '<button type="button" class="mapItem mi2' + (it.id === focusId ? ' on' : '') + '" data-id="' + esc(it.id) + '">' +
-      '<span class="t">' + esc(o.main) + (o.sub ? '<small>' + esc(o.sub) + '</small>' : '') + '</span>' +
-      '<span class="p"><b>' + esc(o.rent) + '</b>' + (o.pp ? '<em>' + esc(o.pp) + '</em>' : '') + '</span>' +
-      '<span class="m">' + esc(o.meta) + '</span></button>';
+    return '<button type="button" class="mapItem' + (it.id === focusId ? ' on' : '') + '" data-id="' + esc(it.id) + '">' +
+      '<span class="miMeta">' + esc(it.catLabel) + ' · ' + esc(it.dong) + '</span>' +
+      '<span class="miTitle">' + listTitle(miTitleText(it)) + '</span>' +
+      '<span class="miPrice">보 <b class="miDep">' + esc(it.depText) + '</b><i>/</i>월 <b class="miRent">' + esc(it.rentText) + '</b><i>/</i>관 <b class="miMg">' + esc(it.mgmt || '문의') + '</b></span>' +
+      '</button>';
   }
   // 정렬: 최신순 · 월세 높은순 · 면적 넓은순
   function sortList(a) {
@@ -2168,8 +2156,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     var cv = fitListW.cv || (fitListW.cv = document.createElement('canvas').getContext('2d')), F = "'Noto Sans KR',sans-serif";
     var wd = function (txt, f) { cv.font = f + ' ' + F; return cv.measureText(txt).width; };
     var cand = ITEMS.map(function (it) {
-      var o = miParts(it);
-      return [Math.max(wd(o.main, '800 14.5px') + (o.sub ? 6 + wd(o.sub, '500 12px') : 0), wd(o.meta, '400 12.5px')) + Math.max(wd(o.rent, '900 16px'), o.pp ? wd(o.pp, '700 12px') : 0), it];
+      return [Math.max(wd(miTitleText(it), '700 15px') + 17, wd('보 ' + (it.depText || '') + ' / 월 ' + (it.rentText || '') + ' / 관 ' + (it.mgmt || '문의'), '700 14px'), wd((it.catLabel || '') + ' · ' + (it.dong || ''), '600 12px')), it];
     }).sort(function (a, b) { return b[0] - a[0]; }).slice(0, 40);
     var L = $('mapList'); if (!L) return;
     var box = document.createElement('div'); box.style.cssText = 'position:absolute;left:-9999px;top:0;width:max-content;visibility:hidden';
