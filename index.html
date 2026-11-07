@@ -2791,7 +2791,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       '<p class="dtSmall">※ 매물 정보는 등록 시점 기준이며 실제와 다를 수 있습니다. 계약 전 현장과 공부서류를 반드시 확인해 주세요.</p></aside>';
     return '<div class="dtWrap"><div class="dtPrintHead" aria-hidden="true"><b>DAUM REAL ESTATE</b><span>부동산다움공인중개사사무소 · 개업공인중개사 안혁준 · 등록번호 제11680-2021-00537호</span><span>서울특별시 강남구 신사동 578-1 일상빌딩 1층 · 02-555-1165 · r-daum.com</span></div>' +
       '<nav class="dtCrumb" aria-label="현재 위치"><button type="button" class="dtBack"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>목록으로</button>' +
-      '<span><a href="#top">홈</a> <i>›</i> ' + (DT.from === 'listings' ? '<a href="#listings">추천 매물</a>' : '<a href="#map">상가·사무실 임대</a>') + ' <i>›</i> No.' + esc(it.id) + '</span></nav>' +
+      '<span><a href="#top">홈</a> <i>›</i> ' + (DT.from === 'listings' || DT.from === 'fa' ? '<a href="#listings">추천 매물</a>' : '<a href="#map">상가·사무실 임대</a>') + ' <i>›</i> No.' + esc(it.id) + '</span></nav>' +
       '<div class="dtHead"><div><div class="dtBadges">' + badges + '</div><h1 class="dtTitle">' + esc(it.title) + '</h1>' +
       '</div>' +
       '<div class="dtTools"><button type="button" class="dtTool" data-act="share"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"></path></svg><span>링크 복사</span></button>' +
@@ -3449,6 +3449,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     document.body.classList.remove('detailMode'); DT.el.hidden = true; DT.el.innerHTML = ''; document.title = DT.baseTitle;
     var t = location.hash && location.hash.length > 1 && !/^#item\//.test(location.hash) ? document.getElementById(location.hash.slice(1)) : null;
     var restore = DT.restore; DT.restore = false;
+    if (DT.from === 'fa' && history.state && history.state.fa && typeof faReopen === 'function') faReopen();   // 추천 매물 전체 보기 → 상세 → 목록으로/뒤로: 그 창으로 다시
     requestAnimationFrame(function () {
       window.dispatchEvent(new Event('resize'));
       // 뒤로 가기·목록으로: 상세를 열기 전 보던 위치(지도 또는 추천 매물)로 / 메뉴 클릭: 해당 섹션으로
@@ -3463,10 +3464,10 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     });
   }
   function closeByUser() {
-    if (innerWidth > 760) document.body.classList.add('mapFull');   // 목록으로 → 지도 크게 보기로 (컴퓨터 화면만)
+    if (innerWidth > 760 && DT.from !== 'fa') document.body.classList.add('mapFull');   // 목록으로 → 지도 크게 보기로 (컴퓨터 화면만, 추천 매물 전체 보기에서 온 경우는 그 창으로)
     if (DT.internal) { DT.internal = false; DT.restore = true; history.back(); return; }
     // 공유 링크로 바로 들어온 경우: 지도(또는 추천 매물) 목록으로
-    location.hash = DT.from === 'listings' ? '#listings' : '#map';
+    location.hash = DT.from === 'listings' || DT.from === 'fa' ? '#listings' : '#map';
   }
   // 매물번호 바로 열기: r-daum.com/#D5B531F, r-daum.com/?no=D5B531F, 검색칸
   function findNo(q) {
@@ -3511,7 +3512,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   document.addEventListener('click', function (e) {
     var a = e.target.closest('a[href^="#item/"]'); if (!a || e.defaultPrevented) return;
     if (a.closest('#itemDetail')) { e.preventDefault(); location.replace(a.getAttribute('href')); return; }
-    DT.from = a.closest('#listings') ? 'listings' : 'map';
+    DT.from = a.closest('#faOv') ? 'fa' : a.closest('#listings') ? 'listings' : 'map';
   });
   // 상세 화면에서 '빠른 문의'를 누르면 상세 페이지의 문의 폼으로
   document.addEventListener('click', function (e) {
@@ -3555,7 +3556,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     faEl('faRst').addEventListener('click', function () { d.querySelectorAll('.faRng input,#faQ').forEach(function (x) { x.value = ''; }); faEl('faDong').value = ''; faEl('faSort').value = 'f'; faEl('faNp').checked = false; FA.cat = 'all'; faRender(); });
     faEl('faClose').addEventListener('click', function () { faClose(); });
     // 카드를 누르면 창을 닫고 그 매물 상세로
-    faEl('faGrid').addEventListener('click', function (e) { var a = e.target.closest('a.listing'); if (a) faClose(true); });
+    faEl('faGrid').addEventListener('click', function (e) { var a = e.target.closest('a.listing'); if (a) { FA.scroll = d.scrollTop; faClose(true); } });
   }
   function faPool() { return ITEMS.filter(function (it) { return it.featured; }).sort(function (a, b) { return (a.featOrder || 0) - (b.featOrder || 0); }); }
   function faNum(v) { v = String(v || '').replace(/[^\d.]/g, ''); return v === '' ? null : +v; }
@@ -3597,6 +3598,10 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     var d = faEl('faOv'); d.hidden = false; d.scrollTop = 0; document.body.classList.add('faOpen');
     try { history.pushState({ fa: 1 }, '', location.pathname + location.search + '#listings'); } catch (e) { }
     setTimeout(function () { faEl('faClose').focus({ preventScroll: true }); }, 30);
+  }
+  function faReopen() {   // 상세에서 돌아올 때: 고른 조건·스크롤 그대로
+    var d = faEl('faOv'); if (!d) return; d.hidden = false; document.body.classList.add('faOpen');
+    requestAnimationFrame(function () { d.scrollTop = FA.scroll || 0; });
   }
   function faClose(toItem) {
     var d = faEl('faOv'); if (!d || d.hidden) return;
