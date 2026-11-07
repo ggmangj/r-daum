@@ -300,7 +300,8 @@ body.dlFull .mapFullBtn{display:none}
 <style id="saCss">
 /* ===== 상권 분석 페이지 ===== */
 .saGrid{display:grid;grid-template-columns:330px minmax(0,1fr) 410px;gap:18px;align-items:stretch}
-.saSide h1{font-size:26px;line-height:1.32;font-weight:900;color:#2A333C;letter-spacing:-1px;margin:0 0 8px}
+.saSide h1{font-size:26px;line-height:1.32;font-weight:900;color:#2A333C;letter-spacing:-1px;margin:0 0 8px;white-space:nowrap}
+.saSide h1 .heroName{letter-spacing:-1.5px}
 .saSide h1 .g{color:#BC975E;letter-spacing:-1.5px}.saSide h1 .saMk{background:linear-gradient(transparent 62%,#E8D7B6 62%)}
 .saSide [hidden],.saMapBox [hidden]{display:none!important}
 .saSub{font-size:14px;color:#5B6470;line-height:1.6;margin:0 0 16px}
@@ -346,7 +347,10 @@ body.dlFull .mapFullBtn{display:none}
 .saMapBox{position:relative;border-radius:16px;overflow:hidden;border:1px solid #E6E0D4;background:#EFEBE3;min-height:520px}
 #map{position:absolute!important;inset:0;width:auto!important;height:auto!important}
 .saMapTop{position:absolute;left:12px;top:12px;z-index:5;display:flex;gap:8px}
-.saWork{order:1}.saWork.on{background:#294652;color:#fff;border-color:#294652}.saMine{order:2}
+.saTgls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 12px}
+.saTgl{height:42px;border:1px solid #D9D2C4;background:#fff;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font:inherit;font-size:13.5px;font-weight:700;color:#14191F;cursor:pointer;white-space:nowrap}
+.saTgl:hover{border-color:#294652}.saTgl.on{background:#294652;color:#fff;border-color:#294652}
+.saTgl:disabled{color:#A9AFB6;background:#F8F5EF;cursor:default;border-color:#E6E0D4}
 .saWl{background:rgba(255,255,255,.95);border:1px solid #294652;border-radius:8px;padding:3px 8px;font-size:11.5px;font-weight:700;color:#14191F;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;box-shadow:0 1px 4px rgba(0,0,0,.15);text-align:center;line-height:1.35;cursor:pointer}
 .saWl b{display:block;color:#8A6A33;font-size:11px}
 .saChips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}.saChips button{border:1px solid #D9D2C4;background:#fff;border-radius:999px;padding:5px 11px;font:inherit;font-size:12.5px;font-weight:700;color:#5B6470;cursor:pointer}.saChips button.on{background:#294652;border-color:#294652;color:#fff}
@@ -430,7 +434,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
 @media (max-width:1280px){.saGrid{grid-template-columns:330px minmax(0,1fr)}.saRep{grid-column:1/-1;min-height:0}.saMapBox{min-height:640px}.saRepB{overflow:visible}}
 @media (max-width:760px){
  .saGrid{grid-template-columns:1fr;gap:14px}
- .saSide h1{font-size:clamp(30px,8.6vw,38px);letter-spacing:-1.2px;line-height:1.28}
+ .saSide h1{font-size:clamp(24px,7.4vw,34px);letter-spacing:-1.2px;line-height:1.28}
  .saMapBox{min-height:0;height:400px}
  .saRep{min-height:0}.saRepB{padding:14px 16px}
  .saLeg{font-size:11px;padding:6px 9px;gap:3px 9px}
@@ -476,8 +480,9 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
 <main class="wrap saPageMain">
 <div class="saGrid">
 <aside class="saSide">
-<h1><span>강남 · 서초</span><br><span><span class="g">상권</span> <span class="saMk">분석</span></span></h1>
+<h1>강남 · 서초 <span class="heroName">상권</span> <span class="saMk">분석</span></h1>
 <p class="saSub">위치와 범위, 업종을 고르면 주변 업소·상권 매출·임대 시세를 한 장으로 정리해 드려요.</p>
+<div class="saTgls"><button type="button" class="saTgl saWork" id="workBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 21V7l6-3v17M10 21V9l10 3v9M2 21h20M7 10h0M7 14h0M14 14h2M14 17h2"/></svg><span>사무실 밀집도</span></button><button type="button" class="saTgl saMine" id="mineBtn" disabled title="「분석하기」 후에 볼 수 있어요"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>다움 매물 보기</span></button></div>
 <div class="saCard">
  <div class="saStep"><h3><em>1</em>위치<small>지도를 눌러도 돼요</small></h3>
   <form class="saIn" id="qForm" autocomplete="off"><input id="q" type="search" placeholder="주소·지번 또는 매물번호" aria-label="주소·지번 또는 매물번호"><button type="submit" aria-label="찾기"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button></form>
@@ -501,7 +506,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
 <div class="saMapCol">
 <div class="saMapBox">
  <div id="map"></div>
- <div class="saMapTop"><button type="button" class="saPill saWork" id="workBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 21V7l6-3v17M10 21V9l10 3v9M2 21h20M7 10h0M7 14h0M14 14h2M14 17h2"/></svg><span>사무실 밀집도</span></button><button type="button" class="saPill saMine" id="mineBtn" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>다움 매물 보기</span></button><button type="button" class="saPill" id="fullBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>지도 크게 보기</span></button></div>
+ <div class="saMapTop"><button type="button" class="saPill" id="fullBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>지도 크게 보기</span></button></div>
  <div class="saTip" id="tip" hidden></div>
  <div class="saLeg" id="leg" hidden></div>
  <div class="saMsg" id="mapMsg">지도를 불러오는 중…</div>
@@ -621,6 +626,8 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
     M = new NM.Map('map', { center: ll(S.lat, S.lng), zoom: 16, zoomControl: true, zoomControlOptions: { position: NM.Position.TOP_RIGHT, style: NM.ZoomControlStyle.SMALL }, mapDataControl: false, scaleControl: true });
     $('mapMsg').hidden = true;
     defineDots(); [0, 300, 1200].forEach(function (t) { setTimeout(window.saFitH || function () { }, t); });
+    NM.Event.addListener(M, 'mousemove', function (e) { if (S.mode === 'poly' && S.poly.length) rubber(e.coord); });
+    NM.Event.addListener(M, 'mouseout', function () { rubber(null); });
     NM.Event.addListener(M, 'click', function (e) {
       if (S.mode === 'poly') { if (S.poly.length >= 40) return; S.poly.push([e.coord.lat(), e.coord.lng()]); drawArea(); return; }
       if (S.mode === 'r') { setCenter(e.coord.lat(), e.coord.lng()); }
@@ -635,6 +642,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
   function clear(a) { (Array.isArray(a) ? a : [a]).forEach(function (o) { if (o) o.setMap(null); }); }
   function drawArea(fit) {
     if (!M) return;
+    if (S.mode !== 'poly' || !S.poly.length) rubber(null);
     clear(OV.circle); clear(OV.ctr); clear(OV.poly); clear(OV.vx); OV.circle = OV.ctr = OV.poly = null; OV.vx = [];
     if (S.mode === 'r') {
       OV.circle = new NM.Circle({ map: M, center: ll(S.lat, S.lng), radius: S.r, strokeColor: '#294652', strokeWeight: 2.5, strokeOpacity: .9, fillColor: '#294652', fillOpacity: .07, clickable: false });
@@ -649,6 +657,19 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
       if (S.poly.length >= 3) tip('');
     }
     zoneStyle();
+  }
+
+  // 직접 그리기: 마지막 점에서 마우스까지 선이 따라오고, 첫 점으로 닫히는 선도 흐리게
+  function rubber(c) {
+    if (!M) return;
+    if (!c || S.mode !== 'poly' || !S.poly.length) { if (OV.rb) { OV.rb.setMap(null); OV.rb2.setMap(null); } return; }
+    var last = S.poly[S.poly.length - 1], first = S.poly[0];
+    if (!OV.rb) {
+      OV.rb = new NM.Polyline({ map: M, path: [], strokeColor: '#294652', strokeWeight: 2.5, strokeStyle: 'solid', strokeOpacity: .9, clickable: false, zIndex: 60 });
+      OV.rb2 = new NM.Polyline({ map: M, path: [], strokeColor: '#294652', strokeWeight: 2, strokeStyle: 'shortdash', strokeOpacity: .5, clickable: false, zIndex: 59 });
+    }
+    OV.rb.setMap(M); OV.rb.setPath([ll(last[0], last[1]), c]);
+    if (S.poly.length >= 2) { OV.rb2.setMap(M); OV.rb2.setPath([c, ll(first[0], first[1])]); } else OV.rb2.setMap(null);
   }
 
   /* ---------- 상권 선택 ---------- */
@@ -817,7 +838,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
       NM.Event.addListener(m, 'click', function () { window.open('/#item/' + encodeURIComponent(it.id), '_blank'); });
       OV.mine.push(m);
     });
-    $('mineBtn').hidden = !(d.mine || []).length; mineUi();
+    $('mineBtn').disabled = !(d.mine || []).length; mineUi();
     // 범위에 맞춰 보기
     var A = d.area, P = A.poly;
     if (P && P.length) { var b = new NM.LatLngBounds(ll(P[0][0], P[0][1]), ll(P[0][0], P[0][1])); P.forEach(function (p) { b.extend(ll(p[0], p[1])); }); M.fitBounds(b, { top: 50, right: 30, bottom: 60, left: 30 }); }
@@ -853,7 +874,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
   }
   function mineUi() {
     var b = $('mineBtn'), n = RES && RES.mineN || 0;
-    b.classList.toggle('on', !!S.showMine); b.querySelector('span').textContent = (S.showMine ? '다움 매물 숨기기' : '다움 매물 보기') + (n ? ' (' + n + ')' : '');
+    b.classList.toggle('on', !!S.showMine); b.querySelector('span').textContent = S.showMine ? '다움 매물 숨기기' : '다움 매물 보기' + (n ? ' ' + n + '건' : '');
   }
   var SA_MAP = { I201: 'CS100001', I202: 'CS100002', I203: 'CS100003', I204: 'CS100004', I21001: 'CS100005', I21002: 'CS100005', I21003: 'CS100006', I21004: 'CS100006', I21005: 'CS100006', I21006: 'CS100007', I21007: 'CS100008', I211: 'CS100009', I212: 'CS100010', P105: 'CS200001', P10615: 'CS200002', P10609: 'CS200003', P10611: 'CS200003', P10627: 'CS200004', P10601: 'CS200005', P10603: 'CS200005', P10613: 'CS200005', Q102: 'CS200006', Q10210: 'CS200007', Q10103: 'CS200007', Q10211: 'CS200008', Q10104: 'CS200008', M111: 'CS200009', M103: 'CS200010', M104: 'CS200015', M10401: 'CS200014', R10310: 'CS200016', R10311: 'CS200017', R10309: 'CS200018', R10406: 'CS200019', R10404: 'CS200020', R10405: 'CS200021', R10410: 'CS200022', S202: 'CS200023', R10307: 'CS200024', R10306: 'CS200024', S20301: 'CS200025', S20302: 'CS200026', S204: 'CS200027', S20701: 'CS200028', S20703: 'CS200029', S20702: 'CS200030', S209: 'CS200031', S205: 'CS200032', L102: 'CS200033', I10102: 'CS200034', I10201: 'CS200036', R10407: 'CS200037', R10202: 'CS200038', R10402: 'CS200039', M113: 'CS200041', N102: 'CS200043', N105: 'CS200044', N110: 'CS200047', G20404: 'CS300001', G20405: 'CS300002', G20801: 'CS300003', G20802: 'CS300004', G20503: 'CS300007', G20505: 'CS300008', G20506: 'CS300009', G20509: 'CS300010', G20901: 'CS300011', G20902: 'CS300011', G20905: 'CS300011', G20904: 'CS300012', G20903: 'CS300013', G20910: 'CS300014', G20911: 'CS300015', G21602: 'CS300016', G217: 'CS300017', G21501: 'CS300018', G21502: 'CS300019', G21301: 'CS300020', G21302: 'CS300021', G21503: 'CS300022', G21304: 'CS300024', G21305: 'CS300025', G21306: 'CS300026', G20906: 'CS300027', G20909: 'CS300027', G219: 'CS300028', G220: 'CS300029', G211: 'CS300031', G20803: 'CS300032', G210: 'CS300033', G21203: 'CS300034', G21201: 'CS300036', G202: 'CS300038', G203: 'CS300039', G21801: 'CS300041', G21401: 'CS300042' };
   function seoulCode(code) {
@@ -947,7 +968,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
   $('resetBtn').addEventListener('click', function () {
     if (WK.on) wSet(false);
     if (OV.dots) { OV.dots.setMap(null); OV.dots = null; }
-    clear(OV.res); OV.res = []; clear(OV.mine); OV.mine = []; RES = null; S.showMine = false; $('mineBtn').hidden = true; mineUi();
+    clear(OV.res); OV.res = []; clear(OV.mine); OV.mine = []; RES = null; S.showMine = false; $('mineBtn').disabled = true; mineUi();
     $('leg').hidden = true; $('leg').innerHTML = '';
     $('repB').innerHTML = EMPTY; document.querySelector('#rep .saRepH .t').innerHTML = EMPTY_T; $('repSub').textContent = EMPTY_S;
     // 업종·범위 선택도 처음으로 (위치는 그대로)
