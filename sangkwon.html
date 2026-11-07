@@ -335,9 +335,11 @@ body.dlFull .mapFullBtn{display:none}
 .saSel:disabled{color:#9AA3AD;background:#F8F5EF}
 .saGo{width:100%;height:50px;border:0;border-radius:12px;background:#BC975E;color:#fff;font:inherit;font-size:16px;font-weight:800;cursor:pointer}
 .saGo:hover{background:#A9854F}.saGo:disabled{opacity:.6;cursor:wait}
-.saSrc{font-size:11.5px;color:#8A8F96;line-height:1.6;margin:10px 2px 0}
+.saMapCol{position:relative;min-width:0;display:flex;flex-direction:column}
+.saSrcNote{margin:10px 0 0;font-size:13px;color:#6B757D;line-height:1.5}
+@media (min-width:1281px){.saSrcNote{position:absolute;left:0;top:100%;margin:12px 0 0}.saGrid{margin-bottom:34px}}
 .saMapBox{position:relative;border-radius:16px;overflow:hidden;border:1px solid #E6E0D4;background:#EFEBE3;min-height:520px}
-#map{position:absolute;inset:0}
+#map{position:absolute!important;inset:0;width:auto!important;height:auto!important}
 .saMapTop{position:absolute;left:12px;top:12px;z-index:5;display:flex;gap:8px}
 .saPill{background:#fff;border:1px solid #D9D2C4;border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;font-weight:700;color:#14191F;box-shadow:0 2px 6px rgba(0,0,0,.08);cursor:pointer;display:flex;align-items:center;gap:6px}
 .saTip{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:5;background:rgba(20,25,31,.82);color:#fff;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:999px;white-space:nowrap;pointer-events:none}
@@ -409,8 +411,9 @@ a.saItem:hover b{text-decoration:underline}
 .saCta{display:grid;grid-template-columns:1.4fr 1fr;gap:8px;padding:14px 20px;border-top:1px solid #EFEAE0;background:#fff}
 .saCta a,.saCta button{height:46px;border-radius:12px;display:grid;place-items:center;font:inherit;font-weight:800;font-size:14.5px;cursor:pointer}
 .saCta a{background:#294652;color:#fff}.saCta button{border:1px solid #D9D2C4;color:#14191F;background:#fff}
-body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border:0}
-@media (min-width:1281px){.saGrid{height:calc(100vh - 150px);min-height:720px;max-height:900px}.saSide{overflow:auto}}
+body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border:0;height:auto!important}
+@media (min-width:761px){.saSide{align-self:start}.saMapBox{min-height:0}}
+@media (min-width:1281px){.saRep{min-height:0}}
 @media (max-width:1280px){.saGrid{grid-template-columns:330px minmax(0,1fr)}.saRep{grid-column:1/-1;min-height:0}.saMapBox{min-height:640px}.saRepB{overflow:visible}}
 @media (max-width:760px){
  .saGrid{grid-template-columns:1fr;gap:14px}
@@ -479,14 +482,16 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
  </div>
  <button type="button" class="saGo" id="go">분석하기</button>
 </div>
-<p class="saSrc">자료: 소상공인시장진흥공단 상가(상권)정보 · 서울시 상권분석서비스(추정) · 부동산다움 매물(호가)·국토교통부 실거래가</p>
 </aside>
+<div class="saMapCol">
 <div class="saMapBox">
  <div id="map"></div>
  <div class="saMapTop"><button type="button" class="saPill" id="fullBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>지도 크게 보기</span></button></div>
  <div class="saTip" id="tip" hidden></div>
  <div class="saLeg" id="leg" hidden></div>
  <div class="saMsg" id="mapMsg">지도를 불러오는 중…</div>
+</div>
+<p class="saSrcNote">※ 자료: 소상공인시장진흥공단 상가(상권)정보 · 서울시 상권분석서비스(추정) · 부동산다움 매물(호가) · 국토교통부 실거래가</p>
 </div>
 <section class="saRep" id="rep" aria-label="상권 분석 리포트">
  <div class="saRepH"><div class="t">상권 분석 리포트</div><div class="s" id="repSub">위치 · 범위 · 업종을 고른 뒤 「분석하기」를 눌러 주세요</div></div>
@@ -597,7 +602,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
     NM = naver.maps;
     M = new NM.Map('map', { center: ll(S.lat, S.lng), zoom: 16, zoomControl: true, zoomControlOptions: { position: NM.Position.TOP_RIGHT, style: NM.ZoomControlStyle.SMALL }, mapDataControl: false, scaleControl: true });
     $('mapMsg').hidden = true;
-    defineDots();
+    defineDots(); [0, 300, 1200].forEach(function (t) { setTimeout(window.saFitH || function () { }, t); });
     NM.Event.addListener(M, 'click', function (e) {
       if (S.mode === 'poly') { if (S.poly.length >= 40) return; S.poly.push([e.coord.lat(), e.coord.lng()]); drawArea(); return; }
       if (S.mode === 'r') { setCenter(e.coord.lat(), e.coord.lng()); }
@@ -876,10 +881,21 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
   $('fullBtn').onclick = function () {
     var on = document.body.classList.toggle('saFull');
     this.querySelector('span').textContent = on ? '닫기' : '지도 크게 보기';
-    setTimeout(function () { if (M) { var el = $('map'); M.setSize(new NM.Size(el.clientWidth, el.clientHeight)); if (OV.dots) OV.dots.draw(); } }, 60);
+    setTimeout(fitH, 60);
   };
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && document.body.classList.contains('saFull')) $('fullBtn').click(); });
-  window.addEventListener('resize', function () { if (M) { var el = $('map'); M.setSize(new NM.Size(el.clientWidth, el.clientHeight)); } });
+  /* 지도·리포트 아래 끝을 왼쪽 열(출처 글) 아래 끝에 맞춤 — 상가·사무실 임대 / 빌딩 매매 실거래가와 같은 방식 */
+  function fitH() {
+    var sd = document.querySelector('.saSide'), bx = document.querySelector('.saMapBox'), rp = $('rep'), w = innerWidth;
+    if (!document.body.classList.contains('saFull')) {
+      if (w > 760) { var h = Math.max(560, Math.round(sd.getBoundingClientRect().height)); bx.style.height = h + 'px'; rp.style.height = w > 1280 ? h + 'px' : ''; }
+      else { bx.style.height = ''; rp.style.height = ''; }
+    }
+    if (M) { var el = $('map'); el.style.width = ''; el.style.height = ''; M.setSize(new NM.Size(bx.clientWidth, bx.clientHeight)); if (OV.dots) OV.dots.draw(); }
+  }
+  window.saFitH = fitH;
+  fitH(); window.addEventListener('load', fitH); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitH);
+  var rzT; window.addEventListener('resize', function () { clearTimeout(rzT); rzT = setTimeout(fitH, 80); });
 })();
 </script>
 
