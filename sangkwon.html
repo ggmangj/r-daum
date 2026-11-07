@@ -346,13 +346,15 @@ body.dlFull .mapFullBtn{display:none}
 .saMapBox{position:relative;border-radius:16px;overflow:hidden;border:1px solid #E6E0D4;background:#EFEBE3;min-height:520px}
 #map{position:absolute!important;inset:0;width:auto!important;height:auto!important}
 .saMapTop{position:absolute;left:12px;top:12px;z-index:5;display:flex;gap:8px}
+.saMine{order:2}.saMine.on{background:#294652;color:#fff;border-color:#294652}
 .saPill{background:#fff;border:1px solid #D9D2C4;border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;font-weight:700;color:#14191F;box-shadow:0 2px 6px rgba(0,0,0,.08);cursor:pointer;display:flex;align-items:center;gap:6px}
 .saTip{position:absolute;left:50%;top:12px;transform:translateX(-50%);z-index:5;background:rgba(20,25,31,.82);color:#fff;font-size:12.5px;font-weight:600;padding:7px 14px;border-radius:999px;white-space:nowrap;pointer-events:none}
 .saLeg{position:absolute;left:12px;bottom:12px;z-index:5;background:#fff;border:1px solid #E6E0D4;border-radius:12px;padding:8px 12px;display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;font-weight:600;color:#3A424B;box-shadow:0 2px 8px rgba(0,0,0,.08);max-width:calc(100% - 90px)}
 .saLeg i{display:inline-block;vertical-align:-1px;margin-right:5px}
 .saMsg{position:absolute;inset:0;display:grid;place-items:center;z-index:4;color:#5B6470;font-size:14px;pointer-events:none}
-.saPin{background:#294652;color:#fff;font-size:12px;font-weight:700;padding:5px 9px;border-radius:6px;white-space:nowrap;position:relative;box-shadow:0 2px 6px rgba(0,0,0,.2);cursor:pointer;font-family:'Noto Sans KR',sans-serif}
-.saPin:after{content:'';position:absolute;left:12px;bottom:-6px;border:6px solid transparent;border-bottom:0;border-top-color:#294652}
+.saPin{background:rgba(255,255,255,.94);color:#294652;font-size:11px;font-weight:700;padding:3px 7px;border:1.5px solid #294652;border-radius:6px;white-space:nowrap;position:relative;box-shadow:0 1px 4px rgba(0,0,0,.15);cursor:pointer;font-family:'Noto Sans KR',sans-serif}
+.saPin:hover{background:#294652;color:#fff;z-index:9}
+.saPin:after{content:'';position:absolute;left:9px;bottom:-6px;border:5px solid transparent;border-bottom:0;border-top-color:#294652}
 .saCtr{width:30px;height:30px;border-radius:50%;background:#BC975E;border:4px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3);cursor:grab;position:relative}
 .saCtr:after{content:'';position:absolute;inset:7px;border-radius:50%;background:#fff}
 .saZl{background:#fff;border:1px solid #9C7A3E;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700;color:#14191F;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;box-shadow:0 1px 4px rgba(0,0,0,.12)}
@@ -493,7 +495,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
 <div class="saMapCol">
 <div class="saMapBox">
  <div id="map"></div>
- <div class="saMapTop"><button type="button" class="saPill" id="fullBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>지도 크게 보기</span></button></div>
+ <div class="saMapTop"><button type="button" class="saPill saMine" id="mineBtn" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><span>다움 매물 보기</span></button><button type="button" class="saPill" id="fullBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>지도 크게 보기</span></button></div>
  <div class="saTip" id="tip" hidden></div>
  <div class="saLeg" id="leg" hidden></div>
  <div class="saMsg" id="mapMsg">지도를 불러오는 중…</div>
@@ -554,7 +556,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   var NM, M;
   var S = { mode: 'r', lat: 37.52707, lng: 127.02833, r: 300, poly: [], zone: null, code: '', label: '' };
-  var OV = { circle: null, ctr: null, poly: null, vx: [], zones: [], zFetch: null, res: [], dots: null };
+  var OV = { mine: [], circle: null, ctr: null, poly: null, vx: [], zones: [], zFetch: null, res: [], dots: null };
   var RES = null;
 
   /* ---------- 업종 ---------- */
@@ -568,7 +570,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
     var l = b.getAttribute('data-l'), on = !b.classList.contains('on');
     this.querySelectorAll('.saIc').forEach(function (x) { x.classList.remove('on'); });
     var sel = $('sub');
-    if (!on) { S.code = ''; sel.disabled = true; sel.innerHTML = '<option value="">업종 아이콘을 먼저 고르세요</option>'; return; }
+    if (!on) { S.code = ''; sel.disabled = true; sel.innerHTML = '<option value="">업종 아이콘을 먼저 고르세요</option>'; applyCode(); return; }
     b.classList.add('on'); S.code = l;
     var L = UPJ.large.filter(function (x) { return x[0] === l; })[0];
     sel.disabled = false;
@@ -577,8 +579,10 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
       if (sm.length <= 1) return '<option value="' + (sm.length ? sm[0][0] : m[0]) + '">' + esc(sm.length ? sm[0][1] : m[1]) + '</option>';
       return '<optgroup label="' + esc(m[1]) + '"><option value="' + m[0] + '">' + esc(m[1]) + ' 전체</option>' + sm.map(function (s) { return '<option value="' + s[0] + '">' + esc(s[1]) + '</option>'; }).join('') + '</optgroup>';
     }).join('');
+
+    applyCode();
   });
-  $('sub').addEventListener('change', function () { S.code = this.value; });
+  $('sub').addEventListener('change', function () { S.code = this.value; applyCode(); });
 
   /* ---------- 범위 ---------- */
   $('mode').addEventListener('click', function (e) {
@@ -696,12 +700,24 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
     }
     var qq = /서울|강남구|서초구/.test(q) ? q : '서울 ' + q;
     hint('주소를 찾는 중…');
-    NM.Service.geocode({ query: qq }, function (st, res) {
-      var a = st === NM.Service.Status.OK && res && res.v2 && res.v2.addresses || [];
-      if (!a.length) { hint('주소를 찾지 못했어요. 「신사동 535-7」처럼 동·지번으로 적어 주세요', true); return; }
-      hint((a[0].roadAddress || a[0].jibunAddress || '').replace(/^서울특별시\s*/, '') + ' 로 옮겼어요');
-      goTo(+a[0].y, +a[0].x);
-    });
+    var done = false, fail = function () { hint('주소를 찾지 못했어요. 「신사동 535-7」처럼 동·지번으로 적어 주세요', true); };
+    var server = function () {   // 지도 주소 찾기가 안 되면 홈페이지 서버로 한 번 더
+      if (done) return; done = true;
+      fetch(SHEET_URL + '?sa=geo&q=' + encodeURIComponent(q)).then(function (r) { return r.json(); }).then(function (d) {
+        if (!d || !d.ok) { fail(); return; } hint((d.q || q) + ' 로 옮겼어요'); goTo(+d.lat, +d.lng);
+      }).catch(fail);
+    };
+    var tm = setTimeout(server, 4000);
+    try {
+      NM.Service.geocode({ query: qq }, function (st, res) {
+        if (done) return; clearTimeout(tm);
+        var a = st === NM.Service.Status.OK && res && res.v2 && res.v2.addresses || [];
+        if (!a.length) { server(); return; }
+        done = true;
+        hint((a[0].roadAddress || a[0].jibunAddress || '').replace(/^서울특별시\s*/, '') + ' 로 옮겼어요');
+        goTo(+a[0].y, +a[0].x);
+      });
+    } catch (e) { clearTimeout(tm); server(); }
   }
   function goTo(a, b) {
     if (S.mode === 'poly') { S.poly = []; }
@@ -739,8 +755,9 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
       this.pts.forEach(function (p) {
         var o = pr.fromCoordToOffset(ll(p[0], p[1])), x = o.x - tl.x + pad, y = o.y - tl.y + pad;
         if (x < -10 || y < -10 || x > w + 10 || y > h + 10) return;
-        if (p[3]) { big.push([x, y]); return; }
-        g.globalAlpha = .75; g.fillStyle = LCOL[p[2]] || LCOL[10]; g.beginPath(); g.arc(x, y, rs, 0, 6.2832); g.fill();
+        var cd = String(p[2] || '');
+        if (S.code && cd.indexOf(S.code) === 0) { big.push([x, y]); return; }
+        var li = LC.indexOf(cd.slice(0, 2)); g.globalAlpha = S.code ? .45 : .75; g.fillStyle = LCOL[li < 0 ? 10 : li]; g.beginPath(); g.arc(x, y, rs, 0, 6.2832); g.fill();
       });
       g.globalAlpha = 1;
       big.forEach(function (q) { g.fillStyle = '#C8553D'; g.strokeStyle = '#fff'; g.lineWidth = 2; g.beginPath(); g.arc(q[0], q[1], rb, 0, 6.2832); g.fill(); g.stroke(); });
@@ -763,7 +780,6 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
     if (S.mode === 'zone') { if (!S.zone) { tip('먼저 점선 상권을 눌러 고르세요'); return; } u += '&zone=' + encodeURIComponent(S.zone.no); }
     else if (S.mode === 'poly') { if (S.poly.length < 3) { $('pHint').textContent = '지도를 눌러 꼭짓점을 3개 이상 찍어 주세요'; $('pHint').classList.add('err'); return; } u += '&poly=' + encodeURIComponent(S.poly.map(function (p) { return p[0].toFixed(6) + ',' + p[1].toFixed(6); }).join('|')); }
     else u += '&lat=' + S.lat.toFixed(6) + '&lng=' + S.lng.toFixed(6) + '&r=' + S.r;
-    if (S.code) u += '&c=' + S.code;
     $('go').disabled = true; $('go').textContent = '분석 중…';
     $('repSub').textContent = (S.label ? S.label + ' · ' : '') + areaText() + (S.code ? ' · ' + NAME[S.code] : '');
     $('repB').innerHTML = '<div class="saLoad"><div class="saSpin"></div>상가업소·상권 자료를 모으는 중이에요<br><small>' + (S.mode === 'r' && S.r >= 1000 ? '반경 1km는 20~40초 걸릴 수 있어요' : '보통 5~15초 걸려요') + '</small></div>';
@@ -787,23 +803,57 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
       OV.res.push(new NM.Polygon({ map: M, paths: [z.pts.map(function (p) { return ll(p[0], p[1]); })], strokeColor: '#9C7A3E', strokeWeight: 2, strokeStyle: 'shortdash', fillColor: '#BC975E', fillOpacity: .06, clickable: false, zIndex: 40 }));
       var cc = cent(z.pts); OV.res.push(new NM.Marker({ map: M, position: ll(cc[0], cc[1]), clickable: false, zIndex: 110, icon: { content: '<div class="saZl">' + esc(z.nm) + '</div>', anchor: new NM.Point(40, 12) } }));
     });
+    clear(OV.mine); OV.mine = [];
     (d.mine || []).forEach(function (it) {
       var t = (it.floor || '') + ' ' + (it.area ? Math.round(it.area) + '평' : '') + (it.rentText ? ' · 월 ' + String(it.rentText).replace(/만$/, '') : '');
-      var m = new NM.Marker({ map: M, position: ll(it.lat, it.lng), zIndex: 200, icon: { content: '<div class="saPin">' + esc(t.trim()) + '</div>', anchor: new NM.Point(14, 34) } });
+      var m = new NM.Marker({ map: S.showMine ? M : null, position: ll(it.lat, it.lng), zIndex: 200, icon: { content: '<div class="saPin">' + esc(t.trim()) + '</div>', anchor: new NM.Point(12, 28) } });
       NM.Event.addListener(m, 'click', function () { window.open('/#item/' + encodeURIComponent(it.id), '_blank'); });
-      OV.res.push(m);
+      OV.mine.push(m);
     });
+    $('mineBtn').hidden = !(d.mine || []).length; mineUi();
     // 범위에 맞춰 보기
     var A = d.area, P = A.poly;
     if (P && P.length) { var b = new NM.LatLngBounds(ll(P[0][0], P[0][1]), ll(P[0][0], P[0][1])); P.forEach(function (p) { b.extend(ll(p[0], p[1])); }); M.fitBounds(b, { top: 50, right: 30, bottom: 60, left: 30 }); }
     else { var z = A.r >= 1000 ? 14 : A.r >= 500 ? 15 : A.r >= 300 ? 16 : 17; M.setZoom(z); M.panTo(ll(A.lat, A.lng)); }
     if (S.mode === 'zone' && S.zone && P) { clear(OV.poly); OV.poly = new NM.Polygon({ map: M, paths: [P.map(function (p) { return ll(p[0], p[1]); })], strokeColor: '#294652', strokeWeight: 3, fillColor: '#294652', fillOpacity: .06, clickable: false }); }
-    var oth = (d.pts || []).length - (d.same ? d.same.n : 0);
+    legend();
+  }
+
+  function sameOf(d) {   // 고른 업종: 지도 점(업종 코드)에서 바로 계산 → 업종을 바꿔도 다시 조회하지 않음
+    var code = S.code, o = { n: 0, fl: { '1': 0, up: 0, b: 0 }, subs: {}, list: [] };
+    if (!code || !d) return o;
+    (d.pts || []).forEach(function (p) {
+      var cd = String(p[2] || ''); if (cd.indexOf(code) !== 0) return;
+      o.n++; var f = String(p[4] || '').trim(), g = /^(B|지하|지)/i.test(f) ? 'b' : /^1(층)?$/.test(f) ? '1' : /^\d+/.test(f) ? 'up' : '';
+      if (g) o.fl[g]++; var nm = NAME[cd] || NAME[cd.slice(0, 4)] || cd; o.subs[nm] = (o.subs[nm] || 0) + 1;
+      if (o.list.length < 300) o.list.push([p[3] || '', nm, f]);
+    });
+    return o;
+  }
+  function legend() {
+    var d = RES; if (!d) { $('leg').hidden = true; return; }
+    var sm = sameOf(d), oth = (d.pts || []).length - sm.n;
     $('leg').hidden = false;
-    $('leg').innerHTML = (d.code ? '<span><i style="width:11px;height:11px;border-radius:50%;background:#C8553D;border:2px solid #fff;box-shadow:0 0 0 1px #C8553D"></i>' + esc(NAME[d.code] || '같은 업종') + ' ' + d.same.n + '</span>' : '') +
-      '<span><i style="width:8px;height:8px;border-radius:50%;background:#4F7CAC"></i>' + (d.code ? '다른 업소 ' : '업소 ') + fmtN(oth) + '</span>' +
-      (d.mineN ? '<span><i style="width:14px;height:10px;border-radius:3px;background:#294652"></i>다움 매물 ' + d.mineN + '</span>' : '') +
-      ((d.zones || []).length && S.mode !== 'zone' ? '<span><i style="width:16px;height:0;border-top:2px dashed #9C7A3E"></i>상권 경계</span>' : '');
+    $('leg').innerHTML = (S.code ? '<span><i style="width:11px;height:11px;border-radius:50%;background:#C8553D;border:2px solid #fff;box-shadow:0 0 0 1px #C8553D"></i>' + esc(NAME[S.code] || '같은 업종') + ' ' + fmtN(sm.n) + '</span>' : '') +
+      '<span><i style="width:8px;height:8px;border-radius:50%;background:#4F7CAC"></i>' + (S.code ? '다른 업소 ' : '업소 ') + fmtN(oth) + '</span>' +
+      (S.showMine && d.mineN ? '<span><i style="width:14px;height:10px;border-radius:3px;background:#fff;border:1.5px solid #294652"></i>다움 매물 ' + d.mineN + '</span>' : '') +
+      ((d.zones || []).length && d.area.mode !== 'zone' ? '<span><i style="width:16px;height:0;border-top:2px dashed #9C7A3E"></i>상권 경계</span>' : '');
+  }
+  function applyCode() {   // 분석한 뒤 업종을 바꾸면 그 업종만 다시 표시
+    if (!RES) return;
+    if (OV.dots) OV.dots.draw(); legend();
+    var y = $('repB').scrollTop; report(RES); $('repB').scrollTop = y;
+  }
+  function mineUi() {
+    var b = $('mineBtn'), n = RES && RES.mineN || 0;
+    b.classList.toggle('on', !!S.showMine); b.querySelector('span').textContent = (S.showMine ? '다움 매물 숨기기' : '다움 매물 보기') + (n ? ' (' + n + ')' : '');
+  }
+  var SA_MAP = { I201: 'CS100001', I202: 'CS100002', I203: 'CS100003', I204: 'CS100004', I21001: 'CS100005', I21002: 'CS100005', I21003: 'CS100006', I21004: 'CS100006', I21005: 'CS100006', I21006: 'CS100007', I21007: 'CS100008', I211: 'CS100009', I212: 'CS100010', P105: 'CS200001', P10615: 'CS200002', P10609: 'CS200003', P10611: 'CS200003', P10627: 'CS200004', P10601: 'CS200005', P10603: 'CS200005', P10613: 'CS200005', Q102: 'CS200006', Q10210: 'CS200007', Q10103: 'CS200007', Q10211: 'CS200008', Q10104: 'CS200008', M111: 'CS200009', M103: 'CS200010', M104: 'CS200015', M10401: 'CS200014', R10310: 'CS200016', R10311: 'CS200017', R10309: 'CS200018', R10406: 'CS200019', R10404: 'CS200020', R10405: 'CS200021', R10410: 'CS200022', S202: 'CS200023', R10307: 'CS200024', R10306: 'CS200024', S20301: 'CS200025', S20302: 'CS200026', S204: 'CS200027', S20701: 'CS200028', S20703: 'CS200029', S20702: 'CS200030', S209: 'CS200031', S205: 'CS200032', L102: 'CS200033', I10102: 'CS200034', I10201: 'CS200036', R10407: 'CS200037', R10202: 'CS200038', R10402: 'CS200039', M113: 'CS200041', N102: 'CS200043', N105: 'CS200044', N110: 'CS200047', G20404: 'CS300001', G20405: 'CS300002', G20801: 'CS300003', G20802: 'CS300004', G20503: 'CS300007', G20505: 'CS300008', G20506: 'CS300009', G20509: 'CS300010', G20901: 'CS300011', G20902: 'CS300011', G20905: 'CS300011', G20904: 'CS300012', G20903: 'CS300013', G20910: 'CS300014', G20911: 'CS300015', G21602: 'CS300016', G217: 'CS300017', G21501: 'CS300018', G21502: 'CS300019', G21301: 'CS300020', G21302: 'CS300021', G21503: 'CS300022', G21304: 'CS300024', G21305: 'CS300025', G21306: 'CS300026', G20906: 'CS300027', G20909: 'CS300027', G219: 'CS300028', G220: 'CS300029', G211: 'CS300031', G20803: 'CS300032', G210: 'CS300033', G21203: 'CS300034', G21201: 'CS300036', G202: 'CS300038', G203: 'CS300039', G21801: 'CS300041', G21401: 'CS300042' };
+  function seoulCode(code) {
+    if (!code) return '';
+    var k = Object.keys(SA_MAP).filter(function (x) { return code.indexOf(x) === 0; }).sort(function (a, b) { return b.length - a.length; });
+    if (!k.length && code.length >= 4) { var dn = Object.keys(SA_MAP).filter(function (x) { return x.indexOf(code) === 0; }); if (dn.length && dn.every(function (x) { return SA_MAP[x] === SA_MAP[dn[0]]; })) k = dn; }
+    return k.length ? SA_MAP[k[0]] : '';
   }
 
   /* ---------- 리포트 ---------- */
@@ -815,7 +865,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
   function argmax(a) { var i = -1, m = -1; (a || []).forEach(function (v, k) { if (v > m) { m = v; i = k; } }); return i; }
   function qTxt(q) { q = String(q || ''); return q.length === 5 ? q.slice(0, 4) + '년 ' + q.slice(4) + '분기' : ''; }
   function report(d) {
-    var tot = d.got || 0, code = d.code, same = d.same || { n: 0 }, h = '';
+    var tot = d.got || 0, code = S.code, same = sameOf(d), sv = seoulCode(code), h = '';
     $('repSub').textContent = (S.label ? S.label + ' · ' : '') + areaText(d.area) + (code ? ' · ' + (NAME[code] || code) : '');
     var hd = document.querySelector('#rep .saRepH .t'); hd.innerHTML = '상권 분석 리포트' + (d.ym ? '<small>상가정보 ' + d.ym.slice(0, 4) + '.' + d.ym.slice(4) + ' 기준</small>' : '');
     var r1 = d.rent && d.rent['1'] || { n: 0 };
@@ -855,7 +905,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
         '<div><dt>개업 / 폐업률</dt><dd>' + (z.st ? pct(z.op, z.st) + ' / ' + pct(z.cl, z.st) + '%' : '–') + '</dd></div></dl>' +
         (z.amt ? '<div class="tp">매출이 많은 시간 <b>' + (TZ[pk] || '–') + '</b> · 주 고객 <b>' + (AGE[ag] || '–') + '</b> · 주말 비중 ' + pct(z.wk, z.amt) + '%' +
           (z.top && z.top.length ? '<br>매출 상위 업종: ' + z.top.slice(0, 3).map(function (t) { return esc(t[0]); }).join(' · ') : '') + '</div>' : '') +
-        (z.my && z.my.nm ? '<div class="my">이 상권 <b>' + esc(z.my.nm) + '</b> · 월 추정매출 ' + (z.my.amt ? won(z.my.amt) : '–') + (z.my.st ? ' · 점포 ' + z.my.st[0] + '곳 (분기 개업 ' + z.my.st[1] + ' · 폐업 ' + z.my.st[2] + ')' : '') + '</div>' : '') +
+        (function () { if (!sv) return ''; var se = (z.sel || {})[sv], so = (z.sto || {})[sv], nm = (se || so || [''])[0]; if (!nm) return '<div class="my">이 상권에는 ' + esc(NAME[code] || '') + ' 매출 자료가 없어요</div>'; return '<div class="my">이 상권 <b>' + esc(nm) + '</b> · 월 추정매출 ' + (se && se[1] ? won(se[1]) : '–') + (so ? ' · 점포 ' + so[1] + '곳 (분기 개업 ' + so[2] + ' · 폐업 ' + so[3] + ')' : '') + '</div>'; })() +
         '</div>';
     });
     h += '</div>';
@@ -888,7 +938,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
   var EMPTY = $('repB').innerHTML, EMPTY_T = document.querySelector('#rep .saRepH .t').innerHTML, EMPTY_S = $('repSub').textContent;
   $('resetBtn').addEventListener('click', function () {
     if (OV.dots) { OV.dots.setMap(null); OV.dots = null; }
-    clear(OV.res); OV.res = []; RES = null;
+    clear(OV.res); OV.res = []; clear(OV.mine); OV.mine = []; RES = null; S.showMine = false; $('mineBtn').hidden = true; mineUi();
     $('leg').hidden = true; $('leg').innerHTML = '';
     $('repB').innerHTML = EMPTY; document.querySelector('#rep .saRepH .t').innerHTML = EMPTY_T; $('repSub').textContent = EMPTY_S;
     // 업종·범위 선택도 처음으로 (위치는 그대로)
@@ -899,6 +949,8 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
     $('mode').querySelector('[data-m="r"]').click();
     if (M) { M.setZoom(16); M.panTo(ll(S.lat, S.lng)); }
   });
+
+  $('mineBtn').addEventListener('click', function () { S.showMine = !S.showMine; OV.mine.forEach(function (m) { m.setMap(S.showMine ? M : null); }); mineUi(); legend(); });
 
   /* ---------- 기타 ---------- */
   $('printBtn').onclick = function () { if (!RES) { $('repSub').textContent = '먼저 「분석하기」를 누른 뒤 저장해 주세요'; return; } window.print(); };
