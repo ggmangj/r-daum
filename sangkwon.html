@@ -333,7 +333,12 @@ body.dlFull .mapFullBtn{display:none}
 .saIc.on{border-color:#294652;background:#294652}.saIc.on svg{stroke:#E8D7B6}.saIc.on span{color:#fff}
 .saSel{width:100%;height:44px;border:1px solid #D9D2C4;border-radius:10px;padding:0 10px;font:inherit;font-size:14px;color:#14191F;background:#fff}
 .saSel:disabled{color:#9AA3AD;background:#F8F5EF}
-.saGo{width:100%;height:50px;border:0;border-radius:12px;background:#BC975E;color:#fff;font:inherit;font-size:16px;font-weight:800;cursor:pointer}
+.saModeBox{min-height:62px}
+.saGoRow{display:flex;gap:8px}
+.saReset{flex:0 0 76px;height:50px;border:1px solid #D9D2C4;border-radius:12px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font:inherit;font-size:11.5px;font-weight:700;color:#3A424B;cursor:pointer}
+.saReset svg{width:18px;height:18px;fill:none;stroke:#294652;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.saReset:hover{border-color:#294652}
+.saGo{flex:1;width:100%;height:50px;border:0;border-radius:12px;background:#BC975E;color:#fff;font:inherit;font-size:16px;font-weight:800;cursor:pointer}
 .saGo:hover{background:#A9854F}.saGo:disabled{opacity:.6;cursor:wait}
 .saMapCol{position:relative;min-width:0;display:flex;flex-direction:column}
 .saSrcNote{margin:10px 0 0;font-size:13px;color:#6B757D;line-height:1.5}
@@ -472,15 +477,17 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
  </div>
  <div class="saStep"><h3><em>2</em>범위</h3>
   <div class="saSeg" id="mode"><button type="button" data-m="r" class="on">반경</button><button type="button" data-m="zone">상권 선택</button><button type="button" data-m="poly">직접 그리기</button></div>
+  <div class="saModeBox">
   <div id="mR" class="saRad"><button type="button" data-r="100">100m</button><button type="button" data-r="300" class="on">300m</button><button type="button" data-r="500">500m</button><button type="button" data-r="1000">1km</button></div>
   <div id="mZ" hidden><div class="saZoneNm none" id="zoneNm">지도에서 상권(점선)을 눌러 고르세요</div></div>
   <div id="mP" hidden><div class="saPolyAct"><button type="button" id="pUndo">한 점 지우기</button><button type="button" id="pClear">다시 그리기</button></div><p class="saHint" id="pHint">지도를 눌러 꼭짓점을 3개 이상 찍으세요</p></div>
+  </div>
  </div>
  <div class="saStep"><h3><em>3</em>업종<small>고르지 않아도 돼요</small></h3>
   <div class="saIcs" id="ics"></div>
   <select class="saSel" id="sub" disabled aria-label="세부 업종"><option value="">업종 아이콘을 먼저 고르세요</option></select>
  </div>
- <button type="button" class="saGo" id="go">분석하기</button>
+ <div class="saGoRow"><button type="button" class="saGo" id="go">분석하기</button><button type="button" class="saReset" id="resetBtn" title="조회한 결과 지우기" aria-label="초기화"><svg viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg><span>초기화</span></button></div>
 </div>
 </aside>
 <div class="saMapCol">
@@ -581,6 +588,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
     $('mR').hidden = S.mode !== 'r'; $('mZ').hidden = S.mode !== 'zone'; $('mP').hidden = S.mode !== 'poly';
     if (S.mode === 'poly' && S.poly.length < 3) tip('지도를 눌러 영역의 꼭짓점을 찍으세요'); else if (S.mode === 'zone') tip('점선 상권을 눌러 고르세요'); else tip('');
     drawArea(); if (S.mode === 'zone') loadZones(true);
+    if (window.saFitH) window.saFitH();
   });
   $('mR').addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return;
@@ -744,10 +752,10 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
   function cent(P) { var a = 0, b = 0; P.forEach(function (p) { a += p[0]; b += p[1]; }); return [a / P.length, b / P.length]; }
   $('go').addEventListener('click', run);
   function areaText(A) {
-    A = A || {};
-    if (S.mode === 'zone' || A.mode === 'zone') return '상권 「' + (A.zone || (S.zone && S.zone.nm) || '') + '」';
-    if (S.mode === 'poly' || A.mode === 'poly') return '직접 그린 영역';
-    return '반경 ' + (S.r >= 1000 ? S.r / 1000 + 'km' : S.r + 'm');
+    var m = A ? A.mode : S.mode, r = A ? A.r : S.r;
+    if (m === 'zone') return '상권 「' + ((A && A.zone) || (S.zone && S.zone.nm) || '') + '」';
+    if (m === 'poly') return '직접 그린 영역';
+    return '반경 ' + (r >= 1000 ? r / 1000 + 'km' : r + 'm');
   }
   function run() {
     if (!M) return;
@@ -875,6 +883,22 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
     $('repB').innerHTML = h; $('repB').scrollTop = 0;
   }
   function topL(d) { var k = Object.keys(d.byL || {}).sort(function (a, b) { return d.byL[b] - d.byL[a]; })[0]; return k ? (NAME[k] || k) : '–'; }
+
+  /* ---------- 초기화: 조회 결과(점·매물·상권 경계·리포트)를 지우고 처음 상태로 ---------- */
+  var EMPTY = $('repB').innerHTML, EMPTY_T = document.querySelector('#rep .saRepH .t').innerHTML, EMPTY_S = $('repSub').textContent;
+  $('resetBtn').addEventListener('click', function () {
+    if (OV.dots) { OV.dots.setMap(null); OV.dots = null; }
+    clear(OV.res); OV.res = []; RES = null;
+    $('leg').hidden = true; $('leg').innerHTML = '';
+    $('repB').innerHTML = EMPTY; document.querySelector('#rep .saRepH .t').innerHTML = EMPTY_T; $('repSub').textContent = EMPTY_S;
+    // 업종·범위 선택도 처음으로 (위치는 그대로)
+    $('ics').querySelectorAll('.saIc').forEach(function (x) { x.classList.remove('on'); });
+    S.code = ''; $('sub').disabled = true; $('sub').innerHTML = '<option value="">업종 아이콘을 먼저 고르세요</option>';
+    S.poly = []; S.zone = null; S.r = 300;
+    $('mR').querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x.getAttribute('data-r') === '300'); });
+    $('mode').querySelector('[data-m="r"]').click();
+    if (M) { M.setZoom(16); M.panTo(ll(S.lat, S.lng)); }
+  });
 
   /* ---------- 기타 ---------- */
   $('printBtn').onclick = function () { if (!RES) { $('repSub').textContent = '먼저 「분석하기」를 누른 뒤 저장해 주세요'; return; } window.print(); };
