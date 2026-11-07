@@ -316,14 +316,14 @@ body.dlFull .mapFullBtn{display:none}
 .lsQ input{flex:1;min-width:0;border:0;outline:0;font:inherit;font-size:14px;background:transparent}
 .lsQ button{width:34px;height:34px;border-radius:50%;border:0;background:#294652;display:grid;place-items:center;cursor:pointer}
 .lsQ svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2.4}
-.lsSub{flex:1 1 auto;display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-left:12px}
+.lsSub{flex:1 1 auto;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:flex-end;margin-left:12px}
 .lsBar{margin-bottom:18px}
 .lsTabs{display:flex;gap:4px;background:#fff;border:1px solid #E6E0D4;border-radius:999px;padding:4px}
 .lsTabs button{border:0;background:transparent;border-radius:999px;padding:8px 16px;font:inherit;font-size:13.5px;font-weight:600;color:#46515B;cursor:pointer}
 .lsTabs button.on{background:#294652;color:#fff;font-weight:700}
 .lsCk{display:flex;align-items:center;gap:6px;font-size:13.5px;color:#3A424B;cursor:pointer;user-select:none}
 .lsCk input{width:16px;height:16px;accent-color:#294652}
-.lsSort{margin-left:auto;height:38px;font-size:13.5px}
+.lsSort{height:38px;font-size:13.5px}
 .lsReset{height:38px;border:1px solid #D9D2C4;background:#fff;border-radius:999px;padding:0 14px;font:inherit;font-size:13px;font-weight:700;color:#3A424B;cursor:pointer}
 .lsGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
 .lsGrid .listing{transition:box-shadow .15s,transform .15s}
@@ -341,7 +341,7 @@ body.dlFull .mapFullBtn{display:none}
  .lsBar{gap:6px}.lsSel{flex:1 1 100%}.lsRng{flex:1 1 calc(50% - 3px);padding:0 10px;min-width:0}.lsRng input{width:100%;min-width:0}.lsQ{flex:1 1 100%;order:-1}
  .lsTabs{overflow-x:auto;max-width:100%;scrollbar-width:none}.lsTabs button{white-space:nowrap;padding:8px 12px}
  .lsSort{margin-left:0;flex:1}
- .lsSub{margin-left:0;flex-basis:100%}
+ .lsSub{margin-left:0;flex-basis:100%;justify-content:flex-start}
  .lsGrid{grid-template-columns:1fr;gap:14px}
 }
 </style>
@@ -380,7 +380,7 @@ body.dlFull .mapFullBtn{display:none}
 <div class="lsSub">
  <div class="lsTabs" id="tabs" role="tablist"><button type="button" data-c="all" class="on">전체</button><button type="button" data-c="clinic">병의원</button><button type="button" data-c="office">사무실</button><button type="button" data-c="shop">상가</button><button type="button" data-c="building">사옥·통임대</button></div>
  <label class="lsCk"><input type="checkbox" id="noPrem"> 무권리만</label>
- <label class="lsCk"><input type="checkbox" id="withGs"> 추가 매물 포함 <span style="color:#8A8F96;font-size:12px">(사진 없음)</span></label>
+ <input type="checkbox" id="withGs" hidden>
  <button type="button" class="lsReset" id="rst">↺ 초기화</button>
  <select class="lsSel lsSort" id="sort" aria-label="정렬"><option value="d">최신순</option><option value="ra">월세 낮은순</option><option value="rd">월세 높은순</option><option value="a">면적 넓은순</option><option value="p">사진 많은순</option></select>
 </div></div>
