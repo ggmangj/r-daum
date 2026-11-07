@@ -1247,7 +1247,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 }
 @media (min-width:1101px){
  .heroMap #mapList{height:626px!important}
- .heroMap .mapTools{margin-top:2px!important;margin-bottom:13px!important}
+ .heroMap .mapTools{margin-top:0!important;margin-bottom:13px!important}
 }
 @media (max-width:760px){
  #map .mapTools .rgnSel,#map .mapTools .noSearch{grid-column:1/-1;max-width:none;width:100%;flex:none}
@@ -1271,6 +1271,10 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
  body.mapFull #map .mapFullClose{grid-column:3;grid-row:1}
  body.mapFull #map .elev{grid-column:1/-1;grid-row:2;align-self:stretch;margin-top:12px;min-height:0;height:auto!important}
 }
+</style>
+<style id="headSameCss">
+/* 두 페이지 공통: 메뉴 글씨 조금 크게 · 고정 메뉴줄 아래 검색 줄까지 여백 24px로 같게 */
+@media (min-width:1101px){.mainNav{font-size:18px!important}.heroSplit{padding-top:24px!important}}
 </style>
 </head>
 <body>
