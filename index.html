@@ -3538,7 +3538,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   function faBuild() {
     if (FA.built) return; FA.built = true;
     var d = document.createElement('div'); d.id = 'faOv'; d.className = 'faOv'; d.hidden = true; d.setAttribute('role', 'dialog'); d.setAttribute('aria-modal', 'true'); d.setAttribute('aria-label', '추천 매물 전체 보기');
-    d.innerHTML = '<div class="faIn"><div class="faHead"><h2>강남 · 서초 <span class="heroName">추천</span> <span class="faMk">매물</span></h2><span class="faCnt" id="faCnt"></span>' +
+    d.innerHTML = '<div class="faIn"><div class="faHead"><h2>이달의 <span class="faMk">추천 매물</span></h2><span class="faCnt" id="faCnt"></span>' +
       '<div class="faSub"><div class="faTabs" id="faTabs"><button type="button" data-c="all">전체</button><button type="button" data-c="clinic">병의원</button><button type="button" data-c="office">사무실</button><button type="button" data-c="shop">상가</button><button type="button" data-c="building">사옥·통임대</button></div>' +
       '<label class="faCk"><input type="checkbox" id="faNp"> 무권리만</label><button type="button" class="faRst" id="faRst">↺ 초기화</button>' +
       '<select class="faSel" id="faSort" aria-label="정렬"><option value="f">추천순</option><option value="d">최신순</option><option value="ra">월세 낮은순</option><option value="rd">월세 높은순</option><option value="a">면적 넓은순</option></select>' +
@@ -3584,7 +3584,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     else if (so === 'rd') L.sort(function (a, b) { return (R(b) || -1) - (R(a) || -1); });
     else if (so === 'a') L.sort(function (a, b) { return (+b.area || 0) - (+a.area || 0); });
     else if (so === 'd') L.sort(function (a, b) { return faDk(b.date) - faDk(a.date); });
-    faEl('faCnt').innerHTML = '<b>' + L.length + '</b>건의 추천 매물';
+    faEl('faCnt').innerHTML = '<b>' + L.length + '</b>건';
     faEl('faGrid').innerHTML = L.length ? L.slice(0, FA.shown).map(card).join('') : '<div class="faEmpty"><b>조건에 맞는 추천 매물이 없어요</b><br>조건을 넓히거나 02-555-1165 로 문의 주세요.</div>';
     faEl('faMore').hidden = L.length <= FA.shown; faEl('faMore').textContent = '더 보기 (남은 ' + (L.length - FA.shown) + '건)';
   }
