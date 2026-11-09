@@ -2040,10 +2040,8 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   function heatMed(a) {   // 칸 평균: 칸 안 매물 전부의 단순 평균
     var t = 0; a.forEach(function (v) { t += v; }); return t / a.length;
   }
-  function heatCol(t) {
-    t = Math.max(0, Math.min(1, t)); var k = t * 3, i = Math.min(2, Math.floor(k)), f = k - i, a = HCOL[i], b = HCOL[i + 1];
-    return 'rgb(' + [0, 1, 2].map(function (j) { return Math.round(a[j] + (b[j] - a[j]) * f); }).join(',') + ')';
-  }
+  var CTC = ['#FAF4E8', '#F2E3C4', '#E9D0A0', '#DDA85A', '#C47F31', '#97521A', '#5E2A09'];   // 등고선 7단계 (중간값 아래 옅은 3단계 + 위 진한 4단계): 크림 → 금색 → 주황갈색 → 진고동색 (단계마다 대비가 뚜렷하게)
+  function heatCol(t) { var n = CTC.length - 1; return CTC[Math.max(0, Math.min(n, Math.round(t * n)))]; }
   function heatScale() {   // 층별 전체 매물 평당가: 색 범위(하위 5%~상위 5%)와 평균. 매물 수가 바뀌면 다시 계산
     var key = HEAT.fl + '|' + ITEMS.length; if (HEAT.sc && HEAT.sc.key === key) return HEAT.sc;
     var a = heatPoints().map(function (p) { return p.v; }).sort(function (x, y) { return x - y; }), t = 0; a.forEach(function (v) { t += v; });
@@ -2058,35 +2056,57 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     heatRender();
   }
   function heatHide() { heatClear(); heatUi(); }
+  /* 등고선 방식: 매물 평당가를 주변(약 400m)과 부드럽게 평균 낸 지형을 만들고, 5단계 띠로 칠함 (강남·서초 전체를 한 번 계산해 두고 이동·확대 때는 다시 그리기만) */
+  var CT = { lib: 0, key: '', bands: null, qs: null, n: 0 };
+  function ctLib(cb) {
+    if (window.d3 && d3.contours) return cb();
+    if (CT.lib) { (CT.wait = CT.wait || []).push(cb); return; } CT.lib = 1; CT.wait = [cb];
+    var add = function (src, next) { var sc = document.createElement('script'); sc.src = src; sc.onload = next; sc.onerror = function () { CT.lib = 0; }; document.head.appendChild(sc); };
+    add('https://cdn.jsdelivr.net/npm/d3-array@3.2.4/dist/d3-array.min.js', function () { add('https://cdn.jsdelivr.net/npm/d3-contour@4.0.2/dist/d3-contour.min.js', function () { var w = CT.wait; CT.wait = []; w.forEach(function (f) { f(); }); }); });
+  }
+  function ctBuild() {
+    var pts = heatPoints(), key = HEAT.fl + '|' + pts.length; if (CT.key === key && CT.bands) return;
+    var LA0 = 37.455, LA1 = 37.536, LO0 = 126.975, LO1 = 127.095, mLat = 111000, mLng = 111000 * Math.cos(37.5 * Math.PI / 180);
+    var cell = 40, nx = Math.round((LO1 - LO0) * mLng / cell), ny = Math.round((LA1 - LA0) * mLat / cell), sg = 380 / cell, R = Math.ceil(sg * 3);
+    var W = new Float64Array(nx * ny), V = new Float64Array(nx * ny), K = [], NEAR = new Uint8Array(nx * ny), rn = 110 / cell, RN = Math.ceil(rn);   // NEAR: 매물에서 약 110m 안쪽만 칠함 (한강·산까지 덮지 않게)
+    for (var d = -R; d <= R; d++) K[d + R] = Math.exp(-d * d / (2 * sg * sg));
+    pts.forEach(function (p) {
+      var gx = (p.lng - LO0) * mLng / cell, gy = (LA1 - p.lat) * mLat / cell; if (gx < 0 || gy < 0 || gx >= nx || gy >= ny) return;
+      var cx = Math.round(gx), cy = Math.round(gy), lv = Math.log(p.v);
+      for (var ny2 = -RN; ny2 <= RN; ny2++) for (var nx2 = -RN; nx2 <= RN; nx2++) { var xx = cx + nx2, yy = cy + ny2; if (xx >= 0 && yy >= 0 && xx < nx && yy < ny && (xx - gx) * (xx - gx) + (yy - gy) * (yy - gy) <= rn * rn) NEAR[yy * nx + xx] = 1; }
+      for (var dy = -R; dy <= R; dy++) { var y = cy + dy; if (y < 0 || y >= ny) continue; var ky = K[dy + R];
+        for (var dx = -R; dx <= R; dx++) { var x = cx + dx; if (x < 0 || x >= nx) continue; var w = ky * K[dx + R]; if (w < 0.01) continue; W[y * nx + x] += w; V[y * nx + x] += w * lv; } }
+    });
+    var Z = new Float64Array(nx * ny), live = [];
+    for (var k = 0; k < Z.length; k++) { if (NEAR[k] && W[k] >= 0.45) { Z[k] = Math.exp(V[k] / W[k]); live.push(Z[k]); } else Z[k] = 0; }   // 매물에서 멀거나 매물이 거의 없는 곳은 비워 둠
+    live.sort(function (a, b) { return a - b; });
+    var Q = function (p) { return heatQ(live, p); };   // 경계: 중간값 아래는 3단계(1만원 단위), 위는 4단계(위로 갈수록 넓게: +1·+1·+2만 이상) → 비싼 구간을 강조하면서 숫자는 깔끔하게
+    var l1 = Math.round(Q(1 / 6)), l2 = Math.max(Math.round(Q(2 / 6)), l1 + 1), md = Math.max(Math.round(Q(0.5) * 2) / 2, l2 + 0.5);
+    var u1 = Math.max(Math.ceil(Q(5 / 8)), md + 0.5), u2 = Math.max(Math.round(Q(6 / 8)), u1 + 1), u3 = Math.max(Math.ceil(Q(7 / 8)), u2 + 2);
+    var qs = [l1, l2, md, u1, u2, u3], th = [live[0] * 0.999].concat(qs);
+    var cs = d3.contours().size([nx, ny]).thresholds(th)(Array.from(Z));
+    CT.key = key; CT.qs = qs; CT.n = pts.length;
+    CT.bands = cs.map(function (c) { return c.coordinates.map(function (poly) { return poly.map(function (ring) { return ring.map(function (q) { return [LA1 - q[1] * cell / mLat, LO0 + q[0] * cell / mLng]; }); }); }); });
+  }
   function heatRender() {
     var nm = naver.maps, map = M.raw; heatClear();
-    var z = map.getZoom(), R = z >= 16 ? 110 : 170;   // 칸 반지름(m): 멀리서 폭 약 300m, 가까이서 약 190m (두 단계만)
-    var G = heatScale();   // 색: 이 층 매물 가격 순위 5단계(20%씩), 화면과 상관없이 고정
-    var lat0 = 37.51, mLat = 111000, mLng = 111000 * Math.cos(lat0 * Math.PI / 180), w = Math.sqrt(3) * R, h = 1.5 * R, C = {}, D = {};
-    var b = map.getBounds(), mn = b.getMin ? b.getMin() : b.getSW(), mx = b.getMax ? b.getMax() : b.getNE();
-    var la0 = typeof mn.lat === 'function' ? mn.lat() : mn.y, la1 = typeof mx.lat === 'function' ? mx.lat() : mx.y, lo0 = typeof mn.lng === 'function' ? mn.lng() : mn.x, lo1 = typeof mx.lng === 'function' ? mx.lng() : mx.x;
-    var inV = function (la, lo) { return la >= la0 && la <= la1 && lo >= lo0 && lo <= lo1; }, padLa = (la1 - la0) * 0.15, padLo = (lo1 - lo0) * 0.15, vals = [];
-    heatPoints().forEach(function (p) {
-      if (p.lat < la0 - padLa || p.lat > la1 + padLa || p.lng < lo0 - padLo || p.lng > lo1 + padLo) return;
-      if (inV(p.lat, p.lng)) vals.push(p.v);
-      var Y = p.lat * mLat, X = p.lng * mLng, row = Math.round(Y / h), cc = Math.round((X - (row & 1) * w / 2) / w), best = '', bd = 1e18;
-      for (var dr = -1; dr <= 1; dr++) for (var dc = -1; dc <= 1; dc++) { var r = row + dr, c = cc + dc, cy = r * h, cx = c * w + (r & 1) * w / 2, dd = (cx - X) * (cx - X) + (cy - Y) * (cy - Y); if (dd < bd) { bd = dd; best = r + '|' + c; } }
-      (C[best] = C[best] || []).push(p.v); var dd0 = (D[best] = D[best] || {}); dd0[p.d] = (dd0[p.d] || 0) + 1;
+    if (!(window.d3 && d3.contours)) { ctLib(function () { if (heatActive()) heatRender(); }); heatUi(); return; }
+    ctBuild();
+    var G = heatScale(), b = map.getBounds(), mn = b.getMin ? b.getMin() : b.getSW(), mx = b.getMax ? b.getMax() : b.getNE();
+    var la0 = typeof mn.lat === 'function' ? mn.lat() : mn.y, la1 = typeof mx.lat === 'function' ? mx.lat() : mx.y, lo0 = typeof mn.lng === 'function' ? mn.lng() : mn.x, lo1 = typeof mx.lng === 'function' ? mx.lng() : mx.x, vals = [];
+    heatPoints().forEach(function (p) { if (p.lat >= la0 && p.lat <= la1 && p.lng >= lo0 && p.lng <= lo1) vals.push(p.v); }); vals.sort(function (x, y) { return x - y; });
+    HEAT.stat = { n: vals.length, cells: CT.bands.length ? 1 : 0, min: vals[0] || 0, max: vals[vals.length - 1] || 0, avg: G.avg, qs: CT.qs };
+    // 띠끼리 겹쳐 칠하면 탁해지므로, 각 띠에서 한 단계 위 띠 자리는 구멍으로 비움 → 단계마다 제 색만 보임
+    var LL = function (ring) { return ring.map(function (q) { return new nm.LatLng(q[0], q[1]); }); }, top = CT.bands.length - 1;
+    CT.bands.forEach(function (band, i) {
+      var paths = []; band.forEach(function (poly) { poly.forEach(function (ring) { paths.push(LL(ring)); }); });
+      if (i < top) CT.bands[i + 1].forEach(function (poly) { paths.push(LL(poly[0])); });
+      if (!paths.length) return;
+      HEAT.objs.push(new nm.Polygon({ map: map, paths: paths, fillColor: CTC[i], fillOpacity: i === top ? 0.62 : 0.48, strokeColor: '#FFFFFF', strokeOpacity: 0.9, strokeWeight: 1, clickable: false }));
     });
-    vals.sort(function (x, y) { return x - y; });
-    var cells = Object.keys(C).filter(function (k) { return C[k].length >= 1; }).map(function (k) {
-      var rc = k.split('|'), r = +rc[0], c = +rc[1], cy = r * h, cx = c * w + (r & 1) * w / 2;
-      var dm = D[k] || {}, dg = Object.keys(dm).sort(function (a, b) { return dm[b] - dm[a]; })[0] || '';   // 칸의 법정동 = 칸 안 매물이 가장 많은 동
-      return { cy: cy, cx: cx, v: heatMed(C[k]), n: C[k].length, la: cy / mLat, lo: cx / mLng, dong: dg };
+    CT.bands[top] && CT.bands[top].forEach(function (poly) {   // 가장 비싼 띠: 진한 테두리로 봉우리를 또렷하게
+      HEAT.objs.push(new nm.Polyline({ map: map, path: LL(poly[0]), strokeColor: '#4A1E05', strokeOpacity: 0.95, strokeWeight: 2.5, clickable: false }));
     });
-    var vis = cells.filter(function (o) { return inV(o.la, o.lo); }), mv = vis.map(function (o) { return o.v; }).sort(function (x, y) { return x - y; });
-    var lo = G.lo, hi = G.hi, L0 = Math.log(lo || 1), L1 = Math.log(hi || 2);
-    HEAT.stat = { n: vals.length, cells: vis.length, min: vals[0] || 0, max: vals[vals.length - 1] || 0, lo: lo, hi: hi, avg: G.avg, q1: G.q1, q3: G.q3, qs: G.qs };
-    if (vis.length) cells.forEach(function (o) {
-      var path = []; for (var k = 0; k < 6; k++) { var an = Math.PI / 180 * (60 * k + 30); path.push(new nm.LatLng((o.cy + R * Math.sin(an)) / mLat, (o.cx + R * Math.cos(an)) / mLng)); }
-      HEAT.objs.push(new nm.Polygon({ map: map, paths: [path], fillColor: heatCol(heatStep(o.v, G) / 4), fillOpacity: 0.38, strokeColor: '#FFFFFF', strokeOpacity: 0.95, strokeWeight: 1.5, clickable: false }));
-    });
-    // 지도에는 금액 숫자를 쓰지 않고 육각형 색으로만 구분
     heatUi();
   }
   function heatSet(on) {   // 켤 때 너무 가까이 있으면 동네가 보이도록 한 단계 멀리
@@ -2109,13 +2129,13 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     var act = !!heatActive(); btn.classList.toggle('on', act); btn.setAttribute('aria-pressed', act ? 'true' : 'false'); btn.hidden = !(M && M.kind === 'naver'); pn.hidden = !(M && M.kind === 'naver');   // 안내판은 처음부터 항상
     if ($('dongPick')) $('dongPick').classList.toggle('dpGrp', !btn.hidden);
     if (pn.hidden) return;
-    var S = act ? (HEAT.stat || { n: 0, cells: 0 }) : (function () { var q = heatScale().qs || []; return { n: 0, cells: q.some(function (v) { return v > 0; }) ? 1 : 0, qs: q, pins: 1 }; })(), f1 = function (v) { return (Math.round(v * 10) / 10).toLocaleString('ko-KR'); }, chip = function (v, t) { return '<button type="button" data-hf="' + v + '"' + (HEAT.fl === v ? ' class="on"' : '') + '>' + t + '</button>'; };
+    var S = act ? (HEAT.stat || { n: 0, cells: 0 }) : (function () { var q = heatScale().qs || []; return { n: 0, cells: q.some(function (v) { return v > 0; }) ? 1 : 0, qs: CT.qs || q, pins: 1 }; })(), f1 = function (v) { return (Math.round(v * 10) / 10).toLocaleString('ko-KR'); }, chip = function (v, t) { return '<button type="button" data-hf="' + v + '"' + (HEAT.fl === v ? ' class="on"' : '') + '>' + t + '</button>'; };
     pn.innerHTML = '<div class="hpTitle">임대 평단가 <span>' + ({ all: '전체 층', '1': '1층', up: '2층 이상', b: '지하' })[HEAT.fl] + '</span></div>' +
       '<div class="hpRow">' + chip('all', '전체') + chip('1', '1층') + chip('up', '2층 이상') + chip('b', '지하') + '</div>' +
-      (S.cells ? '<div class="hpBar">' + [0, 1, 2, 3, 4].map(function (i) { return '<i style="background:' + heatCol(i / 4) + '"></i>'; }).join('') + '</div>' +
-        '<div class="hpTick"><span>하위 20%</span>' + S.qs.map(function (q) { return '<span>' + f1(q) + '만</span>'; }).join('') + '<span>상위 20%</span></div>' +
+      (S.cells ? '<div class="hpBar">' + CTC.map(function (c) { return '<i style="background:' + c + '"></i>'; }).join('') + '</div>' +
+        '<div class="hpTick"><span>낮음</span>' + (S.qs || []).map(function (q) { return '<span>' + f1(q) + '</span>'; }).join('') + '<span>높음</span></div>' +
         (S.pins ? '' : '<div class="hpRange">이 화면 실제 범위 <b>최저 ' + f1(S.min) + '만</b> ~ <b class="hi">최고 ' + f1(S.max) + '만</b></div>') +
-        '<div class="hpNote">평당 월세(만원/전용평) · 칸 안 매물 평균 · 색은 이 층 매물을 싼 순서로 줄 세운 5단계(각 20%, 확대해도 고정)' + (S.pins ? '' : ' · 이 화면 매물 ' + S.n + '건') + ' · 호가 기준 · 입력 오류로 보이는 값 제외</div>'
+        '<div class="hpNote">평당 월세(만원/전용평) · 주변 약 400m 매물을 부드럽게 평균 낸 등고선 · 숫자는 단계 경계(만원) · 중간값 아래 3단계, 위 4단계' + (S.pins ? '' : ' · 이 화면 매물 ' + S.n + '건') + ' · 호가 기준 · 입력 오류로 보이는 값 제외</div>'
         : '<div class="hpNote">이 화면에 조건에 맞는 매물이 부족합니다. 지도를 넓혀 보거나 층을 바꿔 주세요.</div>');
   }
   function drawMap() {   // 지도 이동·확대가 연달아 일어나면 마지막 한 번만 다시 그림
