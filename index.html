@@ -301,6 +301,7 @@ body{word-break:keep-all;overflow-wrap:break-word}
 </style>
 <style>
 .mapItem .miMeta{font-size:12px;color:#6B757D;font-weight:600}
+.mapItem .miTag{font-style:normal;font-size:11px;font-weight:700;color:#7A5A22;background:#F3EAD8;border-radius:3px;padding:1px 6px;margin-left:5px;vertical-align:1px}
 .mapItem .miTitle{font-size:15px;font-weight:700;color:#14191F;line-height:1.45}
 .miSep{display:inline-block;width:1px;height:12px;background:#C9C1B1;margin:0 8px;vertical-align:-1px}
 .miNoPrem{font-style:normal;color:#A27D48}
@@ -1741,7 +1742,8 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 
   /* ---------- 추천 매물 카드 ---------- */
   function card(it) {
-    var badge = it.premium === '무권리' ? '무권리' : (it.point ? it.point.split(/[·|,]/)[0].trim().slice(0, 10) : '');
+    var tg = tagsOf(it), badges = (it.premium === '무권리' ? ['무권리'] : []).concat(tg);
+    if (!badges.length && it.point) badges = [it.point.split(/[·|,]/)[0].trim().slice(0, 10)];
     return '<a href="#item/' + encodeURIComponent(it.id) + '" class="listing" data-id="' + esc(it.id) + '" style="display: flex; flex-direction: column; background: #FFFFFF; border-radius: 14px; overflow: hidden; border: 1px solid #E6E0D4; color: #14191F">' +
       (it.photos && it.photos.length
         ? '<div class="lPhoto" style="height: 180px; background: #ECE6DA; position: relative; overflow: hidden">' +
@@ -1749,9 +1751,9 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
           (it.photos.length > 1 ? '<span class="lPhotoN">사진 ' + it.photos.length + '</span>' : '')
         : '<div style="height: 180px; background: #ECE6DA; position: relative; display: flex; align-items: center; justify-content: center; color: #8A8272; font-size: 13px; gap: 6px">' +
           '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8A8272" stroke-width="1.6" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><path d="M21 16l-5-5-8 8"></path></svg>매물 사진') +
-      '<div style="position: absolute; top: 12px; left: 12px; display: flex; gap: 6px">' +
+      '<div style="position: absolute; top: 12px; left: 12px; right: 12px; display: flex; flex-wrap: wrap; gap: 6px">' +
       '<span style="font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 4px; background: #294652; color: #FFFFFF">' + esc(it.catLabel) + '</span>' +
-      (badge ? '<span style="font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 4px; background: #BC975E; color: #14191F">' + esc(badge) + '</span>' : '') +
+      badges.slice(0, 4).map(function (b) { return '<span style="font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 4px; background: #BC975E; color: #14191F">' + esc(b) + '</span>'; }).join('') +
       '</div></div>' +
       '<div style="padding: 18px; display: flex; flex-direction: column; gap: 10px">' +
       '<div style="font-size: 12px; color: #6B757D">' + esc((it.gu || '강남구') + ' ' + it.dong) + ' · No.' + esc(it.id) + '</div>' +
@@ -2172,9 +2174,11 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   function miTitleText(it) {
     return noPrem(it.title).replace(/통임대\([^)]*\)/, '통임대').replace(/연층\(\s*([^)~]*?)\s*~\s*([^)]*?)\s*\)/, function (x, a, b) { return '연층(' + a.replace(/^지하\s*/, 'B').replace(/층$/, '') + '~' + b.replace(/^지하\s*/, 'B') + ')'; });
   }
+  // 매물장 「특징」에서 고른 말 (병의원 · 인테리어 · 통임대 등)
+  function tagsOf(it) { return (it && it.tags && it.tags.length ? it.tags : []).filter(function (t) { return t && t !== '무권리'; }); }
   function miHtml(it) {
     return '<button type="button" class="mapItem' + (it.id === focusId ? ' on' : '') + '" data-id="' + esc(it.id) + '">' +
-      '<span class="miMeta">' + esc(it.catLabel) + ' · ' + esc(it.dong) + '</span>' +
+      '<span class="miMeta">' + esc(it.catLabel) + ' · ' + esc(it.dong) + tagsOf(it).map(function (t) { return '<em class="miTag">' + esc(t) + '</em>'; }).join('') + '</span>' +
       '<span class="miTitle">' + listTitle(miTitleText(it)) + '</span>' +
       '<span class="miPrice">보 <b class="miDep">' + esc(it.depText) + '</b><i>/</i>월 <b class="miRent">' + esc(it.rentText) + '</b><i>/</i>관 <b class="miMg">' + esc(it.mgmt || '문의') + '</b></span>' +
       '</button>';
@@ -2700,6 +2704,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     var station = nz(it.station) || nearStations(it);
     var opts = nz(it.options) ? it.options.split(/[,，\n]+/).map(function (x) { return x.trim(); }).filter(Boolean) : [];
     var badges = '<span class="dtBadge">' + esc(it.catLabel) + '</span>' + (it.premium === '무권리' ? '<span class="dtBadge gold">무권리</span>' : '') +
+      tagsOf(it).map(function (t) { return '<span class="dtBadge gold">' + esc(t) + '</span>'; }).join('') +
       (it.featured ? '<span class="dtBadge line">추천 매물</span>' : '');
     var gal = photos.length
       ? '<div class="dtGal"><div class="dtMainWrap"><button type="button" class="dtMainImg" aria-label="사진 크게 보기"><img src="' + photoUrl(photos[0], 1600) + '" alt="' + esc(it.title) + ' 대표 사진" referrerpolicy="no-referrer">' + wmHtml() + '<span class="dtCount">1 / ' + photos.length + '</span></button>' +
