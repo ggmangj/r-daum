@@ -2056,7 +2056,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     heatRender();
   }
   function heatHide() { heatClear(); heatUi(); }
-  /* 등고선 방식: 매물 평당가를 주변(약 400m)과 부드럽게 평균 낸 지형을 만들고, 5단계 띠로 칠함 (강남·서초 전체를 한 번 계산해 두고 이동·확대 때는 다시 그리기만) */
+  /* 등고선 방식: 매물 평당가를 주변(약 200~300m)과 부드럽게 평균 낸 지형을 만들고, 5단계 띠로 칠함 (강남·서초 전체를 한 번 계산해 두고 이동·확대 때는 다시 그리기만) */
   var CT = { lib: 0, key: '', bands: null, qs: null, n: 0 };
   function ctLib(cb) {
     if (window.d3 && d3.contours) return cb();
@@ -2067,7 +2067,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   function ctBuild() {
     var pts = heatPoints(), key = HEAT.fl + '|' + pts.length; if (CT.key === key && CT.bands) return;
     var LA0 = 37.455, LA1 = 37.536, LO0 = 126.975, LO1 = 127.095, mLat = 111000, mLng = 111000 * Math.cos(37.5 * Math.PI / 180);
-    var cell = 40, nx = Math.round((LO1 - LO0) * mLng / cell), ny = Math.round((LA1 - LA0) * mLat / cell), sg = 380 / cell, R = Math.ceil(sg * 3);
+    var cell = 40, nx = Math.round((LO1 - LO0) * mLng / cell), ny = Math.round((LA1 - LA0) * mLat / cell), sg = (HEAT.fl === '1' || HEAT.fl === 'b' ? 300 : 200) / cell,   /* 평균 반경: 전체·2층 이상 200m, 매물이 적은 1층·지하 300m */ R = Math.ceil(sg * 3);
     var W = new Float64Array(nx * ny), V = new Float64Array(nx * ny), K = [], NEAR = new Uint8Array(nx * ny), rn = 110 / cell, RN = Math.ceil(rn);   // NEAR: 매물에서 약 110m 안쪽만 칠함 (한강·산까지 덮지 않게)
     for (var d = -R; d <= R; d++) K[d + R] = Math.exp(-d * d / (2 * sg * sg));
     pts.forEach(function (p) {
@@ -2135,7 +2135,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       (S.cells ? '<div class="hpBar">' + CTC.map(function (c) { return '<i style="background:' + c + '"></i>'; }).join('') + '</div>' +
         '<div class="hpTick"><span>낮음</span>' + (S.qs || []).map(function (q) { return '<span>' + f1(q) + '</span>'; }).join('') + '<span>높음</span></div>' +
         (S.pins ? '' : '<div class="hpRange">이 화면 실제 범위 <b>최저 ' + f1(S.min) + '만</b> ~ <b class="hi">최고 ' + f1(S.max) + '만</b></div>') +
-        '<div class="hpNote">평당 월세(만원/전용평) · 주변 약 400m 매물을 부드럽게 평균 낸 등고선 · 숫자는 단계 경계(만원) · 중간값 아래 3단계, 위 4단계' + (S.pins ? '' : ' · 이 화면 매물 ' + S.n + '건') + ' · 호가 기준 · 입력 오류로 보이는 값 제외</div>'
+        '<div class="hpNote">평당 월세(만원/전용평) · 주변 매물(전체·2층 이상 200m, 1층·지하 300m)을 부드럽게 평균 낸 등고선 · 숫자는 단계 경계(만원) · 중간값 아래 3단계, 위 4단계' + (S.pins ? '' : ' · 이 화면 매물 ' + S.n + '건') + ' · 호가 기준 · 입력 오류로 보이는 값 제외</div>'
         : '<div class="hpNote">이 화면에 조건에 맞는 매물이 부족합니다. 지도를 넓혀 보거나 층을 바꿔 주세요.</div>');
   }
   function drawMap() {   // 지도 이동·확대가 연달아 일어나면 마지막 한 번만 다시 그림
