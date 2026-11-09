@@ -1035,6 +1035,7 @@ body.mapFull .mapTools .mapFullBtn{display:none}
 .heatBtn:before{content:"";position:absolute;left:0;top:11px;bottom:11px;width:1px;background:rgba(255,255,255,.6)}
 .heatBtn svg{flex:none;width:17px;height:17px}.heatBtn:hover{background:#BA9862}.heatBtn.on,.heatBtn.on:hover{background:#9C6F2E}.heatBtn.on:before{opacity:0}.heatBtn.on .hbDot{fill:#E5452B;opacity:1}
 .heatBtn[hidden]{display:none!important}
+.hpSub{margin:-4px 0 8px;font-size:11px;color:#8A8F95;letter-spacing:-.2px}
 .dongPick.dpGrp .dpBtn{vertical-align:top;border-right:0;border-radius:999px 0 0 999px;padding-right:13px}
 .dongPick.dpGrp .dpBtn:after{border-radius:999px 0 0 999px}
 @media (max-width:760px){.heatBtn{height:38px;font-size:14px}}
@@ -2032,6 +2033,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     return ITEMS.filter(function (it) {
       if (!(it.lat && it.lng)) return false;
       var a = +it.area, r = manOf(it.rent, it.rentText); if (!(a >= 3) || !(r > 0)) return false;
+      if (HEAT.fl === '1' && (it.cats || []).length && (it.cats || []).every(function (c) { return c === 'office'; })) return false;   // 1층은 상가 시세로: 사무실 전용 매물(1층 소형 사무실 등)은 빼서 대로변 상권이 묻히지 않게
       return HEAT.fl === 'all' || heatFloor(it.floor) === HEAT.fl;
     }).map(function (it) { return { lat: +it.lat, lng: +it.lng, v: manOf(it.rent, it.rentText) / +it.area, d: it.dong || '' }; })
       .filter(function (p) { return p.v >= 2 && p.v <= 100; });   // 평당 2만 미만·100만 초과는 면적·금액 입력 오류로 보고 제외
@@ -2067,7 +2069,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   function ctBuild() {
     var pts = heatPoints(), key = HEAT.fl + '|' + pts.length; if (CT.key === key && CT.bands) return;
     var LA0 = 37.455, LA1 = 37.536, LO0 = 126.975, LO1 = 127.095, mLat = 111000, mLng = 111000 * Math.cos(37.5 * Math.PI / 180);
-    var cell = 40, nx = Math.round((LO1 - LO0) * mLng / cell), ny = Math.round((LA1 - LA0) * mLat / cell), sg = (HEAT.fl === '1' || HEAT.fl === 'b' ? 300 : 200) / cell,   /* 평균 반경: 전체·2층 이상 200m, 매물이 적은 1층·지하 300m */ R = Math.ceil(sg * 3);
+    var cell = 40, nx = Math.round((LO1 - LO0) * mLng / cell), ny = Math.round((LA1 - LA0) * mLat / cell), sg = (HEAT.fl === 'b' ? 300 : 200) / cell,   /* 평균 반경: 전체·1층·2층 이상 200m, 매물이 적은 지하 300m */ R = Math.ceil(sg * 3);
     var W = new Float64Array(nx * ny), V = new Float64Array(nx * ny), K = [], NEAR = new Uint8Array(nx * ny), rn = 110 / cell, RN = Math.ceil(rn);   // NEAR: 매물에서 약 110m 안쪽만 칠함 (한강·산까지 덮지 않게)
     for (var d = -R; d <= R; d++) K[d + R] = Math.exp(-d * d / (2 * sg * sg));
     pts.forEach(function (p) {
@@ -2118,7 +2120,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     var box = $('leafletMap'); if (!box) return; var wrap = box.parentNode, btn = $('heatBtn'), pn = $('heatPanel');
     if (!btn) {
       btn = document.createElement('button'); btn.type = 'button'; btn.id = 'heatBtn'; btn.className = 'heatBtn';
-      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5l8.2 4.75v9.5L12 21.5l-8.2-4.75v-9.5z"></path><path class="hbDot" d="M12 7.5l4 2.3v4.4L12 16.5l-4-2.3V9.8z" fill="currentColor" opacity=".5" stroke="none"></path></svg><span>임대평단가</span>';
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" aria-hidden="true"><path d="M12 2.5l8.2 4.75v9.5L12 21.5l-8.2-4.75v-9.5z"></path><path class="hbDot" d="M12 7.5l4 2.3v4.4L12 16.5l-4-2.3V9.8z" fill="currentColor" opacity=".5" stroke="none"></path></svg><span>매물 평단가</span>';
       btn.setAttribute('aria-pressed', 'false');
       btn.onclick = function () { heatSet(!HEAT.on); };
       var dp = $('dongPick');   // 법정동 버튼 바로 옆에 붙여 하나의 버튼처럼 보이게
@@ -2130,12 +2132,12 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     if ($('dongPick')) $('dongPick').classList.toggle('dpGrp', !btn.hidden);
     if (pn.hidden) return;
     var S = act ? (HEAT.stat || { n: 0, cells: 0 }) : (function () { var q = heatScale().qs || []; return { n: 0, cells: q.some(function (v) { return v > 0; }) ? 1 : 0, qs: CT.qs || q, pins: 1 }; })(), f1 = function (v) { return (Math.round(v * 10) / 10).toLocaleString('ko-KR'); }, chip = function (v, t) { return '<button type="button" data-hf="' + v + '"' + (HEAT.fl === v ? ' class="on"' : '') + '>' + t + '</button>'; };
-    pn.innerHTML = '<div class="hpTitle">임대 평단가 <span>' + ({ all: '전체 층', '1': '1층', up: '2층 이상', b: '지하' })[HEAT.fl] + '</span></div>' +
+    pn.innerHTML = '<div class="hpTitle">매물 임대 평단가 <span>' + ({ all: '전체 층', '1': '1층', up: '2층 이상', b: '지하' })[HEAT.fl] + '</span></div><div class="hpSub">지금 나와 있는 매물의 호가 기준 · 실거래가 아님</div>' +
       '<div class="hpRow">' + chip('all', '전체') + chip('1', '1층') + chip('up', '2층 이상') + chip('b', '지하') + '</div>' +
       (S.cells ? '<div class="hpBar">' + CTC.map(function (c) { return '<i style="background:' + c + '"></i>'; }).join('') + '</div>' +
         '<div class="hpTick"><span>낮음</span>' + (S.qs || []).map(function (q) { return '<span>' + f1(q) + '</span>'; }).join('') + '<span>높음</span></div>' +
-        (S.pins ? '' : '<div class="hpRange">이 화면 실제 범위 <b>최저 ' + f1(S.min) + '만</b> ~ <b class="hi">최고 ' + f1(S.max) + '만</b></div>') +
-        '<div class="hpNote">평당 월세(만원/전용평) · 주변 매물(전체·2층 이상 200m, 1층·지하 300m)을 부드럽게 평균 낸 등고선 · 숫자는 단계 경계(만원) · 중간값 아래 3단계, 위 4단계' + (S.pins ? '' : ' · 이 화면 매물 ' + S.n + '건') + ' · 호가 기준 · 입력 오류로 보이는 값 제외</div>'
+        (S.pins ? '' : '<div class="hpRange">이 화면 매물 <b>최저 ' + f1(S.min) + '만</b> ~ <b class="hi">최고 ' + f1(S.max) + '만</b></div>') +
+        '<div class="hpNote">평당 월세(만원/전용평) · 주변 매물(지하 300m, 나머지 200m)을 부드럽게 평균 낸 등고선' + (HEAT.fl === '1' ? ' · 1층은 상가 매물 기준' : '') + ' · 숫자는 단계 경계(만원) · 중간값 아래 3단계, 위 4단계' + (S.pins ? '' : ' · 이 화면 매물 ' + S.n + '건') + ' · 호가 기준 · 입력 오류로 보이는 값 제외</div>'
         : '<div class="hpNote">이 화면에 조건에 맞는 매물이 부족합니다. 지도를 넓혀 보거나 층을 바꿔 주세요.</div>');
   }
   function drawMap() {   // 지도 이동·확대가 연달아 일어나면 마지막 한 번만 다시 그림
