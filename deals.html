@@ -260,7 +260,7 @@ body.dlFull .mapFullBtn{display:none}
 .mTbl .mRow>*:nth-child(2){background:#F1F5F6}.mTbl .mRow>*:nth-child(3){background:#FAF5EA;justify-content:flex-start;padding-left:14px;padding-right:14px}.mTbl .mRow>*:nth-child(4){background:#F6EFE3}.mTbl .mRow>*:nth-child(5){background:#F2EFE8}
 .mTbl .mTh>*:nth-child(2){background:#E3ECEF}.mTbl .mTh>*:nth-child(3){background:#F3EAD6}.mTbl .mTh>*:nth-child(4){background:#EADFC9}.mTbl .mTh>*:nth-child(5){background:#E9E4DA}
 .mTbl .mRow>.cv{display:grid}
-.mTbl .mRow>.fewC{grid-column:3/6;justify-content:center;background:repeating-linear-gradient(135deg,#FAF8F4 0 8px,#F3F0E9 8px 16px);color:#9AA2A8;font-size:12.5px;font-weight:700;letter-spacing:-.2px}.mTbl .mRow>.fewC small{font-size:11.5px;font-weight:500;margin-left:5px;color:#B0B6BA}
+.mTbl .fewT{color:#B4BBC0!important;font-size:12px;font-weight:400}.mTbl .mRow>.sbc.fewT{justify-content:flex-end}
 </style>
 
 <style id="fullWide">/* 넓은 화면(1400px 이상)에서는 가운데 1280px 제한 없이 화면 가득 (좌우 여백 48px) */
@@ -366,7 +366,7 @@ body.dlFull .mapFullBtn{display:none}
 <div class="mHead"><h2>동별 대지 평당가 및 거래 규모</h2><span class="mkLab">누적 기간</span><span class="seg2 mkSeg" id="mkSeg" role="group" aria-label="누적 기간"><button type="button" data-m="12">1년</button><button type="button" data-m="24">2년</button><button type="button" data-m="36">3년</button><button type="button" data-m="48">4년</button><button type="button" data-m="60">5년</button></span><span class="mkLab">· 대지 평당가·금액대 분포에 적용</span><p class="rs" id="rankSub"></p></div>
 <div class="mTbl"><div class="mRow mGrp2"><span class="g0">지역</span><span class="gA">평당가</span><span class="gB">거래 규모</span></div><div class="mRow mTh"><span>법정동 <em style="color:#B07A2E;font-weight:700">거래건수</em></span><span class="jgH"><span class="jgT">평당 공시지가<em>개별공시지가 중간값</em></span><b class="jgY">2026.1.1 공시</b></span><span>대지 평당가 <em id="ppSub"></em></span><span>연면적 평당가 <em id="bpSub"></em></span><span><span>금액대별 거래 분포(%) <b class="nY" id="dsN"></b></span><em class="bLeg"><i style="--c:#E3D3B4"></i>50억↓<i style="--c:#BC975E"></i>50~100<i style="--c:#8A6A35"></i>100~300<i style="--c:#294652"></i>300억↑</em></span></div>
 <div id="rank"></div><p class="mSwipe">← 옆으로 밀어서 연면적 평당가·금액대 분포 보기</p></div>
-<p class="note">※ 대지 평당가 = 거래금액 ÷ 대지면적(평)의 동별 <b>중간값</b>입니다. 국토부 신고 자료 중 <b>일반건물(통건물) 거래만</b> 집계하며, 지분 거래와 해제(취소)된 거래는 제외하고, 건물 1채를 호실·필지별로 나눠 신고한 거래는 금액·면적을 합쳐 1건으로 봤으며, 신고 후 공개까지 시차가 있습니다. 같은 동이라도 건물 상태·연식·층수·도로 조건에 따라 차이가 큽니다.<br>※ 공시지가는 2026.1.1 개별공시지가의 동별 중간값입니다. 고른 기간 거래가 <b>5건 이하</b>인 동은 거래 몇 건에 평당가가 크게 흔들리므로 평당 공시지가만 보여주고 나머지는 「거래 미비」로 표시합니다.<br>※ 연면적 평당가 = 거래금액 ÷ 연면적(평)의 동별 <b>중간값</b>입니다. 건물 크기를 기준으로 비교할 때 참고하세요.<br>※ 지번은 건축물대장과 대조해 <b>추정한 것으로 실제와 다를 수 있습니다</b>.<br><b style="color:#8A6A35">※ 중간값 해석 주의</b> · 거래가 적거나 대형 빌딩 거래가 섞인 해에는 시세와 관계없이 값이 크게 오르내릴 수 있습니다(<b style="color:#C0533A">예: 테헤란로 대형 업무빌딩과 이면 중소형 빌딩이 함께 거래되는 삼성동</b>). 정확한 시세는 상담 시 개별 거래 사례로 안내해 드립니다.</p>
+<p class="note">※ 대지 평당가 = 거래금액 ÷ 대지면적(평)의 동별 <b>중간값</b>입니다. 국토부 신고 자료 중 <b>일반건물(통건물) 거래만</b> 집계하며, 지분 거래와 해제(취소)된 거래는 제외하고, 건물 1채를 호실·필지별로 나눠 신고한 거래는 금액·면적을 합쳐 1건으로 봤으며, 신고 후 공개까지 시차가 있습니다. 같은 동이라도 건물 상태·연식·층수·도로 조건에 따라 차이가 큽니다.<br>※ 공시지가는 2026.1.1 개별공시지가의 동별 중간값입니다. 고른 기간 거래가 <b>5건 이하</b>인 동은 거래 몇 건에 평당가가 크게 흔들리므로 평당 공시지가만 보여주고 나머지는 「거래 부족」으로 표시합니다.<br>※ 연면적 평당가 = 거래금액 ÷ 연면적(평)의 동별 <b>중간값</b>입니다. 건물 크기를 기준으로 비교할 때 참고하세요.<br>※ 지번은 건축물대장과 대조해 <b>추정한 것으로 실제와 다를 수 있습니다</b>.<br><b style="color:#8A6A35">※ 중간값 해석 주의</b> · 거래가 적거나 대형 빌딩 거래가 섞인 해에는 시세와 관계없이 값이 크게 오르내릴 수 있습니다(<b style="color:#C0533A">예: 테헤란로 대형 업무빌딩과 이면 중소형 빌딩이 함께 거래되는 삼성동</b>). 정확한 시세는 상담 시 개별 거래 사례로 안내해 드립니다.</p>
 </section>
 
 <section class="cta"><div><b>이 동네 빌딩, 지금 얼마일까요?</b>최근 거래 사례로 매입가·매도가를 비교 분석해 드립니다.</div><a href="/?ask=buy#consult">빌딩 매매 상담 받기</a></section>
@@ -630,7 +630,7 @@ body.dlFull .mapFullBtn{display:none}
       var t = g.b[0] + g.b[1] + g.b[2] + g.b[3];
       return '<button type="button" class="mRow' + (F.dong === g.dong ? ' sel' : '') + '" data-dong="' + esc(g.dong) + '"><b>' + esc(g.dong) + '<small>' + g.n + '건</small></b>' +
         bar(g.j, jm, '#7D96A0', '#4A6470') +
-        (few(g) ? '<span class="fewC">거래 미비' + (g.n ? '<small>(' + g.n + '건)</small>' : '') + '</span>' :
+        (few(g) ? '<span class="cv"><em></em><span class="fewT">거래 부족</span></span><span class="cv"><em></em><span class="fewT">거래 부족</span></span><span class="sbc fewT">거래 부족</span>' :
         bar(g.v, pm, '#BC975E') + bar(g.bv, bm, '#8A6A35') +
         (t ? '<span class="sbc"><span class="sb">' + g.b.map(function (x, i) { var p = t ? x / t * 100 : 0; return p ? '<div style="width:' + p + '%;background:' + C4[i] + (i ? '' : ';color:#5a4a2a') + '">' + (p >= 12 ? Math.round(p) : '') + '</div>' : ''; }).join('') + '</span></span>' : '<span class="sbc" style="color:#B4BBC0;font-size:12px">거래 없음</span>')) + '</button>';
     };
