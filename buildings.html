@@ -3681,7 +3681,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     var it = { id: r.id, sale: 1, src: r.src, cats: ['building'], catLabel: '빌딩 매매', gu: r.gu, dong: r.dong, building: '', bf: r.bf || 0, ff: r.ff || 0, yr: r.yr || 0,
       area: r.land ? r.land / PYC : 0, landM2: r.land || 0, bldM2: r.bld || 0, bldPy: r.bld ? r.bld / PYC : 0, priceMan: r.price || 0,
       zone: r.zone || '', parking: r.park || '', elev: r.elev || '', date: r.date || '', lat: r.lat, lng: r.lng, st: r.st || [], jiga: r.jiga || 0,
-      photos: [], tags: [], point: '', desc: '', options: '', station: '', premium: '', mgmt: '', reg: null, usage: '', structure: '', totArea: 0, parkTotal: '', bldElev: 0 };
+      photos: r.photos || [], tags: [], point: '', desc: '', options: '', station: '', premium: '', mgmt: '', reg: null, usage: '', structure: '', totArea: 0, parkTotal: '', bldElev: 0 };
     it.pp = it.area ? it.priceMan / it.area : 0;
     it.dep = it.priceMan / 10000; it.rent = it.pp / 10000;          // 검색 범위: 매매가(억) · 대지 평당가(억)
     it.depText = eokT(it.priceMan); it.rentText = eok2(it.pp);
