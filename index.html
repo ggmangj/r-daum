@@ -2805,8 +2805,9 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
         ['승강기', cnt([['승용', reg.elR], ['비상용', reg.elE]]) || '없음'],   // 건축물대장 기재 그대로 (실제와 달라도 대장 기준)
         ['주차장', cnt([['옥내 자주식', reg.pkIA], ['옥내 기계식', reg.pkIM], ['옥외 자주식', reg.pkOA], ['옥외 기계식', reg.pkOM]])],
         ['부속건축물', reg.atch ? reg.atch + '동' + (reg.atchA ? ' (' + a(reg.atchA) + ')' : '') : '']
-      ].filter(function (r) { return nz(r[1]); });
-      regHtml = '<section class="dtSec"><h2>건축물정보</h2>' +
+      ].concat(it.sale ? [['대지면적', a(reg.plat)], ['구조', reg.strct], ['지붕', reg.roof], ['높이', reg.heit ? reg.heit + 'm' : ''], ['사용승인일', reg.apr], ['허가일', reg.pms]] : [])
+       .filter(function (r) { return nz(r[1]); });
+      regHtml = '<section class="dtSec"><h2>' + (it.sale ? '건축물대장' : '건축물정보') + '</h2>' +
         '<dl class="dtI2">' + rows.map(function (r) { return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>'; }).join('') + (rows.length % 2 ? '<div class="pad"><dt></dt><dd></dd></div>' : '') + '</dl>' +
         (function () { return ''; /* 예전 층별 현황 글자 목록 (표 + 입체도로 바뀜) */ // 건축물대장 표기 그대로 (층 이름·용도·㎡), 지하 가장 낮은 층 → 옥탑, 같은 층은 오른쪽으로 나열
           var fl = (reg.fl || []).filter(function (f) { return +f[3] > 0; }); if (!fl.length) return '';
@@ -2850,10 +2851,11 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       '<div class="dtGrid"><div class="dtMain">' + gal + price +
       '<section class="dtSec"><div class="dtH2r"><h2>매물 정보</h2><span class="dtNo"><small>매물번호</small><b>' + esc(it.id) + '</b><button type="button" class="dtNoCp" onclick="var b=this;try{navigator.clipboard.writeText(\'' + esc(it.id) + '\').then(function(){b.textContent=\'복사됨\';setTimeout(function(){b.textContent=\'복사\'},1500)})}catch(e){}">복사</button></span></div>' + bldMsg + '<div class="dtInfoGrid solo">' + info + '</div>' +
       '<p class="dtNote">※ 「중개대상물의 표시·광고 명시사항 세부기준」에 따른 표시입니다. 소재지는 동까지만 표시하며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
+      (it.sale ? regHtml + saleLandHtml(it) + saleJigaHtml(it) : '') +
       (it.reg ? flvHtml(it.sale ? { reg: it.reg, floor: '', elev: it.elev, area: 0 } : it) : '') +
       addHtml(it) +
-      '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p>' + '</section>' +
-      regHtml + (it.sale ? saleExtraHtml(it) : '') +
+      '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p>' + (it.sale ? saleStHtml(it) : '') + '</section>' +
+      (it.sale ? '' : regHtml) +
       '<section class="dtSec"><h2>중개사무소 정보</h2>' + office + '</section>' +
       '</div>' + side + '</div>' +
       '</div>';
@@ -3719,7 +3721,9 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       '.slSt i{min-width:30px;height:30px;padding:0 5px;border-radius:15px;display:flex;align-items:center;justify-content:center;color:#fff;font-style:normal;font-weight:800;font-size:11.5px;flex:none}.slSt b{font-size:15px;display:block}.slSt span{font-size:12.5px;color:#6B757D}.slSt em{margin-left:auto;font-style:normal;text-align:right;font-weight:800;color:#294652;font-size:17px;white-space:nowrap}.slSt em small{display:block;font-size:11px;color:#8A939A;font-weight:500}' +
       '.slLand{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.slLand div{background:#FBFAF7;border:1px solid #EFEAE0;border-radius:12px;padding:13px 15px}.slLand small{display:block;font-size:12px;color:#6B757D;margin-bottom:4px}.slLand b{font-size:16px;font-weight:800}.slLand em{display:block;font-style:normal;font-size:12px;color:#6B757D;margin-top:2px}' +
       '.slCmp{display:flex;flex-direction:column;gap:11px;border:1px solid #EFEAE0;border-radius:14px;padding:18px 20px;background:#FFFFFF}.slCmp .r{display:grid;grid-template-columns:230px minmax(0,1fr) 90px;gap:14px;align-items:center;font-size:14px}.slCmp .bar{height:14px;border-radius:4px;background:#EFEAE0;position:relative;overflow:hidden}.slCmp .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}.slCmp .r>b{text-align:right}' +
-      '@media (max-width:760px){.slSt{grid-template-columns:1fr}.slLand{grid-template-columns:1fr 1fr}.slCmp .r{grid-template-columns:1fr 70px}.slCmp .r .bar{grid-column:1/3;grid-row:2}}';
+      '.slLand.sl3{grid-template-columns:repeat(3,minmax(0,1fr))}' +
+      '.slCmpH{margin:22px 0 10px;font-size:16px;font-weight:800;color:#1F3640}.slCmpH small{font-size:13px;font-weight:500;color:#6B757D;margin-left:6px}' +
+      '@media (max-width:760px){.slSt{grid-template-columns:1fr}.slLand{grid-template-columns:1fr 1fr}.slLand.sl3{grid-template-columns:1fr 1fr}.slCmp .r{grid-template-columns:1fr 70px}.slCmp .r .bar{grid-column:1/3;grid-row:2}}';
     document.head.appendChild(st);
   })();
   function salePriceHtml(it) {
@@ -3729,21 +3733,16 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   }
   function saleInfoHtml(it) {
     var m2 = function (v) { return v ? Number(v).toLocaleString('ko-KR', { maximumFractionDigits: 2 }) + '㎡ (' + (Math.round(v / PYC * 10) / 10) + '평)' : ''; };
-    var r = it.reg || {}, pk = (r.pkIA || 0) + (r.pkIM || 0) + (r.pkOA || 0) + (r.pkOM || 0), ev = (r.elR || 0) + (r.elE || 0);
+    var r = it.reg || {};
     return '<dl class="dtI2">' +
       infoRow('소재지', (it.gu || '') + ' ' + (it.dong || '')) +
       infoRow('가격', '매매 ' + it.depText) +
       infoRow('거래 형태', '매매') +
       infoRow('대지면적', m2(it.landM2)) +
-      infoRow('총 층수', it.floor) +
       infoRow('연면적', m2(it.bldM2 || r.tot)) +
-      infoRow('중개대상물 종류', '건축물 · ' + (it.usage || r.purp || '근린생활시설 등')) +
-      infoRow('용도지역', it.zone || (it.land && it.land[2]) || '') +
       infoRow('사용승인일', r.apr || it.approval) +
-      infoRow('주차대수', pk ? '건축물대장 ' + pk + '대' : it.parking) +
-      infoRow('엘리베이터', ev ? '있음 (' + ev + '대)' : (r.grnd ? '없음' : it.elev)) +
-      infoRow('가까운 역', it.st && it.st[0] && it.st[0][2] <= 10 ? it.st[0][0] + ' 도보 약 ' + it.st[0][2] + '분' : '', false, '도보 10분 이내 역 없음') +
-      '</dl>';
+      infoRow('용도지역', it.zone || (it.land && it.land[2]) || '') +
+      '<div class="pad"><dt></dt><dd></dd></div></dl>';
   }
   function saleStHtml(it) {
     if (!it.st || !it.st.length) return '';
@@ -3752,33 +3751,47 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       return '<div><i style="background:' + (LCOL[l] || '#7B858C') + '">' + esc(l === '수인분당' ? '분당' : l) + '</i><span><b>' + esc(s[0]) + '</b>직선 약 ' + (s[1] >= 1000 ? (s[1] / 1000).toFixed(1) + 'km' : s[1] + 'm') + '</span><em>' + s[2] + '분<small>도보</small></em></div>';
     }).join('') + '</div><p class="dtNote">※ 가까운 역까지 직선거리 × 1.3, 분당 67m 기준으로 계산한 대략적인 도보 시간입니다.</p>';
   }
-  function saleExtraHtml(it) {
+  function saleLandHtml(it) {
     var L = it.land, h = '';
     if (L) {
       var area = +L[1], j = +L[8], jp = j * PYC / 10000, z1 = L[2] || '', g = JIGA_D[it.gu + '|' + it.dong];
       var road = { '광대한면': '폭 25m 이상 도로에 한 면', '광대소각': '폭 25m 이상 도로 + 다른 도로', '광대세각': '폭 25m 이상 도로 + 좁은 도로', '중로한면': '폭 12~25m 도로에 한 면', '중로각지': '폭 12~25m 도로 모퉁이', '소로한면': '폭 8~12m 도로에 한 면', '소로각지': '폭 8~12m 도로 모퉁이', '세로한면(가)': '폭 8m 미만 · 차량 통행 가능', '세로각지(가)': '폭 8m 미만 도로 모퉁이 · 차량 통행', '세로한면(불)': '폭 8m 미만 · 차량 통행 어려움' }[L[7]] || '';
       var lim = { '제1종일반주거지역': '건폐율 60%·용적률 150% 이하', '제2종일반주거지역': '건폐율 60%·용적률 200% 이하', '제3종일반주거지역': '건폐율 50%·용적률 250% 이하', '일반상업지역': '건폐율 60%·용적률 800% 이하', '근린상업지역': '건폐율 60%·용적률 600% 이하', '준주거지역': '건폐율 60%·용적률 400% 이하', '제1종전용주거지역': '건폐율 50%·용적률 100% 이하', '제2종전용주거지역': '건폐율 40%·용적률 120% 이하', '자연녹지지역': '건폐율 20%·용적률 50% 이하' }[z1] || '';
-      h += '<section class="dtSec"><h2>토지정보</h2><div class="slLand">' +
-        '<div><small>지목</small><b>' + esc(L[0]) + '</b><em>이용상황: ' + esc(L[4] || '-') + '</em></div>' +
+      h += '<section class="dtSec"><h2>토지대장</h2><div class="slLand sl3">' +
+        '<div><small>지목</small><b>' + esc(L[0]) + '</b></div>' +
         '<div><small>토지면적</small><b>' + area.toLocaleString('ko-KR') + '㎡</b><em>' + (Math.round(area / PYC * 10) / 10) + '평</em></div>' +
         '<div><small>용도지역</small><b>' + esc(z1.replace(/지역$/, '')) + '</b><em>' + esc(L[3] ? '+ ' + L[3] : lim) + '</em></div>' +
-        '<div><small>개별공시지가</small><b>' + Math.round(j / 10000).toLocaleString('ko-KR') + '만원/㎡</b><em>평당 ' + Math.round(jp).toLocaleString('ko-KR') + '만원 · 총 ' + eok2(j * area / 10000) + '</em></div>' +
-        '<div><small>지형 높이</small><b>' + esc(L[5] || '-') + '</b></div><div><small>지형 형상</small><b>' + esc(L[6] || '-') + '</b></div>' +
+        '<div><small>이용상황</small><b>' + esc(L[4] || '-') + '</b></div>' +
+        '<div><small>지형 (높이 · 형상)</small><b>' + esc((L[5] || '-') + ' · ' + (L[6] || '-')) + '</b></div>' +
         '<div><small>도로 접면</small><b>' + esc(L[7] || '-') + '</b>' + (road ? '<em>' + road + '</em>' : '') + '</div>' +
-        '<div><small>' + esc(it.dong) + ' 공시지가 중간값</small><b>' + (g ? '평당 ' + g.toLocaleString('ko-KR') + '만원' : '-') + '</b><em>상업·업무용 대지 기준</em></div>' +
         '</div><p class="dtNote">※ 국토교통부 토지특성정보 · 개별공시지가 ' + esc(L[9] || '') + ' 기준. 건폐율·용적률은 서울시 조례 상한이며 실제 건축 가능 규모는 도로·일조 등 조건에 따라 다릅니다. 매물 대지면적과 토지대장 면적이 다를 수 있습니다(도로 편입·합필 등).</p></section>';
-    } else if (it.bldDone) h += '<section class="dtSec"><h2>토지정보</h2><p class="dtNote">※ 이 필지의 토지특성 자료를 준비 중입니다. 상담 시 토지이용계획확인서와 함께 안내해 드립니다.</p></section>';
+    } else if (it.bldDone) h += '<section class="dtSec"><h2>토지대장</h2><p class="dtNote">※ 이 필지의 토지특성 자료를 준비 중입니다. 상담 시 토지이용계획확인서와 함께 안내해 드립니다.</p></section>';
+    return h;
+  }
+  function saleJigaHtml(it) {
+    var L = it.land, h = '', gg = JIGA_D[it.gu + '|' + it.dong];
+    if (L && L[8]) {
+      var j = +L[8], area = +L[1], jp = j * PYC / 10000;
+      h += '<section class="dtSec"><h2>공시지가</h2><div class="slLand sl3">' +
+        '<div><small>개별공시지가</small><b>' + Math.round(j / 10000).toLocaleString('ko-KR') + '만원/㎡</b><em>' + esc(L[9] || '') + ' 기준</em></div>' +
+        '<div><small>평당 공시지가</small><b>' + Math.round(jp).toLocaleString('ko-KR') + '만원</b><em>㎡ × 3.3058</em></div>' +
+        '<div><small>토지 전체 공시가격</small><b>' + eok2(j * area / 10000) + '</b><em>' + area.toLocaleString('ko-KR') + '㎡ 기준</em></div>' +
+        '<div><small>매매가 대비</small><b>' + (it.pp && jp ? (it.pp / jp).toFixed(1) + '배' : '-') + '</b><em>대지 평당 호가 ÷ 평당 공시지가</em></div>' +
+        '<div><small>' + esc(it.dong) + ' 공시지가 중간값</small><b>' + (gg ? '평당 ' + gg.toLocaleString('ko-KR') + '만원' : '-') + '</b><em>상업·업무용 대지 기준</em></div>' +
+        '<div><small>공시 기준일</small><b>매년 1월 1일</b><em>국토교통부 · 서울시 결정 공시</em></div>' +
+        '</div>';
+    } else if (it.bldDone) h += '<section class="dtSec"><h2>공시지가</h2><p class="dtNote">※ 이 필지의 개별공시지가 자료를 준비 중입니다. 상담 시 함께 안내해 드립니다.</p>';
     var dl = it.deal || {}, rows = [['이 매물 (호가)', it.pp, '#294652', 1]];
     if (dl.n) rows.push([it.dong + ' 실거래 중간값 · 최근 1년 ' + dl.n + '건', dl.med, '#BC975E']);
     if (L && L[8]) rows.push(['이 필지 개별공시지가', L[8] * PYC / 10000, '#7D96A0']);
-    var gg = JIGA_D[it.gu + '|' + it.dong]; if (gg) rows.push([it.dong + ' 공시지가 중간값', gg, '#A9BBC1']);
+    if (gg) rows.push([it.dong + ' 공시지가 중간값', gg, '#A9BBC1']);
     if (it.bldDone && rows.length > 1) {
       var mx = Math.max.apply(null, rows.map(function (r) { return r[1] || 0; }));
-      h += '<section class="dtSec"><h2>시세 비교 <small style="font-size:13px;font-weight:500;color:#6B757D">대지 평당 금액</small></h2><div class="slCmp">' + rows.map(function (r) {
+      h += (h ? '' : '<section class="dtSec"><h2>공시지가</h2>') + '<h3 class="slCmpH">시세 비교 <small>대지 평당 금액</small></h3><div class="slCmp">' + rows.map(function (r) {
         return '<div class="r"><span>' + (r[3] ? '<b style="color:#294652">' + esc(r[0]) + '</b>' : esc(r[0])) + '</span><div class="bar"><i style="width:' + Math.max(2, r[1] / mx * 100) + '%;background:' + r[2] + '"></i></div><b>' + eok2(r[1]) + '</b></div>';
-      }).join('') + '</div><p class="dtNote">※ 호가는 매도 희망가로 실제 거래가와 다를 수 있습니다. 실거래는 국토교통부 상업·업무용 일반건물 매매 신고 자료(지분 거래 제외, 약식 집계) · <a href="/deals.html" style="color:#294652;text-decoration:underline">매매 실거래가 보기</a></p></section>';
+      }).join('') + '</div><p class="dtNote">※ 호가는 매도 희망가로 실제 거래가와 다를 수 있습니다. 실거래는 국토교통부 상업·업무용 일반건물 매매 신고 자료(지분 거래 제외, 약식 집계) · <a href="/deals.html" style="color:#294652;text-decoration:underline">매매 실거래가 보기</a></p>';
     }
-    return h;
+    return h ? h + '</section>' : '';
   }
 
   /* ---------- 시작 ---------- */
