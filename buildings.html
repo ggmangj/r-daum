@@ -1,0 +1,887 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<!-- Google tag (gtag.js) : 방문 통계. 사무소 기기는 r-daum.com/?staff=1 로 한 번 접속하면 통계에서 빠짐 (?staff=0 으로 해제) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-WPBH093KHG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  (function () {
+    try {
+      if (/[?&]staff=1\b/.test(location.search)) localStorage.setItem('daumStaff', '1');
+      if (/[?&]staff=0\b/.test(location.search)) localStorage.removeItem('daumStaff');
+      if (localStorage.getItem('daumStaff') === '1') window['ga-disable-G-WPBH093KHG'] = true;
+    } catch (e) { }
+  })();
+  gtag('js', new Date());
+  gtag('config', 'G-WPBH093KHG');
+  window.daumTrack = function (name, p) { try { gtag('event', name, p || {}); } catch (e) { } };
+  document.addEventListener('click', function (e) {   // 전화 버튼·매물 접수·상담 링크 클릭 수
+    var t = e.target && e.target.closest ? e.target : null; if (!t) return;
+    if (t.closest('a[href^="tel:"]')) window.daumTrack('click_call', { page: location.pathname });
+    if (t.closest('[data-intake]')) window.daumTrack('open_intake', { page: location.pathname });
+    if (t.closest('a[href*="#consult"]')) window.daumTrack('click_consult', { page: location.pathname });
+  }, true);
+</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>강남·서초 빌딩 매매 매물 | 부동산다움</title>
+<meta name="description" content="강남구·서초구 매각 빌딩 매물. 대지·연면적, 대지 평당가, 건축물대장 층별 현황, 토지 정보, 가까운 역까지 거리. 상가·사무실·빌딩 전문 부동산다움 02-555-1165">
+<link rel="canonical" href="https://r-daum.com/buildings.html">
+<meta property="og:type" content="website"><meta property="og:site_name" content="부동산다움">
+<meta property="og:url" content="https://r-daum.com/buildings.html"><meta property="og:title" content="강남·서초 빌딩 매매 매물 | 부동산다움">
+<meta property="og:description" content="강남구·서초구 매각 빌딩 · 건축물대장 층별 현황 · 토지 정보 · 역 거리">
+<meta name="theme-color" content="#294652">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNjAgMTYwIj48cmVjdCB3aWR0aD0iMTYwIiBoZWlnaHQ9IjE2MCIgcng9IjM2IiBmaWxsPSIjMUYzNjQ0Ii8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjggMTgpIj48ZGVmcz4KPG1hc2sgaWQ9InRJIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTA0IiBoZWlnaHQ9IjEyNCI+PHJlY3Qgd2lkdGg9IjEwNCIgaGVpZ2h0PSIxMjQiIGZpbGw9IiNmZmYiLz48cmVjdCB4PSIyMS41IiB5PSIzOCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjQ0IiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iNTAiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI1NiIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjYyIiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iNjgiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI3NCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjgwIiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iODYiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI5MiIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9Ijk4IiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iMTA0IiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PC9tYXNrPgo8bWFzayBpZD0iYkkiIG1hc2tVbml0cz0idXNlclNwYWNlT25Vc2UiIHg9IjAiIHk9IjAiIHdpZHRoPSIxMDQiIGhlaWdodD0iMTI0Ij48cmVjdCB3aWR0aD0iMTA0IiBoZWlnaHQ9IjEyNCIgZmlsbD0iI2ZmZiIvPjxyZWN0IHg9IjQ4IiB5PSI0NCIgd2lkdGg9IjU2IiBoZWlnaHQ9IjMuNCIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjQ4IiB5PSI1OCIgd2lkdGg9IjU2IiBoZWlnaHQ9IjMuNCIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjQ4IiB5PSI3MiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjMuNCIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjQ4IiB5PSI4NiIgd2lkdGg9IjU2IiBoZWlnaHQ9IjMuNCIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjQ4IiB5PSIxMDAiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48L21hc2s+CjwvZGVmcz4KPHJlY3QgeD0iMjYuMiIgeT0iMiIgd2lkdGg9IjEuNiIgaGVpZ2h0PSIxMyIgZmlsbD0iI0M5QTQ2QSIvPgo8cGF0aCBkPSJNMTggMTEyVjMxTDI3IDE0TDM2IDMxVjExMloiIGZpbGw9IiNDOUE0NkEiIG1hc2s9InVybCgjdEkpIi8+CjxwYXRoIGQ9Ik00MSAzMUg1OEM4MyAzMSA5OCA1MCA5OCA3MS41Qzk4IDkzIDgzIDExMiA1OCAxMTJINDFaIiBmaWxsPSIjRjZGMkVBIiBtYXNrPSJ1cmwoI2JJKSIvPgo8cmVjdCB4PSI4IiB5PSIxMTYiIHdpZHRoPSI5MiIgaGVpZ2h0PSIzLjIiIGZpbGw9IiNGNkYyRUEiLz48L2c+PC9zdmc+">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700;900&family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@500;600&display=swap">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#F7F3EC;font-family:'Noto Sans KR',sans-serif;color:#14191F;-webkit-font-smoothing:antialiased}
+a{color:#294652;text-decoration:none}
+button,input,select{font-family:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.dmLock{display:inline-flex;align-items:center;gap:11px;line-height:1}
+.dmMark{height:50px;width:auto;display:block}
+.dmRule{display:none}
+.dmText{display:inline-flex;flex-direction:column;align-items:center;gap:6px;transform:translateY(3px)}
+.dmName{position:relative;top:4px}
+.dmName{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:31px;line-height:.8;letter-spacing:.16em;margin-right:-.16em;color:#294652;white-space:nowrap}
+.dmTag{font-family:Montserrat,Inter,sans-serif;font-weight:600;font-size:8.5px;letter-spacing:.42em;color:#9C7A47;white-space:nowrap}
+.dmDark{gap:12px}
+.dmDark .dmMark{height:56px}
+.dmDark .dmText{transform:translateY(3px)}
+.dmDark .dmName{color:#F6F2EA;font-size:34px}
+.dmDark .dmTag{position:relative;top:3px}
+.dmDark .dmTag{color:#C9A46A;font-size:9.5px}
+.mBar{display:none}
+.scrollTabs::-webkit-scrollbar,.mainNav::-webkit-scrollbar{display:none}
+@media (max-width:760px){.topAddr{display:none}.topBar>div{justify-content:flex-end!important;padding-top:2px!important;padding-bottom:2px!important}.topBar a{display:inline-flex;align-items:center;min-height:36px}.siteHead{position:sticky;top:0;z-index:50}.headRow{padding-top:10px!important;padding-bottom:0!important;gap:6px 12px!important;flex-wrap:wrap!important}.headRow .dmLight .dmMark{height:40px}.headRow .dmLight .dmName{font-size:25px}.headRow .dmLight .dmTag{font-size:7.5px}.headTel{order:2;padding:0 14px!important;font-size:14px!important;min-height:42px!important}.mainNav{order:3;flex:1 0 100%;flex-wrap:nowrap!important;gap:22px!important;overflow-x:auto;scrollbar-width:none;margin:0 -20px;padding:0 20px;white-space:nowrap;font-size:15px!important;-webkit-overflow-scrolling:touch;mask-image:linear-gradient(90deg,#000 88%,transparent)}.mainNav a{display:inline-flex;align-items:center;min-height:46px;flex:none}.siteFoot a{display:inline-flex;align-items:center;min-height:36px}.siteFoot div[style*="gap: 10px"]{gap:2px!important}.mBar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;gap:8px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid #E6E0D4;box-shadow:0 -2px 10px rgba(41,70,82,.10);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}.mBar a{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;min-height:48px;border-radius:12px;font-size:15px;font-weight:800;letter-spacing:-.3px;text-decoration:none}.mBarTel,.mBarTel:hover,.mBarTel:visited{flex:0 0 38%!important;background:#FFFFFF;color:#294652!important;border:1.5px solid #294652}.mBarAsk,.mBarAsk:hover,.mBarAsk:visited{background:#294652;color:#FFFFFF!important}.mBarAsk svg{color:#C9A46A}.siteFoot{padding-bottom:76px}}
+@media (max-width:380px){.headRow .dmLight .dmName{font-size:22px}.headTel{padding:0 12px!important;font-size:13px!important}}
+.headTel{background:#FFFFFF!important;color:#294652!important;border:1.5px solid #294652;transition:background-color .18s,color .18s,border-color .18s}
+.headTel svg{stroke:#BC975E}
+.headTel:hover{background:#F6F2EA!important;border-color:#BC975E}
+.hcLock .dmMark{height:46px}
+.hcLock .dmName{font-size:28px}
+.hcLock .dmTag{font-size:8px;top:0!important}
+.siteFoot h2,.siteFoot h3{color:inherit!important}
+@media (min-width:761px){.topBar{position:sticky;top:0;z-index:51}.siteHead{position:sticky;top:var(--tbH,30px);z-index:50;transition:box-shadow .2s}body.scrolled .siteHead{box-shadow:0 2px 10px rgba(41,70,82,.08)}}
+@media (max-width:760px){body.scrolled .siteHead{box-shadow:0 2px 10px rgba(41,70,82,.08)}}
+.headActs{display:flex;align-items:center;gap:10px}
+.headIntake{display:inline-flex;align-items:center;gap:7px;height:48px;padding:0 20px;border:0;border-radius:999px;background:#B8432A;color:#FFFFFF;font:800 15.5px 'Noto Sans KR',sans-serif;letter-spacing:-.2px;text-shadow:0 1px 1px rgba(60,12,4,.35);-webkit-font-smoothing:antialiased;cursor:pointer;box-shadow:0 1px 1px rgba(40,10,4,.35),0 3px 5px rgba(60,18,8,.42);transition:background-color .15s,transform .12s,box-shadow .12s}
+.headIntake:hover{background:#A63B24;transform:translateY(-1px);box-shadow:0 1px 1px rgba(40,10,4,.35),0 4px 7px rgba(60,18,8,.45)}
+.headIntake:active{transform:translateY(1px);box-shadow:0 1px 1px rgba(40,10,4,.35),0 1px 2px rgba(60,18,8,.4)}
+.headIntake:focus-visible{outline:2px solid #294652;outline-offset:2px}
+@media (max-width:1100px){.headIntake{height:42px;padding:0 14px;font-size:14px}}
+@media (max-width:760px){.headActs{order:2;gap:6px}.headIntake{height:42px;padding:0 12px;font-size:13.5px}.headIntake svg{display:none}.headActs .headTel{font-size:0!important;width:42px;height:42px;min-height:42px!important;padding:0!important;justify-content:center;gap:0!important}.headActs .headTel svg{width:18px;height:18px}.headRow{flex-wrap:wrap!important}.headRow>a:first-child{flex:1 1 auto;min-width:0}}
+@media (max-width:380px){.headIntake{padding:0 10px;font-size:13px}}
+@media (min-width:1101px){.headRow{padding-top:10px!important;padding-bottom:10px!important}}
+.heroCard .flipFront.tall .hcLock .dmRule{display:none}
+.heroCard .flipFront.tall .hcLock .dmMark{height:92px}
+.heroCard .flipFront.tall .hcLock .dmText{transform:none;text-align:center;display:flex;flex-direction:column;align-items:center}
+.heroCard .flipFront.tall .hcLock .dmName{font-size:40px;top:0}
+.heroCard .flipFront.tall .hcLock .dmTag{font-size:10.5px;margin-top:10px}
+/* 본문 */
+.wrap{max-width:1280px;margin:0 auto;padding:34px 32px 56px}
+.eyebrow{font:600 11px Inter,sans-serif;letter-spacing:2.2px;color:#9C7A47}
+h1{margin:6px 0 8px;font-size:clamp(24px,3vw,32px);font-weight:900;letter-spacing:-1px;line-height:1.3;color:#2A333C}
+.heroName{color:#A27D48;background:linear-gradient(180deg,#B8915A 0%,#94703C 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-1.2px;padding-right:2px}
+.mainNav a[aria-current="page"]{color:#14191F!important;background:linear-gradient(transparent 50%,#E8D7B6 50%,#E8D7B6 84%,transparent 84%);padding:0 3px;margin:0 -3px}
+.sub{color:#6B757D;font-size:14px;margin:0 0 18px;line-height:1.6}
+.flt{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px}
+.seg{display:flex;background:#fff;border:1px solid #D9D2C4;border-radius:999px;padding:3px}
+.seg button{border:0;background:none;font-size:13.5px;font-weight:600;padding:7px 14px;border-radius:999px;color:#46515B;cursor:pointer;white-space:nowrap}
+.seg button:hover{color:#294652}.seg button.on{background:#294652;color:#fff}
+.dsel{height:40px;border:1px solid #D9D2C4;border-radius:999px;background:#fff;padding:0 34px 0 14px;font-size:13.5px;font-weight:600;color:#14191F;-webkit-appearance:none;appearance:none;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%23294652' stroke-width='1.8' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center}
+.dsel.on{background-color:#294652;color:#fff;border-color:#294652}
+.rng{display:flex;align-items:center;gap:4px;height:40px;padding:0 12px 0 14px;border:1px solid #D9D2C4;border-radius:999px;background:#fff}
+.rng.on{border-color:#294652;background:#F2F5F6}
+.rng b{font-size:13.5px;color:#294652;margin-right:4px;white-space:nowrap}
+.rng input{width:58px;height:28px;border:0;border-bottom:1px solid #E6E0D4;background:transparent;text-align:center;font-weight:600;font-size:14px;color:#14191F;padding:0}
+.rng input:focus{outline:0;border-bottom-color:#BC975E}.rng input::placeholder{color:#A8AEB3;font-weight:400;font-size:12.5px}
+.rng i{font-style:normal;color:#8A939A}.rng span{font-size:12px;color:#6B757D}
+.rst{margin-left:auto;display:inline-flex;align-items:center;gap:4px;height:34px;padding:0 12px;border:1px solid #D9D2C4;border-radius:999px;background:#fff;color:#8A939A;font-size:12.5px;font-weight:700;cursor:pointer}
+.rst.on{border-color:#C0533A;color:#C0533A;background:#FFF6F3}.rst.on:hover{background:#C0533A;color:#fff}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.k{background:#fff;border:1px solid #E6E0D4;border-radius:14px;padding:14px 16px;min-width:0}
+.k small{display:block;color:#6B757D;font-size:12.5px}.k b{display:block;font-size:24px;font-weight:900;color:#294652;letter-spacing:-.5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.k em{display:block;font-style:normal;font-size:12px;color:#9C7A47;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.main{display:grid;grid-template-columns:minmax(0,2.06fr) minmax(0,1fr);border:1px solid #E6E0D4;border-radius:18px;overflow:hidden;background:#fff}
+.mapBox{position:relative;border-right:1px solid #E6E0D4;min-height:600px;display:flex}
+#map{position:relative;flex:1 1 auto;width:100%;min-height:600px;background:#ECE6DA;z-index:0;overflow:hidden}
+.leg{position:absolute;left:12px;bottom:12px;z-index:5;background:rgba(255,255,255,.95);border-radius:10px;padding:8px 10px;font-size:11.5px;box-shadow:0 2px 8px rgba(0,0,0,.14);pointer-events:none}
+.leg .bar{width:170px;height:8px;border-radius:4px;background:linear-gradient(90deg,#F3E9D6,#D9B97F,#9C6F2E,#5A3A10);margin:4px 0}
+.leg .row{display:flex;justify-content:space-between;color:#6B757D}.leg .dots{margin-top:5px;color:#46515B;display:flex;gap:10px;align-items:center}
+.leg .dots i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:3px;vertical-align:-1px}
+.mapMsg{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:6;background:#fff;border-radius:12px;padding:14px 18px;font-size:14px;color:#46515B;box-shadow:0 4px 16px rgba(0,0,0,.15);text-align:center}
+.mk{position:relative;transform:translate(-50%,calc(-100% - 9px));display:flex;align-items:stretch;border-radius:999px;overflow:visible;box-shadow:0 3px 8px rgba(20,25,31,.3);white-space:nowrap;cursor:pointer;font-family:'Noto Sans KR',sans-serif}
+.mk i{font-style:normal;background:#BC975E;color:#fff;font:700 11px/1 Inter,'Noto Sans KR',sans-serif;padding:5px 7px 5px 8px;display:flex;align-items:center;border:1.5px solid #fff;border-right:0;border-radius:999px 0 0 999px}
+.mk b{background:#294652;color:#fff;font-size:12.5px;font-weight:800;line-height:1;padding:5px 9px 5px 7px;display:flex;align-items:center;border:1.5px solid #fff;border-left:0;border-radius:0 999px 999px 0}
+.mk s{position:absolute;right:-8px;top:-9px;background:#C0533A;color:#fff;font:800 10px/1 'Noto Sans KR',sans-serif;text-decoration:none;padding:3px 5px;border-radius:999px;border:1.5px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.25)}.mkDot.multi{box-shadow:0 0 0 3px rgba(192,83,58,.45)}
+.hist{margin:8px 0 2px;border-top:1px solid #EEE8DC;padding-top:8px}.hist h5{margin:0 0 4px;font-size:12px;color:#294652}.hist table{width:100%;border-collapse:collapse;font-size:12px}.hist td{padding:3px 0}.hist td.n{text-align:right;font-weight:700}.hist tr.cur td{color:#C0533A;font-weight:800}.hist .up{color:#C0533A}.hist .dn{color:#2F6FA8}
+.mk:after{content:"";position:absolute;left:50%;bottom:-9px;margin-left:-1px;width:2px;height:8px;background:#294652}
+.mk.on b{background:#C0533A}.mk.on:after{background:#C0533A}.mk.on{z-index:9;transform:translate(-50%,calc(-100% - 9px)) scale(1.1)}
+.mkDot{transform:translate(-50%,-50%);width:11px;height:11px;border-radius:50%;background:#3B4650;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3);cursor:pointer}
+.mkAp{transform:translate(-50%,-50%);white-space:nowrap;background:rgba(255,255,255,.95);border:1.5px dashed #7D96A0;color:#46515B;border-radius:999px;padding:5px 10px;font:600 12px 'Noto Sans KR',sans-serif;box-shadow:0 2px 6px rgba(0,0,0,.15);cursor:pointer}.mkAp b{color:#294652}
+.dongLb{transform:translate(-50%,-50%);font:700 12px 'Noto Sans KR',sans-serif;color:#294652;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;white-space:nowrap;pointer-events:none}
+.pinWrap{position:relative;width:0;height:0}.officePin{position:absolute;left:0;top:0;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28));cursor:pointer}.officeDot{width:48px;height:48px;border-radius:50%;background:#FFFFFF;border:3px solid #C4553A;display:flex;align-items:center;justify-content:center;overflow:hidden}.officeDot img{width:30px;height:auto;display:block;margin-top:2px}.officePulse{position:absolute;left:0;top:0;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:50%;background:#C4553A;opacity:.5;animation:officePulse 1.8s ease-out infinite;pointer-events:none}@keyframes officePulse{0%{transform:scale(.6);opacity:.55}100%{transform:scale(3.4);opacity:0}}@media (prefers-reduced-motion:reduce){.officePulse{animation:none;opacity:.25}}
+.officeHover{position:absolute;left:50%;bottom:calc(100% + 8px);transform:translate(-50%,4px);white-space:nowrap;background:#FFFFFF;color:#C4553A;border:2px solid #C4553A;border-radius:999px;padding:6px 12px;font:800 13px/1 'Noto Sans KR',sans-serif;letter-spacing:-.2px;box-shadow:0 2px 6px rgba(0,0,0,.18);opacity:0;pointer-events:none;transition:opacity .18s ease,transform .18s ease}
+.officeHover:after{content:"";position:absolute;left:50%;top:100%;margin-left:-6px;border:6px solid transparent;border-top-color:#C4553A}
+.officePin:hover .officeHover{opacity:1;transform:translate(-50%,0)}
+.officeLbl{background:#C4553A;color:#FFFFFF;font:900 13px/1 'Noto Sans KR',sans-serif;letter-spacing:-.3px;padding:7px 11px;border-radius:999px;white-space:nowrap;margin-bottom:4px}.officeTip{width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:11px solid #C4553A;margin-top:-2px}
+.pop{width:270px;background:#fff;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.25);padding:12px 14px;font-size:13px;position:relative}
+.pop h4{margin:0 22px 2px 0;font-size:15px;letter-spacing:-.3px}.pop .dt{color:#6B757D;font-size:12px}
+.pop .pr{font-size:22px;font-weight:900;color:#C0533A;margin-top:4px}
+.pop dl{display:grid;grid-template-columns:auto 1fr;gap:3px 10px;margin:8px 0}.pop dt{color:#6B757D}.pop dd{margin:0;font-weight:600}
+.pop .tag{display:inline-block;font-size:11px;font-weight:700;padding:1px 6px;border-radius:4px;background:#F6F2EA;color:#8A6A35;margin-left:4px;vertical-align:1px}
+.pop .ask{display:block;text-align:center;background:#294652;color:#fff;border-radius:8px;padding:9px;font-weight:700;margin-top:8px}.pop .ask:hover{background:#335664;color:#fff}
+.pop .x{position:absolute;right:8px;top:8px;width:24px;height:24px;border:0;background:#F2F2F2;border-radius:50%;cursor:pointer;font-size:13px;line-height:24px;padding:0}
+.list{display:flex;flex-direction:column;min-height:0;max-height:600px}
+.lh{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid #EFEAE0;font-size:13.5px}
+.lh select{border:1px solid #D9D2C4;border-radius:8px;padding:5px 8px;font-size:12.5px;background:#fff}
+#list{overflow-y:auto;flex:1}
+.it{display:grid;grid-template-columns:1fr auto;gap:2px 12px;width:100%;text-align:left;padding:12px 16px;border:0;border-bottom:1px solid #EFEAE0;background:#fff;cursor:pointer}
+.it:hover{background:#FAF7F1}.it.on{background:#F6F2EA;box-shadow:inset 3px 0 0 #C0533A}
+.it .t{font-weight:800;font-size:14.5px;color:#14191F}.it .t small{font-weight:500;color:#6B757D;margin-left:6px;font-size:12px}.it .t .ap{font-weight:600;color:#8A939A;font-size:12px}
+.it .m{font-size:12.5px;color:#6B757D}.it .p{grid-row:1/3;grid-column:2;text-align:right;align-self:center}
+.it .p b{display:block;font-size:17px;font-weight:900;color:#294652;white-space:nowrap}.it .p em{font-style:normal;font-size:12px;color:#9C7A47;font-weight:700;white-space:nowrap}
+.more{width:100%;padding:12px;border:0;background:#FAF7F1;color:#294652;font-weight:700;cursor:pointer}
+.empty{padding:40px 16px;text-align:center;color:#8A939A;font-size:14px}
+.mkt{scroll-margin-top:130px}.mkSeg{margin-right:4px}.mkSeg button{padding:4px 11px;font-size:12px}.mkt .mHead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}.mkt .mHead .rs{margin:0}
+.mGrid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:0 22px}
+.mRow{display:grid;grid-template-columns:96px minmax(0,1fr) 72px repeat(3,minmax(0,1fr));gap:18px;align-items:center;font-size:12.5px;width:100%;border:0;background:none;padding:5px 6px;margin:0;text-align:left;border-radius:8px;cursor:pointer;font-family:inherit;color:inherit}
+.mRow:not(.mTh):hover{background:#F7F3EC}.mRow.sel{background:#F2EADB}.mRow b{font-weight:800;font-size:13px}
+.mTh{cursor:default;font-size:11.5px;font-weight:700;color:#4A545C;border-bottom:1px solid #EEE8DC;border-radius:0;padding-bottom:7px;margin-bottom:3px}.mTh em{display:block;font-style:normal;font-weight:400;color:#9AA2A8;font-size:10.5px}
+.bLeg i{display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--c);margin:0 2px 0 6px;vertical-align:0}.bLeg i:first-child{margin-left:0}
+.cv{display:grid;grid-template-columns:minmax(0,1fr) 58px;align-items:center;gap:8px;min-width:0}.cv.cj{grid-template-columns:minmax(0,1fr) 58px 34px}.cv em{display:block;height:8px;border-radius:4px;background:#F2EEE6;overflow:hidden}.cv i{display:block;height:100%;border-radius:4px}.cv span{font-weight:800;white-space:nowrap;font-size:12.5px;text-align:right}.cv small{color:#C0533A;font-weight:700;font-size:11.5px;white-space:nowrap;text-align:right}
+.dv{display:grid;grid-template-columns:1fr 1fr;align-items:center;height:10px;position:relative}.dv:before{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:#D8D0C0}.dv i{height:8px;border-radius:2px;display:block}
+.chg{display:grid;grid-template-columns:minmax(0,1fr) 48px;gap:6px;align-items:center}.chg span{text-align:right;font-weight:800;font-size:12px}.chg .up{color:#C0533A}.chg .dn{color:#2F6FA8}.chg .na{color:#B4BBC0;font-weight:400}
+.sb{display:flex;height:16px;border-radius:4px;overflow:hidden;background:#F2EEE6}.sb div{display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;color:#fff;min-width:0;overflow:hidden}
+.mRow{gap:0;padding-top:0;padding-bottom:0;border-radius:0}.mRow>*{padding:7px 14px;align-self:stretch;display:flex;align-items:center}.mRow>.cv{display:grid}
+.mRow>*:first-child{padding-left:4px;padding-right:4px;white-space:nowrap}.mRow>b small{font-weight:800;color:#B07A2E;font-size:11.5px;margin-left:5px}
+.db u{position:absolute;top:-1px;font-size:10.5px;line-height:16px;color:#9AA2A8;text-decoration:none;white-space:nowrap}   /* ○ 옆 이전 기간 금액 */.mTbl.noBx .bx{display:none!important}.mTbl.noBx .mRow{grid-template-columns:96px minmax(0,1fr) repeat(3,minmax(0,1fr))!important}.jgY{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:999px;background:#4A6470;color:#fff;font-size:11.5px;font-weight:800;letter-spacing:-.2px;vertical-align:1px}.mGrp{padding:0 0 6px!important;cursor:default}.mGrp>*{background:none!important;border-radius:0!important}.mGrp .g0{grid-column:1/4}.mGrp .g1{grid-column:4/6}.mGrp .g2{grid-column:6}.mTbl.noBx .mGrp .g0{grid-column:1/3}.mTbl.noBx .mGrp .g1{grid-column:3/5}.mTbl.noBx .mGrp .g2{grid-column:5}.mGrp .g1,.mGrp .g2{display:flex;align-items:center;justify-content:center;gap:6px;padding:5px 8px;border-radius:12px!important;font-size:11.5px;color:#46515B;white-space:nowrap}.mGrp .g1{background:#F6EFE2!important}.mGrp .g2{background:#F8EEEA!important}.mGrp b{font-weight:700}.dsN{display:inline-block;margin-left:4px;font-size:10.5px;color:#8A6A35;font-weight:700}.mGrp{padding:0!important}.mGrp .g1{background:linear-gradient(90deg,#F3EAD6,#E9E4DA)!important;border-radius:10px 10px 0 0!important;display:flex;align-items:flex-end;justify-content:center;gap:12px;padding:6px 12px 0!important}.mGrp .g2{background:none!important}.mkTabs{display:inline-flex;gap:2px}.mkTabs button{border:0;background:none;font:600 12.5px inherit;font-family:inherit;color:#8A7B63;padding:3px 10px 5px;border-bottom:2.5px solid transparent;cursor:pointer}.mkTabs button:hover{color:#294652}.mkTabs button.on{color:#294652;font-weight:800;border-bottom-color:#294652}.mGrp .g1 small{font-size:10.5px;color:#9A8A6E;padding-bottom:7px}.mTh>*:nth-child(4),.mTh>*:nth-child(5){border-radius:0!important}.thChg .thT .thR{font-style:normal;font-size:10.5px;color:#9AA2A8;font-weight:400}.yAx{position:relative;display:block;height:18px;margin-top:3px;margin-right:92px}.yAx button,.yAx b{position:absolute;top:0;transform:translateX(-50%);border:0;background:none;font:600 10px inherit;font-family:inherit;color:#8A939A;padding:1px 4px;border-radius:999px;cursor:pointer;white-space:nowrap}.yAx button:hover{color:#294652}.yAx button.on{background:#fff;color:#294652;box-shadow:inset 0 0 0 1.5px #9AA2A8;font-weight:800}.yAx b{color:#294652;font-weight:800;cursor:default}.sp{position:relative;display:block;height:22px}.sp svg{position:absolute;inset:0;width:100%;height:22px;overflow:visible}.sp i{position:absolute;width:5px;height:5px;margin:-2.5px 0 0 -2.5px;border-radius:50%;background:#CBBFAE}.sp i.cmp{width:9px;height:9px;margin:-4.5px 0 0 -4.5px;background:#fff;box-shadow:inset 0 0 0 2px #7C858C}.sp i.now{width:10px;height:10px;margin:-5px 0 0 -5px}.chg5 .up{color:#C0533A;font-weight:800}.chg5 .dn{color:#2F6FA8;font-weight:800}.chg5.na em{color:#B4BBC0;font-weight:400}.chg5 .cv2 em{font-weight:700;color:#4A545C}.mRow:not(.x){grid-template-columns:96px minmax(0,1fr) 72px minmax(0,1fr) minmax(0,1fr) minmax(0,1fr)}.mkLab{font-size:11.5px;color:#8A939A;align-self:center}.nY,.mTh .nY{color:#9AA2A8!important;font-weight:400!important;font-size:10.5px!important}.mkt .mHead{align-items:center}.chT{display:flex;align-items:center;gap:5px;white-space:nowrap}.chT small{font-size:10.5px;color:#5B6670;font-weight:600}.nseg{display:inline-flex;background:rgba(255,255,255,.75);border-radius:999px;padding:2px}.nseg button{border:0;background:none;font:700 10.5px inherit;font-family:inherit;color:#5B6670;min-width:20px;padding:1px 6px;border-radius:999px;cursor:pointer}.nseg button:hover{color:#294652}.nseg button.on{background:#294652;color:#fff}.chC #chgLeg{display:flex;gap:6px;white-space:nowrap;font-size:10px;margin-top:2px}.mTh>*:not(.jgH){display:flex!important;flex-direction:column;justify-content:center}.mTh>*:not(.jgH):not(.bx){align-items:flex-start!important}.mTh>.bx{align-items:center!important}.mTh>.jgH{align-self:stretch}.mGrp2{cursor:default;padding:0!important}.mGrp2>*{background:none!important;padding:0!important}.mGrp2 .g0{grid-column:1}.mGrp2 .gA{grid-column:2/5;margin-left:12px}.mGrp2 .gB{grid-column:5;margin-left:12px}.mGrp2 .gA,.mGrp2 .gB{display:block!important;text-align:center;font-size:12.5px;font-weight:800;letter-spacing:-.2px;padding:0 0 5px!important;margin-bottom:6px}.mGrp2 .gA{color:#294652;border-bottom:2.5px solid #294652}.mGrp2 .gB{color:#8A6A35;border-bottom:2.5px solid #BC975E}.mRow:not(.mGrp2)>*:nth-child(2),.mRow:not(.mGrp2)>*:nth-child(6){margin-left:12px}.mGrp2 .g0{display:block!important;text-align:center;font-size:12.5px;font-weight:800;color:#5B6670;border-bottom:2.5px solid #B4BBC0;padding:0 0 5px!important;margin-bottom:6px}.mRow:not(.mGrp2)>*:first-child{background:#F4F1EB!important;border-radius:0}.mTh>*:first-child{background:#E8E3D9!important;border-radius:8px 8px 0 0!important;padding-left:10px!important}.mRow:not(.mTh):not(.mGrp2)>b{padding-left:10px!important;display:flex;justify-content:space-between;align-items:center}.mRow>b small{background:#fff;border:1.5px solid #E3D3B4;border-radius:999px;padding:0 7px;line-height:17px;margin-left:6px}.jgH{display:flex!important;align-items:center;gap:8px}.jgT{display:flex;flex-direction:column}.jgH .jgY{margin-left:0;padding:4px 10px;font-size:12px;line-height:1.25}.chgSeg{margin-top:3px}.chgSeg button{padding:2px 9px!important;font-size:11px!important}.mRow>.chg5{display:grid;grid-template-columns:minmax(0,1fr) 84px;gap:8px;align-items:center}.thChg .thT{display:flex;align-items:center;justify-content:space-between;gap:6px}.thChg b{font-size:11.5px}.thChg .seg2 button{padding:2px 7px;font-size:11px}#chgLeg{display:flex;gap:10px}#chgLeg i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#294652;margin-right:3px;vertical-align:0}#chgLeg i.o{background:#fff;border:1.5px solid #9AA2A8;width:6px;height:6px}
+.mRow>*:nth-child(5){background:#FBF7F4}.mTh>*:nth-child(5){background:#F5E9E4;border-radius:8px 8px 0 0}.mRow>*:nth-child(6){background:#F2EFE8}.mTh>*:nth-child(6){background:#E9E4DA;border-radius:8px 8px 0 0}
+.sbc .sb{flex:1;display:flex;height:16px;border-radius:4px;overflow:hidden;background:transparent}
+.mTh>*{display:block;padding:6px 14px}#rank{justify-content:flex-start}
+.mRow>*:nth-child(2){background:#F1F5F6}.mRow>*:nth-child(3){background:linear-gradient(90deg,#F1F5F6,#FAF5EA);justify-content:center;padding-left:0;padding-right:0}.mRow>*:nth-child(4){background:#FAF5EA}
+.bx b{display:inline-block;background:#fff;border:1.5px solid #C0533A;color:#B4472F;border-radius:999px;padding:0 7px;line-height:16px;font-size:11.5px;font-weight:800;white-space:nowrap}.mTh>.bx{text-align:center;color:#B4472F;font-size:11px;font-weight:800;line-height:1.3;padding:6px 2px}.mTh>.bx em{color:#9AA2A8;font-weight:400}
+.mTh>*:nth-child(2){background:#E3ECEF;border-radius:8px 8px 0 0}.mTh>*:nth-child(3){background:linear-gradient(90deg,#E3ECEF,#F3EAD6);border-radius:8px 8px 0 0}.mTh>*:nth-child(4){background:#F3EAD6;border-radius:8px 8px 0 0}.mTh{border-bottom:2px solid #E3DCCF;padding-bottom:0;margin-bottom:0}
+.mRow.sel>*{box-shadow:inset 0 0 0 999px rgba(188,151,94,.14)}.mRow:not(.mTh):hover{background:transparent}.mRow:not(.mTh):hover>*{box-shadow:inset 0 0 0 999px rgba(20,25,31,.035)}.mRow:not(.mTh):hover b{color:#C0533A}
+.mSwipe{display:none}.mN{color:#8A939A;text-align:right}.mMore[hidden]{display:none}.mLeft{display:flex;flex-direction:column;min-width:0}.mLeft .note{font-size:11.5px;line-height:1.65}.mTbl{display:flex;flex-direction:column;min-width:0;flex:1}#rank{flex:1;display:flex;flex-direction:column}#rank>.mRow{flex:1}.mMore{display:block;margin:6px auto 0;border:1px solid #DDD5C6;background:#fff;border-radius:999px;padding:5px 14px;font-size:12px;color:#4A545C;cursor:pointer}
+.mSide{background:#FBF9F5;border:1px solid #EFE9DD;border-radius:14px;padding:14px 16px;min-width:0;display:flex;flex-direction:column}.mSide #chgBox{flex:none}.mSide h3{margin:2px 0 8px;font-size:14px}.mSide .h3b{margin-top:16px;padding-top:14px;border-top:1px solid #EEE8DC}.mSide .h3b{display:flex;align-items:center;justify-content:space-between;gap:8px}.seg2{display:inline-flex;background:#EFEAE0;border-radius:999px;padding:2px}.seg2 button{border:0;background:none;font:600 11.5px inherit;font-family:inherit;color:#5B6670;padding:3px 9px;border-radius:999px;cursor:pointer}.seg2 button.on{background:#294652;color:#fff}.pBadgeW{margin:-2px 0 6px}
+.pBadge{display:inline-block;margin-left:0;padding:2px 8px;border-radius:999px;background:#FDECE7;color:#B4472F;font-size:11px;font-weight:700;vertical-align:1px;border:1px solid #F3C9BD}
+.dbLeg{display:flex;gap:12px;font-size:11px;color:#4A545C;margin:-2px 0 4px;font-weight:600}.dbLeg .dbR{margin-left:auto;color:#8A939A;font-weight:400}.dbLeg i{display:inline-block;width:9px;height:9px;border-radius:50%;background:#294652;margin-right:4px;vertical-align:-1px}.dbLeg i.o{background:#fff;border:2px solid #9AA2A8;width:7px;height:7px}
+.db{position:relative;height:14px;display:block}.db:before{content:"";position:absolute;left:0;right:0;top:6.5px;height:1px;background:#E8E2D6}.db s{position:absolute;top:5px;height:4px;border-radius:2px}.db i{position:absolute;top:2px;width:10px;height:10px;margin-left:-5px;border-radius:50%}.db i.o{background:#fff;border:2px solid #9AA2A8;width:6px;height:6px;margin-left:-5px}
+.cv2{display:flex;justify-content:flex-end;align-items:baseline;gap:6px;white-space:nowrap}.cv2 em{font-style:normal;font-weight:600;color:#4A545C;font-size:11.5px}
+.cRow.na b,.cRow.na span,.cRow.na em{color:#B4BBC0!important;font-weight:400}
+.cRow{display:grid;grid-template-columns:50px 1fr 102px;gap:8px;align-items:center;font-size:12.5px;margin:3px 0;width:100%;border:0;background:none;padding:2px 0;cursor:pointer;font-family:inherit;color:inherit;text-align:left}.cRow b{font-weight:700}.cRow:hover b{color:#C0533A}.cRow span{text-align:right;font-weight:800}.cRow .up{color:#C0533A}.cRow .dn{color:#2F6FA8}.mSide h3 em{font-style:normal;font-weight:400;color:#8A939A;font-size:11.5px;margin-left:4px}.mS{font-size:11px;color:#8A939A;margin:6px 0 0}
+#qChart svg{display:block;width:100%;height:auto}
+.mNote{margin:10px 0 0;font-size:13px;color:#6B757D;line-height:1.5}body.dlFull .mNote{display:none}.side .sub b{color:#8A6A35;font-weight:700}
+.rank{margin-top:16px;background:#fff;border:1px solid #E6E0D4;border-radius:18px;padding:18px 20px}
+.rank h2{margin:0 0 4px;font-size:18px;letter-spacing:-.4px}.rank .rs{margin:0 0 12px;font-size:12.5px;color:#6B757D}
+.rk2{display:grid;grid-template-columns:1fr 1fr;gap:0 40px}.rkCol{min-width:0}.rkCol+.rkCol{border-left:1px solid #EEE8DC;padding-left:40px}
+.rank h2 small{font-size:12px;font-weight:600;color:#9C7A47;margin-left:4px;letter-spacing:0}
+.rank .r.j i{background:#7D96A0}.rank .r .x{color:#C0533A;font-weight:700}
+.rank .r{display:grid;grid-template-columns:62px 1fr 64px 46px;gap:8px;align-items:center;font-size:13px;margin:2px 0;width:100%;border:0;background:none;padding:2px 0;cursor:pointer;text-align:left}
+.rank .r:hover b{color:#C0533A}.rank .r i{display:block;height:8px;border-radius:4px;background:#BC975E}.rank .r .v{text-align:right;font-weight:800}.rank .r span{color:#8A939A;font-size:12px}
+.note{font-size:12px;color:#6B757D;margin:12px 0 0;line-height:1.7}
+.cta{margin-top:16px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;background:#294652;color:#E8EDF0;border-radius:18px;padding:22px 24px}
+.cta b{display:block;color:#fff;font-size:18px;margin-bottom:4px}.cta a{background:#BC975E;color:#fff;font-weight:800;border-radius:999px;padding:12px 20px;white-space:nowrap}
+@media (max-width:1100px){.main{grid-template-columns:1fr}.mapBox{border-right:0;border-bottom:1px solid #E6E0D4;min-height:480px}#map{min-height:480px}.list{max-height:none}#list{max-height:560px}}
+@media (max-width:760px){
+ .wrap{padding:22px 16px 90px}h1{font-size:23px}.sub{font-size:13px}
+ .flt{gap:6px}.seg button{padding:6px 10px;font-size:13px}.rng{flex:1 1 calc(50% - 3px);padding:0 10px}.rng input{width:100%;min-width:0}.rst{margin-left:0}
+ .kpi{grid-template-columns:1fr 1fr;gap:8px}.k{padding:12px}.k b{font-size:19px}
+ .mapBox{min-height:380px}#map{min-height:380px}.pop{width:236px;font-size:12.5px}.pop .pr{font-size:19px}
+ .rank{padding:16px}.mGrid{grid-template-columns:1fr}.mSide{border-left:0;padding-left:0;border-top:1px solid #EEE8DC;padding-top:14px;margin-top:10px}.mTbl{overflow-x:auto}.mRow{min-width:840px}.mSwipe{display:block;font-size:11.5px;color:#9C7A47;margin:6px 0 0}
+ .cta{padding:18px}
+}
+
+/* 첫 화면 안에 다 보이게 + 지도 크게 보기 */
+@media (min-width:1101px){
+ .wrap{padding-top:22px}
+ h1{margin:2px 0 4px}.sub{margin-bottom:12px;font-size:13px;line-height:1.55}
+ .flt{margin-bottom:12px}
+ .kpi{margin-bottom:12px;gap:10px}.k{padding:10px 14px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.k small{width:100%}.k b{font-size:21px;margin:0}.k em{flex:1;min-width:0}
+ .main.fit .mapBox{min-height:0}.main.fit #map{min-height:0}.main.fit .list{max-height:none;min-height:0}
+}
+.mapFullBtn{position:absolute;left:12px;top:12px;z-index:7;display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border:1.5px solid #294652;border-radius:999px;background:#fff;color:#294652;font:700 13.5px 'Noto Sans KR',sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(20,25,31,.18)}
+.mapFullBtn svg{color:#BC975E}.mapFullBtn:hover{background:#294652;color:#fff}
+body.dlFull{overflow:hidden}
+.fullHead{display:none}
+body.dlFull .col{position:fixed;inset:0;z-index:200;background:#F7F3EC;padding:14px 22px 16px;display:flex;flex-direction:column;gap:0}
+body.dlFull .fullHead{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex:none}
+.fullHead .fe{font:600 11px Inter,sans-serif;letter-spacing:2.2px;color:#9C7A47}
+.fullHead h2{margin:0;font-size:22px;font-weight:900;letter-spacing:-.6px;color:#2A333C}.fullHead h2 span{color:#A27D48}
+.fullHead .fullClose{margin-left:auto;display:inline-flex;align-items:center;gap:6px;height:44px;padding:0 18px;border:0;border-radius:999px;background:#294652;color:#fff;font:700 14px 'Noto Sans KR',sans-serif;cursor:pointer}
+.fullHead .fullClose:hover{background:#335664}
+body.dlFull .col .flt{flex:none;margin-bottom:12px;flex-wrap:nowrap}@media (min-width:1101px){body.dlFull .col .flt .rng{flex:0 1 260px}}
+body.dlFull .main{flex:1 1 auto;min-height:0;height:auto!important;border-radius:18px;border:1px solid #E6E0D4;grid-template-columns:minmax(0,1fr) 360px}
+body.dlFull .mapBox{min-height:0}body.dlFull #map{min-height:0}body.dlFull .list{max-height:none;min-height:0}
+body.dlFull .mapFullBtn{display:none}
+@media (max-width:1100px){body.dlFull .col{padding:10px 10px calc(10px + env(safe-area-inset-bottom))}body.dlFull .fullHead h2{font-size:17px}body.dlFull .fullHead .fe{display:none}body.dlFull .fullHead .fullClose{height:38px;padding:0 14px;font-size:13px}
+ body.dlFull .col .flt{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}body.dlFull .col .flt>*{flex:none}body.dlFull .col .flt .rng{flex:0 0 190px}
+ body.dlFull .main{grid-template-columns:1fr;grid-template-rows:1fr}body.dlFull .list{display:none}body.dlFull .mapBox{border:0}}
+
+/* 매물 조회처럼: 왼쪽 소개·요약 / 오른쪽 검색·지도 */
+.top{display:block}
+.side .sub{margin-top:10px}
+.miniRank{display:none}.qN{font-size:10.5px;color:#8A939A;margin:4px 0 0;line-height:1.5}#qChart svg{display:block;width:100%;height:auto}
+.lh .rst{margin-left:auto;height:30px;padding:0 9px;white-space:nowrap;flex:none}
+.lh{gap:6px;padding:12px 12px 12px 14px!important}.lh b{white-space:nowrap;flex:none}.lh select{flex:none;width:76px;padding:5px 2px;font-size:12px}.lh .rst svg{display:none}
+@media (min-width:1101px){
+ .wrap{padding-top:24px}
+ .top{display:grid;grid-template-columns:292px minmax(0,1fr);gap:26px;align-items:start}
+ .side h1{font-size:clamp(28px,2.6vw,36px);line-height:1.28;margin:6px 0 0;letter-spacing:-1.2px}
+ .side .sub{letter-spacing:-.4px;margin:12px 0 12px;padding-top:11px;border-top:1px solid #DCD3C2;font-size:13px;line-height:1.65;color:#46515B}
+ .side .kpi{grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+ .side .k{padding:10px 12px;display:block}.side .k small{font-size:12px}.side .k b{font-size:20px;margin-top:2px}.side .k em{display:block;font-size:11.5px}
+ .miniRank{display:block;background:#fff;border:1px solid #E6E0D4;border-radius:14px;padding:12px 14px 10px}
+ .miniRank h3{margin:0 0 8px;font-size:14px;color:#294652;letter-spacing:-.3px}.miniRank h3 small{font-weight:500;color:#8A939A;font-size:11.5px;margin-left:4px}
+ .mr{display:grid;grid-template-columns:16px 52px 1fr 54px;gap:6px;align-items:center;width:100%;border:0;background:none;padding:4px 0;cursor:pointer;font-size:13px;text-align:left}
+ .mr em{font-style:normal;font-weight:800;color:#BC975E;font-size:12px}.mr b{color:#2A333C}.mr i{display:block;height:7px;border-radius:4px;background:#F1ECE2;overflow:hidden}.mr i s{display:block;height:100%;background:#BC975E;border-radius:4px}
+ .mr span{text-align:right;font-weight:800;color:#294652;font-size:12.5px}.mr:hover b{color:#C0533A}
+ .more2{display:block;text-align:right;font-size:12px;color:#8A6A35;margin-top:4px}
+ .qLg i{display:inline-block;margin:0 3px 0 7px;vertical-align:1px}.qLg .b{width:7px;height:9px;background:#294652;border-radius:1px;vertical-align:-1px}.qLg .l{width:12px;height:2px;background:#C0533A}
+ .qTabs{display:flex;margin:0 0 10px}
+ .col{position:relative}.mNote{position:absolute;left:0;top:100%;margin:12px 0 0!important}   /* 지도 아래 안내: 첫 화면 높이·구분선 위치에 영향 없게 */
+ body{overflow-x:clip}.top{position:relative;padding-bottom:69px}.top:after{content:"";position:absolute;bottom:0;left:calc(50% - 50vw);width:100vw;height:1px;background:#E6E0D4}   /* 첫 화면과 아래 내용 사이 구분선 (상가·사무실 임대와 같은 위치) */
+ .top+.rank{margin-top:40px}body.dlFull .top{padding-bottom:0}body.dlFull .top:after{display:none}
+.qTabs button{flex:1;font-size:12px;padding:4px 0}
+ .qPanes{display:grid}.qPane{grid-area:1/1;visibility:hidden}.qPane.on{visibility:visible}
+ #nChart svg{display:block;width:100%;height:auto;overflow:visible}#nChart circle{cursor:pointer}#nChart .nb:hover circle{fill-opacity:.4}
+ #nChart text{font-family:inherit}
+ .col .flt{margin-bottom:12px;flex-wrap:nowrap}
+ .col .flt .rng{flex:1 1 0;min-width:0}.col .flt .rng input{width:100%;min-width:0}
+}
+
+/* 동별 표 5칸: 법정동 | 평당 공시지가 | 대지 평당가 | 연면적 평당가 | 금액대별 거래 분포 */
+.mTbl .mRow{grid-template-columns:96px repeat(4,minmax(0,1fr))}
+.mTbl .mRow>*:nth-child(2){background:#F1F5F6}.mTbl .mRow>*:nth-child(3){background:#FAF5EA;justify-content:flex-start;padding-left:14px;padding-right:14px}.mTbl .mRow>*:nth-child(4){background:#F6EFE3}.mTbl .mRow>*:nth-child(5){background:#F2EFE8}
+.mTbl .mTh>*:nth-child(2){background:#E3ECEF}.mTbl .mTh>*:nth-child(3){background:#F3EAD6}.mTbl .mTh>*:nth-child(4){background:#EADFC9}.mTbl .mTh>*:nth-child(5){background:#E9E4DA}
+.mTbl .mRow>.cv{display:grid}
+.mTbl .fewT{color:#B4BBC0!important;font-size:12px;font-weight:400}.mTbl .mRow>.sbc.fewT{justify-content:flex-end}
+</style>
+
+<style id="fullWide">/* 넓은 화면(1400px 이상)에서는 가운데 1280px 제한 없이 화면 가득 (좌우 여백 48px) */
+@media (min-width:1400px){.wrap,[style*="max-width: 1280px"]{max-width:none!important;padding-left:48px!important;padding-right:48px!important}}</style>
+<style id="lsTogCss">
+/* 넓은 화면: 거래 목록은 한 줄에 들어가는 폭(450px)으로 고정, 넘치면 … */
+@media (min-width:1400px){.main,body.dlFull .main{grid-template-columns:minmax(0,1fr) var(--lw,450px)}.it .t,.it .m{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}}
+/* 거래 목록 열고 닫기: 지도와 목록 경계의 손잡이 */
+.lsTog{position:absolute;right:0;top:50%;transform:translateY(-50%);z-index:6;width:28px;height:76px;padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:0;border-radius:12px 0 0 12px;background:#294652;color:#FFFFFF;cursor:pointer;box-shadow:-2px 0 6px rgba(41,70,82,.15);font:700 10.5px/1.1 'Noto Sans KR',sans-serif;writing-mode:vertical-rl;letter-spacing:1px}
+.lsTog svg{writing-mode:horizontal-tb;color:#C9A46A;transition:transform .2s}.lsTog:hover{background:#1E3540}
+.main.listOff,body.dlFull .main.listOff{grid-template-columns:minmax(0,1fr)!important}
+.main.listOff .list{display:none!important}.main.listOff .mapBox{border-right:0}
+.main.listOff .lsTog svg{transform:rotate(180deg)}
+@media (max-width:1100px){.lsTog{display:none}}
+@media print{.lsTog{display:none}}
+</style>
+<style id="topBarMob">@media (max-width:760px){.topBar{display:none!important}}</style>
+<style id="mobHide">/* 모바일: 거래 목록 · 동별 대지 평당가 및 거래 규모 표는 숨김 (지도 위주) */
+@media (max-width:760px){.main .list,#rankBox,a[href="#rankBox"]{display:none!important}.mapBox{border-bottom:0!important}}</style>
+<style id="headSameCss">
+/* 제목: 상가·사무실 임대 첫 화면과 같은 글자 크기·형식 (소개 문구는 세 줄 그대로) */
+.side h1{font-size:26px!important;font-weight:900;letter-spacing:-1px!important;line-height:1.32!important;color:#2A333C;margin:0!important}
+.side h1 .heroName{letter-spacing:-1.5px}
+.side h1 .h1Mk{background:linear-gradient(transparent 62%,#E8D7B6 62%)}
+@media (max-width:760px){.side h1{font-size:clamp(30px,8.6vw,38px)!important;letter-spacing:-1.2px!important;line-height:1.28!important}}
+</style>
+<style id="fullRowCss">
+/* 지도 크게 보기(컴퓨터 화면): 제목 · 검색 줄 · 닫기를 한 줄에, 그만큼 지도를 위로 키움 */
+@media (min-width:1101px){
+ body.dlFull .col{display:grid!important;grid-template-columns:auto auto minmax(0,1fr) auto;grid-template-rows:auto minmax(0,1fr);column-gap:14px;align-items:center}
+ body.dlFull .fullHead{display:contents!important}
+ body.dlFull .fullHead .fe{grid-column:1;grid-row:1}
+ body.dlFull .fullHead h2{grid-column:2;grid-row:1;white-space:nowrap}
+ body.dlFull .col .flt{grid-column:3;grid-row:1;margin:0!important;min-width:0}
+ body.dlFull .col .flt .rng{flex:1 1 0!important;min-width:0}
+ body.dlFull .fullHead .fullClose{grid-column:4;grid-row:1;margin-left:0}
+ body.dlFull .main{grid-column:1/-1;grid-row:2;align-self:stretch;margin-top:12px}
+}
+</style>
+<style id="headSame2Css">
+/* 두 페이지 공통: 메뉴 글씨 조금 크게 · 고정 메뉴줄 아래 검색 줄까지 여백 24px로 같게 */
+@media (min-width:1101px){.mainNav{font-size:18px!important}main.wrap{padding-top:24px!important}.col .flt{margin-top:0!important}}
+</style>
+<style id="bsCss">
+.flvH{margin:22px 0 8px;font-size:15.5px;color:#294652}
+.flv{display:grid;grid-template-columns:minmax(0,1fr) auto;border-top:2px solid #294652;background:#FBFAF7}
+.flvT{border-right:1px solid #EFEAE0;min-width:0}
+.flvHd,.flvR{display:grid;grid-template-columns:76px minmax(0,1fr) 104px;align-items:center;padding:0 14px 0 16px;gap:8px}
+.flvHd{height:26px;font-size:12.5px;color:#6B757D;border-bottom:1px solid #E6E0D4}.flvHd b{font-weight:600}
+.flvHd em,.flvR em{text-align:right;font-style:normal}
+.flvR{border-bottom:1px solid #F0EBE2;font-size:14.5px;box-sizing:border-box;font-family:'Noto Sans KR',sans-serif}.flvR b{font-weight:600;color:#46515B;white-space:nowrap}.flvR.me b{font-weight:700}
+.flvR span{color:#14191F;font-size:14.5px;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;word-break:keep-all;overflow-wrap:anywhere}
+.flvR em{font-weight:600;font-size:14.5px;line-height:1.2;color:#14191F}.flvR em small{display:block;font-weight:400;color:#8A939A;font-size:12px}
+.flvR.me{background:#FBEDEA;box-shadow:inset 3px 0 #B0452B}.flvR.me b{color:#B0452B}.flvR.ad{background:#FDF5E2;box-shadow:inset 3px 0 #E0A82E}.flvR.gl{border-top:1.6px solid #8A6A35}
+.flvD{display:flex;justify-content:center;background:#fff}.flvSvg{display:block;max-width:100%;height:auto}
+.flvD .flAdd{cursor:pointer}
+.flvD .evCar{animation:evMove 2.6s cubic-bezier(.45,0,.25,1) .2s both;animation-play-state:paused}
+.flvD .evPop{animation:evPop .5s 2.8s both;animation-play-state:paused;transform-box:fill-box;transform-origin:right center}
+.flvD.go .evCar,.flvD.go .evPop{animation-play-state:running}
+@keyframes evMove{from{transform:translateY(var(--d))}to{transform:none}}
+@keyframes evPop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.flvD .evCar,.flvD .evPop{animation:none}}
+.flvLg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:#4A545C;margin:8px 0 0}.flvLg i{display:inline-block;width:14px;height:9px;margin-right:5px;border:2px dashed;vertical-align:-1px}
+@media (max-width:900px){.flv{grid-template-columns:1fr}.flvD{order:-1;border-bottom:1px solid #EFEAE0}.flvT{border-right:0}.flvT>div[style*="height:4px"]{display:none}.flvR{height:auto!important;min-height:46px;padding-top:6px;padding-bottom:6px}.flvR span{display:block}}
+/* 본문 칸이 좁으면(700px 미만, 예: 1024px 화면) 표가 눌리지 않도록 입체도 위 · 표 아래로 */
+.dtFlv{container-type:inline-size}
+@container (max-width:700px){.flv{grid-template-columns:1fr}.flvD{order:-1;border-bottom:1px solid #EFEAE0}.flvT{border-right:0}.flvT>div[style*="height:4px"]{display:none}.flvR{height:auto!important;min-height:46px;padding-top:6px;padding-bottom:6px}.flvR span{display:block}}
+@media (max-width:760px){.dtI2{grid-template-columns:max-content minmax(0,1fr);font-size:14px}.dtI2 dt{padding:10px 12px}.dtI2 dd{padding:10px 12px}.dtI2 .pad{display:none}.dtNo{font-size:14px}}
+@media print{.dtI2 dt,.dtI2 dd{padding-top:7px;padding-bottom:7px}.flvD .evCar,.flvD .evPop{animation:none}.flv{break-inside:avoid}}
+/* ===== 빌딩 매매 ===== */
+.bsWrap{padding-top:28px}
+.bsHero{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:18px}
+.bsEye{margin:0 0 6px;font:600 12px/1 Montserrat,Inter,sans-serif;letter-spacing:3px;color:#8A6A35}
+.bsHero h1{margin:0 0 8px;font-size:34px;font-weight:900;letter-spacing:-1px}
+.bsLead{margin:0;color:#5B6770;font-size:15px}
+.bsCount{text-align:right}.bsCount b{display:block;font:700 40px/1 Inter,sans-serif;color:#294652}.bsCount span{font-size:13px;color:#7B858C}
+.bsBar{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;padding:14px 0;border-top:1px solid #E6E0D4;border-bottom:1px solid #E6E0D4;margin-bottom:16px}
+.bsBar select{height:40px;border:1px solid #D9D2C4;border-radius:10px;background:#fff;padding:0 12px;font:500 14px 'Noto Sans KR',sans-serif;color:#2A333C}
+.bsSeg{display:flex;border:1px solid #D9D2C4;border-radius:10px;overflow:hidden;background:#fff}
+.bsSeg button{height:38px;padding:0 12px;border:0;border-left:1px solid #EEE8DC;background:none;font:600 13.5px 'Noto Sans KR',sans-serif;color:#5B6770;cursor:pointer;white-space:nowrap}
+.bsSeg button:first-child{border-left:0}.bsSeg button.on{background:#294652;color:#fff}
+#fSort{margin-left:auto}
+.bsMain{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start;margin-bottom:40px}
+.bsList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-content:start}
+.bsEmpty{grid-column:1/-1;padding:60px 0;text-align:center;color:#7B858C}
+.bsCard{display:flex;flex-direction:column;gap:10px;background:#fff;border:1px solid #E6E0D4;border-radius:14px;padding:18px 18px 16px;cursor:pointer;text-align:left;font:inherit;color:inherit;transition:border-color .15s,box-shadow .15s}
+.bsCard:hover,.bsCard.hot{border-color:#294652;box-shadow:0 6px 18px rgba(41,70,82,.12)}
+.bsCard .t{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.bsCard .dong{font-weight:800;font-size:15px}.bsCard .dong small{font-weight:500;color:#7B858C;margin-left:6px;font-size:12.5px}
+.bsBadge{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#E9EEF0;color:#294652;white-space:nowrap}.bsBadge.our{background:#F3EAD6;color:#8A6A35}
+.bsCard .pr{font:800 26px/1.1 Inter,'Noto Sans KR',sans-serif;color:#294652;letter-spacing:-.5px}
+.bsCard .spec{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px;font-size:13.5px;color:#4A545C}.bsCard .spec b{color:#2A333C;font-weight:700}
+.bsCard .st{font-size:13px;color:#8A6A35;font-weight:700;border-top:1px dashed #EEE8DC;padding-top:9px}
+.bsMapBox{position:sticky;top:96px}
+#bsMap{height:calc(100vh - 150px);min-height:460px;border-radius:14px;overflow:hidden;border:1px solid #E6E0D4;background:#EEF1EE}
+.bsMapNote{margin:6px 2px 0;font-size:12px;color:#8A939A}
+.bsPin{transform:translate(-50%,-100%);background:#294652;color:#fff;font:700 12px/1 Inter,'Noto Sans KR',sans-serif;padding:6px 9px;border-radius:8px;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.25);position:relative;cursor:pointer}
+.bsPin:after{content:'';position:absolute;left:50%;bottom:-5px;margin-left:-5px;border:5px solid transparent;border-top-color:#294652;border-bottom:0}
+.bsPin.hot{background:#BC975E}.bsPin.hot:after{border-top-color:#BC975E}
+/* 상세 */
+.bsDt{position:fixed;inset:0;z-index:80;background:#F7F4EE;overflow:auto}
+.bsDtTop{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:14px;padding:12px 24px;background:#fff;border-bottom:1px solid #E6E0D4}
+.bsDtTop button{height:38px;padding:0 14px;border:1px solid #D9D2C4;border-radius:10px;background:#fff;font:700 14px 'Noto Sans KR',sans-serif;color:#294652;cursor:pointer}
+.bsDtTop span{font-size:13px;color:#7B858C}
+.bsDtIn{padding-top:26px;padding-bottom:60px}
+.bdHead{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:20px}
+.bdTags{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.bdHead h1{font-size:30px;margin:0 0 6px;font-weight:900;letter-spacing:-.8px}.bdSub{color:#5B6770;font-size:15px}
+.bdPrice{text-align:right}.bdPrice small{display:block;font-size:13px;color:#7B858C;font-weight:600}.bdPrice b{font:800 40px/1.1 Inter,'Noto Sans KR',sans-serif;color:#294652;letter-spacing:-1px}
+.bdGrid{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:30px;align-items:start}
+.bdCard{background:#fff;border:1px solid #E6E0D4;border-radius:14px;padding:20px 22px}
+.bdKpi{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #E6E0D4;border-radius:14px;background:#fff;overflow:hidden}
+.bdKpi div{padding:16px 18px;border-left:1px solid #EEE8DC}.bdKpi div:first-child{border-left:0}
+.bdKpi small{display:block;font-size:12.5px;color:#7B858C;font-weight:600;margin-bottom:4px}.bdKpi b{font-size:22px;font-weight:900}.bdKpi em{display:block;font-style:normal;font-size:12px;color:#8A6A35;margin-top:2px}
+.bdSec{margin-top:30px}.bdSec>h2{font-size:20px!important;font-weight:900;margin:0 0 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}.bdSec>h2 span{font-size:12.5px;font-weight:500;color:#7B858C}
+table.bdKv{width:100%;border-collapse:collapse;font-size:14.5px}
+table.bdKv th{width:16%;text-align:left;color:#6B767D;font-weight:600;padding:11px 12px;background:#FAF8F3;border-bottom:1px solid #EEE8DC;white-space:nowrap}
+table.bdKv td{padding:11px 12px;border-bottom:1px solid #EEE8DC}
+table.bdKv tr:last-child th,table.bdKv tr:last-child td{border-bottom:0}
+.bdNote,.bdSec .dtNote{font-size:12.5px;color:#8A939A;margin:10px 2px 0;line-height:1.6}
+.bdLoc{display:grid;grid-template-columns:1.25fr 1fr;gap:16px;align-items:stretch}
+#bdMap{min-height:260px;border-radius:12px;overflow:hidden;border:1px solid #E6E0D4;background:#EEF1EE}
+.bdSt{display:flex;flex-direction:column;gap:10px}
+.bdSti{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid #EEE8DC;border-radius:12px;background:#fff}
+.bdSti i{min-width:34px;height:34px;padding:0 6px;border-radius:17px;display:flex;align-items:center;justify-content:center;color:#fff;font-style:normal;font-weight:800;font-size:12px;flex:none}
+.bdSti b{font-size:16px}.bdSti span{display:block;font-size:13px;color:#6B767D}
+.bdSti .min{margin-left:auto;text-align:right}.bdSti .min b{font-size:20px;color:#294652}.bdSti .min small{display:block;font-size:11.5px;color:#8A939A}
+.bdLand{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.bdLand div{background:#fff;border:1px solid #EEE8DC;border-radius:12px;padding:14px 16px}
+.bdLand small{display:block;font-size:12.5px;color:#7B858C;font-weight:600;margin-bottom:4px}.bdLand b{font-size:17px;font-weight:800}.bdLand em{display:block;font-style:normal;font-size:12.5px;color:#6B767D;margin-top:2px}
+.bdCmp{display:flex;flex-direction:column;gap:12px}
+.bdCmp .r{display:grid;grid-template-columns:230px minmax(0,1fr) 110px;gap:14px;align-items:center;font-size:14px}
+.bdCmp .bar{height:16px;border-radius:4px;background:#EEE8DC;position:relative;overflow:hidden}.bdCmp .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
+.bdCmp .r>b{text-align:right}
+.bdSide{position:sticky;top:80px;display:flex;flex-direction:column;gap:14px}
+.bdSide h3{margin:0 0 6px;font-size:17px;font-weight:900}.bdSide p{margin:0 0 14px;color:#5B6770;font-size:13.5px;line-height:1.6}
+.bdBtn{display:flex;align-items:center;justify-content:center;height:48px;border-radius:10px;font-weight:800;font-size:15px;text-decoration:none}
+.bdBtn.p{background:#294652;color:#fff}.bdBtn.o{border:1.5px solid #294652;color:#294652;margin-top:8px}
+.bdMini{font-size:13px;color:#5B6770;line-height:1.8}.bdMini b{color:#2A333C}
+.bdLegal{font-size:12px;color:#8A939A;line-height:1.7}
+.bdWait{display:flex;align-items:center;gap:10px;color:#7B858C;font-size:14px;padding:18px 4px}
+.bdWait i{width:16px;height:16px;border:2px solid #D9D2C4;border-top-color:#294652;border-radius:50%;animation:bdSpin .8s linear infinite}
+@keyframes bdSpin{to{transform:rotate(360deg)}}
+@media (max-width:1100px){.bsMain{grid-template-columns:minmax(0,1fr) 380px}.bsList{grid-template-columns:1fr}.bdGrid{grid-template-columns:1fr}.bdSide{position:static}}
+@media (max-width:760px){
+ .bsWrap{padding-top:16px}.bsHero{flex-wrap:nowrap;align-items:flex-start;gap:12px;margin-bottom:8px}.bsHero h1{font-size:26px}.bsLead{font-size:14px}.bsCount{flex:none;padding-top:22px}.bsCount b{font-size:28px}.bsCount span{font-size:11.5px}
+ .bsBar{gap:8px;overflow-x:auto;flex-wrap:nowrap;margin:0 -20px 12px;padding:10px 20px;scrollbar-width:none}.bsBar>*{flex:none}#fSort{margin-left:0}
+ .bsMain{grid-template-columns:1fr;gap:12px}.bsMapBox{position:static;order:-1}#bsMap{height:300px;min-height:0}
+ .bsDtTop{padding:10px 16px}.bdHead h1{font-size:22px}.bdPrice{text-align:left}.bdPrice b{font-size:32px}
+ .bdKpi{grid-template-columns:1fr 1fr}.bdKpi div:nth-child(3){border-left:0}.bdKpi div:nth-child(n+3){border-top:1px solid #EEE8DC}
+ .bdLoc{grid-template-columns:1fr}.bdLand{grid-template-columns:1fr 1fr}.bdCmp .r{grid-template-columns:1fr 70px}.bdCmp .r .bar{grid-column:1/3;grid-row:2}
+ table.bdKv tr{display:grid;grid-template-columns:30% 1fr}table.bdKv th{width:auto}table.bdKv td[colspan]{grid-column:2}
+}
+</style>
+</head>
+<body>
+<div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; width: 100%; letter-spacing: -0.2px">
+<!-- ===== 상단 유틸바 ===== -->
+<div class="topBar" style="background: #294652; color: #D3D8E2; font-size: 13px">
+<div style="max-width: 1280px; margin: 0 auto; padding: 8px 32px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px">
+<span class="topAddr">압구정역 5번출구 · 신사동 578-1 일상빌딩 1층 · 병의원 / 상가 / 사무실 전문 중개</span>
+</div>
+</div>
+
+<!-- ===== 헤더 ===== -->
+<header class="siteHead" style="background: #FFFFFF; border-bottom: 1px solid #E6E0D4">
+<div class="headRow" style="max-width: 1280px; margin: 0 auto; padding: 18px 32px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<a href="/" aria-label="부동산다움 홈" style="display: flex; align-items: center"><span class="dmLock dmLight"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDQgMTI0IiB3aWR0aD0iMjA4IiBoZWlnaHQ9IjI0OCI+PGRlZnM+CjxtYXNrIGlkPSJ0TCIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iMCIgeT0iMCIgd2lkdGg9IjEwNCIgaGVpZ2h0PSIxMjQiPjxyZWN0IHdpZHRoPSIxMDQiIGhlaWdodD0iMTI0IiBmaWxsPSIjZmZmIi8+PHJlY3QgeD0iMjEuNSIgeT0iMzgiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI0NCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjUwIiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iNTYiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI2MiIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjY4IiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iNzQiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI4MCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9Ijg2IiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iOTIiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI5OCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjEwNCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjwvbWFzaz4KPG1hc2sgaWQ9ImJMIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTA0IiBoZWlnaHQ9IjEyNCI+PHJlY3Qgd2lkdGg9IjEwNCIgaGVpZ2h0PSIxMjQiIGZpbGw9IiNmZmYiLz48cmVjdCB4PSI0OCIgeT0iNDQiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iNTgiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iNzIiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iODYiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iMTAwIiB3aWR0aD0iNTYiIGhlaWdodD0iMy40IiBmaWxsPSIjMDAwIi8+PC9tYXNrPgo8L2RlZnM+CjxyZWN0IHg9IjI2LjIiIHk9IjIiIHdpZHRoPSIxLjYiIGhlaWdodD0iMTMiIGZpbGw9IiNCRTk2NUMiLz4KPHBhdGggZD0iTTE4IDExMlYzMUwyNyAxNEwzNiAzMVYxMTJaIiBmaWxsPSIjQkU5NjVDIiBtYXNrPSJ1cmwoI3RMKSIvPgo8cGF0aCBkPSJNNDEgMzFINThDODMgMzEgOTggNTAgOTggNzEuNUM5OCA5MyA4MyAxMTIgNTggMTEySDQxWiIgZmlsbD0iIzFGMzY0NCIgbWFzaz0idXJsKCNiTCkiLz4KPHJlY3QgeD0iOCIgeT0iMTE2IiB3aWR0aD0iOTIiIGhlaWdodD0iMy4yIiBmaWxsPSIjMUYzNjQ0Ii8+PC9zdmc+" alt="" aria-hidden="true" class="dmMark"><span class="dmRule"></span><span class="dmText"><span class="dmName">DAUM</span><span class="dmTag">REAL ESTATE</span></span></span></a>
+<nav class="mainNav" aria-label="주 메뉴" style="display: flex; flex-wrap: wrap; gap: 34px; font-size: 16px; font-weight: 700">
+<a href="/#map" style="color: #14191F">상가·사무실 임대</a>
+<a href="/buildings.html" aria-current="page" style="color: #14191F">빌딩 매매</a>
+<a href="/deals.html" style="color: #14191F">매매 실거래가</a>
+<a href="/sangkwon.html" style="color: #14191F">상권 분석</a>
+<a href="/#clinic" style="color: #14191F">실무 가이드</a>
+</nav>
+<div class="headActs"><a href="/#intake" class="headIntake"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13"></path><path d="M12 11v6M9 14h6"></path></svg>매물 접수</a>
+<a href="tel:025551165" class="headTel" aria-label="전화 상담 02-555-1165" style="display: flex; align-items: center; gap: 8px; background: #294652; color: #FFFFFF; padding: 11px 18px; border-radius: 999px; font-weight: 700; font-size: 15px; min-height: 44px">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#BC975E" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>
+02-555-1165
+</a></div>
+</div>
+</header>
+
+<main class="wrap bsWrap">
+<section class="bsHero">
+  <div>
+    <p class="bsEye">BUILDING FOR SALE</p>
+    <h1>강남·서초 빌딩 매매</h1>
+    <p class="bsLead">부동산다움이 확인한 매각 빌딩입니다. 정확한 위치와 임대 현황·수익률 자료는 상담 시 드립니다.</p>
+  </div>
+  <div class="bsCount"><b id="bsN">-</b><span>매각 중인 빌딩</span></div>
+</section>
+<section class="bsBar" aria-label="조건">
+  <select id="fGu" aria-label="구"><option value="">강남·서초 전체</option><option>강남구</option><option>서초구</option></select>
+  <select id="fDong" aria-label="동"><option value="">동 전체</option></select>
+  <div class="bsSeg" id="fPrice" role="group" aria-label="매매가">
+    <button data-v="" class="on">전체</button><button data-v="0-50">50억 이하</button><button data-v="50-100">50~100억</button><button data-v="100-200">100~200억</button><button data-v="200-500">200~500억</button><button data-v="500-">500억 이상</button>
+  </div>
+  <div class="bsSeg" id="fLand" role="group" aria-label="대지">
+    <button data-v="" class="on">대지 전체</button><button data-v="0-50">~50평</button><button data-v="50-100">50~100평</button><button data-v="100-">100평 이상</button>
+  </div>
+  <select id="fSort" aria-label="정렬"><option value="new">최근 확인순</option><option value="pl">매매가 낮은순</option><option value="ph">매매가 높은순</option><option value="pp">대지 평당가 낮은순</option><option value="st">역에서 가까운순</option></select>
+</section>
+<section class="bsMain">
+  <div class="bsList" id="bsList"><div class="bsEmpty">매물을 불러오는 중입니다…</div></div>
+  <div class="bsMapBox"><div id="bsMap"></div><p class="bsMapNote">지도 위치는 동네 단위(약 100m)로만 표시합니다.</p></div>
+</section>
+<section class="cta"><div><b>찾는 조건의 빌딩이 없나요?</b>예산·지역·용도를 알려주시면 공개되지 않은 매물까지 찾아 드립니다.</div><a href="/?ask=buy#consult">매입 상담 남기기</a></section>
+</main>
+
+<div class="bsDt" id="bsDt" hidden>
+  <div class="bsDtTop"><button type="button" id="bsBack">← 목록으로</button><span id="bsDtCrumb"></span></div>
+  <div class="wrap bsDtIn" id="bsDtIn"></div>
+</div>
+
+
+<footer class="siteFoot" style="background: #294652; color: #C6CED7; font-size: 14px">
+<div style="max-width: 1280px; margin: 0 auto; padding: 56px 32px 40px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 32px">
+<div style="display: flex; flex-direction: column; gap: 12px; flex: 1 1 360px">
+<a href="/" aria-label="부동산다움 홈" style="align-self: flex-start; display: block"><span class="dmLock dmDark"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDQgMTI0IiB3aWR0aD0iMjA4IiBoZWlnaHQ9IjI0OCI+PGRlZnM+CjxtYXNrIGlkPSJ0RCIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iMCIgeT0iMCIgd2lkdGg9IjEwNCIgaGVpZ2h0PSIxMjQiPjxyZWN0IHdpZHRoPSIxMDQiIGhlaWdodD0iMTI0IiBmaWxsPSIjZmZmIi8+PHJlY3QgeD0iMjEuNSIgeT0iMzgiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI0NCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjUwIiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iNTYiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI2MiIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjY4IiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iNzQiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI4MCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9Ijg2IiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iOTIiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI5OCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjEwNCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjwvbWFzaz4KPG1hc2sgaWQ9ImJEIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTA0IiBoZWlnaHQ9IjEyNCI+PHJlY3Qgd2lkdGg9IjEwNCIgaGVpZ2h0PSIxMjQiIGZpbGw9IiNmZmYiLz48cmVjdCB4PSI0OCIgeT0iNDQiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iNTgiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iNzIiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iODYiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iMTAwIiB3aWR0aD0iNTYiIGhlaWdodD0iMy40IiBmaWxsPSIjMDAwIi8+PC9tYXNrPgo8L2RlZnM+CjxyZWN0IHg9IjI2LjIiIHk9IjIiIHdpZHRoPSIxLjYiIGhlaWdodD0iMTMiIGZpbGw9IiNDOUE0NkEiLz4KPHBhdGggZD0iTTE4IDExMlYzMUwyNyAxNEwzNiAzMVYxMTJaIiBmaWxsPSIjQzlBNDZBIiBtYXNrPSJ1cmwoI3REKSIvPgo8cGF0aCBkPSJNNDEgMzFINThDODMgMzEgOTggNTAgOTggNzEuNUM5OCA5MyA4MyAxMTIgNTggMTEySDQxWiIgZmlsbD0iI0Y2RjJFQSIgbWFzaz0idXJsKCNiRCkiLz4KPHJlY3QgeD0iOCIgeT0iMTE2IiB3aWR0aD0iOTIiIGhlaWdodD0iMy4yIiBmaWxsPSIjRjZGMkVBIi8+PC9zdmc+" alt="" aria-hidden="true" class="dmMark"><span class="dmRule"></span><span class="dmText"><span class="dmName">DAUM</span><span class="dmTag">REAL ESTATE</span></span></span></a>
+<span style="line-height: 1.8">부동산다움공인중개사사무소 · 개업공인중개사 안혁준<br>중개사무소 등록번호 제11680-2021-00537호 · 사업자등록번호 415-16-62854<br>서울특별시 강남구 신사동 578-1 일상빌딩 1층 (압구정역 5번출구)<br><a href="tel:025551165" style="color: inherit">전화 02-555-1165</a> · <a href="mailto:airbbb@naver.com" style="color: inherit">이메일 airbbb@naver.com</a> · <a href="https://r-daum.com" style="color: inherit">홈페이지 r-daum.com</a></span>
+</div>
+<div style="display: flex; gap: 48px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 10px"><span style="color: #FFFFFF; font-weight: 700">바로가기</span><a href="/#map" style="color: #A9B1C2">상가·사무실 임대</a><a href="/#listings" style="color: #A9B1C2">추천 매물</a><a href="/buildings.html" style="color: #A9B1C2">빌딩 매매</a><a href="/deals.html" style="color: #A9B1C2">매매 실거래가</a><a href="/sangkwon.html" style="color: #A9B1C2">상권 분석</a><a href="/#clinic" style="color: #A9B1C2">실무 가이드</a></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><span style="color: #FFFFFF; font-weight: 700">고객지원</span><a href="/#consult" style="color: #A9B1C2">매물 의뢰</a><a href="https://blog.naver.com/airbbb" style="color: #A9B1C2">네이버 블로그</a><a id="mgrLink" href="https://script.google.com/macros/s/AKfycbxcrADcmOUogYCPPnEY9Hh6h_NpdV31gaOiP1zNCLn1fKrRsi12m-wi9d6wU8Sbw6dn9Q/exec" target="_blank" rel="noopener" title="다움 매물 리스트 (직원용)" style="color: #A9B1C2">매니저 관리</a></div>
+</div>
+</div>
+<div style="max-width: 1280px; margin: 0 auto; padding: 18px 32px 32px; border-top: 1px solid #3D5E6B; font-size: 12px; color: #9AA6B2; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 24px"><span>© 2026 부동산다움. All rights reserved. 본 사이트의 매물 정보는 실제와 차이가 있을 수 있으며, 계약 전 반드시 현장 및 공부서류를 확인하시기 바랍니다.</span><span style="white-space: nowrap; color: #A9B1C2; letter-spacing: .3px">Designed by <b style="font-weight: 500; color: #C7A774">E.J. Kim</b></span></div>
+<nav class="mBar" aria-label="빠른 연락">
+<a href="tel:025551165" class="mBarTel"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg>전화 상담</a>
+<a href="/?ask=buy#consult" class="mBarAsk"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>빠른 문의 남기기</a>
+</nav>
+</footer>
+</div>
+
+<script>
+(function () {
+  var SHEET_URL = 'https://script.google.com/macros/s/AKfycbyevvh7GTqebd5C3a8A2e8dKpkh2ujZeQL0i0xBYo9MvdvMwZ9g67u2yC89kRqKkLoKJg/exec';
+  var NAVER_KEY = 'i0aavzp1qg';
+  var PY = 3.3058;
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  // 동별 개별공시지가 중간값 [만원/평] (deals.html 과 같은 값)
+  var JIGA = {"강남구|역삼동":5825,"강남구|개포동":2777,"강남구|청담동":7302,"강남구|삼성동":7554,"강남구|대치동":6053,"강남구|신사동":6655,"강남구|논현동":5296,"강남구|압구정동":15217,"강남구|세곡동":2467,"강남구|자곡동":3425,"강남구|율현동":2129,"강남구|일원동":3299,"강남구|수서동":4860,"강남구|도곡동":4069,"서초구|방배동":3904,"서초구|양재동":3395,"서초구|우면동":2603,"서초구|원지동":1858,"서초구|잠원동":4466,"서초구|반포동":4215,"서초구|서초동":5041,"서초구|내곡동":2117,"서초구|염곡동":1963,"서초구|신원동":2119};
+  // 역 → 노선 (색 동그라미)
+  var LINES = { '압구정역': ['3'], '신사역': ['3', '신분당'], '압구정로데오역': ['수인분당'], '청담역': ['7'], '강남구청역': ['7', '수인분당'], '학동역': ['7'], '논현역': ['7', '신분당'], '신논현역': ['9', '신분당'],
+    '강남역': ['2', '신분당'], '역삼역': ['2'], '선릉역': ['2', '수인분당'], '삼성역': ['2'], '언주역': ['9'], '선정릉역': ['9', '수인분당'], '삼성중앙역': ['9'], '봉은사역': ['9'], '잠원역': ['3'], '고속터미널역': ['3', '7', '9'],
+    '반포역': ['7'], '교대역': ['2', '3'], '서초역': ['2'], '양재역': ['3', '신분당'], '매봉역': ['3'], '도곡역': ['3', '수인분당'], '한티역': ['수인분당'], '남부터미널역': ['3'], '방배역': ['2'], '내방역': ['7'], '사평역': ['9'],
+    '신반포역': ['9'], '구반포역': ['9'], '대치역': ['3'], '학여울역': ['3'], '대청역': ['3'], '일원역': ['3'], '수서역': ['3', '수인분당'], '개포동역': ['수인분당'], '구룡역': ['수인분당'], '양재시민의숲역': ['신분당'], '종합운동장역': ['2', '9'] };
+  var LC = { '2': '#00A84D', '3': '#EF7C1C', '7': '#747F00', '9': '#BDB092', '신분당': '#D4003B', '수인분당': '#F5A200' };
+  var lineBadge = function (n) { var l = (LINES[n] || [])[0] || ''; return '<i style="background:' + (LC[l] || '#7B858C') + '">' + esc(l === '수인분당' ? '분당' : l) + '</i>'; };
+  var eok = function (man) { if (!man) return '-'; var e = man / 10000; return (e >= 100 ? Math.round(e).toLocaleString() : (Math.round(e * 10) / 10).toString().replace(/\.0$/, '')) + '억'; };
+  var eok2 = function (man) { return man ? (man / 10000).toFixed(2).replace(/\.?0+$/, '') + '억' : '-'; };
+  var man = function (v) { return Math.round(v).toLocaleString() + '만원'; };
+  var py = function (m2) { return m2 ? (m2 / PY).toFixed(1) : ''; };
+  var scaleTxt = function (it) { return it.ff ? (it.bf ? '지하' + it.bf + '층~' : '') + '지상' + it.ff + '층' : ''; };
+  var ALL = [], F = { gu: '', dong: '', price: '', land: '', sort: 'new' }, map = null, marks = {}, NM = null;
+
+  /* ===== 목록 ===== */
+  function filtered() {
+    var rg = function (v, s) { if (!s) return true; var a = s.split('-'), lo = a[0] ? +a[0] : -1, hi = a[1] ? +a[1] : 1e12; return v >= lo && v < hi; };
+    var L = ALL.filter(function (it) {
+      return (!F.gu || it.gu === F.gu) && (!F.dong || it.dong === F.dong) && rg(it.price / 10000, F.price) && rg(it.land / PY, F.land);
+    });
+    var k = { pl: function (a, b) { return a.price - b.price; }, ph: function (a, b) { return b.price - a.price; }, pp: function (a, b) { return a.pp - b.pp; },
+      st: function (a, b) { return ((a.st[0] || [0, 1e9])[1]) - ((b.st[0] || [0, 1e9])[1]); }, new: function (a, b) { return String(b.date).localeCompare(String(a.date)); } }[F.sort];
+    return L.sort(k);
+  }
+  function card(it) {
+    var s0 = it.st[0];
+    return '<button type="button" class="bsCard" data-id="' + it.id + '"><div class="t"><span class="dong">' + esc(it.dong) + '<small>' + esc(it.gu) + '</small></span><span class="bsBadge' + (it.src === 'our' ? ' our' : '') + '">' + (it.src === 'our' ? '다움 매물' : '공동중개') + '</span></div>' +
+      '<div class="pr">' + eok(it.price) + '</div>' +
+      '<div class="spec"><span>대지 <b>' + (py(it.land) || '-') + '평</b></span><span>연면적 <b>' + (py(it.bld) || '-') + '평</b></span>' +
+      '<span>대지 평당 <b>' + eok2(it.pp) + '</b></span><span>' + (scaleTxt(it) || '규모 확인 중') + (it.yr ? ' · ' + it.yr + '년' : '') + '</span></div>' +
+      (s0 ? '<div class="st">' + esc(s0[0]) + ' 도보 약 ' + s0[2] + '분</div>' : '') + '</button>';
+  }
+  function render() {
+    var L = filtered();
+    $('bsN').textContent = L.length;
+    $('bsList').innerHTML = L.length ? L.map(card).join('') : '<div class="bsEmpty">조건에 맞는 매물이 없습니다. 조건을 넓혀 보시거나 매입 상담을 남겨 주세요.</div>';
+    pins(L);
+  }
+  function dongOpts() {
+    var ds = {}; ALL.forEach(function (it) { if (!F.gu || it.gu === F.gu) ds[it.dong] = (ds[it.dong] || 0) + 1; });
+    $('fDong').innerHTML = '<option value="">동 전체</option>' + Object.keys(ds).sort().map(function (d) { return '<option value="' + esc(d) + '"' + (d === F.dong ? ' selected' : '') + '>' + esc(d) + ' (' + ds[d] + ')</option>'; }).join('');
+  }
+  /* ===== 지도 ===== */
+  function loadMap(cb) {
+    if (window.naver && naver.maps) return cb();
+    var s = document.createElement('script'); s.src = 'https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=' + encodeURIComponent(NAVER_KEY); s.onload = cb; document.head.appendChild(s);
+  }
+  function pins(L) {
+    if (!map) return;
+    Object.keys(marks).forEach(function (k) { marks[k].setMap(null); }); marks = {};
+    var b = null;
+    L.forEach(function (it) {
+      if (!it.lat) return;
+      var p = new NM.LatLng(it.lat, it.lng);
+      marks[it.id] = new NM.Marker({ position: p, map: map, icon: { content: '<div class="bsPin" data-id="' + it.id + '">' + eok(it.price) + '</div>', anchor: new NM.Point(0, 0) } });
+      NM.Event.addListener(marks[it.id], 'click', function () { location.hash = 'b/' + it.id; });
+      b = b ? (b.extend(p), b) : new NM.LatLngBounds(p, p);
+    });
+    if (b && L.length > 1) map.fitBounds(b, { top: 40, right: 40, bottom: 40, left: 40 }); else if (b) map.setCenter(b.getCenter());
+  }
+  function initMap() {
+    loadMap(function () {
+      NM = naver.maps;
+      map = new NM.Map('bsMap', { center: new NM.LatLng(37.505, 127.035), zoom: 13, scaleControl: false, mapDataControl: false, zoomControlOptions: { position: NM.Position.TOP_RIGHT }, zoomControl: true });
+      pins(filtered());
+    });
+  }
+  function hot(id, on) {
+    var c = document.querySelector('.bsCard[data-id="' + id + '"]'), p = document.querySelector('.bsPin[data-id="' + id + '"]');
+    if (c) c.classList.toggle('hot', on); if (p) p.classList.toggle('hot', on);
+  }
+
+  /* ===== 상세 ===== */
+  var DT = { el: null };
+  function landRow(L, it) {
+    if (!L) return '';
+    var area = +L[1], j = +L[8], jp = j * PY / 10000, z1 = L[2] || '', z2 = L[3] || '';
+    var road = { '광대한면': '폭 25m 이상 도로에 한 면', '광대소각': '폭 25m 이상 도로 + 다른 도로', '중로한면': '폭 12~25m 도로에 한 면', '중로각지': '폭 12~25m 도로 모퉁이', '소로한면': '폭 8~12m 도로에 한 면', '소로각지': '폭 8~12m 도로 모퉁이', '세로한면(가)': '폭 8m 미만, 차가 다니는 도로', '세로각지(가)': '폭 8m 미만 도로 모퉁이(차량 통행)', '세로한면(불)': '폭 8m 미만, 차가 다니기 어려운 길' }[L[7]] || '';
+    var lim = { '제1종일반주거지역': '건폐율 60%·용적률 150% 이하', '제2종일반주거지역': '건폐율 60%·용적률 200% 이하', '제3종일반주거지역': '건폐율 50%·용적률 250% 이하', '일반상업지역': '건폐율 60%·용적률 800% 이하', '근린상업지역': '건폐율 60%·용적률 600% 이하', '준주거지역': '건폐율 60%·용적률 400% 이하', '제1종전용주거지역': '건폐율 50%·용적률 100% 이하', '제2종전용주거지역': '건폐율 40%·용적률 120% 이하', '준공업지역': '건폐율 60%·용적률 400% 이하', '자연녹지지역': '건폐율 20%·용적률 50% 이하' }[z1] || '';
+    return '<section class="bdSec"><h2>토지 정보 <span>국토교통부 토지특성정보 · 개별공시지가 ' + esc(L[9] || '') + ' 기준</span></h2><div class="bdLand">' +
+      '<div><small>지목</small><b>' + esc(L[0]) + '</b><em>이용상황: ' + esc(L[4] || '-') + '</em></div>' +
+      '<div><small>토지면적</small><b>' + area.toLocaleString() + '㎡</b><em>' + py(area) + '평</em></div>' +
+      '<div><small>용도지역</small><b>' + esc(z1.replace(/지역$/, '')) + '</b><em>' + esc(z2 ? '+ ' + z2 : lim) + '</em></div>' +
+      '<div><small>개별공시지가</small><b>' + Math.round(j / 10000).toLocaleString() + '만원/㎡</b><em>평당 ' + Math.round(jp).toLocaleString() + '만원 · 총 ' + eok2(j * area / 10000) + '</em></div>' +
+      '<div><small>지형 높이</small><b>' + esc(L[5] || '-') + '</b></div><div><small>지형 형상</small><b>' + esc(L[6] || '-') + '</b></div>' +
+      '<div><small>도로 접면</small><b>' + esc(L[7] || '-') + '</b>' + (road ? '<em>' + road + '</em>' : '') + '</div>' +
+      (function () { var g = JIGA[it.gu + '|' + it.dong]; return '<div><small>' + esc(it.dong) + ' 공시지가 중간값</small><b>' + (g ? '평당 ' + g.toLocaleString() + '만원' : '-') + '</b><em>상업·업무용 대지 기준</em></div>'; })() +
+      '</div><p class="bdNote">※ 용도지역의 건폐율·용적률은 서울시 조례 기준 상한이며, 실제 건축 가능 규모는 도로·일조 등 조건에 따라 다릅니다. 매물 대지면적과 토지대장 면적이 다를 수 있습니다(도로 편입·합필 등).</p></section>';
+  }
+  function bldRow(b) {
+    var r = b.reg || {}, pk = (r.pkIA || 0) + (r.pkIM || 0) + (r.pkOA || 0) + (r.pkOM || 0);
+    var cell = function (k, v) { return '<th>' + k + '</th><td>' + (v || '-') + '</td>'; };
+    return '<section class="bdSec"><h2>건축물 정보 <span>건축물대장 표제부</span></h2><div class="bdCard" style="padding:6px 12px"><table class="bdKv">' +
+      '<tr>' + cell('주용도', esc(r.purp || b.usage)) + cell('구조', esc(r.strct || b.structure)) + '</tr>' +
+      '<tr>' + cell('사용승인일', esc(r.apr || b.approval)) + cell('연면적', r.tot ? r.tot.toLocaleString() + '㎡ (' + py(r.tot) + '평)' : '') + '</tr>' +
+      '<tr>' + cell('건축면적', r.arch ? r.arch.toLocaleString() + '㎡' : '') + cell('규모', (r.ugrnd ? '지하 ' + r.ugrnd + '층 · ' : '') + (r.grnd ? '지상 ' + r.grnd + '층' : '')) + '</tr>' +
+      '<tr>' + cell('건폐율', r.bc ? r.bc + '%' : '') + cell('용적률', r.vl ? r.vl + '%' : '') + '</tr>' +
+      '<tr>' + cell('승강기', (r.elR || 0) + (r.elE || 0) ? '승용 ' + (r.elR || 0) + '대' + (r.elE ? ' · 비상용 ' + r.elE + '대' : '') : '없음') + cell('주차', pk ? pk + '대 (자주식·기계식 합계)' : '') + '</tr>' +
+      '</table></div></section>';
+  }
+  function openDetail(id) {
+    if (DT.cur === id && !$('bsDt').hidden) return; DT.cur = id;
+    var it = ALL.filter(function (x) { return x.id === id; })[0]; if (!it) return;
+    var d = $('bsDt'); d.hidden = false; document.body.style.overflow = 'hidden'; d.scrollTop = 0;
+    $('bsDtCrumb').textContent = '빌딩 매매 › ' + it.gu + ' ' + it.dong;
+    var jg = JIGA[it.gu + '|' + it.dong] || 0, jp = it.jiga ? it.jiga * PY / 10000 : 0, sc = scaleTxt(it);
+    var stHtml = it.st.length ? it.st.map(function (s) { return '<div class="bdSti">' + lineBadge(s[0]) + '<div><b>' + esc(s[0]) + '</b><span>직선 약 ' + (s[1] >= 1000 ? (s[1] / 1000).toFixed(1) + 'km' : s[1] + 'm') + '</span></div><div class="min"><b>' + s[2] + '분</b><small>도보</small></div></div>'; }).join('') : '<p class="bdNote">위치 정보를 준비 중입니다.</p>';
+    $('bsDtIn').innerHTML =
+      '<div class="bdHead"><div><div class="bdTags"><span class="bsBadge">빌딩 매매</span>' + (it.st[0] ? '<span class="bsBadge our">' + esc(it.st[0][0]) + ' 도보 ' + it.st[0][2] + '분</span>' : '') + '<span class="bsBadge' + (it.src === 'our' ? ' our' : '') + '">' + (it.src === 'our' ? '다움 매물' : '공동중개') + '</span></div>' +
+      '<h1 id="bdTitle">' + esc(it.dong) + ' · ' + esc(sc ? sc.replace('~', '~') + ' 빌딩' : '빌딩') + '</h1>' +
+      '<div class="bdSub">대지 ' + (py(it.land) || '-') + '평 · 연면적 ' + (py(it.bld) || '-') + '평' + (it.yr ? ' · ' + it.yr + '년 준공' : '') + (it.zone ? ' · ' + esc(it.zone) : '') + '</div></div>' +
+      '<div class="bdPrice"><small>매매가</small><b>' + eok(it.price) + '</b></div></div>' +
+      '<div class="bdGrid"><div>' +
+      '<div class="bdKpi"><div><small>대지 평당가</small><b>' + eok2(it.pp) + '</b><em>매매가 ÷ 대지 ' + (py(it.land) || '-') + '평</em></div>' +
+      '<div><small>연면적 평당가</small><b>' + eok2(it.bld ? it.price / (it.bld / PY) : 0) + '</b><em>매매가 ÷ 연면적 ' + (py(it.bld) || '-') + '평</em></div>' +
+      '<div><small>개별공시지가 대비</small><b>' + (jp && it.pp ? (it.pp / jp).toFixed(1) + '배' : '-') + '</b><em>' + (jp ? '평당 ' + Math.round(jp).toLocaleString() + '만원' : '공시지가 준비 중') + '</em></div>' +
+      '<div id="bdDealK"><small>' + esc(it.dong) + ' 실거래 대지 평당</small><b>…</b><em>최근 1년 중간값</em></div></div>' +
+      '<section class="bdSec"><h2>매물 개요</h2><div class="bdCard" style="padding:6px 12px"><table class="bdKv">' +
+      '<tr><th>소재지</th><td>서울 ' + esc(it.gu + ' ' + it.dong) + ' <span style="color:#8A939A">(정확한 위치는 상담 시 안내)</span></td><th>규모</th><td id="bdScale">' + (sc ? sc.replace('지하', '지하 ').replace('지상', '지상 ') : '-') + '</td></tr>' +
+      '<tr><th>대지면적</th><td>' + (it.land ? it.land.toLocaleString() + '㎡ (' + py(it.land) + '평)' : '-') + '</td><th>연면적</th><td>' + (it.bld ? it.bld.toLocaleString() + '㎡ (' + py(it.bld) + '평)' : '-') + '</td></tr>' +
+      '<tr><th>준공</th><td>' + (it.yr ? it.yr + '년' : '-') + '</td><th>용도지역</th><td>' + esc(it.zone || '-') + '</td></tr>' +
+      (it.park || it.elev ? '<tr><th>주차</th><td>' + esc(it.park || '-') + '</td><th>엘리베이터</th><td>' + esc(it.elev || '-') + '</td></tr>' : '') +
+      '</table></div></section>' +
+      '<section class="bdSec"><h2>위치 · 교통 <span>가까운 역까지 직선거리 × 1.3, 분당 67m 기준</span></h2><div class="bdLoc"><div id="bdMap"></div><div class="bdSt">' + stHtml + '</div></div>' +
+      '<p class="bdNote">※ 지도는 동네 단위(약 100m)로만 표시합니다. 정확한 위치와 실제 동선은 상담 시 안내해 드립니다.</p></section>' +
+      '<div id="bdBld"><div class="bdWait"><i></i>건축물대장(층별 현황)과 토지 정보를 불러오는 중…</div></div>' +
+      '<div id="bdCmp"></div>' +
+      '</div><aside class="bdSide"><div class="bdCard"><h3>이 빌딩 상담하기</h3><p>정확한 위치·임대 현황·수익률 자료는 상담 시 드립니다.</p>' +
+      '<a class="bdBtn p" href="tel:025551165">02-555-1165 전화 상담</a><a class="bdBtn o" href="/?ask=buy&amp;listing=' + it.id + '#consult">상담 신청 남기기</a></div>' +
+      '<div class="bdCard bdMini"><b>매물 번호</b> ' + it.id + '<br><b>확인일</b> ' + esc(String(it.date || '').replace(/-/g, '.')) + '<br><b>중개</b> 부동산다움' + (it.src === 'our' ? '' : ' (공동중개)') + '</div>' +
+      '<div class="bdLegal">부동산다움공인중개사사무소 · 개업공인중개사 안혁준 · 등록번호 제11680-2021-00537호 · 02-555-1165<br>표시·광고 명시사항: 소재지(동), 면적, 가격, 중개대상물 종류(건물), 거래형태(매매), 총 층수, 사용승인일.</div></aside></div>';
+    // 작은 지도
+    loadMap(function () {
+      NM = naver.maps; if (!it.lat || !$('bdMap')) return;
+      var p = new NM.LatLng(it.lat, it.lng), m = new NM.Map('bdMap', { center: p, zoom: 15, scaleControl: false, mapDataControl: false, zoomControl: true, zoomControlOptions: { position: NM.Position.TOP_RIGHT } });
+      new NM.Circle({ map: m, center: p, radius: 120, fillColor: '#294652', fillOpacity: 0.12, strokeColor: '#294652', strokeOpacity: 0.5, strokeWeight: 1.5, strokeStyle: 'shortdash' });
+    });
+    // 건축물대장 · 토지 · 실거래
+    fetch(SHEET_URL + '?sbld=' + encodeURIComponent(id)).then(function (r) { return r.json(); }).then(function (d) {
+      if (!$('bdBld')) return;
+      var h = '';
+      if (d.b) {
+        var reg = d.b.reg || {}, fv = flvHtml({ reg: reg, floor: '', elev: '' });
+        if (fv) h += fv.replace('<section class="dtSec dtFlv"><h2>층별 현황</h2>', '<section class="bdSec dtFlv"><h2>층별 현황 <span>건축물대장 층별개요</span></h2>');
+        h += bldRow(d.b);
+        if (reg.grnd && !it.ff) { it.ff = reg.grnd; it.bf = reg.ugrnd || 0; var s2 = scaleTxt(it); $('bdTitle').textContent = it.dong + ' · ' + s2 + ' 빌딩'; $('bdScale').textContent = s2.replace('지하', '지하 ').replace('지상', '지상 '); }
+      } else h += '<section class="bdSec"><h2>층별 현황</h2><p class="bdNote">' + esc(d.bErr || '건축물대장 정보를 불러오지 못했습니다.') + ' 상담 시 건축물대장을 보내 드립니다.</p></section>';
+      h += landRow(d.L, it);
+      $('bdBld').innerHTML = h; flvWatch();
+      var dl = d.deal || {}, k = $('bdDealK');
+      if (k) k.innerHTML = '<small>' + esc(it.dong) + ' 실거래 대지 평당</small><b>' + (dl.n ? eok2(dl.med) : '-') + '</b><em>' + (dl.n ? '최근 1년 ' + dl.n + '건 중간값' : '최근 1년 거래 없음') + '</em>';
+      var rows = [['이 매물 (호가)', it.pp, '#294652', 1]];
+      if (dl.n) rows.push([it.dong + ' 실거래 중간값 · 최근 1년', dl.med, '#BC975E']);
+      if (d.L && d.L[8]) rows.push(['이 필지 개별공시지가', d.L[8] * PY / 10000, '#7D96A0']);
+      if (jg) rows.push([it.dong + ' 공시지가 중간값', jg, '#A9BBC1']);
+      var mx = Math.max.apply(null, rows.map(function (r) { return r[1] || 0; }));
+      $('bdCmp').innerHTML = '<section class="bdSec"><h2>시세 비교 <span>대지 평당 금액</span></h2><div class="bdCard bdCmp">' + rows.map(function (r) {
+        return '<div class="r"><span>' + (r[3] ? '<b style="color:#294652">' + esc(r[0]) + '</b>' : esc(r[0])) + '</span><div class="bar"><i style="width:' + Math.max(2, r[1] / mx * 100) + '%;background:' + r[2] + '"></i></div><b>' + eok2(r[1]) + '</b></div>';
+      }).join('') + '<p class="bdNote" style="margin:2px 0 0">※ 호가는 매도 희망가로 실제 거래가와 다를 수 있습니다. 실거래는 국토교통부 상업·업무용 일반건물 매매 신고 자료(지분 거래 제외, 약식 집계)입니다.</p></div></section>';
+    }).catch(function () { if ($('bdBld')) $('bdBld').innerHTML = '<p class="bdNote">건축물대장·토지 정보를 불러오지 못했습니다. 잠시 후 다시 열어 주세요.</p>'; });
+    try { window.daumTrack && window.daumTrack('view_building', { id: id }); } catch (e) { }
+  }
+  function closeDetail() { DT.cur = ''; $('bsDt').hidden = true; document.body.style.overflow = ''; $('bsDtIn').innerHTML = ''; }
+  function route() { var m = /^#b\/(S[0-9A-F]{6})$/.exec(location.hash); if (m) openDetail(m[1]); else closeDetail(); }
+
+  /* ===== 시작 ===== */
+  document.addEventListener('click', function (e) {
+    var c = e.target.closest && e.target.closest('.bsCard'); if (c) { location.hash = 'b/' + c.dataset.id; return; }
+    var b = e.target.closest && e.target.closest('.bsSeg button'); if (b) { b.parentNode.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); }); F[b.parentNode.id === 'fPrice' ? 'price' : 'land'] = b.dataset.v; render(); }
+  });
+  document.addEventListener('mouseover', function (e) { var c = e.target.closest && e.target.closest('.bsCard'); document.querySelectorAll('.bsCard.hot,.bsPin.hot').forEach(function (x) { x.classList.remove('hot'); }); if (c) hot(c.dataset.id, true); });
+  $('fGu').onchange = function () { F.gu = this.value; F.dong = ''; dongOpts(); render(); };
+  $('fDong').onchange = function () { F.dong = this.value; render(); };
+  $('fSort').onchange = function () { F.sort = this.value; render(); };
+  $('bsBack').onclick = function () { if (history.length > 1 && /^#b\//.test(location.hash)) history.back(); else { location.hash = ''; } };
+  window.addEventListener('hashchange', route);
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !$('bsDt').hidden) $('bsBack').click(); });
+  var CK = 'daumSale.v1';
+  function use(d) {
+    ALL = (d.rows || []).map(function (it) { it.pp = it.land ? it.price / (it.land / PY) : 0; it.st = it.st || []; return it; });
+    dongOpts(); render(); route();
+  }
+  try { var o = JSON.parse(localStorage.getItem(CK) || 'null'); if (o && Date.now() - o.t < 864e5) use(o.d); } catch (e) { }
+  fetch(SHEET_URL + '?sale=1').then(function (r) { return r.json(); }).then(function (d) { try { localStorage.setItem(CK, JSON.stringify({ t: Date.now(), d: d })); } catch (e) { } use(d); })
+    .catch(function () { if (!ALL.length) $('bsList').innerHTML = '<div class="bsEmpty">매물을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.</div>'; });
+  initMap();
+
+  /* ===== 층별 현황 그림 (index.html 과 같은 코드) ===== */
+  function sameBldg() { return []; }
+  function floorKey(name) {
+    var t = String(name || '').replace(/\s+/g, ''), n = parseInt((/(\d+)/.exec(t) || [0, 1])[1], 10);
+    if (/옥탑|PH|R/i.test(t)) return 10000 + n;
+    if (/^(지하|지|B)/i.test(t)) return -n;
+    return n;
+  }
+  var FCAT = {   // 홈페이지 네이비·골드·아이보리 톤에 맞춘 차분한 색
+    sale: ['판매', '#E9D8BA'], office: ['업무', '#CDD6DD'], food: ['음식점', '#E7C8BA'], med: ['의료', '#B7CBD9'],
+    edu: ['교육', '#C8D5C0'], life: ['생활서비스', '#D9CEDA'], sport: ['운동시설', '#E2D7A8'], house: ['주거', '#DDD3C1'],
+    park: ['주차', '#E3E0D9'], mech: ['기계·계단실', '#C2C6CA'], etc: ['기타', '#ECE6DA']
+  };
+  function useCat(t) {
+    if (/주차|카리프트|차량/.test(t)) return 'park';
+    if (/기계|전기실|물탱크|펌프|계단|승강기|ELEV|발전|저수|정화|창고|화장실|공조/i.test(t)) return 'mech';
+    if (/의원|치과|한의|병원|의료|약국|조산/.test(t)) return 'med';
+    if (/음식|카페|커피|제과|주점/.test(t)) return 'food';
+    if (/학원|교습|독서실|교육|연구/.test(t)) return 'edu';
+    if (/체육|탁구|골프|당구|헬스|체력|무도|볼링|수영|운동|필라테스|요가/.test(t)) return 'sport';
+    if (/미용|용원|이용원|세탁|목욕|안마|네일|피부|사진/.test(t)) return 'life';
+    if (/사무소|사무실|업무|금융|오피스/.test(t)) return 'office';
+    if (/주택|다가구|다세대|공동주택|주거|원룸|아파트|기숙/.test(t)) return 'house';
+    if (/소매|판매|점포|매장|근린생활/.test(t)) return 'sale';
+    return 'etc';
+  }
+  function useShort(t) {
+    t = String(t || '').trim().replace(/이\(미\)용원/g, '미용원').replace(/\((?:연면적제외|연면적 제외)\)/g, '');
+    var m = /^([^(]*)\((.*)\)\s*$/.exec(t), main = m ? m[1].trim() : t, sub = m ? m[2].trim() : '';
+    sub = sub.replace(/^제?[12]종\s*근린생활시설\s*\(?/, '').replace(/\)+$/, '');
+    var pick = (/^(기타)?(제[12]종)?\s*근린생활시설$|^기타/.test(main) || !main) && sub ? sub : main;
+    pick = pick.replace(/^기타\s*/, '').replace(/제[12]종\s*/, '');
+    var parts = pick.replace(/\([^)]*\)/g, '').split(/[,·\/]/).map(function (x) { return x.trim(); }).filter(function (x) { return x && !/[A-Za-z]/.test(x); });
+    if (!parts.length) parts = [pick.replace(/[A-Za-z.()]+/g, '').trim()];
+    var out = parts.slice(0, 2).join('·');
+    return out.length > 8 ? out.slice(0, 7) + '…' : out;
+  }
+  function floorNameKo(n) { return String(n || '').replace(/^지(\d+)층$/, '지하 $1층').replace(/^옥탑\s*(\d+)\s*층$/, '옥탑 $1층').replace(/^지하(\d)/, '지하 $1'); }
+  function sameFloor(a, b) {
+    var k = function (s) { s = String(s || '').replace(/\s+/g, ''); var n = (/(\d+)/.exec(s) || [0, ''])[1]; return (/^(지하|지|B)/i.test(s) ? 'B' : /옥탑/.test(s) ? 'R' : '') + n; };
+    return k(a) && k(a) === k(b);
+  }
+  // 매물장 「층」 값으로 해당 층인지 판단: 3층 / B1 / 지하1층 / 1~2층 / 1,2층 / 지하1~지상2층 / 통임대·전층·건물 전체
+  function isHereFloor(name, fl) {
+    fl = String(fl || '').replace(/\s+/g, ''); if (!fl) return false;
+    // '연층(지하1층~1층)', '복층(1~2층)' 처럼 괄호 안에 층 범위가 있으면 그 범위만 사용
+    var par = /\(([^)]*\d[^)]*)\)/.exec(fl); if (par) fl = par[1];
+    fl = fl.replace(/^(연층|복층|연|복)/, '');
+    fl = fl.replace(/(지하|B)(\d+)층[~\-](\d+)층/gi, '$1$2층~지상$3층');   // 지하1층~1층 → 지하1층~지상1층
+    if (/통|전층|전체|건물/.test(fl)) return !/옥탑/.test(String(name));
+    var num = function (s) { s = String(s || ''); var m = /(\d+)/.exec(s); if (!m) return null; return /^(지하|지|B)/i.test(s) ? -(+m[1]) : /옥탑|R/i.test(s) ? 1000 + (+m[1]) : +m[1]; };
+    var me = num(String(name).replace(/\s+/g, '')); if (me == null) return false;
+    var parts = fl.replace(/층/g, '').split(/[,·\/]/);
+    return parts.some(function (p) {
+      var m = /^(.+?)[~\-](.+)$/.exec(p);
+      if (m) { var a = num(m[1]), b = num(/^(지하|지|B)/i.test(m[1]) && /^\d/.test(m[2]) && !/지상/.test(m[2]) ? m[1].replace(/\d+/, m[2]) : m[2].replace('지상', '')); if (a == null || b == null) return false; if (a > b) { var t = a; a = b; b = t; } return me >= a && me <= b; }
+      return num(p) === me;
+    });
+  }
+  // 층별개요 → 층별 묶음 (위층 → 아래층 순서)
+  function floorRows(reg) {
+    if (!reg || !reg.fl || !reg.fl.length) return [];
+    var groups = {}, order = [];
+    reg.fl.forEach(function (f) {
+      var area = +f[3]; if (!(area > 0)) return;
+      var key = String(f[0]).replace(/\s+/g, '');
+      if (!groups[key]) { groups[key] = { name: f[0], segs: [] }; order.push(key); }
+      var full = String(f[2] || ''), cat = useCat(full), sh = useShort(full) || FCAT[cat][0];
+      var prev = groups[key].segs.filter(function (s) { return s.full === full; })[0];   // 대장 용도 문구가 같을 때만 합침
+      if (prev) prev.area += area; else groups[key].segs.push({ cat: cat, label: sh, full: full, area: area });
+    });
+    var rows = order.map(function (k) { return groups[k]; }).sort(function (a, b) { return floorKey(b.name) - floorKey(a.name); });
+    rows.forEach(function (r) { r.tot = r.segs.reduce(function (s, x) { return s + x.area; }, 0); r.label = floorNameKo(r.name); });
+    return rows;
+  }
+
+  /* ===== 층별 현황: 왼쪽 표(층·대장 용도·층 합계 면적) + 오른쪽 입체도 =====
+   * - 엘리베이터: 대장에 승강기가 있을 때만 건물 왼쪽에 승강로를 그리고, 카가 움직이다 이 매물의 가장 윗층에 멈춤
+   * - 지반선(G.L) 아래는 흙색, 이 매물은 빨간 점선 · 같은 건물 추가임대는 노란 점선(누르면 그 매물로)
+   * - 지하가 지상 단일층의 2배를 넘으면 지상 기준으로 그리고 지하는 지상층의 최대 1.3배까지만 */
+  // 용도지역: 지역·지구 목록에서 「○○지역」만 (도시지역 제외)  예) 제2종일반주거지역 · 일반상업지역
+  function zoneTxt(z) {
+    var a = String(z || '').split(/\s*,\s*/).filter(function (v, i, l) { return /지역$/.test(v) && v !== '도시지역' && l.indexOf(v) === i; });
+    return a.join(' · ');
+  }
+  // 건축물대장 출력본의 층별 「용도」 칸 = 기타용도 문구 (주용도 코드는 계단실·기계실 등 공용부분도 건물 주된 용도로 잡혀 있음)
+  //   예) 「사무소 (기계실/전기실)」 → 기계실/전기실, 「사진관 (제2종근린생활시설(사진관))」 → 제2종근린생활시설(사진관), 기타용도가 없으면 주용도
+  function regUse(t) { var m = /^(.*?) \((.*)\)$/.exec(String(t || '').trim()); return m ? m[2].trim() : String(t || '').trim(); }
+  function flvHtml(it) {
+    var rows = floorRows(it.reg); if (!rows.length) return '';
+    var PY = 3.3058, n = rows.length, RH = n > 16 ? 40 : 46, TOP = 30, X0 = 96, MAXW = 200, DX = 22, DY = 12;
+    var isRoof = function (r) { return /옥탑|탑층/.test(r.name); }, isUnder = function (r) { return /^(지하|지\d|B\d)/i.test(String(r.name).replace(/\s+/g, '')); };
+    rows.forEach(function (r) { r.roof = isRoof(r); r.under = isUnder(r); r.here = isHereFloor(r.name, it.floor); r.cat = r.segs.slice().sort(function (a, b) { return b.area - a.area; })[0].cat; });
+    var xs = sameBldg(it);
+    rows.forEach(function (r) { if (r.here) return; var o = xs.filter(function (x) { return isHereFloor(r.name, x.floor); })[0]; if (o) r.add = o; });
+    var g = rows.filter(function (r) { return !r.under && !r.roof; }), b = rows.filter(function (r) { return r.under; });
+    var gMax = Math.max.apply(null, g.map(function (r) { return r.tot; }).concat([1])), bMax = Math.max.apply(null, b.map(function (r) { return r.tot; }).concat([0]));
+    var shrink = g.length && bMax > gMax * 2, CAP = gMax * 1.3, scale = MAXW / (shrink ? CAP : Math.max(gMax, bMax));
+    var wOf = function (r) { return Math.max(26, (shrink && r.under ? Math.min(r.tot, CAP) : r.tot) * scale); };
+    var gi = rows.findIndex(function (r) { return r.under; }); if (gi < 0) gi = n;
+    var y = function (i) { return TOP + i * RH; }, gy = y(gi), H = TOP + n * RH + 30, W = X0 + MAXW + DX + 90;
+    var C = { med: ['#C7D6E2', '#A9BCCB', '#E3ECF2'], sale: ['#EDE0C8', '#D8C6A6', '#F6EEDF'], food: ['#EBD6CB', '#D3B7A8', '#F5EAE4'], office: ['#D6DEE4', '#B9C6CF', '#ECF0F3'], edu: ['#D6E0CF', '#BCCAB2', '#EBF0E7'],
+      life: ['#E2D9E3', '#C9BCCB', '#F0EBF1'], sport: ['#E9E1BE', '#D2C79C', '#F4F0DE'], house: ['#E6DECF', '#CFC3AE', '#F2EEE6'], park: ['#E4E1DA', '#CBC7BE', '#F1EFEA'], mech: ['#CDD1D5', '#B3B8BD', '#E5E7E9'], etc: ['#E6E1D6', '#CFC8B9', '#F3F0EA'] };
+    var ST = ' stroke="#7F8E99" stroke-width=".8"', s = '';
+    if (gi < n) s += '<rect x="0" y="' + gy + '" width="' + W + '" height="' + (H - gy) + '" fill="#F3ECDF"/><line x1="0" x2="' + W + '" y1="' + gy + '" y2="' + gy + '" stroke="#8A6A35" stroke-width="1.6"/>' +
+      '<text x="4" y="' + (gy + 13) + '" font-size="10" fill="#8A6A35" font-weight="700">▲ 지반선 (G.L)</text>';
+    for (var i = n - 1; i >= 0; i--) {   // 아래층부터 그려서 위층이 덮도록
+      var r = rows[i], w = wOf(r), x = X0, yy = y(i) + 3, h = RH - 6, c = C[r.cat] || C.etc;
+      s += '<polygon points="' + x + ',' + yy + ' ' + (x + DX) + ',' + (yy - DY) + ' ' + (x + w + DX) + ',' + (yy - DY) + ' ' + (x + w) + ',' + yy + '" fill="' + c[2] + '"' + ST + '/>' +
+        '<polygon points="' + (x + w) + ',' + yy + ' ' + (x + w + DX) + ',' + (yy - DY) + ' ' + (x + w + DX) + ',' + (yy + h - DY) + ' ' + (x + w) + ',' + (yy + h) + '" fill="' + c[1] + '"' + ST + '/>' +
+        '<rect x="' + x + '" y="' + yy + '" width="' + w + '" height="' + h + '" fill="' + c[0] + '"' + ST + '/>';
+      if (!r.roof && w >= 52) s += '<text x="' + (x + 8) + '" y="' + (yy + h / 2 + 4) + '" font-size="11.5" font-weight="700" fill="#33414B">' + (r.tot / PY).toFixed(1) + '평</text>';
+    }
+    // 층 일부만 임대할 때: 전용면적 ÷ 그 층(들) 합계 면적 비율만큼만 점선 표시 (왼쪽부터)
+    var part = function (py, rs) { var t = 0; rs.forEach(function (r) { t += r.tot; }); return py > 0 && t > 0 ? Math.min(1, py * PY / t) : 1; };
+    var partBox = function (i, ra, col, py) {
+      // 층 오른쪽 끝(옆면 포함)에 임대 부분만큼 작은 블록처럼 표시 — 왼쪽의 층 합계 면적 글씨와 겹치지 않게
+      var r = rows[i], w = wOf(r), pw = Math.max(18, w * ra), xr = X0 + w, xl = xr - pw, yy = y(i) + 3, h = RH - 6;
+      var d = 'M' + xl + ' ' + (yy + h) + ' L' + xl + ' ' + yy + ' L' + (xl + DX) + ' ' + (yy - DY) + ' L' + (xr + DX) + ' ' + (yy - DY) + ' L' + (xr + DX) + ' ' + (yy + h - DY) + ' L' + xr + ' ' + (yy + h) + ' Z';
+      return '<path d="' + d + '" fill="' + col + '" fill-opacity=".18" stroke="' + col + '" stroke-width="2" stroke-dasharray="5 3" stroke-linejoin="round"/>' +
+        '<path d="M' + xl + ' ' + yy + ' L' + xr + ' ' + yy + ' L' + (xr + DX) + ' ' + (yy - DY) + ' M' + xr + ' ' + yy + ' L' + xr + ' ' + (yy + h) + '" fill="none" stroke="' + col + '" stroke-width="1.1" stroke-dasharray="3 2"/>' +
+        (py ? '<text x="' + (pw >= 32 ? xl + pw / 2 : xl - 5) + '" y="' + (yy + h / 2 + 4) + '" text-anchor="' + (pw >= 32 ? 'middle' : 'end') + '" font-size="10.5" font-weight="800" fill="' + col + '">' + Math.round(py) + '평</text>' : '');
+    };
+    var lx = X0 + MAXW + DX + 12;
+    rows.forEach(function (r, i) {
+      if (!r.add) return; var yy = y(i) + 3, o = r.add, ttl = '추가임대 · ' + (o.floor || '') + (o.area ? ' ' + Math.round(o.area) + '평' : '') + ' · 보증금 ' + (o.depText || '문의') + ' / 월세 ' + (o.rentText || '문의');
+      var ra = part(+o.area, [r]);
+      s += '<a href="#item/' + encodeURIComponent(o.id) + '" class="flAdd"><title>' + esc(ttl) + '</title>' + (ra < 0.95 ? partBox(i, ra, '#E0A82E', o.area) : '<rect x="' + (X0 - 3) + '" y="' + (yy - DY - 3) + '" width="' + (wOf(r) + DX + 6) + '" height="' + (RH - 6 + DY + 6) + '" fill="#E0A82E" fill-opacity=".08" stroke="#E0A82E" stroke-width="2" stroke-dasharray="6 4" rx="3"/>') +
+        '<rect x="' + lx + '" y="' + (yy + (RH - 6) / 2 - 10) + '" width="62" height="20" rx="10" fill="#E0A82E"/><text x="' + (lx + 31) + '" y="' + (yy + (RH - 6) / 2 + 4) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">추가임대</text></a>';
+    });
+    var here = rows.map(function (r, i) { return r.here ? i : -1; }).filter(function (i) { return i >= 0; });
+    if (here.length) {
+      var a = here[0], z = here[here.length - 1], ww = Math.max.apply(null, here.map(function (i) { return wOf(rows[i]); })), my = (y(a) + y(z) + RH) / 2;
+      var rh = part(+it.area, here.map(function (i) { return rows[i]; }));
+      s += (rh < 0.95 ? here.map(function (i) { return partBox(i, rh, '#C0392B', here.length === 1 ? it.area : 0); }).join('') : '<rect x="' + (X0 - 3) + '" y="' + (y(a) + 3 - DY - 3) + '" width="' + (ww + DX + 6) + '" height="' + ((z - a + 1) * RH - 6 + DY + 6) + '" fill="none" stroke="#C0392B" stroke-width="2" stroke-dasharray="6 4" rx="3"/>') +
+        '<rect x="' + lx + '" y="' + (my - 10) + '" width="56" height="20" rx="10" fill="#B0452B"/><text x="' + (lx + 28) + '" y="' + (my + 4) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">이 매물</text>';
+    }
+    var reg = it.reg || {}, ev = (+reg.elR || 0) + (+reg.elE || 0) > 0 || /^(O|Y|유|있)/i.test(it.elev || '');
+    if (ev) {   // 엘리베이터: 승강로 + 카(이 매물의 가장 윗층에서 멈춤) + 문 열린 엘리베이터 그림
+      var EVX = X0 - 26, top = rows.findIndex(function (r) { return !r.roof; }), t0 = y(top) + 3, t1 = y(n - 1) + RH - 3;
+      var stop = here.length ? here[0] : top, CH = RH - 10, cy = y(stop) + 5, from = (gi > 0 && gi - 1 > stop) ? gi - 1 : (stop === top ? n - 1 : top), d = y(from) - y(stop);
+      s += '<rect x="' + EVX + '" y="' + t0 + '" width="20" height="' + (t1 - t0) + '" fill="#F7F8F9"' + ST + '/><line x1="' + (EVX + 10) + '" x2="' + (EVX + 10) + '" y1="' + t0 + '" y2="' + t1 + '" stroke="#D3D8DC" stroke-width=".8"/>' +
+        '<text x="' + (EVX + 10) + '" y="' + (t0 - 6) + '" text-anchor="middle" font-size="9.5" font-weight="800" fill="#294652">E/V</text>' +
+        '<g class="evCar" style="--d:' + d + 'px"><rect x="' + (EVX + 2) + '" y="' + cy + '" width="16" height="' + CH + '" rx="2" fill="#294652"/><rect x="' + (EVX + 4) + '" y="' + (cy + 3) + '" width="5.5" height="' + (CH - 6) + '" fill="#7D96A6"/><rect x="' + (EVX + 10.5) + '" y="' + (cy + 3) + '" width="5.5" height="' + (CH - 6) + '" fill="#7D96A6"/></g>';
+      var ix = EVX - 62, iy = cy + CH / 2 - 23;
+      s += '<g class="evPop"><line x1="' + (ix + 52) + '" y1="' + (iy + 22) + '" x2="' + (EVX + 2) + '" y2="' + (cy + CH / 2) + '" stroke="#294652" stroke-width="1" stroke-dasharray="2 2"/>' +
+        '<rect x="' + ix + '" y="' + iy + '" width="52" height="46" rx="5" fill="#2F6FA6"/><rect x="' + (ix + 6) + '" y="' + (iy + 4) + '" width="40" height="7" rx="2" fill="#16334A"/>' +
+        '<path d="M' + (ix + 20) + ' ' + (iy + 9.5) + ' l2.5 -3.5 l2.5 3.5z M' + (ix + 29) + ' ' + (iy + 6) + ' l2.5 3.5 l2.5 -3.5z" fill="#3DDC84"/>' +
+        '<rect x="' + (ix + 8) + '" y="' + (iy + 13) + '" width="36" height="31" fill="#C9D5DE"/><rect x="' + (ix + 11) + '" y="' + (iy + 15) + '" width="30" height="29" fill="#E9EEF2"/>' +
+        '<rect x="' + (ix + 8) + '" y="' + (iy + 13) + '" width="5" height="31" fill="#9FB3C2"/><rect x="' + (ix + 39) + '" y="' + (iy + 13) + '" width="5" height="31" fill="#9FB3C2"/>' +
+        '<circle cx="' + (ix + 26) + '" cy="' + (iy + 21) + '" r="3.4" fill="#5B4636"/><path d="M' + (ix + 20.5) + ' ' + (iy + 38) + ' v-8 q0 -5 5.5 -5 q5.5 0 5.5 5 v8z" fill="#E8B53A"/><rect x="' + (ix + 22) + '" y="' + (iy + 38) + '" width="3.2" height="6" fill="#2D4A5C"/><rect x="' + (ix + 26.8) + '" y="' + (iy + 38) + '" width="3.2" height="6" fill="#2D4A5C"/>' +
+        '<rect x="' + (ix + 2) + '" y="' + (iy + 44) + '" width="48" height="2.5" fill="#4A5A66"/></g>';
+    }
+    // 워터마크: 작은 「부동산다움 02-555-1165」를 비스듬히 아주 옅게 반복 (도식을 가리지 않으면서 잘라 가도 남음)
+    var wm = '';
+    for (var wy = 40, wr = 0; wy < H - 34; wy += 70, wr++) for (var wx = wr % 2 ? -40 : 20; wx < W; wx += 150)
+      wm += '<text x="' + wx + '" y="' + wy + '" transform="rotate(-20 ' + wx + ' ' + wy + ')">부동산다움 02-555-1165</text>';
+    s += '<g class="flvWm" opacity=".09" font-size="13" font-weight="800" fill="#294652" pointer-events="none">' + wm + '</g>' +
+      '<defs><linearGradient id="flvBand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0F1920" stop-opacity="0"/><stop offset="1" stop-color="#0F1920" stop-opacity=".62"/></linearGradient></defs>' +
+      '<rect x="0" y="' + (H - 26) + '" width="' + W + '" height="26" fill="url(#flvBand)" pointer-events="none"/>' +
+      '<rect x="10" y="' + (H - 16) + '" width="3.4" height="9" fill="#C9A46A"/><path d="M14.6 ' + (H - 16) + 'h1.6a4.5 4.5 0 0 1 0 9h-1.6z" fill="#fff"/>' +
+      '<text x="22" y="' + (H - 8) + '" font-size="11" font-weight="700" fill="#fff">부동산다움 · r-daum.com</text><text x="' + (W - 10) + '" y="' + (H - 8) + '" text-anchor="end" font-size="11" font-weight="600" fill="#fff">02-555-1165</text>';
+    var svg = '<svg class="flvSvg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="층별 현황 입체도">' + s + '</svg>';
+    var m2t = function (v) { return Number(v).toLocaleString('ko-KR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
+    var tbl = rows.map(function (r, i) {
+      var use = r.segs.slice().sort(function (p, q) { return q.area - p.area; }).map(function (x) { return regUse(x.full); }).filter(function (v, k, l) { return v && l.indexOf(v) === k; }).join(' · ') || '-', full = r.segs.map(function (x) { return x.full + ' ' + m2t(x.area) + '㎡'; }).join(' / ');
+      return '<div class="flvR' + (r.here ? ' me' : '') + (r.add ? ' ad' : '') + (i === gi ? ' gl' : '') + '" style="height:' + RH + 'px" title="' + esc(full) + '"><b>' + esc(r.label) + '</b><span>' + esc(use) + '</span><em>' + (r.tot / PY).toFixed(2) + '평<small>' + m2t(r.tot) + '㎡</small></em></div>';
+    }).join('');
+    return '<section class="dtSec dtFlv"><h2>층별 현황</h2><div class="flv"><div class="flvT"><div class="flvHd"><b>층</b><span>건축물대장상 용도</span><em>층 합계 면적</em></div><div style="height:' + (TOP - 26) + 'px"></div>' + tbl + '</div><div class="flvD">' + svg + '</div></div>' +
+      '<p class="dtNote">※ 건축물대장상 용도로, 실제 업종과 다를 수 있습니다. 입체도는 층별 면적 비율로 그린 개념도입니다.' +
+      (shrink ? '<br>※ 지하층은 지상층보다 훨씬 넓은 경우 지상층의 최대 1.3배까지로 표시됩니다. 실제 면적은 왼쪽 표를 확인하세요.' : '') + '</p></section>';
+  }
+  var flvIO = window.IntersectionObserver ? new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('go'); flvIO.unobserve(e.target); } }); }, { threshold: 0.35 }) : null;
+  function flvWatch() { document.querySelectorAll('#bdBld .flvD:not(.go)').forEach(function (el) { if (flvIO) flvIO.observe(el); else el.classList.add('go'); }); }
+})();
+</script>
+<script>
+(function(){
+  function fit(){
+    document.querySelectorAll('.dmLock').forEach(function(b){
+      var n=b.querySelector('.dmName'), t=b.querySelector('.dmTag'); if(!n||!t) return;
+      t.style.letterSpacing='0px'; t.style.marginRight='0px';
+      var trail=parseFloat(getComputedStyle(n).letterSpacing)||0, nw=n.scrollWidth-trail, tw=t.getBoundingClientRect().width, k=t.textContent.length;
+      if(nw>0&&tw>0&&k>1){var ls=Math.max(0,(nw-tw)/(k-1)); t.style.letterSpacing=ls+'px'; t.style.marginRight=(-ls)+'px';}
+    });
+  }
+  fit(); if(document.fonts&&document.fonts.ready) document.fonts.ready.then(fit); window.addEventListener('load',fit);
+})();
+</script>
+<script>/* 휴대폰: 현재 메뉴(빌딩 매매 실거래가)가 잘리지 않게 메뉴 줄을 옆으로 밀어 둠 */
+(function(){var n=document.querySelector('.mainNav'),a=n&&n.querySelector('a[aria-current]');if(!a||n.scrollWidth<=n.clientWidth)return;n.scrollLeft=Math.max(0,a.offsetLeft-n.offsetLeft-(n.clientWidth-a.offsetWidth)/2);})();</script>
+</body>
+</html>
