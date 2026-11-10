@@ -1711,6 +1711,11 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
    * ================================================================ */
   var SHEET_URL = window.BD_SHEET_URL = 'https://script.google.com/macros/s/AKfycbyevvh7GTqebd5C3a8A2e8dKpkh2ujZeQL0i0xBYo9MvdvMwZ9g67u2yC89kRqKkLoKJg/exec';
   var NAVER_KEY = 'i0aavzp1qg';
+  // 빌딩 매매 페이지(buildings.html)는 이 파일과 같은 코드에 <meta name="bd-mode" content="sale"> 만 다름
+  var SM = !!document.querySelector('meta[name="bd-mode"][content="sale"]');
+  var eokT = function (man) { if (!man) return '문의'; var e = man / 10000; return (e >= 100 ? Math.round(e).toLocaleString() : (Math.round(e * 10) / 10).toString().replace(/\.0$/, '')) + '억'; };
+  var eok2 = function (man) { return man ? (man / 10000).toFixed(2).replace(/\.?0+$/, '') + '억' : '-'; };
+  var scShort = function (it) { return it.ff ? (it.bf ? 'B' + it.bf + '~' : '') + it.ff + 'F' : ''; };
 
   var DEMO = [
     { id: 'S650H6F3', cats: ['clinic', 'office'], catLabel: '병의원·사무실', title: '압구정로데오 도산공원 전망, 높은 층고·전면창', point: '도산공원 조망 · 무권리 · 즉시입주', dong: '신사동', floor: '3층', area: 60, depText: '2억', rentText: '1,500만', mgmt: '100만', premium: '무권리', parking: '무료 1대 · 발렛', elev: 'O', lat: 37.5237, lng: 127.0353 },
@@ -1856,6 +1861,14 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 
   /* ---------- 지도 말풍선 내용 ---------- */
   function itemPopup(it) {
+    if (it.sale) return '<div class="mpop"><div class="mpopCat">빌딩 매매 · No.' + esc(it.id) + '</div>' +
+      '<div class="mpopTitle">' + esc(it.title) + '</div>' +
+      '<div class="mpopPrice">매매 ' + esc(it.depText) + ' <span>대지 평당 ' + esc(it.rentText) + '</span></div>' +
+      '<div class="mpopMeta">대지 ' + Math.round(it.area) + '평 · 연면적 ' + Math.round(it.bldPy || 0) + '평' + (it.floor ? ' · ' + esc(it.floor) : '') + (it.yr ? ' · ' + it.yr + '년' : '') + '</div>' +
+      (it.st && it.st[0] ? '<div class="mpopMeta">' + esc(it.st[0][0]) + ' 도보 약 ' + it.st[0][2] + '분</div>' : '') +
+      '<div style="display: flex; gap: 6px; margin-top: 4px"><a href="#item/' + encodeURIComponent(it.id) + '" class="mpopBtn" style="flex: 1; margin: 0">상세 보기</a>' +
+      '<a href="#consult" class="mpopBtn" data-ask="' + esc(it.id) + '" style="flex: 1; margin: 0; background: #FFFFFF; color: #294652 !important; border: 1px solid #294652">문의하기</a></div>' +
+      '<button type="button" class="mpopClose" aria-label="닫기">×</button></div>';
     return '<div class="mpop">' +
       (it.photos && it.photos.length ? '<img class="mpopImg" src="' + photoUrl(it.photos[0], 600) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">' : '') +
       '<div class="mpopCat">' + esc(it.catLabel) + ' · No.' + esc(it.id) + '</div>' +
@@ -1870,11 +1883,13 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   function clusterPopup(g) {
     return '<div class="mpop"><div class="mpopCat">이 주변 매물 ' + g.items.length + '건</div><div class="mpopList">' +
       g.items.slice().sort(function (a, b) { return floorKey(a.floor) - floorKey(b.floor) || (a.area || 0) - (b.area || 0); }).slice(0, 12).map(function (it) {
+        if (it.sale) return '<button type="button" data-focus="' + esc(it.id) + '"><b>' + esc(scShort(it) || '빌딩') + ' · 대지 ' + Math.round(it.area) + '평</b><span>매매 ' + esc(it.depText) + ' / 대지 평당 ' + esc(it.rentText) + '</span></button>';
         return '<button type="button"' + (it.unv ? ' class="unv"' : '') + ' data-focus="' + esc(it.id) + '"><b>' + esc(it.floor || '') + ' · ' + esc(areaText(it.area)) + '</b><span>보 ' + esc(it.depText) + ' / 월 ' + esc(it.rentText) + ' / 관 ' + esc(it.mgmt || (it.unv ? '확인요청' : '문의')) + '</span></button>';
       }).join('') + (g.items.length > 12 ? '<div class="mpopMeta">외 ' + (g.items.length - 12) + '건은 왼쪽 목록에서 확인하세요</div>' : '') +
       '</div><button type="button" class="mpopClose" aria-label="닫기">×</button></div>';
   }
   function pinHtml(it) {
+    if (it.sale) return '<div class="pinWrap"><span class="pinLabel' + (it.id === focusId ? ' on' : '') + '">' + (scShort(it) ? '<span class="pinArea">' + esc(scShort(it)) + '</span>' : '') + esc(it.depText) + '</span></div>';
     var fl = String(it.floor || '').replace(/\s+/g, '').replace(/^연층\((.*)\)$/, '$1').replace(/^통임대\(.*\)$/, '통임대');   // 층 | 평 (통임대(지하1층~5층) → 통임대)
     var area = it.area ? Math.round(it.area) + '평' : '';
     var main = area || it.catLabel || '';
@@ -2028,7 +2043,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   var HEAT = { on: false, fl: 'all', objs: [] };
   var HCOL = [[243, 233, 214], [217, 185, 127], [156, 111, 46], [90, 58, 16]];
   var HEAT_Z = 15;   // 이보다 멀리 보면 매물 대신 임대 평단가 (빌딩 매매 실거래가의 동별 대지 평당가처럼)
-  function heatActive() { return M && M.kind === 'naver' && M.raw && (HEAT.on || M.raw.getZoom() < HEAT_Z); }
+  function heatActive() { return !SM && M && M.kind === 'naver' && M.raw && (HEAT.on || M.raw.getZoom() < HEAT_Z); }
   function heatFloor(f) { f = String(f || ''); return /지하|^\s*B\d/i.test(f) ? 'b' : /^\s*1\s*층|^\s*1F/i.test(f) ? '1' : 'up'; }
   function heatPoints() {
     return ITEMS.filter(function (it) {
@@ -2200,6 +2215,10 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   // 매물장 「특징」에서 고른 말 (병의원 · 인테리어 · 통임대 등)
   function tagsOf(it) { return (it && it.tags && it.tags.length ? it.tags : []).filter(function (t) { return t && t !== '무권리'; }); }
   function miHtml(it) {
+    if (it.sale) return '<button type="button" class="mapItem' + (it.id === focusId ? ' on' : '') + '" data-id="' + esc(it.id) + '">' +
+      '<span class="miMeta">' + (it.src === 'our' ? '다움 매물' : '공동중개') + ' · ' + esc(it.dong) + '</span>' +
+      '<span class="miTitle">' + listTitle(it.title) + '</span>' +
+      '<span class="miPrice">매매 <b class="miDep">' + esc(it.depText) + '</b><i>/</i>대지 평당 <b class="miRent">' + esc(it.rentText) + '</b>' + (it.yr ? '<i>/</i><b class="miMg">' + it.yr + '년</b>' : '') + '</span></button>';
     return '<button type="button" class="mapItem' + (it.id === focusId ? ' on' : '') + '" data-id="' + esc(it.id) + '">' +
       '<span class="miMeta">' + esc(it.catLabel) + ' · ' + esc(it.dong) + tagsOf(it).map(function (t) { return '<em class="miTag">' + esc(t) + '</em>'; }).join('') + '</span>' +
       '<span class="miTitle">' + listTitle(miTitleText(it)) + '</span>' +
@@ -2211,7 +2230,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     var k = ($('mapSort') || {}).value || 'd', idx = {}; a.forEach(function (it, i) { idx[it.id] = i; });
     var dv = function (it) { return String(it.date || '').replace(/\D/g, ''); };
     return a.slice().sort(function (x, y) {
-      var r = k === 'r' ? (manOf(y.rent, y.rentText) || 0) - (manOf(x.rent, x.rentText) || 0) : k === 'a' ? (+y.area || 0) - (+x.area || 0) : (dv(x) < dv(y) ? 1 : dv(x) > dv(y) ? -1 : 0);
+      var r = k === 'r' ? (SM ? (y.dep || 0) - (x.dep || 0) : (manOf(y.rent, y.rentText) || 0) - (manOf(x.rent, x.rentText) || 0)) : k === 'a' ? (+y.area || 0) - (+x.area || 0) : (dv(x) < dv(y) ? 1 : dv(x) > dv(y) ? -1 : 0);
       return r || idx[x.id] - idx[y.id];
     });
   }
@@ -2250,6 +2269,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     v = String(v || '').replace(/[,\s]/g, ''); if (!v) return null;
     var m;
     if (floor && (m = /^(?:B|b|지하|지|-)(\d+)/.exec(v))) return -(+m[1]);
+    if (SM && (m = /^([\d.]+)억?$/.exec(v))) return parseFloat(m[1]);
     if ((m = /^([\d.]+)억([\d.]*)/.exec(v))) return parseFloat(m[1]) * 10000 + (parseFloat(m[2]) || 0);
     var n = parseFloat(v); return isFinite(n) ? n : null;
   }
@@ -2295,6 +2315,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   }
   // 같은 건물(같은 좌표·같은 동)의 다른 임대 매물
   function sameBldg(it) {
+    if (SM || (it && it.sale)) return [];
     if (!it || !isFinite(it.lat) || !it.lat) return [];
     return ITEMS.filter(function (o) { return o.id !== it.id && isFinite(o.lat) && Math.abs(o.lat - it.lat) < 0.00002 && Math.abs(o.lng - it.lng) < 0.00002 && (o.dong || '') === (it.dong || ''); })
       .sort(function (a, b) { return (floorNum(a.floor) || 0) - (floorNum(b.floor) || 0); });
@@ -2734,7 +2755,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
         (photos.length > 1 ? '<button type="button" class="dtNav prev" aria-label="이전 사진"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button type="button" class="dtNav next" aria-label="다음 사진"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>' : '') + '</div>' +
         (photos.length > 1 ? '<div class="dtThumbs dtThumb5" role="list">' + photos.map(function (p, i) { return p ? '<button type="button" role="listitem" data-i="' + i + '" class="' + (i ? '' : 'on') + '" aria-label="' + (i + 1) + '번째 사진"><img src="' + photoUrl(p, 400) + '" alt="" loading="lazy" referrerpolicy="no-referrer"></button>' : '<span class="dtThumbEmpty" aria-hidden="true"></span>'; }).join('') + '</div>' : '') + '</div>'
       : '<div class="dtNoPhoto" id="dtNoPhoto"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#BC975E" stroke-width="1.5" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><path d="M21 16l-5-5-8 8"></path></svg><b>현장 사진 준비 중</b><span>실제 내부 사진과 도면은 상담 시 바로 보내드립니다.<br>02-555-1165</span></div>';
-    var price = '<div class="dtPrice"><div><small>보증금</small><b>' + esc(it.depText || '문의') + '</b></div><div class="rent"><small>월세</small><b>' + esc(it.rentText || '문의') + '</b></div>' +
+    var price = it.sale ? salePriceHtml(it) : '<div class="dtPrice"><div><small>보증금</small><b>' + esc(it.depText || '문의') + '</b></div><div class="rent"><small>월세</small><b>' + esc(it.rentText || '문의') + '</b></div>' +
       '<div><small>관리비</small><b>' + esc(it.mgmt || (it.unv ? '확인요청' : '문의')) + '</b></div><div class="prem"><small>권리금</small><b>' + esc(it.premium || (it.unv ? '확인요청' : '문의')) + '</b></div></div>';
     var desc = nz(it.desc) ? esc(it.desc) :
       esc((it.dong || '') + ' ' + (it.floor || '') + ' ' + (it.catLabel || '') + ' 임대 매물입니다.\n' +
@@ -2747,7 +2768,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     var parkTxt = [nz(it.parkTotal) ? '건축물대장 ' + nz(it.parkTotal) : '', nz(it.parking) ? '실제 사용 가능 ' + nz(it.parking) : ''].filter(Boolean).join(' / ');
     var dirTxt = nz(it.direction) ? (/기준/.test(it.direction) ? it.direction : it.direction + ' (주된 출입구 기준)') : '';
     // 두 열(왼쪽·오른쪽) 7줄: 소재지|가격 · 거래 형태|관리비 · 해당층|권리금 · 전용면적|주차대수 · 종류|엘리베이터 · 방향|화장실 · 사용승인일|입주가능일
-    var info = '<dl class="dtI2">' +
+    var info = it.sale ? saleInfoHtml(it) : '<dl class="dtI2">' +
       infoRow('소재지', (it.gu || '강남구') + ' ' + (it.dong || '') + (it.floor ? ' · ' + it.floor : '')) +
       infoRow('가격', '보증금 ' + (it.depText || '문의') + ' / 월세 ' + (it.rentText || '문의')) +
       infoRow('거래 형태', '임대차 (월세)') +
@@ -2770,7 +2791,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     var floorBoxOld = hasFl ? '<div class="dtFloorBox"><h3>층별 현황</h3><div id="dtFloor" class="dtFloor"></div><p class="dtFloorNote">※ 건축물대장상 용도로, 실제 업종과 다를 수 있습니다.</p></div>' : '';
     // ── 건축물대장 (표제부·층별현황·지역지구) ──
     var reg = it.reg, regHtml = '';
-    var bldMsg = !it.unv || reg ? '' : !it.bldDone ? '<p class="dtBldMsg" id="dtBldMsg"><span class="spin" aria-hidden="true"></span>건축물대장(층별 현황·건축물정보)을 불러오는 중입니다…</p>'
+    var bldMsg = !(it.unv || it.sale) || reg ? '' : !it.bldDone ? '<p class="dtBldMsg" id="dtBldMsg"><span class="spin" aria-hidden="true"></span>건축물대장(층별 현황·건축물정보)을 불러오는 중입니다…</p>'
       : it.bldMsg ? '<p class="dtBldMsg off" id="dtBldMsg">' + esc(it.bldMsg) + '</p>' : '';
     if (reg) {
       var a = function (v) { return v ? Number(v).toLocaleString('ko-KR', { maximumFractionDigits: 2 }) + '㎡' : ''; };
@@ -2803,8 +2824,10 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     var office = '<div class="dtOffice">' + OFFICE_INFO.map(function (o) { return '<div><b>' + o[0] + '</b><span>' + o[1] + '</span></div>'; }).join('') + '</div>';
     var callSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>';
     var side = '<aside class="dtSide"><div class="dtCard">' +
-      '<div class="dtCardTop"><small>No.' + esc(it.id) + '</small><small>' + esc(areaText(it.area)) + ' · ' + esc(it.floor || '') + '</small></div>' +
-      '<div class="dtCardPrice">보증금 ' + esc(it.depText || '문의') + '<br>월세 <em>' + esc(it.rentText || '문의') + '</em><span class="dtCardSep" aria-hidden="true"></span><span class="dtCardMgmt">관리비 ' + esc(it.mgmt || (it.unv ? '확인요청' : '문의')) + '</span></div>' +
+      (it.sale ? '<div class="dtCardTop"><small>No.' + esc(it.id) + '</small><small>대지 ' + Math.round(it.area) + '평 · ' + esc(it.floor || '') + '</small></div>' +
+        '<div class="dtCardPrice">매매가 <em>' + esc(it.depText) + '</em><span class="dtCardSep" aria-hidden="true"></span><span class="dtCardMgmt">대지 평당 ' + esc(it.rentText) + '</span></div>'
+      : '<div class="dtCardTop"><small>No.' + esc(it.id) + '</small><small>' + esc(areaText(it.area)) + ' · ' + esc(it.floor || '') + '</small></div>' +
+      '<div class="dtCardPrice">보증금 ' + esc(it.depText || '문의') + '<br>월세 <em>' + esc(it.rentText || '문의') + '</em><span class="dtCardSep" aria-hidden="true"></span><span class="dtCardMgmt">관리비 ' + esc(it.mgmt || (it.unv ? '확인요청' : '문의')) + '</span></div>') +
       '<a href="tel:025551165" class="dtCall">' + callSvg + '전화 상담 02-555-1165</a>' +
       (/^https:\/\/([a-z0-9-]+\.)*(naver\.me|land\.naver\.com)\//i.test(nz(it.naverUrl)) ? '<a href="' + esc(it.naverUrl) + '" target="_blank" rel="noopener" class="dtNaver"><span class="dtN">N</span>네이버 부동산에서 보기</a>' : '') +
       '</div>' +
@@ -2819,7 +2842,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       '<p class="dtSmall">※ 매물 정보는 등록 시점 기준이며 실제와 다를 수 있습니다. 계약 전 현장과 공부서류를 반드시 확인해 주세요.</p></aside>';
     return '<div class="dtWrap"><div class="dtPrintHead" aria-hidden="true"><b>DAUM REAL ESTATE</b><span>부동산다움공인중개사사무소 · 개업공인중개사 안혁준 · 등록번호 제11680-2021-00537호</span><span>서울특별시 강남구 신사동 578-1 일상빌딩 1층 · 02-555-1165 · r-daum.com</span></div>' +
       '<nav class="dtCrumb" aria-label="현재 위치"><button type="button" class="dtBack"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>목록으로</button>' +
-      '<span><a href="#top">홈</a> <i>›</i> ' + (DT.from === 'listings' || DT.from === 'fa' ? '<a href="#listings">추천 매물</a>' : '<a href="#map">상가·사무실 임대</a>') + ' <i>›</i> No.' + esc(it.id) + '</span></nav>' +
+      '<span><a href="#top">홈</a> <i>›</i> ' + (DT.from === 'listings' || DT.from === 'fa' ? '<a href="#listings">추천 매물</a>' : '<a href="#map">' + (it.sale ? '빌딩 매매' : '상가·사무실 임대') + '</a>') + ' <i>›</i> No.' + esc(it.id) + '</span></nav>' +
       '<div class="dtHead"><div><div class="dtBadges">' + badges + '</div><h1 class="dtTitle">' + esc(it.title) + '</h1>' +
       '</div>' +
       '<div class="dtTools"><button type="button" class="dtTool" data-act="share"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"></path></svg><span>링크 복사</span></button>' +
@@ -2827,10 +2850,10 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       '<div class="dtGrid"><div class="dtMain">' + gal + price +
       '<section class="dtSec"><div class="dtH2r"><h2>매물 정보</h2><span class="dtNo"><small>매물번호</small><b>' + esc(it.id) + '</b><button type="button" class="dtNoCp" onclick="var b=this;try{navigator.clipboard.writeText(\'' + esc(it.id) + '\').then(function(){b.textContent=\'복사됨\';setTimeout(function(){b.textContent=\'복사\'},1500)})}catch(e){}">복사</button></span></div>' + bldMsg + '<div class="dtInfoGrid solo">' + info + '</div>' +
       '<p class="dtNote">※ 「중개대상물의 표시·광고 명시사항 세부기준」에 따른 표시입니다. 소재지는 동까지만 표시하며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
-      (it.reg ? flvHtml(it) : '') +
+      (it.reg ? flvHtml(it.sale ? { reg: it.reg, floor: '', elev: it.elev, area: 0 } : it) : '') +
       addHtml(it) +
-      '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
-      regHtml +
+      '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p>' + (it.sale ? saleStHtml(it) : '') + '</section>' +
+      regHtml + (it.sale ? saleExtraHtml(it) : '') +
       '<section class="dtSec"><h2>중개사무소 정보</h2>' + office + '</section>' +
       '</div>' + side + '</div>' +
       '</div>';
@@ -2901,6 +2924,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
         if (window.naver && naver.maps && naver.maps.Map && M && M.kind === 'naver') {
           var c = new naver.maps.LatLng(it.lat, it.lng);
           var mp = new naver.maps.Map(el, { center: c, zoom: 17, scrollWheel: false, zoomControl: true, zoomControlOptions: { position: naver.maps.Position && naver.maps.Position.TOP_RIGHT } });
+          if (it.sale) { mp.setZoom(16); new naver.maps.Circle({ map: mp, center: c, radius: 120, fillColor: '#294652', fillOpacity: 0.12, strokeColor: '#294652', strokeOpacity: 0.55, strokeWeight: 1.5, strokeStyle: 'shortdash' }); return; }
           new naver.maps.Marker({ position: c, map: mp, zIndex: 100, icon: { content: pin, anchor: naver.maps.Point ? new naver.maps.Point(15, 15) : undefined } });
           try { drawWalk(mp, it); } catch (e) { }
           return;
@@ -3096,7 +3120,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     document.title = it.title + ' | 부동산다움';
     paintDetail(it);
     window.scrollTo(0, 0);
-    if (it.unv && !it.bldDone) loadGsBld(it);   // 업종현황은 표시하지 않음
+    if ((it.unv || it.sale) && !it.bldDone) loadGsBld(it);   // 업종현황은 표시하지 않음
   }
   /* ---------- 업종현황 (소상공인시장진흥공단 상가업소 정보) ---------- */
   function shopsInner(it) {
@@ -3121,7 +3145,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   }
   function paintDetail(it) {
     DT.el.innerHTML = detailHtml(it);
-    bindDetail(it); detailMap(it); renderFloors(); renderAddSum(it); DT.el.querySelectorAll('input[data-add]').forEach(function (c) { c.addEventListener('change', function () { renderAddSum(it); }); }); if (!(it.photos && it.photos.length)) detailPano(it);
+    bindDetail(it); detailMap(it); renderFloors(); renderAddSum(it); DT.el.querySelectorAll('input[data-add]').forEach(function (c) { c.addEventListener('change', function () { renderAddSum(it); }); }); if (!(it.photos && it.photos.length) && !it.sale) detailPano(it);
   }
   // 공실매물관 매물: 상세를 열 때 건축물대장(층별 현황·건축물정보)을 불러와 다시 그림
   function loadGsBld(it) {
@@ -3130,8 +3154,9 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       it.bldBusy = 0; it.bldMsg = msg;
       var w = DT.el && DT.el.querySelector('#dtBldMsg'); if (w && DT.it === it) { w.className = 'dtBldMsg off'; w.textContent = msg; }
     };
-    fetch(SHEET_URL + (SHEET_URL.indexOf('?') < 0 ? '?' : '&') + 'bld=' + encodeURIComponent(it.id)).then(function (r) { return r.json(); }).then(function (d) {
+    fetch(SHEET_URL + (SHEET_URL.indexOf('?') < 0 ? '?' : '&') + (it.sale ? 'sbld=' : 'bld=') + encodeURIComponent(it.id)).then(function (r) { return r.json(); }).then(function (d) {
       it.bldDone = 1;
+      if (it.sale && d && d.ok) { it.land = d.L || null; it.deal = d.deal || null; if (!d.b) { it.bldMsg = d.bErr ? '※ ' + d.bErr + '. 건물 정보는 상담 시 확인해 드립니다.' : ''; if (DT.it === it && DT.el && !DT.el.hidden) { var y0 = window.scrollY; paintDetail(it); window.scrollTo(0, y0); } it.bldBusy = 0; return; } }
       if (!(d && d.ok && d.b)) {
         done(d && d.none ? '※ 건축물대장에서 이 건물을 찾지 못했습니다. 건물 정보는 상담 시 확인해 드립니다.'
           : d && d.error ? '※ 건축물대장 정보를 지금 불러오지 못했습니다 (' + d.error + '). 건물 정보는 상담 시 확인해 드립니다.'
@@ -3142,6 +3167,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       if (b.floors) it.totalFloor = b.floors; if (b.approval) it.approval = b.approval;
       it.usage = b.usage || it.usage; it.structure = b.structure || it.structure; it.totArea = b.totArea || 0;
       it.parkTotal = b.park ? b.park + '대' : ''; it.bldElev = b.elev || 0; it.bldSrc = 1; it.reg = b.reg || null;
+      if (it.sale && it.reg && it.reg.grnd && !it.ff) { it.ff = it.reg.grnd; it.bf = it.reg.ugrnd || 0; it.floor = saleScale(it); }
       it.bldBusy = 0;
       if (DT.it === it && DT.el && !DT.el.hidden && document.body.classList.contains('detailMode')) { var y = window.scrollY; paintDetail(it); window.scrollTo(0, y); }
     }).catch(function () { it.bldDone = 0; done('※ 건축물대장 정보를 불러오지 못했습니다. 잠시 후 다시 열어 주세요.'); });
@@ -3640,9 +3666,126 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { var d = faEl('faOv'); if (d && !d.hidden) faClose(); } });
   document.addEventListener('click', function (e) { var a = e.target.closest('a[data-fa]'); if (!a) return; e.preventDefault(); faOpen(); });
 
+  /* ================= 빌딩 매매 (buildings.html · SM) =================
+   * 목록: ?sale=1 (우리 매물 + 공클(매매) 노출 매물) · 상세: ?sbld=ID (건축물대장 + 토지특성 + 동 실거래)
+   * 지번·건물명은 받지 않음. 지도 위치는 약 100m 단위로 흐린 값 */
+  var PYC = 3.3058;
+  var JIGA_D = {"강남구|역삼동":5825,"강남구|개포동":2777,"강남구|청담동":7302,"강남구|삼성동":7554,"강남구|대치동":6053,"강남구|신사동":6655,"강남구|논현동":5296,"강남구|압구정동":15217,"강남구|세곡동":2467,"강남구|자곡동":3425,"강남구|율현동":2129,"강남구|일원동":3299,"강남구|수서동":4860,"강남구|도곡동":4069,"서초구|방배동":3904,"서초구|양재동":3395,"서초구|우면동":2603,"서초구|원지동":1858,"서초구|잠원동":4466,"서초구|반포동":4215,"서초구|서초동":5041,"서초구|내곡동":2117,"서초구|염곡동":1963,"서초구|신원동":2119};   // 동별 개별공시지가 중간값 (만원/평, 상업·업무용 대지)
+  var LINES = { '압구정역': ['3'], '신사역': ['3', '신분당'], '압구정로데오역': ['수인분당'], '청담역': ['7'], '강남구청역': ['7', '수인분당'], '학동역': ['7'], '논현역': ['7', '신분당'], '신논현역': ['9', '신분당'],
+    '강남역': ['2', '신분당'], '역삼역': ['2'], '선릉역': ['2', '수인분당'], '삼성역': ['2'], '언주역': ['9'], '선정릉역': ['9', '수인분당'], '삼성중앙역': ['9'], '봉은사역': ['9'], '잠원역': ['3'], '고속터미널역': ['3', '7', '9'],
+    '반포역': ['7'], '교대역': ['2', '3'], '서초역': ['2'], '양재역': ['3', '신분당'], '매봉역': ['3'], '도곡역': ['3', '수인분당'], '한티역': ['수인분당'], '남부터미널역': ['3'], '방배역': ['2'], '내방역': ['7'], '사평역': ['9'],
+    '신반포역': ['9'], '구반포역': ['9'], '대치역': ['3'], '학여울역': ['3'], '대청역': ['3'], '일원역': ['3'], '수서역': ['3', '수인분당'], '개포동역': ['수인분당'], '구룡역': ['수인분당'], '양재시민의숲역': ['신분당'], '종합운동장역': ['2', '9'] };
+  var LCOL = { '2': '#00A84D', '3': '#EF7C1C', '7': '#747F00', '9': '#BDB092', '신분당': '#D4003B', '수인분당': '#F5A200' };
+  function saleScale(it) { return it.ff ? (it.bf ? '지하' + it.bf + '층~' : '') + '지상' + it.ff + '층' : ''; }
+  function saleItem(r) {
+    var it = { id: r.id, sale: 1, src: r.src, cats: ['building'], catLabel: '빌딩 매매', gu: r.gu, dong: r.dong, building: '', bf: r.bf || 0, ff: r.ff || 0, yr: r.yr || 0,
+      area: r.land ? r.land / PYC : 0, landM2: r.land || 0, bldM2: r.bld || 0, bldPy: r.bld ? r.bld / PYC : 0, priceMan: r.price || 0,
+      zone: r.zone || '', parking: r.park || '', elev: r.elev || '', date: r.date || '', lat: r.lat, lng: r.lng, st: r.st || [], jiga: r.jiga || 0,
+      photos: [], tags: [], point: '', desc: '', options: '', station: '', premium: '', mgmt: '', reg: null, usage: '', structure: '', totArea: 0, parkTotal: '', bldElev: 0 };
+    it.pp = it.area ? it.priceMan / it.area : 0;
+    it.dep = it.priceMan / 10000; it.rent = it.pp / 10000;          // 검색 범위: 매매가(억) · 대지 평당가(억)
+    it.depText = eokT(it.priceMan); it.rentText = eok2(it.pp);
+    it.floor = saleScale(it); it.totalFloor = it.floor; it.approval = it.yr ? it.yr + '년' : '';
+    it.title = it.dong + ' ' + (it.ff ? (it.bf ? '지하' + it.bf + '~' : '') + '지상' + it.ff + '층 ' : '') + '빌딩 · 대지 ' + Math.round(it.area) + '평';
+    return it;
+  }
+  function saleStart() {
+    var CK = 'daumSale.v1', old = '';
+    try { var o = JSON.parse(localStorage.getItem(CK) || 'null'); if (o && Date.now() - o.t < 864e5) old = o.s; } catch (e) { }
+    var go = function (txt, soft) { var d; try { d = JSON.parse(txt); } catch (e) { return false; } if (!d || !d.rows) return false; load(d.rows.map(saleItem), true, d.updated, soft); return true; };
+    var shown = old ? go(old, false) : false;
+    fetch(SHEET_URL + (SHEET_URL.indexOf('?') < 0 ? '?' : '&') + 'sale=1').then(function (r) { return r.text(); }).then(function (t) {
+      if (!t || t === old) { if (!shown) go(t || '{"rows":[]}', false); return; }
+      try { localStorage.setItem(CK, JSON.stringify({ t: Date.now(), s: t })); } catch (e) { }
+      go(t, shown);
+    }).catch(function () { if (!shown) load([], true, ''); });
+  }
+  // 화면 글자 바꾸기 (같은 HTML을 쓰므로 매매 페이지에서만)
+  (function saleUi() {
+    if (!SM) return;
+    document.body.classList.add('saleMode');
+    var t = function (sel, html) { var e = document.querySelector(sel); if (e) e.innerHTML = html; };
+    t('.heroMapTitle', '<span>MAP SEARCH</span>빌딩 매매');
+    t('.heroH1', '<span class="h1l">강남 · 서초 빌딩 매매</span><br><span class="h1l"><span class="heroName">부동산다움</span>에서 <span style="background: linear-gradient(transparent 62%, #E8D7B6 62%)">답을 찾다</span></span>');
+    t('.heroLead', '매각 중인 빌딩을 지도에서 찾아보세요. 건축물대장 · 토지 정보 · 주변 실거래까지 한 번에 정리해 드립니다. 정확한 위치와 임대 현황 · 수익률 자료는 상담 시 드립니다.');
+    var rg = function (id, lbl, unit, ph) { var b = document.getElementById(id); if (!b) return; var l = b.querySelector('.rgL'), u = b.querySelector('.rgU'); if (l) l.textContent = lbl; if (u) u.textContent = unit; if (ph) b.querySelectorAll('input').forEach(function (x, i) { x.placeholder = ph[i]; x.setAttribute('aria-label', lbl + (i ? ' 최대' : ' 최소')); }); };
+    rg('rgArea', '대지', '평'); rg('rgFloor', '층수', '층'); rg('rgDep', '매매가', '억'); rg('rgRent', '평당가', '억');
+    var fl = document.getElementById('rgFloor'); if (fl) fl.title = '건물 층수(지상) 기준';
+    var so = document.getElementById('mapSort'); if (so) so.innerHTML = '<option value="d">최근 확인순</option><option value="r">매매가 높은순</option><option value="a">대지 넓은순</option>';
+    var ni = document.getElementById('noInput'); if (ni) ni.placeholder = '매물번호 검색 (예: S1A2B3C)';
+    var dn = document.getElementById('demoNote'); if (dn) dn.textContent = '';
+    ['listings'].forEach(function (id) { var e = document.getElementById(id); if (e) e.hidden = true; });
+    var st = document.createElement('style'); st.textContent = '.saleMode #heatBtn,.saleMode #heatPanel,.saleMode .heatLeg{display:none!important}' +
+      '.slSt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}.slSt div{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid #EFEAE0;border-radius:12px;background:#FBFAF7}' +
+      '.slSt i{min-width:30px;height:30px;padding:0 5px;border-radius:15px;display:flex;align-items:center;justify-content:center;color:#fff;font-style:normal;font-weight:800;font-size:11.5px;flex:none}.slSt b{font-size:15px;display:block}.slSt span{font-size:12.5px;color:#6B757D}.slSt em{margin-left:auto;font-style:normal;text-align:right;font-weight:800;color:#294652;font-size:17px;white-space:nowrap}.slSt em small{display:block;font-size:11px;color:#8A939A;font-weight:500}' +
+      '.slLand{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.slLand div{background:#FBFAF7;border:1px solid #EFEAE0;border-radius:12px;padding:13px 15px}.slLand small{display:block;font-size:12px;color:#6B757D;margin-bottom:4px}.slLand b{font-size:16px;font-weight:800}.slLand em{display:block;font-style:normal;font-size:12px;color:#6B757D;margin-top:2px}' +
+      '.slCmp{display:flex;flex-direction:column;gap:11px;border:1px solid #EFEAE0;border-radius:14px;padding:18px 20px;background:#FFFFFF}.slCmp .r{display:grid;grid-template-columns:230px minmax(0,1fr) 90px;gap:14px;align-items:center;font-size:14px}.slCmp .bar{height:14px;border-radius:4px;background:#EFEAE0;position:relative;overflow:hidden}.slCmp .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}.slCmp .r>b{text-align:right}' +
+      '@media (max-width:760px){.slSt{grid-template-columns:1fr}.slLand{grid-template-columns:1fr 1fr}.slCmp .r{grid-template-columns:1fr 70px}.slCmp .r .bar{grid-column:1/3;grid-row:2}}';
+    document.head.appendChild(st);
+  })();
+  function salePriceHtml(it) {
+    var jp = it.jiga ? it.jiga * PYC / 10000 : 0;
+    return '<div class="dtPrice"><div><small>매매가</small><b>' + esc(it.depText) + '</b></div><div class="rent"><small>대지 평당가</small><b>' + esc(it.rentText) + '</b></div>' +
+      '<div><small>연면적 평당가</small><b>' + eok2(it.bldPy ? it.priceMan / it.bldPy : 0) + '</b></div><div class="prem"><small>개별공시지가 대비</small><b>' + (jp && it.pp ? (it.pp / jp).toFixed(1) + '배' : '-') + '</b></div></div>';
+  }
+  function saleInfoHtml(it) {
+    var m2 = function (v) { return v ? Number(v).toLocaleString('ko-KR', { maximumFractionDigits: 2 }) + '㎡ (' + (Math.round(v / PYC * 10) / 10) + '평)' : ''; };
+    var r = it.reg || {}, pk = (r.pkIA || 0) + (r.pkIM || 0) + (r.pkOA || 0) + (r.pkOM || 0), ev = (r.elR || 0) + (r.elE || 0);
+    return '<dl class="dtI2">' +
+      infoRow('소재지', (it.gu || '') + ' ' + (it.dong || '')) +
+      infoRow('가격', '매매 ' + it.depText) +
+      infoRow('거래 형태', '매매') +
+      infoRow('대지면적', m2(it.landM2)) +
+      infoRow('총 층수', it.floor) +
+      infoRow('연면적', m2(it.bldM2 || r.tot)) +
+      infoRow('중개대상물 종류', '건축물 · ' + (it.usage || r.purp || '근린생활시설 등')) +
+      infoRow('용도지역', it.zone || (it.land && it.land[2]) || '') +
+      infoRow('사용승인일', r.apr || it.approval) +
+      infoRow('주차대수', pk ? '건축물대장 ' + pk + '대' : it.parking) +
+      infoRow('엘리베이터', ev ? '있음 (' + ev + '대)' : (r.grnd ? '없음' : it.elev)) +
+      infoRow('가까운 역', it.st && it.st[0] ? it.st[0][0] + ' 도보 약 ' + it.st[0][2] + '분' : '') +
+      '</dl>';
+  }
+  function saleStHtml(it) {
+    if (!it.st || !it.st.length) return '';
+    return '<div class="slSt">' + it.st.map(function (s) {
+      var l = (LINES[s[0]] || [])[0] || '';
+      return '<div><i style="background:' + (LCOL[l] || '#7B858C') + '">' + esc(l === '수인분당' ? '분당' : l) + '</i><span><b>' + esc(s[0]) + '</b>직선 약 ' + (s[1] >= 1000 ? (s[1] / 1000).toFixed(1) + 'km' : s[1] + 'm') + '</span><em>' + s[2] + '분<small>도보</small></em></div>';
+    }).join('') + '</div><p class="dtNote">※ 가까운 역까지 직선거리 × 1.3, 분당 67m 기준으로 계산한 대략적인 도보 시간입니다.</p>';
+  }
+  function saleExtraHtml(it) {
+    var L = it.land, h = '';
+    if (L) {
+      var area = +L[1], j = +L[8], jp = j * PYC / 10000, z1 = L[2] || '', g = JIGA_D[it.gu + '|' + it.dong];
+      var road = { '광대한면': '폭 25m 이상 도로에 한 면', '광대소각': '폭 25m 이상 도로 + 다른 도로', '광대세각': '폭 25m 이상 도로 + 좁은 도로', '중로한면': '폭 12~25m 도로에 한 면', '중로각지': '폭 12~25m 도로 모퉁이', '소로한면': '폭 8~12m 도로에 한 면', '소로각지': '폭 8~12m 도로 모퉁이', '세로한면(가)': '폭 8m 미만 · 차량 통행 가능', '세로각지(가)': '폭 8m 미만 도로 모퉁이 · 차량 통행', '세로한면(불)': '폭 8m 미만 · 차량 통행 어려움' }[L[7]] || '';
+      var lim = { '제1종일반주거지역': '건폐율 60%·용적률 150% 이하', '제2종일반주거지역': '건폐율 60%·용적률 200% 이하', '제3종일반주거지역': '건폐율 50%·용적률 250% 이하', '일반상업지역': '건폐율 60%·용적률 800% 이하', '근린상업지역': '건폐율 60%·용적률 600% 이하', '준주거지역': '건폐율 60%·용적률 400% 이하', '제1종전용주거지역': '건폐율 50%·용적률 100% 이하', '제2종전용주거지역': '건폐율 40%·용적률 120% 이하', '자연녹지지역': '건폐율 20%·용적률 50% 이하' }[z1] || '';
+      h += '<section class="dtSec"><h2>토지정보</h2><div class="slLand">' +
+        '<div><small>지목</small><b>' + esc(L[0]) + '</b><em>이용상황: ' + esc(L[4] || '-') + '</em></div>' +
+        '<div><small>토지면적</small><b>' + area.toLocaleString('ko-KR') + '㎡</b><em>' + (Math.round(area / PYC * 10) / 10) + '평</em></div>' +
+        '<div><small>용도지역</small><b>' + esc(z1.replace(/지역$/, '')) + '</b><em>' + esc(L[3] ? '+ ' + L[3] : lim) + '</em></div>' +
+        '<div><small>개별공시지가</small><b>' + Math.round(j / 10000).toLocaleString('ko-KR') + '만원/㎡</b><em>평당 ' + Math.round(jp).toLocaleString('ko-KR') + '만원 · 총 ' + eok2(j * area / 10000) + '</em></div>' +
+        '<div><small>지형 높이</small><b>' + esc(L[5] || '-') + '</b></div><div><small>지형 형상</small><b>' + esc(L[6] || '-') + '</b></div>' +
+        '<div><small>도로 접면</small><b>' + esc(L[7] || '-') + '</b>' + (road ? '<em>' + road + '</em>' : '') + '</div>' +
+        '<div><small>' + esc(it.dong) + ' 공시지가 중간값</small><b>' + (g ? '평당 ' + g.toLocaleString('ko-KR') + '만원' : '-') + '</b><em>상업·업무용 대지 기준</em></div>' +
+        '</div><p class="dtNote">※ 국토교통부 토지특성정보 · 개별공시지가 ' + esc(L[9] || '') + ' 기준. 건폐율·용적률은 서울시 조례 상한이며 실제 건축 가능 규모는 도로·일조 등 조건에 따라 다릅니다. 매물 대지면적과 토지대장 면적이 다를 수 있습니다(도로 편입·합필 등).</p></section>';
+    } else if (it.bldDone) h += '<section class="dtSec"><h2>토지정보</h2><p class="dtNote">※ 이 필지의 토지특성 자료를 준비 중입니다. 상담 시 토지이용계획확인서와 함께 안내해 드립니다.</p></section>';
+    var dl = it.deal || {}, rows = [['이 매물 (호가)', it.pp, '#294652', 1]];
+    if (dl.n) rows.push([it.dong + ' 실거래 중간값 · 최근 1년 ' + dl.n + '건', dl.med, '#BC975E']);
+    if (L && L[8]) rows.push(['이 필지 개별공시지가', L[8] * PYC / 10000, '#7D96A0']);
+    var gg = JIGA_D[it.gu + '|' + it.dong]; if (gg) rows.push([it.dong + ' 공시지가 중간값', gg, '#A9BBC1']);
+    if (it.bldDone && rows.length > 1) {
+      var mx = Math.max.apply(null, rows.map(function (r) { return r[1] || 0; }));
+      h += '<section class="dtSec"><h2>시세 비교 <small style="font-size:13px;font-weight:500;color:#6B757D">대지 평당 금액</small></h2><div class="slCmp">' + rows.map(function (r) {
+        return '<div class="r"><span>' + (r[3] ? '<b style="color:#294652">' + esc(r[0]) + '</b>' : esc(r[0])) + '</span><div class="bar"><i style="width:' + Math.max(2, r[1] / mx * 100) + '%;background:' + r[2] + '"></i></div><b>' + eok2(r[1]) + '</b></div>';
+      }).join('') + '</div><p class="dtNote">※ 호가는 매도 희망가로 실제 거래가와 다를 수 있습니다. 실거래는 국토교통부 상업·업무용 일반건물 매매 신고 자료(지분 거래 제외, 약식 집계) · <a href="/deals.html" style="color:#294652;text-decoration:underline">매매 실거래가 보기</a></p></section>';
+    }
+    return h;
+  }
+
   /* ---------- 시작 ---------- */
   ccInit(); bind(); initMap();
-  if (SHEET_URL) {
+  if (SM && SHEET_URL) saleStart();
+  else if (SHEET_URL) {
     // 1) 이 브라우저에 저장해 둔 지난 데이터가 있으면 바로 그림 (7일 이내, 공개 데이터만)
     // 2) 매물 목록과 공실매물관 목록을 동시에 요청하고, 도착하면 바뀐 경우에만 다시 그림
     var CK = 'daumFeed.v1', CKG = 'daumGs.v1', MAXAGE = 7 * 864e5;
