@@ -503,7 +503,7 @@ body.dlFull .mapFullBtn{display:none}
       d = d || {};
       var keepDong = $('fDong').value;
       ALL = (d.rows || []).map(function (r) {
-        var o = { date: r[0], gu: r[1], dong: r[2], jb: r[3], ok: !!r[4], zone: r[5], use: r[6], year: r[7], land: r[8], bld: r[9], amt: r[10], share: !!r[11], lat: r[12], lng: r[13], gbn: r[14], la: +r[15] || 0 };
+        var o = { date: r[0], gu: r[1], dong: r[2], jb: r[3], ok: !!r[4], zone: r[5], use: r[6], year: r[7], land: r[8], bld: r[9], amt: r[10], share: !!r[11], lat: r[12], lng: r[13], gbn: r[14], la: +r[15] || 0, cf: r[16] || '' };
         o.key = [o.date, o.gu, o.dong, o.jb, o.amt, o.land].join('|');
         o.pp = o.land > 0 ? o.amt / py(o.land) : 0;          // 대지 평당가 (만원)
         o.bp = o.bld > 0 ? o.amt / py(o.bld) : 0;            // 연면적 평당가 (만원)
@@ -512,7 +512,10 @@ body.dlFull .mapFullBtn{display:none}
       });
       ALL = cleanDeals(ALL).filter(function (o) { return !((o.land > 0 && o.land < 33) || (o.bld > 0 && o.bld < 33)); });   // 합친 뒤에도 대지·연면적 10평 미만(호실 단위 거래)은 빌딩이 아니라서 제외
       // 토지대장 면적과 비교: 신고 대지가 토지대장보다 20% 넘게 작으면 일부(대지권) 거래·신고 오류로 보고 평당가 통계에서 뺌, 20% 넘게 크면 여러 필지 함께 거래로 봄
-      ALL.forEach(function (o) { o.lx = ''; if (o.la > 0 && o.land > 0 && !o.share) { var r = o.land / o.la; o.lx = r < 0.8 ? 'small' : r > 1.2 ? 'multi' : ''; } });
+      ALL.forEach(function (o) { o.lx = ''; o.lxT = '';
+        if (o.cf === '지분' || o.cf === '일부') { o.lx = 'small'; o.lxT = o.cf === '지분' ? '지분 거래' : '일부 거래'; o.lxOk = 1; return; }   // 등기부로 직접 확인한 거래
+        if (o.cf === '전체' || !(o.la > 0 && o.land > 0) || o.share) return;
+        var r = o.land / o.la; if (r < 0.5) { o.lx = 'small'; o.lxT = '일부 거래 추정'; } else if (r < 0.8) o.lx = 'diff'; else if (r > 1.2) o.lx = 'multi'; });
       if (d.updated) { var ud = new Date(d.updated); $('upd').textContent = '(' + ud.getFullYear() + '.' + (ud.getMonth() + 1) + '.' + ud.getDate() + ')'; }
       var dongs = {}; ALL.forEach(function (o) { dongs[o.gu + '|' + o.dong] = 1; });
       var byGu = {}; Object.keys(dongs).forEach(function (k) { (byGu[k.split('|')[0]] = byGu[k.split('|')[0]] || []).push(k.split('|')[1]); });
@@ -570,8 +573,8 @@ body.dlFull .mapFullBtn{display:none}
   }
   function itemHtml(o) {
     return '<button type="button" class="it' + (o.key === selKey ? ' on' : '') + '" data-k="' + esc(o.key) + '"><span class="t">' + esc(o.dong + ' ' + o.jb) + (o.ok ? '' : ' <span class="ap">일대</span>') + '<small>' + dotDate(o.date) + '</small></span>' +
-      '<span class="p"><b>' + eok(o.amt) + '</b>' + (o.lx === 'small' ? '<em style="color:#B4552F">지분 추정</em>' : '<em>평당 ' + eok(o.pp) + '</em>') + '</span>' +
-      '<span class="m">대지 ' + py(o.land) + '평 · 연면적 ' + py(o.bld) + '평' + (o.year ? ' · ' + o.year + '년' : '') + (o.zone ? ' · ' + esc(o.zone) : '') + (o.share ? ' · 지분' : o.lx === 'small' ? ' · <b style="color:#B4552F">지분 추정</b>' : '') + '</span></button>';
+      '<span class="p"><b>' + eok(o.amt) + '</b>' + (o.lx === 'small' ? '<em style="color:#B4552F">' + o.lxT + '</em>' : '<em>평당 ' + eok(o.pp) + '</em>') + '</span>' +
+      '<span class="m">대지 ' + py(o.land) + '평 · 연면적 ' + py(o.bld) + '평' + (o.year ? ' · ' + o.year + '년' : '') + (o.zone ? ' · ' + esc(o.zone) : '') + (o.share ? ' · 지분' : o.lx === 'small' ? ' · <b style="color:#B4552F">' + o.lxT + '</b>' : '') + '</span></button>';
   }
   // 목록 폭: 모든 거래 중 가장 긴 줄이 한 줄에 들어가는 만큼만 (긴 줄 후보 40개를 실제 글꼴로 재서 한 번 정함)
   var LW_N = -1;
@@ -830,18 +833,19 @@ body.dlFull .mapFullBtn{display:none}
     var H = ALL.filter(function (x) { return x.ok && x.gu === o.gu && x.dong === o.dong && x.jb === o.jb; }).sort(function (a, b) { return a.date < b.date ? 1 : -1; });
     if (H.length < 2) return '';
     return '<div class="hist"><h5>이 건물 거래 이력 ' + H.length + '건</h5><table>' + H.map(function (x, i) { var p = H[i + 1], ch = p && p.amt ? (x.amt / p.amt - 1) * 100 : null;
-      return '<tr' + (x.key === o.key ? ' class="cur"' : '') + '><td>' + dotDate(x.date) + '</td><td class="n">' + eok(x.amt) + '</td><td class="n" style="font-weight:400;color:#6B757D">' + (x.lx === 'small' ? '지분 추정' : '평당 ' + eok(x.pp)) + '</td><td class="n ' + (ch == null ? '' : ch >= 0 ? 'up' : 'dn') + '">' + (ch == null ? '' : (ch > 0 ? '+' : '') + ch.toFixed(0) + '%') + '</td></tr>'; }).join('') + '</table></div>';
+      return '<tr' + (x.key === o.key ? ' class="cur"' : '') + '><td>' + dotDate(x.date) + '</td><td class="n">' + eok(x.amt) + '</td><td class="n" style="font-weight:400;color:#6B757D">' + (x.lx === 'small' ? x.lxT : '평당 ' + eok(x.pp)) + '</td><td class="n ' + (ch == null ? '' : ch >= 0 ? 'up' : 'dn') + '">' + (ch == null ? '' : (ch > 0 ? '+' : '') + ch.toFixed(0) + '%') + '</td></tr>'; }).join('') + '</table></div>';
   }
   function popHtml(o) {
-    return '<div class="pop"><button type="button" class="x" aria-label="닫기">✕</button><h4>' + esc(o.gu + ' ' + o.dong + ' ' + o.jb) + (o.ok ? '' : ' 일대') + (o.share ? '<span class="tag">지분</span>' : o.lx === 'small' ? '<span class="tag" style="background:#B4552F;color:#fff">지분 추정</span>' : '') + (o.multi ? '<span class="tag">' + o.multi + '건 합산</span>' : '') + '</h4>' +
+    return '<div class="pop"><button type="button" class="x" aria-label="닫기">✕</button><h4>' + esc(o.gu + ' ' + o.dong + ' ' + o.jb) + (o.ok ? '' : ' 일대') + (o.share ? '<span class="tag">지분</span>' : o.lx === 'small' ? '<span class="tag" style="background:#B4552F;color:#fff">' + o.lxT + '</span>' : '') + (o.multi ? '<span class="tag">' + o.multi + '건 합산</span>' : '') + '</h4>' +
       '<div class="dt">' + dotDate(o.date) + ' 계약 · ' + esc(o.gbn) + (o.zone ? ' · ' + esc(o.zone) : '') + '</div><div class="pr">' + eok(o.amt) + '</div>' +
       '<dl><dt>대지</dt><dd>' + py(o.land) + '평 (' + o.land + '㎡)' + (o.lx === 'small' ? ' · 신고 면적' : ' · 평당 ' + eok(o.pp)) + '</dd>' +
-      (o.la ? '<dt>토지대장</dt><dd' + (o.lx ? ' style="color:#B4552F;font-weight:700"' : '') + '>' + py(o.la) + '평 (' + o.la.toLocaleString() + '㎡)' + (o.lx === 'small' ? ' · 신고 면적의 약 ' + Math.round(o.land / o.la * 100) + '%' : '') + '</dd>' : '') +
+      (o.la ? '<dt>토지대장</dt><dd' + (o.lx ? ' style="color:#B4552F;font-weight:700"' : '') + '>' + py(o.la) + '평 (' + o.la.toLocaleString() + '㎡)' + '' + '</dd>' : '') +
       '<dt>연면적</dt><dd>' + py(o.bld) + '평' + (o.lx === 'small' ? '' : ' · 평당 ' + eok(o.bp)) + '</dd>' +
       (o.year ? '<dt>건축년도</dt><dd>' + o.year + '년</dd>' : '') + (o.use ? '<dt>건물 용도</dt><dd>' + esc(o.use) + '</dd>' : '') + '</dl>' +
       (o.multi ? '<div class="dt">※ ' + (o.why === 'unit' ? '같은 날 같은 건물(지번·건축년도)로 호실·필지별로 나눠 신고된 ' : '같은 날 같은 금액으로 필지별로 나눠 신고된 ') + o.multi + '건을 한 거래로 보고 거래금액·대지·연면적을 모두 합쳤습니다.</div>' : '') + (o.alt && o.alt.length ? '<div class="dt">※ 같은 거래가 ' + esc(o.alt.join(', ')) + '(으)로도 신고되어 1건으로 정리했습니다.</div>' : '') +
       (o.ok ? '' : '<div class="dt">※ 국토부 공개자료에 지번이 일부만 나오고 건축물대장과도 일치하는 건물이 없어 ' + esc(o.dong) + ' 가운데에 표시했습니다. (지분 거래·신축·여러 필지 거래 등)</div>') +
-      (o.lx === 'small' ? '<div class="dt" style="color:#B4552F">※ 지분 거래 추정 · 확인 필요 — 신고 대지면적(' + o.land + '㎡)이 토지대장 면적(' + o.la.toLocaleString() + '㎡)의 약 ' + Math.round(o.land / o.la * 100) + '%라 건물 전체가 아닌 지분 거래로 보입니다. 평당가가 실제와 달라 동별·기간 평당가 통계에서는 뺐습니다.</div>' :
+      (o.lx === 'small' ? '<div class="dt" style="color:#B4552F">※ ' + (o.lxOk ? o.lxT + '(등기부 확인) — 건물 전체가 아닌 지분·호실 일부 거래입니다.' : o.lxT + ' · 확인 필요 — 신고 대지면적이 토지대장 면적보다 훨씬 작아, 건물 전체가 아닌 지분이나 호실 일부를 거래한 것으로 보입니다.') + ' 평당가가 실제와 달라 동별·기간 평당가 통계에서는 뺐습니다.</div>' :
+       o.lx === 'diff' ? '<div class="dt">※ 신고 대지면적이 현재 토지대장 면적과 차이가 있습니다. 거래 뒤 필지 합병이나 일부 거래일 수 있습니다.</div>' :
        o.lx === 'multi' ? '<div class="dt">※ 신고 대지면적이 이 지번의 토지대장 면적보다 커서, 옆 필지와 함께 거래된 것으로 보입니다. 평당가는 신고 면적 기준입니다.</div>' : '') +
       histHtml(o) +
       '<a class="ask" href="/?ask=buy&dong=' + encodeURIComponent(o.dong) + '#consult">이 주변 빌딩 상담 받기</a></div>';
