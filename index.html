@@ -2798,12 +2798,13 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       var a = function (v) { return v ? Number(v).toLocaleString('ko-KR', { maximumFractionDigits: 2 }) + '㎡' : ''; };
       var pct = function (v) { return v ? (Math.round(v * 100) / 100) + '%' : ''; };
       var cnt = function (pairs) { return pairs.filter(function (p) { return p[1]; }).map(function (p) { return p[0] + ' ' + p[1] + '대'; }).join(' · '); };
-      var withPct = function (area, p) { return area ? a(area) + (p ? ' (' + pct(p) + ')' : '') : ''; };
-      var withPyPct = function (area, p) { return area ? a(area) + ' (' + (Math.round(area / 3.3058 * 10) / 10) + '평)' + (p ? ' / ' + pct(p) : '') : ''; };   // 빌딩 매매: ㎡(평) / %
+      var withPct = function (area, p) { return area ? a(area) + ' (' + (p ? pct(p) : '대장 미기재') + ')' : ''; };
+      var NR = '대장 미기재';
+      var withPyPct = function (area, p) { return area ? a(area) + ' (' + (Math.round(area / 3.3058 * 10) / 10) + '평) / ' + (p ? pct(p) : NR) : ''; };   // 빌딩 매매: ㎡(평) / %
       var rows = it.sale ? [
         ['주용도', (reg.purp || '') + (reg.etc && reg.etc !== reg.purp ? ' (' + reg.etc + ')' : '')],
         ['규모 · 높이', (reg.ugrnd ? '지하 ' + reg.ugrnd + '층 · ' : '') + (reg.grnd ? '지상 ' + reg.grnd + '층' : '') + (reg.heit ? ' · ' + reg.heit + 'm' : '')],
-        ['지역 · 지구', zoneTxt(reg.zone)], ['토지면적', reg.plat ? a(reg.plat) + ' (' + (Math.round(reg.plat / 3.3058 * 10) / 10) + '평)' : ''],
+        ['지역 · 지구', zoneTxt(reg.zone)], ['토지면적', reg.plat ? a(reg.plat) + ' (' + (Math.round(reg.plat / 3.3058 * 10) / 10) + '평)' : NR],
         ['구조', reg.strct], ['건축면적 / 건폐율', withPyPct(reg.arch, reg.bc)],
         ['승강기', cnt([['승용', reg.elR], ['비상용', reg.elE]]) || '없음'], ['연면적 / 용적률', withPyPct(reg.tot, reg.vl)],
         ['주차장', cnt([['옥내 자주식', reg.pkIA], ['옥내 기계식', reg.pkIM], ['옥외 자주식', reg.pkOA], ['옥외 기계식', reg.pkOM]]) || '없음'],
@@ -3823,7 +3824,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       h += '<div class="slFar"><div class="hd"><b>용적률 · 개발 여력</b><span>' + esc(z1) + ' · 건폐율 ' + lim[0] + '% / 용적률 ' + lim[1] + '% 이하 (서울시 조례)</span></div>' +
         '<div class="bar"><i class="now" style="width:' + pc(vl) + '"></i>' +
         '<s style="left:' + pc(lim[1]) + '"><em>조례 ' + lim[1] + '%</em></s>' + (tmp ? '<s class="tmp" style="left:' + pc(tmp) + '"><em>한시 ' + tmp + '%</em></s>' : '') + '</div>' +
-        '<p class="ft">현재 용적률 <b>' + (vl ? (Math.round(vl * 10) / 10) + '%' : '확인 필요') + '</b>' +
+        '<p class="ft">현재 용적률 <b>' + (vl ? (Math.round(vl * 10) / 10) + '%' : '건축물대장 미기재') + '</b>' +
         (vl ? (room > 0 ? ' · ' + (tmp ? '한시 완화 적용 시' : '조례 상한까지') + ' 산술상 약 <b>' + roomPy.toLocaleString('ko-KR') + '평</b> 여유' : ' · 상한에 거의 도달') : '') + '</p></div>';
       if (tmp) h += '<div class="slTmp"><b>소규모 건축물 용적률 한시적 완화</b>' +
         '<p>서울시 도시계획조례 개정으로 <strong>2025.5.19 ~ 2028.5.18</strong> 3년간 제2종 일반주거 <strong>200% → 250%</strong>, 제3종 일반주거 <strong>250% → 300%</strong>(법적 상한)까지 용적률이 완화됩니다. 건축허가·신고에 바로 적용되며, 실제 적용 여부와 규모는 일조·높이·주차·구조 등 조건과 관할 구청 확인이 필요합니다.' +
