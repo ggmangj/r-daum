@@ -2804,7 +2804,8 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
         ['건축면적 (건폐율)', withPct(reg.arch, reg.bc)], ['연면적 (용적률)', withPct(reg.tot, reg.vl)],
         ['구조', reg.strct], ['승강기', cnt([['승용', reg.elR], ['비상용', reg.elE]]) || '없음'],
         ['주차장', cnt([['옥내 자주식', reg.pkIA], ['옥내 기계식', reg.pkIM], ['옥외 자주식', reg.pkOA], ['옥외 기계식', reg.pkOM]])],
-        ['허가 · 사용승인', [reg.pms, reg.apr].filter(Boolean).join(' · ')]
+        ['지역 · 지구', zoneTxt(reg.zone)],
+        ['허가일', reg.pms], ['사용승인일', reg.apr]
       ] : [
         ['대장 종류', reg.kind], ['주용도', (reg.purp || '') + (reg.etc && reg.etc !== reg.purp ? ' (' + reg.etc + ')' : '')],
         ['층수', (reg.grnd ? '지상 ' + reg.grnd + '층' : '') + (reg.ugrnd ? ' / 지하 ' + reg.ugrnd + '층' : '')], ['용도지역', zoneTxt(reg.zone)],
@@ -2858,14 +2859,14 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       (it.sale ? saleSumHtml(it) + bldMsg + saleCmpHtml(it) + regHtml +
       (it.reg ? flvHtml(it.sale ? { reg: it.reg, floor: '', elev: it.elev, area: 0 } : it) : '') +
         saleLandHtml(it) +
-      '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p>' + (it.sale ? saleStHtml(it) : '') + '</section>' +
+      '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div></section>' +
         ''
       : price +
       '<section class="dtSec"><div class="dtH2r"><h2>매물 정보</h2><span class="dtNo"><small>매물번호</small><b>' + esc(it.id) + '</b><button type="button" class="dtNoCp" onclick="var b=this;try{navigator.clipboard.writeText(\'' + esc(it.id) + '\').then(function(){b.textContent=\'복사됨\';setTimeout(function(){b.textContent=\'복사\'},1500)})}catch(e){}">복사</button></span></div>' + (it.sale ? '' : bldMsg) + '<div class="dtInfoGrid solo">' + info + '</div>' +
       '<p class="dtNote">※ 「중개대상물의 표시·광고 명시사항 세부기준」에 따른 표시입니다. 소재지는 동까지만 표시하며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
       (it.reg ? flvHtml(it.sale ? { reg: it.reg, floor: '', elev: it.elev, area: 0 } : it) : '') +
       addHtml(it) +
-      '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p>' + (it.sale ? saleStHtml(it) : '') + '</section>' +
+      '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
       regHtml) +
       '<section class="dtSec"><h2>중개사무소 정보</h2>' + office + '</section>' +
       '</div>' + side + '</div>' +
@@ -2924,7 +2925,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       });
       try { mp.fitBounds(bounds, { top: 56, right: 60, bottom: 30, left: 40 }); } catch (e) { mp.fitBounds(bounds); }
       var lg = document.createElement('div'); lg.className = 'walkLegend'; lg.innerHTML = legend.join('');
-      var host = $('dtMap'); if (host && host.parentNode) host.parentNode.insertBefore(lg, host.nextSibling);
+      var host = $('dtMap'); if (host && host.parentNode && !it.sale) host.parentNode.insertBefore(lg, host.nextSibling);   // 빌딩 매매는 지도 위 표시만
     });
   }
   function detailMap(it) {
@@ -3733,6 +3734,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       '.slLand{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.slLand div{background:#FBFAF7;border:1px solid #EFEAE0;border-radius:12px;padding:13px 15px}.slLand small{display:block;font-size:12px;color:#6B757D;margin-bottom:4px}.slLand b{font-size:16px;font-weight:800}.slLand em{display:block;font-style:normal;font-size:12px;color:#6B757D;margin-top:2px}' +
       '.slCmp{display:flex;flex-direction:column;gap:11px;border:1px solid #EFEAE0;border-radius:14px;padding:18px 20px;background:#FFFFFF}.slCmp .r{display:grid;grid-template-columns:230px minmax(0,1fr) 90px;gap:14px;align-items:center;font-size:14px}.slCmp .bar{height:14px;border-radius:4px;background:#EFEAE0;position:relative;overflow:hidden}.slCmp .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}.slCmp .r>b{text-align:right}' +
       '.slLand.sl3{grid-template-columns:repeat(3,minmax(0,1fr))}' +
+      '.slBase{display:inline-block;vertical-align:middle;margin-left:8px;padding:4px 10px;border-radius:6px;background:#1F3640;color:#D9BE8C;font-size:13px;font-weight:800}.slBaseT{margin:-4px 0 12px;font-size:13.5px;color:#3B4A52}.slBaseT b{color:#8A6A35}' +
       '.slSumT{display:flex;flex-wrap:wrap;gap:4px 14px;padding:11px 18px;border-bottom:1px solid #EFEAE0;font-size:13px;color:#3B4A52}.slSumT span+span:before{content:"·";margin-right:14px;color:#C9BFA9}.slSumT .no{margin-left:auto;color:#8A6A35;font-weight:700}.slSumT .no:before{display:none}' +
       '.slSum{margin-top:22px;border:1px solid #E6E0D4;border-radius:14px;overflow:hidden;background:#fff}.slSumP{display:grid;grid-template-columns:1.35fr 1fr 1fr 1fr}.slSumP>div{padding:16px 18px;border-right:1px solid #EFEAE0}.slSumP>div:last-child{border-right:0}' +
       '.slSumP small{display:block;font-size:12.5px;color:#6B757D;margin-bottom:4px}.slSumP b{font-size:19px;font-weight:800;color:#1F3640}.slSumP .main{background:#1F3640}.slSumP .main small{color:#C9D3D6}.slSumP .main b{font-size:26px;color:#D9BE8C}' +
@@ -3796,10 +3798,10 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     if (L && L[8]) rows.push(['이 필지 개별공시지가', L[8] * PYC / 10000, '#7D96A0']);
     if (!it.bldDone || rows.length < 2) return '';
     var mx = Math.max.apply(null, rows.map(function (r) { return r[1] || 0; }));
-    return '<section class="dtSec"><h2>가격 판단 <small class="dtH2s">대지 평당 금액 비교</small></h2><div class="slCmp">' + rows.map(function (r) {
+    return '<section class="dtSec"><h2>가격 판단 <span class="slBase">대지(토지) 평당가 기준</span></h2><p class="slBaseT">건물 연면적이 아닌 <b>대지 1평당 가격</b>으로 비교했습니다. (매매가 ÷ 대지면적)</p><div class="slCmp">' + rows.map(function (r) {
       return '<div class="r"><span>' + (r[3] ? '<b style="color:#294652">' + esc(r[0]) + '</b>' : esc(r[0])) + '</span><div class="bar"><i style="width:' + Math.max(2, r[1] / mx * 100) + '%;background:' + r[2] + '"></i></div><b>' + eok2(r[1]) + '</b></div>';
     }).join('') + '</div><p class="slTerms"><b>매매 조건</b>매매 · 가격 협의 여부와 임대 현황(보증금·월세·공실)은 상담 시 자료로 안내해 드립니다.</p>' +
-      '<p class="dtNote">※ 호가는 매도 희망가로 실제 거래가와 다를 수 있습니다. 실거래는 국토교통부 상업·업무용 일반건물 매매 신고 자료(지분·일부 거래 제외, 약식 집계) · <a href="/deals.html" style="color:#294652;text-decoration:underline">매매 실거래가 보기</a></p></section>';
+      '</section>';
   }
   // ⑤ 토지 (토지대장 + 공시지가 + 개발 여력)
   function saleLandHtml(it) {
@@ -3810,7 +3812,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     var h = '<section class="dtSec"><h2>토지 <small class="dtH2s">토지대장 · 공시지가</small></h2><div class="slLand">' +
       '<div><small>대지면적</small><b>' + area.toLocaleString('ko-KR') + '㎡</b><em>' + (Math.round(area / PYC * 10) / 10).toLocaleString('ko-KR') + '평</em></div>' +
       '<div><small>지목 · 이용상황</small><b>' + esc(L[0] || '-') + '</b><em>' + esc(L[4] || '-') + '</em></div>' +
-      '<div><small>도로 · 지형</small><b>' + esc(L[7] || '-') + '</b><em>' + esc(road || [L[5], L[6]].filter(Boolean).join(' · ')) + '</em></div>' +
+      '<div><small>도로 · 지형</small><b>' + esc(L[7] || '-') + '</b><em>' + esc(road ? road + ' (공시지가 조사 기준)' : [L[5], L[6]].filter(Boolean).join(' · ')) + '</em></div>' +
       '<div><small>개별공시지가 (' + esc(L[9] || '') + ')</small><b>평당 ' + Math.round(jp).toLocaleString('ko-KR') + '만원</b><em>' + Math.round(j / 10000).toLocaleString('ko-KR') + '만원/㎡ · 합계 ' + eok2(j * area / 10000) + '</em></div></div>';
     var lim = ZLIM[z1], tmp = FAR_TMP[z1], vl = +r.vl || 0, plat = +r.plat || area, inPlan = /지구단위계획/.test(r.zone || '');
     if (lim) {
@@ -3826,7 +3828,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
         (inPlan ? ' <strong>이 필지는 지구단위계획구역에 있어 계획상 용적률을 별도로 확인해야 합니다.</strong>' : '') + '</p>' +
         '<a href="https://mediahub.seoul.go.kr/archives/2016308" target="_blank" rel="noopener">[출처] 규제 풀자 건설 활력↑ 소규모 건축물 용적률 한시적 완화 · 내 손안에 서울 →</a></div>';
     }
-    h += '<p class="dtNote">※ 국토교통부 토지특성정보 · 개별공시지가 ' + esc(L[9] || '') + ' 기준. 증축 여유는 대지면적 × 남은 용적률로 계산한 산술값이며 실제 건축 가능 규모는 도로·일조·높이 제한 등에 따라 다릅니다.</p></section>';
+    h += '<p class="dtNote">※ 국토교통부 토지특성정보 · 개별공시지가 ' + esc(L[9] || '') + ' 기준. 도로접면(광대로 25m 이상 · 중로 12~25m · 소로 8~12m · 세로 8m 미만)은 국토교통부 개별공시지가 토지특성 조사 기준의 구분으로, 실제 도로 폭과 다를 수 있습니다. 증축 여유는 대지면적 × 남은 용적률로 계산한 산술값이며 실제 건축 가능 규모는 도로·일조·높이 제한 등에 따라 다릅니다.</p></section>';
     return h;
   }
 
