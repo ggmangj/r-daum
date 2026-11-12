@@ -3275,7 +3275,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     var isRoof = function (r) { return /옥탑|탑층/.test(r.name); }, isUnder = function (r) { return /^(지하|지\d|B\d)/i.test(String(r.name).replace(/\s+/g, '')); };
     rows.forEach(function (r) { r.roof = isRoof(r); r.under = isUnder(r); r.here = isHereFloor(r.name, it.floor); r.cat = r.segs.slice().sort(function (a, b) { return b.area - a.area; })[0].cat; });
     var xs = sameBldg(it);
-    rows.forEach(function (r) { if (r.here) return; var o = xs.filter(function (x) { return isHereFloor(r.name, x.floor); })[0]; if (o) r.add = o; });
+    rows.forEach(function (r) { r.adds = xs.filter(function (x) { return isHereFloor(r.name, x.floor); }); if (r.adds.length) r.add = r.adds[0]; });   // 같은 층 다른 호실도 (이 매물 층 포함)
     var g = rows.filter(function (r) { return !r.under && !r.roof; }), b = rows.filter(function (r) { return r.under; });
     var gMax = Math.max.apply(null, g.map(function (r) { return r.tot; }).concat([1])), bMax = Math.max.apply(null, b.map(function (r) { return r.tot; }).concat([0]));
     var shrink = g.length && bMax > gMax * 2, CAP = gMax * 1.3, scale = MAXW / (shrink ? CAP : Math.max(gMax, bMax));
@@ -3296,25 +3296,33 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     }
     // 층 일부만 임대할 때: 전용면적 ÷ 그 층(들) 합계 면적 비율만큼만 점선 표시 (왼쪽부터)
     var part = function (py, rs) { var t = 0; rs.forEach(function (r) { t += r.tot; }); return py > 0 && t > 0 ? Math.min(1, py * PY / t) : 1; };
-    var partBox = function (i, ra, col, py) {
+    var partBox = function (i, ra, col, py, off) {
       // 층 오른쪽 끝(옆면 포함)에 임대 부분만큼 작은 블록처럼 표시 — 왼쪽의 층 합계 면적 글씨와 겹치지 않게
-      var r = rows[i], w = wOf(r), pw = Math.max(18, w * ra), xr = X0 + w, xl = xr - pw, yy = y(i) + 3, h = RH - 6;
+      // off: 같은 층에 매물이 여러 개면 오른쪽에서부터 차례로 왼쪽에 이어 붙임
+      var r = rows[i], w = wOf(r), xr = X0 + w - (off || 0), pw = Math.max(18, Math.min(w * ra, xr - X0)), xl = xr - pw, yy = y(i) + 3, h = RH - 6;
       var d = 'M' + xl + ' ' + (yy + h) + ' L' + xl + ' ' + yy + ' L' + (xl + DX) + ' ' + (yy - DY) + ' L' + (xr + DX) + ' ' + (yy - DY) + ' L' + (xr + DX) + ' ' + (yy + h - DY) + ' L' + xr + ' ' + (yy + h) + ' Z';
       return '<path d="' + d + '" fill="' + col + '" fill-opacity=".18" stroke="' + col + '" stroke-width="2" stroke-dasharray="5 3" stroke-linejoin="round"/>' +
         '<path d="M' + xl + ' ' + yy + ' L' + xr + ' ' + yy + ' L' + (xr + DX) + ' ' + (yy - DY) + ' M' + xr + ' ' + yy + ' L' + xr + ' ' + (yy + h) + '" fill="none" stroke="' + col + '" stroke-width="1.1" stroke-dasharray="3 2"/>' +
         (py ? '<text x="' + (pw >= 32 ? xl + pw / 2 : xl - 5) + '" y="' + (yy + h / 2 + 4) + '" text-anchor="' + (pw >= 32 ? 'middle' : 'end') + '" font-size="10.5" font-weight="800" fill="' + col + '">' + Math.round(py) + '평</text>' : '');
     };
-    var lx = X0 + MAXW + DX + 12;
-    rows.forEach(function (r, i) {
-      if (!r.add) return; var yy = y(i) + 3, o = r.add, ttl = '추가임대 · ' + (o.floor || '') + (o.area ? ' ' + Math.round(o.area) + '평' : '') + ' · 보증금 ' + (o.depText || '문의') + ' / 월세 ' + (o.rentText || '문의');
-      var ra = part(+o.area, [r]);
-      s += '<a href="#item/' + encodeURIComponent(o.id) + '" class="flAdd"><title>' + esc(ttl) + '</title>' + (ra < 0.95 ? partBox(i, ra, '#E0A82E', o.area) : '<rect x="' + (X0 - 3) + '" y="' + (yy - DY - 3) + '" width="' + (wOf(r) + DX + 6) + '" height="' + (RH - 6 + DY + 6) + '" fill="#E0A82E" fill-opacity=".08" stroke="#E0A82E" stroke-width="2" stroke-dasharray="6 4" rx="3"/>') +
-        '<rect x="' + lx + '" y="' + (yy + (RH - 6) / 2 - 10) + '" width="62" height="20" rx="10" fill="#E0A82E"/><text x="' + (lx + 31) + '" y="' + (yy + (RH - 6) / 2 + 4) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">추가임대</text></a>';
-    });
+    var lx = X0 + MAXW + DX + 12, used = {}, pw = function (r, ra) { return Math.max(18, wOf(r) * ra); };
     var here = rows.map(function (r, i) { return r.here ? i : -1; }).filter(function (i) { return i >= 0; });
+    var rh = here.length ? part(+it.area, here.map(function (i) { return rows[i]; })) : 1;
+    if (here.length && rh < 0.95) here.forEach(function (i) { used[i] = pw(rows[i], rh); });
+    var addPill = function (yy, cy) { return '<rect x="' + lx + '" y="' + (cy - 10) + '" width="62" height="20" rx="10" fill="#E0A82E"/><text x="' + (lx + 31) + '" y="' + (cy + 4) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">추가임대' + '</text>'; };
+    rows.forEach(function (r, i) {
+      if (!r.adds || !r.adds.length) return; var yy = y(i) + 3, cy = yy + (RH - 6) / 2, two = r.here && here.length === 1;
+      r.adds.forEach(function (o, k) {
+        var ttl = '추가임대 · ' + (o.floor || '') + (o.area ? ' ' + Math.round(o.area) + '평' : '') + ' · 보증금 ' + (o.depText || '문의') + ' / 월세 ' + (o.rentText || '문의');
+        var ra = part(+o.area, [r]), full = ra >= 0.95 && !used[i];
+        s += '<a href="#item/' + encodeURIComponent(o.id) + '" class="flAdd"><title>' + esc(ttl) + '</title>' + (full ? '<rect x="' + (X0 - 3) + '" y="' + (yy - DY - 3) + '" width="' + (wOf(r) + DX + 6) + '" height="' + (RH - 6 + DY + 6) + '" fill="#E0A82E" fill-opacity=".08" stroke="#E0A82E" stroke-width="2" stroke-dasharray="6 4" rx="3"/>' : partBox(i, Math.min(ra, 0.9), '#E0A82E', o.area, used[i] || 0)) +
+          (k ? '' : addPill(yy, two ? cy + 11 : cy)) + '</a>';
+        if (!full) used[i] = (used[i] || 0) + pw(r, Math.min(ra, 0.9));
+      });
+    });
     if (here.length) {
       var a = here[0], z = here[here.length - 1], ww = Math.max.apply(null, here.map(function (i) { return wOf(rows[i]); })), my = (y(a) + y(z) + RH) / 2;
-      var rh = part(+it.area, here.map(function (i) { return rows[i]; }));
+      if (here.length === 1 && rows[a].adds && rows[a].adds.length) my -= 11;   // 같은 층에 추가임대가 있으면 「이 매물」을 위로
       s += (rh < 0.95 ? here.map(function (i) { return partBox(i, rh, '#C0392B', here.length === 1 ? it.area : 0); }).join('') : '<rect x="' + (X0 - 3) + '" y="' + (y(a) + 3 - DY - 3) + '" width="' + (ww + DX + 6) + '" height="' + ((z - a + 1) * RH - 6 + DY + 6) + '" fill="none" stroke="#C0392B" stroke-width="2" stroke-dasharray="6 4" rx="3"/>') +
         '<rect x="' + lx + '" y="' + (my - 10) + '" width="56" height="20" rx="10" fill="#B0452B"/><text x="' + (lx + 28) + '" y="' + (my + 4) + '" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">이 매물</text>';
     }
