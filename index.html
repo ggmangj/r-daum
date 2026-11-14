@@ -407,7 +407,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 .dtMainWrap.svOn .dtNav{display:none}
 .dtSvIn{position:absolute;inset:0;opacity:0;transition:opacity .3s}
 .dtSv.ok .dtSvIn{opacity:1}
-.panoPin{position:absolute;z-index:6;left:50%;top:45%;transform:translate(-50%,-100%);pointer-events:none;display:none;flex-direction:column;align-items:center}.panoPin b{background:#294652;color:#fff;font-size:13px;font-weight:800;padding:6px 12px;border-radius:999px;white-space:nowrap;border:2px solid #fff;box-shadow:0 2px 10px rgba(0,0,0,.4)}.panoPin i{width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-top:11px solid #fff;margin-top:-1px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35))}
+.panoPin{position:absolute;z-index:6;display:none;transform:translateX(-50%);pointer-events:none;text-align:center;color:#fff;font-weight:700;font-size:13px;text-shadow:0 1px 3px #000}.panoPin.show{display:block}.panoPin .bx{display:inline-block;background:#e5484d;border:2px solid #fff;border-radius:8px;padding:3px 10px;box-shadow:0 2px 6px rgba(0,0,0,.5);white-space:nowrap}.panoPin .ar{display:block;font-size:26px;line-height:1;color:#e5484d;text-shadow:0 0 3px #fff,0 0 3px #fff}
 .dtSvMsg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#C3CAD8;font-size:14px}
 .dtSv.ok .dtSvMsg{display:none}
 @media (max-width:760px){.dtSv{left:-20px;right:-20px;border-radius:0}.dtSvBtn{top:10px;right:-10px;padding:7px 11px;font-size:12px}}
@@ -2976,20 +2976,19 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   function panoPin(pano, wrap, it) {
     try {
       if (getComputedStyle(wrap).position === 'static') wrap.style.position = 'relative';
-      var pin = document.createElement('div'); pin.className = 'panoPin'; pin.innerHTML = '<b>이 건물</b><i></i>'; wrap.appendChild(pin);
+      var pin = document.createElement('div'); pin.className = 'panoPin'; wrap.appendChild(pin);
       var R = Math.PI / 180, upd = function () {
         try {
-          var p = pano.getPosition(), v = pano.getPov(); if (!p || !v) { pin.style.display = 'none'; return; }
+          var p = pano.getPosition(), v = pano.getPov(); if (!p || !v) { pin.classList.remove('show'); return; }
           var la1 = p.lat() * R, la2 = it.lat * R, dl = (it.lng - p.lng()) * R;
           var brg = Math.atan2(Math.sin(dl) * Math.cos(la2), Math.cos(la1) * Math.sin(la2) - Math.sin(la1) * Math.cos(la2) * Math.cos(dl)) / R;
-          var dx = (it.lng - p.lng()) * R * Math.cos(la1) * 6371000, dy = (it.lat - p.lat()) * R * 6371000, dist = Math.sqrt(dx * dx + dy * dy);
-          var w = wrap.clientWidth, h = wrap.clientHeight, hf = Math.min(80, (v.fov || 100) / 2), d = ((brg - (v.pan || 0)) % 360 + 540) % 360 - 180;
-          if (!w || !h || Math.abs(d) > hf + 3) { pin.style.display = 'none'; return; }
-          var th = Math.tan(hf * R), vf = Math.atan(th * h / w), el = Math.atan2(7, Math.max(dist, 6)) / R - (v.tilt || 0);
-          var x = w / 2 + (w / 2) * Math.tan(d * R) / th, y = h / 2 - (h / 2) * Math.tan(el * R) / Math.tan(vf);
-          pin.style.left = Math.max(50, Math.min(w - 50, x)) + 'px'; pin.style.top = Math.max(50, Math.min(h * 0.85, y)) + 'px'; pin.style.display = 'flex';
-          pin.firstChild.textContent = '이 건물' + (dist >= 8 && dist < 300 ? ' · ' + Math.round(dist) + 'm' : '');
-        } catch (e) { pin.style.display = 'none'; }
+          var dx = (it.lng - p.lng()) * R * Math.cos(la1) * 6371000, dy = (it.lat - p.lat()) * R * 6371000, d = Math.round(Math.sqrt(dx * dx + dy * dy));
+          var W = wrap.clientWidth, H = wrap.clientHeight, fov = v.fov || 100, rel = ((brg - (v.pan || 0)) % 360 + 540) % 360 - 180, dm = d < 3 ? '' : ' · 약 ' + d + 'm';
+          if (!W || !H) { pin.classList.remove('show'); return; }
+          if (Math.abs(rel) <= fov / 2 * 0.92) { pin.style.left = (50 + rel / fov * 100) + '%'; pin.style.top = Math.round(H * 0.28) + 'px'; pin.innerHTML = '<span class="bx">이 건물' + dm + '</span><span class="ar">▼</span>'; }
+          else { var L = rel < 0; pin.style.left = (L ? 80 : W - 80) + 'px'; pin.style.top = Math.round(H * 0.4) + 'px'; pin.innerHTML = '<span class="bx">' + (L ? '◀ 매물 방향' : '매물 방향 ▶') + dm + '</span>'; }
+          pin.classList.add('show');
+        } catch (e) { pin.classList.remove('show'); }
       };
       ['pov_changed', 'pano_changed', 'pano_status', 'init'].forEach(function (ev) { naver.maps.Event.addListener(pano, ev, function () { setTimeout(upd, 60); }); });
       var onRs = function () { if (!document.body.contains(wrap)) { window.removeEventListener('resize', onRs); return; } upd(); };
