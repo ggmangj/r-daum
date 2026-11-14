@@ -397,6 +397,19 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 @media (max-width:760px){.faHead{position:static}.faIn{padding:12px 16px 40px}.faHead h2{font-size:22px}.faSub{justify-content:flex-start;flex-basis:100%}.faTabs{overflow-x:auto;max-width:100%;scrollbar-width:none}.faTabs button{white-space:nowrap;padding:8px 12px}
  .faClose{position:fixed;right:12px;bottom:76px;z-index:6;box-shadow:0 4px 14px rgba(0,0,0,.25)}.faSel{flex:1}.faBar .faSel{flex:1 1 100%}.faRng{flex:1 1 calc(50% - 4px);min-width:0;padding:0 10px}.faRng input{width:100%;min-width:0}.faQ{flex:1 1 100%;order:-1}.faGrid{grid-template-columns:1fr;gap:14px}}
 .dtMainWrap{position:relative}
+.dtSvBtn{position:absolute;top:14px;right:14px;z-index:6;display:inline-flex;align-items:center;gap:6px;padding:8px 13px;border:0;border-radius:999px;background:rgba(20,25,31,.72);color:#fff;font-family:inherit;font-size:13px;font-weight:700;line-height:1;cursor:pointer;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.dtSvBtn:hover{background:rgba(41,70,82,.92)}
+.dtSvBtn[aria-pressed=true]{background:#fff;color:#294652;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+.dtSv{position:absolute;inset:0;z-index:5;border-radius:16px;overflow:hidden;background:#294652;display:none}
+.dtMainWrap.svOn .dtSv{display:block}
+.dtMainWrap.svOn .dtNav{display:none}
+.dtSvIn{position:absolute;inset:0;opacity:0;transition:opacity .3s}
+.dtSv.ok .dtSvIn{opacity:1}
+.dtSvMsg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#C3CAD8;font-size:14px}
+.dtSv.ok .dtSvMsg{display:none}
+@media (max-width:760px){.dtSv{left:-20px;right:-20px;border-radius:0}.dtSvBtn{top:10px;right:-10px;padding:7px 11px;font-size:12px}}
+@media print{.dtSvBtn,.dtSv{display:none!important}}
+
 .dtNav{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.88);box-shadow:0 2px 10px rgba(0,0,0,.18);display:grid;place-items:center;cursor:pointer;z-index:3;opacity:.85;transition:opacity .15s,background .15s}
 .dtNav:hover{opacity:1;background:#fff}.dtNav svg{width:22px;height:22px;fill:none;stroke:#294652;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .dtNav.prev{left:14px}.dtNav.next{right:14px}
@@ -2752,7 +2765,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       tagsOf(it).map(function (t) { return '<span class="dtBadge gold">' + esc(t) + '</span>'; }).join('') +
       (it.featured ? '<span class="dtBadge line">추천 매물</span>' : '');
     var gal = photos.length
-      ? '<div class="dtGal"><div class="dtMainWrap"><button type="button" class="dtMainImg" aria-label="사진 크게 보기"><img src="' + photoUrl(photos[0], 1600) + '" alt="' + esc(it.title) + ' 대표 사진" referrerpolicy="no-referrer">' + wmHtml() + '<span class="dtCount">1 / ' + photos.length + '</span></button>' +
+      ? '<div class="dtGal"><div class="dtMainWrap">' + (isFinite(it.lat) && it.lat ? '<button type="button" class="dtSvBtn" aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="5" r="2.2"/><path d="M12 8v6M9 21l3-7 3 7M7 11l5-2 5 2"/></svg><span>거리뷰 보기</span></button>' : '') + '<button type="button" class="dtMainImg" aria-label="사진 크게 보기"><img src="' + photoUrl(photos[0], 1600) + '" alt="' + esc(it.title) + ' 대표 사진" referrerpolicy="no-referrer">' + wmHtml() + '<span class="dtCount">1 / ' + photos.length + '</span></button>' +
         (photos.length > 1 ? '<button type="button" class="dtNav prev" aria-label="이전 사진"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><button type="button" class="dtNav next" aria-label="다음 사진"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>' : '') + '</div>' +
         (photos.length > 1 ? '<div class="dtThumbs dtThumb5" role="list">' + photos.map(function (p, i) { return p ? '<button type="button" role="listitem" data-i="' + i + '" class="' + (i ? '' : 'on') + '" aria-label="' + (i + 1) + '번째 사진"><img src="' + photoUrl(p, 400) + '" alt="" loading="lazy" referrerpolicy="no-referrer"></button>' : '<span class="dtThumbEmpty" aria-hidden="true"></span>'; }).join('') + '</div>' : '') + '</div>'
       : '<div class="dtNoPhoto" id="dtNoPhoto"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#BC975E" stroke-width="1.5" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><path d="M21 16l-5-5-8 8"></path></svg><b>현장 사진 준비 중</b><span>실제 내부 사진과 도면은 상담 시 바로 보내드립니다.<br>02-555-1165</span></div>';
@@ -2997,6 +3010,46 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       } catch (err) { }
     })();
   }
+  // 사진이 있어도 큰 사진 칸에서 거리뷰로 실제 외관 보기 (우측 상단 「거리뷰 보기」 ↔ 「사진 보기」)
+  function svClose() {
+    var w = DT.el && DT.el.querySelector('.dtMainWrap'); if (!w || !w.classList.contains('svOn')) return;
+    w.classList.remove('svOn'); var b = w.querySelector('.dtSvBtn'); if (b) { b.setAttribute('aria-pressed', 'false'); b.querySelector('span').textContent = '거리뷰 보기'; }
+  }
+  function svToggle(it) {
+    var w = DT.el && DT.el.querySelector('.dtMainWrap'); if (!w) return;
+    var b = w.querySelector('.dtSvBtn');
+    if (w.classList.contains('svOn')) { svClose(); return; }
+    w.classList.add('svOn'); b.setAttribute('aria-pressed', 'true'); b.querySelector('span').textContent = '사진 보기';
+    var box = w.querySelector('.dtSv');
+    if (box) { if (box._pano) { try { box._pano.setSize(new naver.maps.Size(box.clientWidth, box.clientHeight)); } catch (e) { } } return; }
+    box = document.createElement('div'); box.className = 'dtSv'; box.innerHTML = '<span class="dtSvMsg">거리뷰를 불러오는 중…</span>'; w.appendChild(box);
+    var tries = 0;
+    (function go() {
+      if (!document.body.contains(box)) return;
+      var ok = window.naver && naver.maps && naver.maps.Panorama;
+      if (!ok) { if (++tries < 50) setTimeout(go, 200); else box.querySelector('.dtSvMsg').textContent = '이 위치는 거리뷰를 불러오지 못했습니다'; return; }
+      try {
+        var inner = document.createElement('div'); inner.className = 'dtSvIn'; box.appendChild(inner);
+        var sz = function () { return new naver.maps.Size(Math.max(200, box.clientWidth), Math.max(150, box.clientHeight)); };
+        var pano = new naver.maps.Panorama(inner, { size: sz(), position: new naver.maps.LatLng(it.lat, it.lng), pov: { pan: 0, tilt: 5, fov: 100 }, aroundControl: false, flightSpot: false, zoomControl: true, zoomControlOptions: { position: naver.maps.Position && naver.maps.Position.BOTTOM_RIGHT }, logoControl: true });
+        box._pano = pano;
+        var face = function () {
+          try {
+            var p = pano.getPosition(); if (!p) return;
+            var la1 = p.lat() * Math.PI / 180, la2 = it.lat * Math.PI / 180, dl = (it.lng - p.lng()) * Math.PI / 180;
+            var brg = Math.atan2(Math.sin(dl) * Math.cos(la2), Math.cos(la1) * Math.sin(la2) - Math.sin(la1) * Math.cos(la2) * Math.cos(dl)) * 180 / Math.PI;
+            pano.setPov({ pan: (brg + 360) % 360, tilt: 5, fov: 100 });
+          } catch (e) { }
+        };
+        var shown = false, show = function () { if (shown) return; shown = true; face(); box.classList.add('ok'); };
+        naver.maps.Event.addListener(pano, 'pano_status', function (st) { if (st === 'OK') show(); else if (!shown) box.querySelector('.dtSvMsg').textContent = '이 위치는 거리뷰가 없습니다'; });
+        naver.maps.Event.addListener(pano, 'init', show);
+        var onRs = function () { if (!document.body.contains(box)) { window.removeEventListener('resize', onRs); return; } try { pano.setSize(sz()); } catch (e) { } };
+        window.addEventListener('resize', onRs);
+        [3000, 8000].forEach(function (ms) { setTimeout(function () { if (!shown) { try { if (pano.getPosition()) show(); } catch (e) { } } }, ms); });
+      } catch (err) { box.querySelector('.dtSvMsg').textContent = '거리뷰를 불러오지 못했습니다'; }
+    })();
+  }
   // 같은 건물 추가 임대 + 합산 정보
   function addHtml(it) {
     var xs = sameBldg(it); if (!xs.length) return '';
@@ -3063,12 +3116,14 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     show(i); if (!d.open) d.showModal();
   }
   function setPhoto(i) {
+    svClose();
     var it = DT.it, ph = it.photos || []; DT.idx = i;
     var img = DT.el.querySelector('.dtMainImg img'); if (img) img.src = photoUrl(ph[i], 1600);
     var n = DT.el.querySelector('.dtCount'); if (n) n.textContent = (i + 1) + ' / ' + ph.length;
     DT.el.querySelectorAll('.dtThumbs button').forEach(function (b) { var on = +b.getAttribute('data-i') === i; b.classList.toggle('on', on); if (on) { var w = b.parentNode, l = b.offsetLeft - w.offsetLeft; if (l < w.scrollLeft || l + b.offsetWidth > w.scrollLeft + w.clientWidth) w.scrollTo({ left: l - (w.clientWidth - b.offsetWidth) / 2, behavior: 'smooth' }); } });
   }
   function bindDetail(it) {
+    var svb = DT.el && DT.el.querySelector('.dtSvBtn'); if (svb) svb.addEventListener('click', function (e) { e.stopPropagation(); svToggle(it); });
     var el = DT.el;
     el.querySelector('.dtBack').addEventListener('click', closeByUser);
     var mi = el.querySelector('.dtMainImg'), swiped = false;
