@@ -3227,7 +3227,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     };
     fetch(SHEET_URL + (SHEET_URL.indexOf('?') < 0 ? '?' : '&') + (it.sale ? 'sbld=' : 'bld=') + encodeURIComponent(it.id)).then(function (r) { return r.json(); }).then(function (d) {
       it.bldDone = 1;
-      if (it.sale && d && d.ok) { it.land = d.L || null; it.deal = d.deal || null; if (!d.b) { it.bldMsg = d.bErr ? '※ ' + d.bErr + '. 건물 정보는 상담 시 확인해 드립니다.' : ''; if (DT.it === it && DT.el && !DT.el.hidden) { var y0 = window.scrollY; paintDetail(it); window.scrollTo(0, y0); } it.bldBusy = 0; return; } }
+      if (it.sale && d && d.ok) { it.land = d.L || null; it.deal = d.deal || null; it.near = d.near || null; if (!d.b) { it.bldMsg = d.bErr ? '※ ' + d.bErr + '. 건물 정보는 상담 시 확인해 드립니다.' : ''; if (DT.it === it && DT.el && !DT.el.hidden) { var y0 = window.scrollY; paintDetail(it); window.scrollTo(0, y0); } it.bldBusy = 0; return; } }
       if (!(d && d.ok && d.b)) {
         done(d && d.none ? '※ 건축물대장에서 이 건물을 찾지 못했습니다. 건물 정보는 상담 시 확인해 드립니다.'
           : d && d.error ? '※ 건축물대장 정보를 지금 불러오지 못했습니다 (' + d.error + '). 건물 정보는 상담 시 확인해 드립니다.'
@@ -3798,7 +3798,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       '.slSt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}.slSt div{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid #EFEAE0;border-radius:12px;background:#FBFAF7}' +
       '.slSt i{min-width:30px;height:30px;padding:0 5px;border-radius:15px;display:flex;align-items:center;justify-content:center;color:#fff;font-style:normal;font-weight:800;font-size:11.5px;flex:none}.slSt b{font-size:15px;display:block}.slSt span{font-size:12.5px;color:#6B757D}.slSt em{margin-left:auto;font-style:normal;text-align:right;font-weight:800;color:#294652;font-size:17px;white-space:nowrap}.slSt em small{display:block;font-size:11px;color:#8A939A;font-weight:500}' +
       '.slLand{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}.slLand div{background:#FBFAF7;border:1px solid #EFEAE0;border-radius:12px;padding:13px 15px}.slLand small{display:block;font-size:12px;color:#6B757D;margin-bottom:4px}.slLand b{font-size:16px;font-weight:800}.slLand em{display:block;font-style:normal;font-size:12px;color:#6B757D;margin-top:2px}' +
-      '.slCmp{display:flex;flex-direction:column;gap:11px;border:1px solid #EFEAE0;border-radius:14px;padding:18px 20px;background:#FFFFFF}.slCmp .r{display:grid;grid-template-columns:230px minmax(0,1fr) 90px;gap:14px;align-items:center;font-size:14px}.slCmp .bar{height:14px;border-radius:4px;background:#EFEAE0;position:relative;overflow:hidden}.slCmp .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}.slCmp .r>b{text-align:right}' +
+      '.slCmp{display:flex;flex-direction:column;gap:11px;border:1px solid #EFEAE0;border-radius:14px;padding:18px 20px;background:#FFFFFF}.slCmp .r{display:grid;grid-template-columns:300px minmax(0,1fr) 90px;gap:14px;align-items:center;font-size:14px}.slCmp .bar{height:14px;border-radius:4px;background:#EFEAE0;position:relative;overflow:hidden}.slCmp .bar i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}.slCmp .r>b{text-align:right}' +
       '.slLand.sl3{grid-template-columns:repeat(3,minmax(0,1fr))}' +
       '.slBase{display:inline-block;vertical-align:middle;margin-left:8px;padding:4px 10px;border-radius:6px;background:#294652;color:#D9BE8C;font-size:13px;font-weight:800}.slBaseT{margin:-4px 0 12px;font-size:13.5px;color:#3B4A52}.slBaseT b{color:#8A6A35}' +
       '.slSumT{display:flex;flex-wrap:wrap;gap:4px 14px;padding:11px 18px;border-bottom:1px solid #EFEAE0;font-size:13px;color:#3B4A52}.slSumT span+span:before{content:"·";margin-right:14px;color:#C9BFA9}.slSumT .no{margin-left:auto;color:#8A6A35;font-weight:700}.slSumT .no:before{display:none}' +
@@ -3859,6 +3859,8 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   // ② 가격 판단 (대지 평당 시세 비교 + 매매 조건)
   function saleCmpHtml(it) {
     var L = it.land, dl = it.deal || {}, gg = JIGA_D[it.gu + '|' + it.dong], rows = [['이 매물 (호가)', it.pp, '#294652', 1]];
+    var nr = it.near || {};   // 주변 블록(반경 200~500m) 실거래 — 동 전체보다 체감에 가까운 값
+    if (nr.n) rows.push(['주변 실거래 중간값 · 반경 ' + nr.r + 'm · 최근 ' + (nr.yrs || 2) + '년 ' + nr.n + '건', nr.med, '#9C7A45']);
     if (dl.n) rows.push([it.dong + ' 실거래 중간값 · 최근 1년 ' + dl.n + '건', dl.med, '#BC975E']);
     if (gg) rows.push([it.dong + ' 공시지가 중간값', gg, '#A9BBC1']);
     if (L && L[8]) rows.push(['이 필지 개별공시지가', L[8] * PYC / 10000, '#7D96A0']);
