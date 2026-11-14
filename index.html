@@ -3859,7 +3859,8 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   }
   // ② 가격 판단 (대지 평당 시세 비교 + 매매 조건)
   function saleCmpHtml(it) {
-    var L = it.land, dl = it.deal || {}, gg = JIGA_D[it.gu + '|' + it.dong], rows = [['이 매물 (호가)', it.pp, '#294652', 1]];
+    var L = it.land, dl = it.deal || {}, gg = JIGA_D[it.gu + '|' + it.dong], ay = +(((it.reg && it.reg.apr) || '').slice(0, 4)) || +it.yr || 0, cy = new Date().getFullYear(),
+      rows = [['이 매물 (호가)' + (ay > 1900 && ay <= cy ? ' · ' + ay + '년 준공 · ' + (cy - ay + 1) + '년차' : ''), it.pp, '#294652', 1]];   // 연식: 위의 신축·구축 줄과 비교하기 쉽게
     var nr = it.near || {};   // 주변 블록(반경 200~500m) 최근 5년 실거래 — 신축·준신축(준공 5년 이내)과 구축으로 나눠서
     if (nr.n) {
       var tip = nr.by ? Object.keys(nr.by).sort().map(function (y) { return y + '년 ' + nr.by[y] + '건'; }).join(' · ') : '';
