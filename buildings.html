@@ -44,6 +44,7 @@ body{margin:0;background:#FFFFFF}
 a{color:#294652;text-decoration:none}a:hover{color:#294652}
 *{box-sizing:border-box}
 input,select,textarea,button{font-family:inherit}
+.slCmp .r.sub{font-size:.92em;color:#6b6157}.slCmp .r.sub>span{padding-left:10px}.slCmp .r.sub .bar{height:8px;opacity:.85}
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -3860,15 +3861,20 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   // ② 가격 판단 (대지 평당 시세 비교 + 매매 조건)
   function saleCmpHtml(it) {
     var L = it.land, dl = it.deal || {}, gg = JIGA_D[it.gu + '|' + it.dong], rows = [['이 매물 (호가)', it.pp, '#294652', 1]];
-    var nr = it.near || {};   // 주변 블록(반경 200~500m) 실거래 — 동 전체보다 체감에 가까운 값
-    if (nr.n) rows.push(['주변 실거래 중간값 · 반경 ' + nr.r + 'm · 최근 ' + (nr.yrs || 2) + '년 ' + nr.n + '건', nr.med, '#9C7A45']);
+    var nr = it.near || {};   // 주변 블록(반경 200~500m) 최근 5년 실거래 — 신축·준신축(준공 5년 이내)과 구축으로 나눠서
+    if (nr.n) {
+      var tip = nr.by ? Object.keys(nr.by).sort().map(function (y) { return y + '년 ' + nr.by[y] + '건'; }).join(' · ') : '';
+      rows.push(['주변 실거래 중간값 · ' + nr.r + 'm · ' + (nr.from && nr.to ? (nr.from === nr.to ? nr.from.slice(2) : nr.from.slice(2) + '~' + nr.to.slice(2)) + '년 ' : '최근 ' + (nr.yrs || 5) + '년 ') + nr.n + '건', nr.med, '#9C7A45', 0, tip]);
+      if (nr.nw && nr.nw.n) rows.push(['└ 신축·준신축 (준공 5년 이내) ' + nr.nw.n + '건', nr.nw.med, '#B88B4A', 0, '', 1]);
+      if (nr.old && nr.old.n) rows.push(['└ 구축 (준공 5년 초과) ' + nr.old.n + '건', nr.old.med, '#8A7558', 0, '', 1]);
+    }
     if (dl.n) rows.push([it.dong + ' 실거래 중간값 · 최근 1년 ' + dl.n + '건', dl.med, '#BC975E']);
     if (gg) rows.push([it.dong + ' 공시지가 중간값', gg, '#A9BBC1']);
     if (L && L[8]) rows.push(['이 필지 개별공시지가', L[8] * PYC / 10000, '#7D96A0']);
     if (!it.bldDone || rows.length < 2) return '';
     var mx = Math.max.apply(null, rows.map(function (r) { return r[1] || 0; }));
     return '<section class="dtSec"><h2>가격 판단 <span class="slBase">대지(토지) 평당가 기준</span></h2><div class="slCmp">' + rows.map(function (r) {
-      return '<div class="r"><span>' + (r[3] ? '<b style="color:#294652">' + esc(r[0]) + '</b>' : esc(r[0])) + '</span><div class="bar"><i style="width:' + Math.max(2, r[1] / mx * 100) + '%;background:' + r[2] + '"></i></div><b>' + eok2(r[1]) + '</b></div>';
+      return '<div class="r' + (r[5] ? ' sub' : '') + '"' + (r[4] ? ' title="' + esc(r[4]) + '"' : '') + '><span>' + (r[3] ? '<b style="color:#294652">' + esc(r[0]) + '</b>' : esc(r[0])) + '</span><div class="bar"><i style="width:' + Math.max(2, r[1] / mx * 100) + '%;background:' + r[2] + '"></i></div><b>' + eok2(r[1]) + '</b></div>';
     }).join('') + '</div><p class="slTerms"><b>매매 조건</b>매매 · 가격 협의 여부와 임대 현황(보증금·월세·공실)은 상담 시 자료로 안내해 드립니다.</p>' +
       '</section>';
   }
