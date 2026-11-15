@@ -2193,7 +2193,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   function tagsOf(it) { return (it && it.tags && it.tags.length ? it.tags : []).filter(function (t) { return t && t !== '무권리'; }); }
   function miHtml(it) {
     if (it.sale) return '<button type="button" class="mapItem' + (it.id === focusId ? ' on' : '') + '" data-id="' + esc(it.id) + '">' +
-      '<span class="miMeta">' + (it.shop ? '<em class="miTag shopTag">상가점포</em>' : '<em class="miTag bldTag">빌딩·건물</em>') + (it.src === 'our' ? '다움 매물 · ' : '') + esc(it.dong) + '</span>' +
+      '<span class="miMeta">' + (it.shop ? '<em class="miTag shopTag">상가점포</em>' : '<em class="miTag bldTag">빌딩·건물</em>') + esc(it.dong) + '</span>' +
       '<span class="miTitle">' + listTitle(it.title) + '</span>' +
       '<span class="miPrice">매매 <b class="miDep">' + esc(it.depText) + '</b><i>/</i>' + (it.shop ? '전용 평당' : '대지 평당') + ' <b class="miRent">' + esc(it.rentText) + '</b>' + (it.yr ? '<i>/</i><b class="miMg">' + it.yr + '년</b>' : '') + '</span></button>';
     return '<button type="button" class="mapItem' + (it.id === focusId ? ' on' : '') + '" data-id="' + esc(it.id) + '">' +
