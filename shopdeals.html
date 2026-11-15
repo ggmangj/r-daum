@@ -312,6 +312,7 @@ body.dlFull .mapFullBtn{display:none}
 .kindSw a.on{background:#294652;color:#fff}.kindSw a.on small{color:#C9D3D6}.kindSw a.on.shopOn{background:#B5764F}.kindSw a.on.shopOn small{color:#FBE7D6}
 body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{margin-top:7px;width:100%;display:inline-flex;align-items:center;justify-content:center;gap:5px;height:30px;padding:0 10px;border-radius:8px;border:1.5px solid #B5764F;background:#fff;color:#7A4424;font:700 12.5px 'Noto Sans KR',sans-serif;cursor:pointer}
 .cadBtn:hover{background:#FBF1EA}
+.sdScope{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 10px;padding:10px 12px 10px 14px;border-radius:12px;background:#A0582E;color:#fff}.sdScope b{font-size:16px;font-weight:800;letter-spacing:-.4px}.sdScope small{display:block;font-size:11px;opacity:.85;font-weight:600}.sdScope button{flex:none;border:0;background:#fff;color:#A0582E;font:700 12px inherit;font-family:inherit;padding:6px 11px;border-radius:999px;cursor:pointer}.sdAge{margin:0 0 4px}.sdAge h3{margin:0 0 6px;font-size:12.5px;color:#6B757D;font-weight:700}.sdAge .gS{padding:0;background:none;grid-template-columns:repeat(3,minmax(0,1fr))}.sdAge .gS div{border-radius:12px}.sdAge .gS b{font-size:16px}.sdAge .gS small{font-size:11.5px;white-space:nowrap}.sdAge .gS em{display:block;font-style:normal;font-size:11px;color:#8A939A;white-space:nowrap;margin-top:1px}.sdAge .gS .few{margin:0;font-size:10.5px}.sdAge .gS div{padding:8px 9px}
 .sdInfo{margin-top:12px;padding:12px 14px;border:1px dashed #B9A88A;border-radius:12px;background:#FBF8F2;font-size:12.5px;line-height:1.6;color:#46515B}.sdInfo b{color:#8A6A35}
 .leg{pointer-events:none}.leg b{display:block;margin-bottom:4px}.lgRow{display:flex;align-items:center;gap:6px;color:#46515B;margin-top:3px}
 .lgD{width:14px;height:14px;border-radius:50%;background:#B5764F;display:inline-block}.lgB{width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid #C98F69;display:inline-block}
@@ -364,7 +365,9 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
 <aside class="side">
 <h1><span class="h1l">강남 · 서초</span><br><span class="h1l"><span class="heroName">상가·사무실</span> <span class="h1Mk">실거래가</span></span></h1>
 <p class="sub">구분소유 <b>상가·사무실(호실)</b> 매매 실거래입니다. 국토부가 지번 앞자리만 공개해 <b>동 → 번지대(예: 5**번지)</b> 단위로 묶어 보여드리고, 가격은 <b>전용면적 평당가</b>로 비교합니다.</p>
+<div class="sdScope" id="scope" hidden></div>
 <section class="kpi" id="kpi" aria-label="요약"></section>
+<div id="grp"></div>
 <div class="sdInfo"><b>연식 미상</b>은 건축년도 정보가 없는 거래입니다. 준공 직후 신축이거나 정보 누락일 수 있어 따로 모아 보여드리며, 「전체」 중간값에는 포함됩니다.</div>
 </aside>
 <div class="col">
@@ -383,7 +386,7 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
   <button type="button" class="mapFullBtn" id="fullBtn" aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"></path></svg><span>지도 크게 보기</span></button>
   <div class="mapMsg" id="mapMsg">실거래 자료를 불러오는 중입니다…</div>
  </div>
- <div class="list"><div class="lh"><b id="lhT">강남·서초 전체</b><button type="button" class="rst" id="rst">전체 보기</button></div><div id="grp"></div><div id="list"></div></div>
+ <div class="list"><div class="lh"><b id="lhT">강남·서초 전체</b><button type="button" class="rst" id="rst">전체 보기</button></div><div id="list"></div></div>
 </section>
 <p class="mNote">※ 국토부 상업업무용 실거래(집합건물) 기준 · 해제(취소) 거래 제외 · 지분 거래는 중간값 계산에서 제외 · 5건 미만은 「표본 적음」 <span id="upd"></span></p>
 </div>
@@ -466,12 +469,18 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
     if (!ALL.length && LOADED) { $('mapMsg').hidden = false; $('mapMsg').textContent = '상가·사무실 실거래 자료를 준비 중입니다. 잠시 후 다시 확인해 주세요.'; }
   }
   function stat(L) { var v = L.filter(function (o) { return !o.share && o.pp; }).map(function (o) { return o.pp; }); return { n: L.length, m: med(v), few: v.length < 5 }; }
+  function scopeL() { return sel ? VIEW.filter(function (o) { return o.bk === sel || o.dk === sel; }) : VIEW; }
+  function scopeT() { var g0 = scopeL()[0]; return sel && g0 ? (sel.split('|').length > 2 ? g0.gu + ' ' + g0.dong + ' ' + g0.bt : g0.gu + ' ' + g0.dong) : (F.dong ? F.dong.replace('|', ' ') : ''); }
   function kpi() {
-    var s = stat(VIEW), am = med(VIEW.map(function (o) { return o.amt; })), unk = VIEW.filter(function (o) { return o.ak === 'unk'; }).length;
+    var L = scopeL(), s = stat(L), am = med(L.map(function (o) { return o.amt; })), ar = med(L.map(function (o) { return o.ar; }).filter(Boolean)), t = scopeT();
+    $('scope').hidden = !t; $('scope').innerHTML = t ? '<span><small>선택한 지역</small><b>' + esc(t) + '</b></span>' + (sel ? '<button type="button" id="scOff">전체 보기</button>' : '') : '';
+    var part = function (lab, LL, cls) { var q = stat(LL); return '<div class="' + (cls || '') + '"><small>' + lab + '</small><b>' + (q.m ? man(q.m) : '-') + '</b><em>' + q.n + '건' + (q.n && q.few ? ' · <span class="few">표본 적음</span>' : '') + '</em></div>'; };
+    $('grp').innerHTML = '<div class="sdAge"><h3>준공 연식별 전용 평당 중간값</h3><div class="gS">' + part('5년 이내', L.filter(function (o) { return o.ak === 'new'; })) +
+      part('5년 초과', L.filter(function (o) { return o.ak === 'old'; })) + part('연식 미상', L.filter(function (o) { return o.ak === 'unk'; }), 'unk') + '</div></div>';
     $('kpi').innerHTML = '<div class="k"><small>거래 건수</small><b>' + s.n.toLocaleString('ko-KR') + '건</b><em>최근 ' + (F.per / 12) + '년</em></div>' +
       '<div class="k"><small>전용 평당 중간값</small><b>' + man(s.m) + '</b><em>' + (s.few ? '표본 적음' : '지분 거래 제외') + '</em></div>' +
       '<div class="k"><small>거래금액 중간값</small><b>' + man(am) + '</b><em>호실 1건 기준</em></div>' +
-      '<div class="k"><small>연식 미상</small><b>' + unk + '건</b><em>신축 또는 정보 누락</em></div>';
+      '<div class="k"><small>전용면적 중간값</small><b>' + (ar ? (Math.round(ar / PY * 10) / 10) + '평' : '-') + '</b><em>' + (ar ? Math.round(ar) + '㎡' : '') + '</em></div>';
   }
   function groups() {
     var z = M ? M.getZoom() : 14, useB = z >= ZB, G = {};
@@ -493,14 +502,11 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
       MK.push(mk);
     });
   }
-  function pick(k, zoomTo) { sel = sel === k && !zoomTo ? '' : k; shown = 80; if (zoomTo) { M.setCenter(zoomTo); M.setZoom(ZB, true); } markers(); list(); }
+  function pick(k, zoomTo) { sel = sel === k && !zoomTo ? '' : k; shown = 80; if (zoomTo) { M.setCenter(zoomTo); M.setZoom(ZB, true); } markers(); kpi(); list(); }
   function list() {
-    var L = sel ? VIEW.filter(function (o) { return o.bk === sel || o.dk === sel; }) : VIEW, g0 = L[0];
-    $('lhT').textContent = sel && g0 ? (sel.split('|').length > 2 ? g0.dong + ' ' + g0.bt : g0.gu + ' ' + g0.dong) : (F.dong ? F.dong.replace('|', ' ') : '강남·서초 전체');
+    var L = scopeL();
+    $('lhT').textContent = (scopeT() || '강남·서초 전체') + ' 거래 ' + L.length.toLocaleString('ko-KR') + '건';
     $('rst').hidden = !sel;
-    var part = function (lab, LL, cls) { var s = stat(LL); return '<div class="' + (cls || '') + '"><small>' + lab + ' · ' + s.n + '건</small><b>' + (s.m ? man(s.m) : '-') + '</b>' + (s.n && s.few ? '<span class="few">표본 적음</span>' : '') + '</div>'; };
-    $('grp').innerHTML = '<div class="gS">' + part('전체 (전용 평당)', L) + part('5년 이내 준공', L.filter(function (o) { return o.ak === 'new'; })) +
-      part('5년 초과', L.filter(function (o) { return o.ak === 'old'; })) + part('연식 미상', L.filter(function (o) { return o.ak === 'unk'; }), 'unk') + '</div>';
     L = L.slice().sort(function (a, b) { return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; });
     $('list').innerHTML = L.slice(0, shown).map(function (o) {
       return '<div class="it"><span class="t">' + esc(o.dong + ' ' + (o.bt || o.jb)) + '<span class="fb">' + esc(flText(o.fl)) + '</span>' +
@@ -515,7 +521,8 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
   }
   seg('fPer', 'per', 1); seg('fUse', 'use'); seg('fFl', 'fl'); seg('fAge', 'age');
   $('fDong').addEventListener('change', function () { F.dong = this.value; sel = ''; shown = 80; apply(); var c = CENT[F.dong]; if (M && c) { M.setCenter(new NM.LatLng(c[0], c[1])); M.setZoom(F.dong ? 15 : 14, true); } });
-  $('rst').addEventListener('click', function () { sel = ''; shown = 80; markers(); list(); });
+  $('rst').addEventListener('click', function () { sel = ''; shown = 80; markers(); kpi(); list(); });
+  $('scope').addEventListener('click', function (e) { if (e.target.id === 'scOff') { sel = ''; shown = 80; markers(); kpi(); list(); } });
   $('list').addEventListener('click', function (e) { if (e.target.id === 'more') { shown += 80; list(); } });
   var CAD = null;   /* 네이버 지적편집도 (번지 경계·지번 번호) */
   function cadSet(on) {   /* 기본은 지적편집도 켜짐 · 버튼으로 일반지도와 바꿔 봄 */
