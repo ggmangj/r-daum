@@ -519,6 +519,25 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
 }
 </style>
 <style id="navTwo">.mainNav .nvS{font-size:.74em;font-weight:500;color:#9C7A47;margin-left:5px;letter-spacing:-.2px}@media (max-width:760px){.mainNav .nvS{display:none}}</style>
+<style id="navG">:root{--tabBg:#F7F3EC}/* 상단 메뉴: 폴더 탭 (선택 메뉴가 아래 본문과 이어짐) */
+.mainNav a .nvB,.mainNav a .nvS{transition:color .15s}
+.mainNav a.on,.mainNav a[aria-current="page"]{background:var(--tabBg,#F6F2EA)!important;border-color:#E6DCCB!important;box-shadow:inset 0 3px 0 #BC975E;color:#294652!important}
+@media (min-width:761px){
+.siteHead .headRow{padding-bottom:0!important;align-items:flex-end!important}
+.siteHead .headRow>a:first-child,.siteHead .headActs{margin-bottom:16px}
+.mainNav{gap:4px!important;align-self:flex-end;flex-wrap:nowrap!important}
+.mainNav a{display:flex!important;flex-direction:column;align-items:center;padding:12px 24px 13px!important;margin:0 0 -1px!important;border-radius:14px 14px 0 0;border:1px solid transparent;border-bottom:0!important;background:none;color:#46515B!important;position:relative;z-index:1;line-height:1.25;white-space:nowrap}
+.mainNav .nvB{font-size:17px;font-weight:800}
+.mainNav .nvS{display:block!important;margin:2px 0 0!important;font-size:11.5px!important;font-weight:500;color:#9AA2A8!important}
+.mainNav a:hover .nvB{color:#294652}.mainNav a:hover .nvS{color:#9C7A47!important}
+.mainNav a.on .nvS,.mainNav a[aria-current="page"] .nvS{color:#9C7A47!important;font-weight:600}
+}
+@media (min-width:761px) and (max-width:1100px){.mainNav a{padding:10px 14px 11px!important}.mainNav .nvB{font-size:16px}}
+@media (max-width:760px){
+.mainNav{gap:4px!important;align-items:flex-end}
+.mainNav a{padding:0 14px!important;margin:0 0 -1px!important;border-radius:12px 12px 0 0;border:1px solid transparent;border-bottom:0!important;min-height:44px!important;font-weight:700;color:#46515B!important}
+}
+</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; width: 100%; letter-spacing: -0.2px">
