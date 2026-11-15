@@ -452,6 +452,72 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
 }
 </style>
 
+<style id="guideBase">
+.sectorTabs{display:flex;gap:8px;flex-wrap:wrap}
+.sectorTabs button{min-height:44px;padding:0 20px;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:transparent;color:#C3CAD8;font:600 15px/1 'Noto Sans KR',sans-serif;letter-spacing:-.2px;cursor:pointer;transition:background-color .2s,color .2s,border-color .2s}
+.sectorTabs button:hover{border-color:#BC975E;color:#FFFFFF}
+.sectorTabs button[aria-selected="true"]{background:#BC975E;border-color:#BC975E;color:#14191F;font-weight:800}
+.sectorTabs button:focus-visible{outline:2px solid #E8D7B6;outline-offset:2px}
+.sectorBody{transition:opacity .22s ease}
+.sectorBody.swap{opacity:0}
+#clinic{scroll-margin-top:24px}
+@media (max-width:760px){.sectorTabs{flex-wrap:nowrap}.sectorTabs button{flex:none;padding:0 16px}}
+@media (prefers-reduced-motion:reduce){.sectorBody{transition:none}}
+.hlWord{background:linear-gradient(transparent 62%,#E8D7B6 62%)}
+#sectorTitle,.procHead h2,.guideList>div>span:nth-child(2),.procLine b{color:#2A333C!important}
+#clinic{scroll-margin-top:90px}
+@media (min-width:1400px){.guideTabsWrap,.sectorBody,.procBand{max-width:none!important;padding-left:48px!important;padding-right:48px!important}}
+@media (max-width:760px){.guideTabsWrap,.sectorBody,.procBand{padding-left:20px!important;padding-right:20px!important}}
+</style>
+<style id="guideCss">
+/* 실무 가이드: 밑줄 탭 + 선 구분 목록 */
+.guideTabsWrap .sectorTabs{display:flex;gap:30px;flex-wrap:nowrap;border-bottom:1px solid #E6E0D4;border-radius:0!important;overflow-x:auto;scrollbar-width:none}
+.guideTabsWrap .sectorTabs::-webkit-scrollbar{display:none}
+.guideTabsWrap .sectorTabs button{flex:none;min-height:0;padding:0 2px 14px!important;border:0!important;border-radius:0;background:none!important;color:#8A939B;font:600 16px/1.2 'Noto Sans KR',sans-serif;position:relative;cursor:pointer;transition:color .18s}
+.guideTabsWrap .sectorTabs button:hover{color:#294652}
+.guideTabsWrap .sectorTabs button[aria-selected="true"]{color:#14191F;font-weight:800}
+.guideTabsWrap .sectorTabs button[aria-selected="true"]:after{content:'';position:absolute;left:0;right:0;bottom:-1px;height:3px;background:#294652;border-radius:2px}
+.guideTabsWrap .sectorTabs button:focus-visible{outline:2px solid #BC975E;outline-offset:2px}
+.guideBody{display:grid;grid-template-columns:300px minmax(0,1fr);gap:56px}
+#sectorEyebrow{color:#9C7A47!important;font-size:11px!important;letter-spacing:2.4px!important}
+#sectorTitle{margin-top:10px!important;font-size:25px!important;letter-spacing:-1px!important;color:#14191F}
+#sectorDesc{margin-top:12px!important;font-size:14px!important;color:#46515B!important}
+.guideList{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:40px}
+.guideList>div{display:grid!important;grid-template-columns:34px minmax(0,1fr);grid-template-rows:auto auto;gap:0!important;background:none!important;border:0!important;border-top:1px solid #E6E0D4!important;border-radius:0!important;box-shadow:none!important;padding:16px 0!important;transform:none!important}
+.guideList>div:nth-child(-n+2){border-top:0!important;padding-top:2px!important}
+.guideList>div>span:first-child{grid-row:1/3;font-size:13px!important;color:#A27D48!important;padding-top:2px}
+.guideList>div>span:nth-child(2){font-size:16px!important;font-weight:700;color:#14191F;margin-bottom:4px}
+.guideList>div>span:nth-child(3){font-size:13px!important;line-height:1.55!important;color:#5B6670!important}
+/* 상담부터 입주까지 */
+.procBand{scroll-margin-top:24px}
+.procIn{margin-top:40px;padding-top:26px;border-top:1px solid #E6E0D4;display:grid;grid-template-columns:220px minmax(0,1fr);gap:30px;align-items:start}
+.procEb{display:block;font-family:Inter,sans-serif;font-size:11px;font-weight:600;letter-spacing:2.4px;color:#9C7A47}
+.procHead h2{margin:6px 0 0;font-size:19px!important;font-weight:800;line-height:1.4!important;letter-spacing:-.4px;color:#14191F}
+.procLine{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr))}
+.procLine li{padding:0 14px;border-left:1px solid #E6E0D4;display:flex;flex-direction:column}
+.procLine li:first-child{border-left:0;padding-left:0}
+.procLine i{font-style:normal;font-family:Inter,sans-serif;font-size:12px;font-weight:700;color:#A27D48}
+.procLine b{font-size:14.5px;margin:4px 0 3px;color:#14191F}
+.procLine span{font-size:12.5px;line-height:1.5;color:#6B757D}
+@media (max-width:1100px){
+ .guideBody{grid-template-columns:minmax(0,1fr);gap:28px}
+ .procIn{grid-template-columns:minmax(0,1fr);gap:18px}
+}
+@media (max-width:760px){
+ #clinic{padding:52px 0 48px!important}
+ .guideTabsWrap{margin-bottom:26px!important}
+ .guideTabsWrap .sectorTabs{gap:22px;margin:0 -20px;padding:0 20px}
+ .guideTabsWrap .sectorTabs button{font-size:15px;padding-bottom:12px!important}
+ #sectorTitle{font-size:clamp(22px,6.4vw,25px)!important}
+ .guideList{grid-template-columns:minmax(0,1fr)}
+ .guideList>div:nth-child(2){border-top:1px solid #E6E0D4!important;padding-top:16px!important}
+ .procLine{grid-template-columns:minmax(0,1fr)}
+ .procLine li{display:grid;grid-template-columns:34px minmax(0,1fr);border-left:0;border-top:1px solid #E6E0D4;padding:12px 0}
+ .procLine li:first-child{border-top:0;padding-top:0}
+ .procLine i{grid-row:1/3;padding-top:2px}
+ .procLine b{margin:0 0 2px}
+}
+</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; width: 100%; letter-spacing: -0.2px">
@@ -471,7 +537,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
 <a href="/buildings.html" style="color: #14191F">빌딩 매매</a>
 <a href="/deals.html" style="color: #14191F">매매 실거래가</a>
 <a href="/sangkwon.html" aria-current="page" style="color: #14191F">상권 분석</a>
-<a href="/#clinic" style="color: #14191F">실무 가이드</a>
+<a href="#clinic" style="color: #14191F">실무 가이드</a>
 </nav>
 <div class="headActs"><a href="/#intake" class="headIntake"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V8l7-5 7 5v13"></path><path d="M12 11v6M9 14h6"></path></svg>매물 접수</a>
 <a href="tel:025551165" class="headTel" aria-label="전화 상담 02-555-1165" style="display: flex; align-items: center; gap: 8px; background: #294652; color: #FFFFFF; padding: 11px 18px; border-radius: 999px; font-weight: 700; font-size: 15px; min-height: 44px">
@@ -532,6 +598,72 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
 </div>
 </main>
 
+<!-- ===== 실무 가이드 (업종별 입점 가이드 · 상담부터 입주까지) ===== -->
+<section id="clinic" style="background: #FBF8F3; color: #14191F; padding: 72px 0 64px; border-top: 1px solid #E6E0D4">
+<div class="guideTabsWrap" style="max-width: 1280px; margin: 0 auto 34px; padding: 0 32px">
+<div role="tablist" aria-label="업종별 입점 가이드" id="sectorTabs" class="scrollTabs sectorTabs">
+<button type="button" role="tab" data-sector="clinic" aria-selected="true">병의원</button>
+<button type="button" role="tab" data-sector="gym" aria-selected="false">체육시설</button>
+<button type="button" role="tab" data-sector="food" aria-selected="false">음식점</button>
+<button type="button" role="tab" data-sector="beauty" aria-selected="false">미용실</button>
+<button type="button" role="tab" data-sector="academy" aria-selected="false">학원</button>
+</div>
+</div>
+<div id="sectorBody" class="sectorBody guideBody" style="max-width: 1280px; margin: 0 auto; padding: 0 32px">
+<div class="guideLead" style="min-width: 0; display: flex; flex-direction: column">
+<div id="sectorEyebrow" style="font-family: Inter, sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 2.4px; color: #BC975E">MEDICAL LEASING</div>
+<h2 id="sectorTitle" style="margin: 0; font-size: 34px; font-weight: 900; line-height: 1.3; letter-spacing: -1.2px"><span class="hlWord">병의원</span> 개원,<br>입지부터 계약 특약까지</h2>
+<p id="sectorDesc" style="margin: 0; font-size: 16px; line-height: 1.75; color: #C3CAD8">진료과목에 따라 필요한 건물 조건이 달라집니다. 개원 전 확인해야 할 항목을 체크리스트로 정리해 매물과 함께 브리핑해 드립니다.</p>
+</div>
+<div id="sectorGrid" class="guideList" style="min-width: 0">
+
+<div class="elevDark elevLift" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: Inter, sans-serif; font-size: 13px; font-weight: 700; color: #BC975E">01</span>
+<span style="font-size: 18px; font-weight: 700">건축물 용도 확인</span>
+<span style="font-size: 14px; line-height: 1.6; color: #C3CAD8">건축물대장상 근린생활시설·의료시설 용도와 면적 기준이 진료과목에 맞는지 확인합니다.</span>
+</div>
+
+<div class="elevDark elevLift" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: Inter, sans-serif; font-size: 13px; font-weight: 700; color: #BC975E">02</span>
+<span style="font-size: 18px; font-weight: 700">진료과목별 입지</span>
+<span style="font-size: 14px; line-height: 1.6; color: #C3CAD8">피부·성형은 대로변 가시성, 내과·소아과는 배후 주거 수요 등 과목별 기준으로 봅니다.</span>
+</div>
+
+<div class="elevDark elevLift" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: Inter, sans-serif; font-size: 13px; font-weight: 700; color: #BC975E">03</span>
+<span style="font-size: 18px; font-weight: 700">승강기 · 주차</span>
+<span style="font-size: 14px; line-height: 1.6; color: #C3CAD8">환자 동선과 장비 반입을 고려한 엘리베이터 규격, 주차 대수와 발렛 여부를 체크합니다.</span>
+</div>
+
+<div class="elevDark elevLift" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: Inter, sans-serif; font-size: 13px; font-weight: 700; color: #BC975E">04</span>
+<span style="font-size: 18px; font-weight: 700">전기용량 · 설비</span>
+<span style="font-size: 14px; line-height: 1.6; color: #C3CAD8">의료장비 사용에 필요한 전기 증설 가능 여부와 급배수·환기 설비를 확인합니다.</span>
+</div>
+
+<div class="elevDark elevLift" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: Inter, sans-serif; font-size: 13px; font-weight: 700; color: #BC975E">05</span>
+<span style="font-size: 18px; font-weight: 700">시설 승계 · 원상복구</span>
+<span style="font-size: 14px; line-height: 1.6; color: #C3CAD8">기존 시설 승계 조건과 퇴거 시 원상복구 범위를 특약으로 명확히 정리합니다.</span>
+</div>
+
+<div class="elevDark elevLift" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-family: Inter, sans-serif; font-size: 13px; font-weight: 700; color: #BC975E">06</span>
+<span style="font-size: 18px; font-weight: 700">동일 건물 업종 제한</span>
+<span style="font-size: 14px; line-height: 1.6; color: #C3CAD8">같은 건물 내 동종 진료과목 입점 제한 등 임대인과 협의할 조건을 미리 챙깁니다.</span>
+</div>
+
+</div>
+</div>
+
+<div id="about" class="procBand" style="max-width: 1280px; margin: 0 auto; padding: 0 32px">
+<div class="procIn">
+<div class="procHead"><span class="procEb">HOW WE WORK</span><h2>상담부터 입주까지</h2></div>
+<ol class="procLine"><li><i>01</i><b>조건 상담</b><span>업종·면적·예산·입주 시기</span></li><li><i>02</i><b>맞춤 매물 브리핑</b><span>후보 매물과 시세 비교</span></li><li><i>03</i><b>현장 투어</b><span>동선을 짜 한 번에</span></li><li><i>04</i><b>조건 협상 · LOI</b><span>렌트프리·인테리어 기간</span></li><li><i>05</i><b>계약 · 특약 검토</b><span>권리관계·원상복구 특약</span></li></ol>
+</div>
+</div>
+</section>
+
 
 <footer class="siteFoot" style="background: #294652; color: #C6CED7; font-size: 14px">
 <div style="max-width: 1280px; margin: 0 auto; padding: 56px 32px 40px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 32px">
@@ -540,7 +672,7 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
 <span style="line-height: 1.8">부동산다움공인중개사사무소 · 개업공인중개사 안혁준<br>중개사무소 등록번호 제11680-2021-00537호 · 사업자등록번호 415-16-62854<br>서울특별시 강남구 신사동 578-1 일상빌딩 1층 (압구정역 5번출구)<br><a href="tel:025551165" style="color: inherit">전화 02-555-1165</a> · <a href="mailto:airbbb@naver.com" style="color: inherit">이메일 airbbb@naver.com</a> · <a href="https://r-daum.com" style="color: inherit">홈페이지 r-daum.com</a></span>
 </div>
 <div style="display: flex; gap: 48px; flex-wrap: wrap">
-<div style="display: flex; flex-direction: column; gap: 10px"><span style="color: #FFFFFF; font-weight: 700">바로가기</span><a href="/#map" style="color: #A9B1C2">상가·사무실 임대</a><a href="/#listings" style="color: #A9B1C2">추천 매물</a><a href="/buildings.html" style="color: #A9B1C2">빌딩 매매</a><a href="/deals.html" style="color: #A9B1C2">매매 실거래가</a><a href="/sangkwon.html" style="color: #A9B1C2">상권 분석</a><a href="/#clinic" style="color: #A9B1C2">실무 가이드</a></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><span style="color: #FFFFFF; font-weight: 700">바로가기</span><a href="/#map" style="color: #A9B1C2">상가·사무실 임대</a><a href="/#listings" style="color: #A9B1C2">추천 매물</a><a href="/buildings.html" style="color: #A9B1C2">빌딩 매매</a><a href="/deals.html" style="color: #A9B1C2">매매 실거래가</a><a href="/sangkwon.html" style="color: #A9B1C2">상권 분석</a><a href="#clinic" style="color: #A9B1C2">실무 가이드</a></div>
 <div style="display: flex; flex-direction: column; gap: 10px"><span style="color: #FFFFFF; font-weight: 700">고객지원</span><a href="/#consult" style="color: #A9B1C2">매물 의뢰</a><a href="https://blog.naver.com/airbbb" style="color: #A9B1C2">네이버 블로그</a><a id="mgrLink" href="https://script.google.com/macros/s/AKfycbxcrADcmOUogYCPPnEY9Hh6h_NpdV31gaOiP1zNCLn1fKrRsi12m-wi9d6wU8Sbw6dn9Q/exec" target="_blank" rel="noopener" title="다움 매물 리스트 (직원용)" style="color: #A9B1C2">매니저 관리</a></div>
 </div>
 </div>
@@ -1135,5 +1267,97 @@ body.saFull .saMapBox{position:fixed;inset:0;z-index:1000;border-radius:0;border
 </script>
 <script>/* 휴대폰: 현재 메뉴(상권 분석)가 잘리지 않게 메뉴 줄을 옆으로 밀어 둠 */
 (function(){var n=document.querySelector('.mainNav'),a=n&&n.querySelector('a[aria-current]');if(!a||n.scrollWidth<=n.clientWidth)return;n.scrollLeft=Math.max(0,a.offsetLeft-n.offsetLeft-(n.clientWidth-a.offsetWidth)/2);})();</script>
+<script>
+/* ===== 업종별 입점 가이드 (병의원·체육시설·음식점·미용실·학원) ===== */
+(function(){
+  var SECTORS = {
+    clinic: { eb:'MEDICAL LEASING', title:'병의원 개원,<br>입지부터 계약 특약까지', use:'병의원', cta:'병의원 개원 상담 신청 →', memo:'[병의원 개원] ',
+      desc:'진료과목에 따라 필요한 건물 조건이 달라집니다. 개원 전 확인해야 할 항목을 체크리스트로 정리해 매물과 함께 브리핑해 드립니다.',
+      items:[['건축물 용도 확인','건축물대장상 근린생활시설·의료시설 용도와 면적 기준이 진료과목에 맞는지 확인합니다.'],
+        ['진료과목별 입지','피부·성형은 대로변 가시성, 내과·소아과는 배후 주거 수요 등 과목별 기준으로 봅니다.'],
+        ['승강기 · 주차','환자 동선과 장비 반입을 고려한 엘리베이터 규격, 주차 대수와 발렛 여부를 체크합니다.'],
+        ['전기용량 · 설비','의료장비 사용에 필요한 전기 증설 가능 여부와 급배수·환기 설비를 확인합니다.'],
+        ['시설 승계 · 원상복구','기존 시설 승계 조건과 퇴거 시 원상복구 범위를 특약으로 명확히 정리합니다.'],
+        ['동일 건물 업종 제한','같은 건물 내 동종 진료과목 입점 제한 등 임대인과 협의할 조건을 미리 챙깁니다.']] },
+    gym: { eb:'FITNESS LEASING', title:'체육시설 오픈,<br>하중부터 소음 협의까지', use:'체육시설', cta:'체육시설 입점 상담 신청 →', memo:'[체육시설 입점] ',
+      desc:'헬스장·필라테스·골프연습장은 바닥 하중과 소음·진동, 샤워 설비가 매물 선택을 좌우합니다. 오픈 전 확인할 항목을 정리해 매물과 함께 브리핑해 드립니다.',
+      items:[['건축물 용도 확인','체력단련장·체육도장·골프연습장 등은 바닥면적 500㎡ 미만이면 제2종 근린생활시설, 그 이상이면 운동시설 용도인지 확인합니다.'],
+        ['체육시설업 신고 요건','헬스장·골프연습장 등 신고 체육시설업은 업종별 시설 기준을 갖춰야 해 신고 가능 여부를 미리 점검합니다.'],
+        ['바닥 하중','운동기구와 덤벨 하중을 견딜 수 있는 구조인지, 보강 공사가 필요한지 확인합니다.'],
+        ['소음 · 진동 협의','아래층·옆 호실 업종을 살피고 방진 시공 범위와 운영 시간 조건을 임대인과 미리 협의합니다.'],
+        ['샤워 · 급배수 설비','샤워실·탈의실 설치를 위한 급배수, 온수, 환기 용량과 위치를 확인합니다.'],
+        ['소방 · 안전 기준','업종과 면적에 따라 다중이용업소 소방 안전시설 대상인지, 피난 동선은 충분한지 점검합니다.']] },
+    food: { eb:'F&B LEASING', title:'음식점 창업,<br>설비부터 권리 관계까지', use:'음식점', cta:'음식점 창업 상담 신청 →', memo:'[음식점 창업] ',
+      desc:'음식점은 같은 면적이라도 정화조·가스·배기 여건에 따라 가능한 업종이 달라집니다. 창업 전 확인할 항목을 정리해 매물과 함께 브리핑해 드립니다.',
+      items:[['건축물 용도 확인','일반·휴게음식점 영업신고가 가능한 근린생활시설 용도인지, 위반건축물 표시는 없는지 확인합니다.'],
+        ['정화조 · 오수 용량','음식점으로 바꿀 때 정화조 용량 기준을 충족하는지, 증설이 필요한지 확인합니다.'],
+        ['가스 · 전기 용량','주방 설비에 맞는 도시가스 인입과 전기 증설 가능 여부를 점검합니다.'],
+        ['배기 · 덕트 경로','주방 배기 덕트를 옥상이나 외부로 뺄 수 있는지, 냄새 민원 소지는 없는지 봅니다.'],
+        ['시설 · 권리금 정리','기존 시설 인수 범위와 권리금 조건, 퇴거 시 원상복구 범위를 특약으로 명확히 정리합니다.'],
+        ['다중이용업소 기준','영업장 면적(지상 100㎡·지하 66㎡ 이상 등)에 따라 다중이용업소 소방 안전시설 대상인지 확인합니다.']] },
+    beauty: { eb:'BEAUTY LEASING', title:'미용실 오픈,<br>급배수부터 가시성까지', use:'미용실', cta:'미용실 오픈 상담 신청 →', memo:'[미용실 오픈] ',
+      desc:'미용실·네일·피부관리샵은 샴푸대 배수와 온수, 전기 용량이 관건입니다. 오픈 전 확인할 항목을 정리해 매물과 함께 브리핑해 드립니다.',
+      items:[['건축물 용도 확인','미용원은 제1종 근린생활시설 용도로, 건축물대장 용도와 위반건축물 여부를 확인합니다.'],
+        ['급배수 · 온수','샴푸대 배수 경로와 바닥 높이, 온수기 설치 공간과 용량을 점검합니다.'],
+        ['전기 용량','드라이어·열기구를 동시에 쓰는 데 필요한 전기 용량과 증설 가능 여부를 확인합니다.'],
+        ['가시성 · 접근성','1층은 전면 노출, 2층 이상은 간판 위치와 엘리베이터·계단 동선을 봅니다.'],
+        ['영업신고 시설 기준','미용업 영업신고에 필요한 시설 기준을 갖출 수 있는 공간인지 확인합니다.'],
+        ['동일 건물 업종 제한','같은 건물 내 동종 업종 입점 제한과 간판 설치 범위를 임대인과 협의합니다.']] },
+    academy: { eb:'ACADEMY LEASING', title:'학원 설립,<br>등록 요건부터 동선까지', use:'학원', cta:'학원 설립 상담 신청 →', memo:'[학원 설립] ',
+      desc:'학원은 교육지원청 등록 요건을 갖춰야 문을 열 수 있습니다. 설립 전 확인할 항목을 정리해 매물과 함께 브리핑해 드립니다.',
+      items:[['건축물 용도 확인','학원은 바닥면적 500㎡ 미만이면 제2종 근린생활시설, 그 이상이면 교육연구시설 용도인지 확인합니다.'],
+        ['유해업소 확인','같은 건물이나 주변에 유흥주점 등 학원 등록에 걸림돌이 되는 업소가 있는지 확인합니다.'],
+        ['교육청 등록 시설 기준','강의실 면적과 정원 산정, 화장실 등 교육지원청 등록 시설 기준을 충족하는지 점검합니다.'],
+        ['소방 · 피난 기준','수용 인원에 따른 소방 안전시설 기준과 피난 계단·출입구를 확인합니다.'],
+        ['통학 동선 · 주차','학생 승하차 공간과 통학차량 정차 위치, 엘리베이터 혼잡도를 봅니다.'],
+        ['계약 시점 · 렌트프리','등록 처리 기간과 인테리어 공사를 고려해 렌트프리와 계약 개시일을 협의합니다.']] }
+  };
+  var tabs = document.getElementById('sectorTabs'); if (!tabs) return;
+  var body = document.getElementById('sectorBody'), cur = 'clinic';
+  var CARD = 'background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 22px; display: flex; flex-direction: column; gap: 8px';
+  var e = function (t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  function paint(k) {
+    var d = SECTORS[k];
+    document.getElementById('sectorEyebrow').textContent = d.eb;
+    var kw = (tabs.querySelector('[data-sector="' + k + '"]') || {}).textContent || '';
+    document.getElementById('sectorTitle').innerHTML = kw && d.title.indexOf(kw) >= 0 ? d.title.replace(kw, '<span class="hlWord">' + kw + '</span>') : d.title;
+    document.getElementById('sectorDesc').textContent = d.desc;
+    var cta = document.getElementById('sectorCta'); if (cta) { cta.textContent = d.cta; cta.setAttribute('data-sector', k); }
+    document.getElementById('sectorGrid').innerHTML = d.items.map(function (it, i) {
+      return '<div class="elevDark elevLift" style="' + CARD + '"><span style="font-family: Inter, sans-serif; font-size: 13px; font-weight: 700; color: #BC975E">0' + (i + 1) + '</span>' +
+        '<span style="font-size: 18px; font-weight: 700">' + e(it[0]) + '</span><span style="font-size: 14px; line-height: 1.6; color: #C3CAD8">' + e(it[1]) + '</span></div>';
+    }).join('');
+  }
+  function show(k, push) {
+    if (!SECTORS[k]) k = 'clinic';
+    [].forEach.call(tabs.querySelectorAll('button'), function (b) { b.setAttribute('aria-selected', b.getAttribute('data-sector') === k ? 'true' : 'false'); });
+    var on = tabs.querySelector('[data-sector="' + k + '"]'); if (on && on.scrollIntoView && tabs.scrollWidth > tabs.clientWidth) tabs.scrollLeft = on.offsetLeft - 20;
+    if (k === cur) return;
+    cur = k;
+    if (push && history.replaceState) history.replaceState(null, '', k === 'clinic' ? '#clinic' : '#clinic-' + k);
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) { paint(k); return; }
+    body.classList.add('swap'); setTimeout(function () { paint(k); body.classList.remove('swap'); }, 200);
+  }
+  tabs.addEventListener('click', function (ev) { var b = ev.target.closest('button[data-sector]'); if (b) show(b.getAttribute('data-sector'), true); });
+  tabs.addEventListener('keydown', function (ev) {
+    if (ev.key !== 'ArrowRight' && ev.key !== 'ArrowLeft') return;
+    var bs = [].slice.call(tabs.querySelectorAll('button')), i = bs.indexOf(document.activeElement); if (i < 0) return;
+    var n = bs[(i + (ev.key === 'ArrowRight' ? 1 : bs.length - 1)) % bs.length]; n.focus(); show(n.getAttribute('data-sector'), true);
+  });
+  // 상담 신청: 업종과 상세 내용 머리말을 미리 채움
+  var ctaEl = document.getElementById('sectorCta'); if (ctaEl) ctaEl.addEventListener('click', function () {
+    var d = SECTORS[cur], sel = document.getElementById('consultType'), ta = document.getElementById('consultMsg');
+    if (sel) sel.value = d.use;
+    if (ta && (!ta.value.trim() || /^\[[^\]]+\]\s*$/.test(ta.value.trim()))) ta.value = d.memo;
+  });
+  // 주소로 바로 열기: …#clinic-gym, #clinic-food, #clinic-beauty, #clinic-academy
+  function fromHash() {
+    var m = /^#clinic-(gym|food|beauty|academy)$/.exec(location.hash);
+    if (m) { show(m[1], false); var sec = document.getElementById('clinic'); if (sec) setTimeout(function () { sec.scrollIntoView(); }, 50); }
+  }
+  window.addEventListener('hashchange', fromHash); fromHash();
+})();
+</script>
 </body>
 </html>
