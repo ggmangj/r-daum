@@ -483,7 +483,7 @@ body.dlFull .mapFullBtn{display:none}
     lvl = M.getZoom() >= ZB ? 'b' : 'd';
     groups().forEach(function (g) {
       var p = pos(g); if (!p) return; var s = stat(g.L);
-      var html = '<div class="sdPin ' + (g.b ? 'g' : 'd') + (g.k === sel ? ' on' : '') + '"><b>' + esc(g.b ? g.t.replace(/^\S+\s/, '') : g.t) + ' · ' + s.n + '건</b><em>' + (s.m ? '평당 ' + man(s.m) : '-') + '</em>' + (s.few ? '<span class="few">표본 적음</span>' : '') + '</div>';
+      var html = '<div class="sdPin ' + (g.b ? 'g' : 'd') + (g.k === sel ? ' on' : '') + '"><b>' + esc(g.b ? g.t.replace(/^\S+\s/, '') : g.t) + ' · ' + s.n + '건</b><em>' + (s.m ? '전용 평당 ' + man(s.m) : '-') + '</em>' + (s.few ? '<span class="few">표본 적음</span>' : '') + '</div>';
       var mk = new NM.Marker({ position: p, map: M, zIndex: g.k === sel ? 50 : g.b ? 20 : 10, icon: { content: html, anchor: new NM.Point(0, 0) } });
       NM.Event.addListener(mk, 'click', function () { pick(g.k, g.b ? null : p); });
       MK.push(mk);
