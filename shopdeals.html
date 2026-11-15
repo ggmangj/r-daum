@@ -418,17 +418,19 @@ body.dlFull .mapFullBtn{display:none}
   var F = { per: 60, dong: '', use: '', fl: '', age: '' }, CY = new Date().getFullYear();
   function man(v) { if (!v) return '-'; return v >= 10000 ? (Math.round(v / 1000) / 10).toLocaleString('ko-KR') + '억' : Math.round(v).toLocaleString('ko-KR') + '만'; }
   function med(a) { if (!a.length) return 0; var s = a.slice().sort(function (x, y) { return x - y; }), h = s.length >> 1; return s.length % 2 ? s[h] : (s[h - 1] + s[h]) / 2; }
-  function bun(jb) {
-    var m = /^(산)?(\d*)(\**)/.exec(String(jb || '').replace(/\s+/g, '')); if (!m || !m[2]) return null;
-    var n = m[3].length, p = Math.pow(10, n), lo = +m[2] * p;
-    return { k: (m[1] ? 1 : 0) + '|' + lo + '|' + (lo + p - 1), t: (m[1] ? '산 ' : '') + (n ? m[2] + new Array(n + 1).join('*') : m[2]) + '번지' };
+  function bun(jb) {   /* 본번 첫 자리 + 자릿수로 묶음: 426·579-3·5** → 4**·5**번지, 61·6* → 6*번지, 한 자리 → 1~9번지 */
+    var m = /^(산)?(\d)([\d*]*)/.exec(String(jb || '').replace(/\s+/g, '').split('-')[0]); if (!m) return null;
+    var n = m[3].length, mt = m[1] ? 1 : 0, sn = m[1] ? '산 ' : '';
+    if (!n) return { k: mt + '|1|9', t: sn + '1~9번지' };
+    var p = Math.pow(10, n), lo = +m[2] * p;
+    return { k: mt + '|' + lo + '|' + (lo + p - 1), t: sn + m[2] + new Array(n + 1).join('*') + '번지' };
   }
   function flKind(f) { var s = String(f || ''), v = parseInt(s.replace(/[^\d-]/g, ''), 10); if (/지하|B/i.test(s) || v < 0) return 'b'; if (v === 1) return '1'; if (v >= 2) return '2'; return ''; }
   function flText(f) { var k = flKind(f), v = Math.abs(parseInt(String(f).replace(/[^\d-]/g, ''), 10)); return k === 'b' ? '지하' + (v || '') + '층' : v ? v + '층' : '층 미상'; }
   function useKind(u) { return /업무/.test(u) ? 'office' : /근린|판매/.test(u) ? 'shop' : 'etc'; }
   function ageKind(o) { return !o.yr ? 'unk' : CY - o.yr <= 5 ? 'new' : 'old'; }
   function load() {
-    var CK = 'daumSd.v1', old = '';
+    var CK = 'daumSd.v2', old = '';
     try { var c = JSON.parse(localStorage.getItem(CK) || 'null'); if (c && Date.now() - c.t < 864e5) old = c.s; } catch (e) { }
     if (old) try { build(JSON.parse(old)); } catch (e) { }
     fetch(SHEET_URL + '?sdeals=1').then(function (r) { return r.text(); }).then(function (t) {
