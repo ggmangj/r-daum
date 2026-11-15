@@ -310,7 +310,7 @@ body.dlFull .mapFullBtn{display:none}
 .kindSw a{display:flex;align-items:baseline;gap:6px;padding:9px 16px;border-radius:9px;font-size:14.5px;font-weight:800;color:#46515B;white-space:nowrap}
 .kindSw a small{font-size:12px;font-weight:600;color:#8A939A}.kindSw a:hover{color:#294652}
 .kindSw a.on{background:#294652;color:#fff}.kindSw a.on small{color:#C9D3D6}.kindSw a.on.shopOn{background:#B5764F}.kindSw a.on.shopOn small{color:#FBE7D6}
-.cadBtn{position:absolute;left:12px;top:12px;z-index:5;display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:999px;border:1.5px solid #B5764F;background:#fff;color:#7A4424;font:700 13.5px 'Noto Sans KR',sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.14)}
+body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{margin-top:7px;width:100%;display:inline-flex;align-items:center;justify-content:center;gap:5px;height:30px;padding:0 10px;border-radius:8px;border:1.5px solid #B5764F;background:#fff;color:#7A4424;font:700 12.5px 'Noto Sans KR',sans-serif;cursor:pointer}
 .cadBtn:hover{background:#FBF1EA}
 .sdInfo{margin-top:12px;padding:12px 14px;border:1px dashed #B9A88A;border-radius:12px;background:#FBF8F2;font-size:12.5px;line-height:1.6;color:#46515B}.sdInfo b{color:#8A6A35}
 .leg{pointer-events:none}.leg b{display:block;margin-bottom:4px}.lgRow{display:flex;align-items:center;gap:6px;color:#46515B;margin-top:3px}
@@ -369,6 +369,7 @@ body.dlFull .mapFullBtn{display:none}
 </aside>
 <div class="col">
 <div class="kindSw" role="group" aria-label="실거래 종류"><a href="/deals.html">빌딩 <small>건물 전체</small></a><a href="/shopdeals.html" class="on shopOn" aria-current="true">상가·사무실 <small>호실</small></a></div>
+<div class="fullHead"><span class="fe">SHOP & OFFICE DEALS</span><h2>강남·서초 <span>상가·사무실 실거래가</span></h2><button type="button" class="fullClose" id="fullClose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button></div>
 <div class="flt" role="group" aria-label="검색 조건">
  <div class="seg" id="fPer"><button type="button" data-v="12">1년</button><button type="button" data-v="24">2년</button><button type="button" data-v="36">3년</button><button type="button" data-v="60" class="on">5년</button></div>
  <label class="sr" for="fDong">지역</label><select id="fDong" class="dsel"><option value="">강남·서초 전체</option></select>
@@ -378,8 +379,8 @@ body.dlFull .mapFullBtn{display:none}
 </div>
 <section class="main" aria-label="실거래 지도와 목록">
  <div class="mapBox"><div id="map" role="application" aria-label="상가·사무실 실거래 지도"></div>
-  <div class="leg" aria-hidden="true"><b>지도 보는 법</b><div class="lgRow"><i class="lgD"></i>동 (거래 수 · 전용 평당 중간값)</div><div class="lgRow"><i class="lgB"></i>확대하면 번지대(5**번지 등)로 나뉨</div></div>
-  <button type="button" class="cadBtn" id="cadBtn" aria-pressed="false" title="네이버 지적편집도를 겹쳐서 번지 경계를 봅니다"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3h18v18H3zM3 9h18M9 3v18M15 9v12"></path></svg><span>지적편집도로 보기</span></button>
+  <div class="leg sdLeg"><b>지도 보는 법</b><div class="lgRow"><i class="lgD"></i>동 (거래 수 · 전용 평당 중간값)</div><div class="lgRow"><i class="lgB"></i>확대하면 번지대(5**번지 등)로 나뉨</div><button type="button" class="cadBtn" id="cadBtn" aria-pressed="true" title="네이버 지적편집도와 일반지도를 바꿔 봅니다"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3h18v18H3zM3 9h18M9 3v18M15 9v12"></path></svg><span>일반지도로 보기</span></button></div>
+  <button type="button" class="mapFullBtn" id="fullBtn" aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"></path></svg><span>지도 크게 보기</span></button>
   <div class="mapMsg" id="mapMsg">실거래 자료를 불러오는 중입니다…</div>
  </div>
  <div class="list"><div class="lh"><b id="lhT">강남·서초 전체</b><button type="button" class="rst" id="rst">전체 보기</button></div><div id="grp"></div><div id="list"></div></div>
@@ -524,6 +525,17 @@ body.dlFull .mapFullBtn{display:none}
     b.setAttribute('aria-pressed', on ? 'true' : 'false'); b.querySelector('span').textContent = on ? '일반지도로 보기' : '지적편집도로 보기';
   }
   $('cadBtn').addEventListener('click', function () { cadSet(!(CAD && CAD.getMap())); });
+  /* 지도 크게 보기 (빌딩 실거래 페이지와 같은 방식) */
+  function mapFit() { if (!M) return; var el = $('map'), box = el.parentNode; el.style.width = ''; el.style.height = ''; var w = box.clientWidth, h = box.clientHeight; if (w && h) { el.style.height = h + 'px'; try { M.setSize(new NM.Size(w, h)); } catch (e) { } } }
+  function setFull(on) {
+    document.body.classList.toggle('dlFull', on); $('fullBtn').setAttribute('aria-pressed', on ? 'true' : 'false');
+    $('fullBtn').querySelector('span').textContent = on ? '크게 보기 닫기' : '지도 크게 보기';
+    setTimeout(mapFit, 30); setTimeout(mapFit, 300); if (!on) $('fullBtn').blur();
+  }
+  $('fullBtn').addEventListener('click', function () { setFull(!document.body.classList.contains('dlFull')); });
+  $('fullClose').addEventListener('click', function () { setFull(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && document.body.classList.contains('dlFull')) setFull(false); });
+  window.addEventListener('resize', function () { setTimeout(mapFit, 60); });
   function initMap() {
     NM = naver.maps; $('mapMsg').hidden = !!ALL.length || false;
     M = new NM.Map('map', { center: new NM.LatLng(HOME.lat, HOME.lng), zoom: innerWidth < 760 ? 13 : 14, zoomControl: true, zoomControlOptions: { position: NM.Position.TOP_RIGHT } });
