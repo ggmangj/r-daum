@@ -8,21 +8,53 @@
 <meta property="og:title" content="북쪽으로 3m 더 넓게! 일조사선 규제 완화">
 <meta property="og:description" content="강남·서초 주거지역 꼬마빌딩, 다시 지으면 4~5층 면적이 넓어집니다 | 부동산다움">
 <meta property="og:image" content="https://r-daum.com/sunlight-guide.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-body{margin:0;background:#EEF1F5;font-family:'Pretendard','Noto Sans KR',sans-serif;color:#1a1a1a}
-.top{position:sticky;top:0;z-index:2;background:#1F2A44;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
-.top a{color:#fff;text-decoration:none;font-size:15px;font-weight:700}
-.wrap{max-width:860px;margin:0 auto;background:#fff}
-.wrap img{display:block;width:100%;height:auto}
-.cta{max-width:860px;margin:0 auto;display:flex;gap:10px;padding:16px;box-sizing:border-box}
-.cta a{flex:1;text-align:center;padding:14px 10px;border-radius:12px;font-weight:700;text-decoration:none;font-size:15px}
-.cta .tel{border:2px solid #1F2A44;color:#1F2A44;background:#fff}
-.cta .home{background:#1F2A44;color:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:#F5F1EA;font-family:'Noto Sans KR',sans-serif;color:#14191F;-webkit-font-smoothing:antialiased}
+.hd{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid #E6E0D4}
+.hdIn{max-width:920px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 24px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#1F3644}
+.brand img{height:34px;width:auto}
+.brand span{display:flex;flex-direction:column;line-height:1}
+.brand b{font:900 22px/1 'Noto Sans KR',sans-serif;letter-spacing:.14em}
+.brand small{font-size:9px;letter-spacing:.32em;color:#9C7A47;margin-top:4px;font-weight:700}
+.tel{display:flex;align-items:center;gap:7px;border:1.5px solid #294652;color:#294652;border-radius:999px;padding:9px 16px;font-weight:700;font-size:14px;text-decoration:none;white-space:nowrap}
+.wrap{max-width:920px;margin:0 auto;padding:22px 24px 70px}
+.crumb em{font-style:normal}.crumb{display:flex;align-items:center;gap:12px;font-size:12.5px;color:#7A838A}
+.back{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #DCD3C2;border-radius:999px;padding:8px 15px;font-weight:700;font-size:13px;color:#294652;text-decoration:none;cursor:pointer}
+.tags{display:flex;gap:6px;margin:20px 0 8px}
+.tags span{font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:6px;background:#294652;color:#fff}
+.tags span.g{background:#fff;color:#8A6A35;border:1px solid #E3D3B4}
+h1{margin:0;font-size:clamp(23px,3.4vw,30px);font-weight:900;letter-spacing:-1px;line-height:1.3}
+.lead{margin:8px 0 18px;font-size:14px;color:#5B6670;line-height:1.6}
+.card{background:#fff;border-radius:24px;padding:18px;box-shadow:0 10px 34px rgba(60,45,20,.10),0 1px 3px rgba(60,45,20,.06);border:1px solid #EFE8DA;animation:up .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.sheet{position:relative;border-radius:16px;overflow:hidden;background:#EEF1F5}
+.sheet img{display:block;width:100%;height:auto}
+.wm{position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22420%22%20height%3D%22300%22%3E%3Cg%20transform%3D%22rotate%28-24%20210%20150%29%22%20font-family%3D%22Noto%20Sans%20KR%2Csans-serif%22%20text-anchor%3D%22middle%22%3E%3Ctext%20x%3D%22210%22%20y%3D%22140%22%20font-size%3D%2230%22%20font-weight%3D%22900%22%20letter-spacing%3D%224%22%20fill%3D%22rgba%28120%2C120%2C120%2C.16%29%22%3E%EB%B6%80%EB%8F%99%EC%82%B0%EB%8B%A4%EC%9B%80%3C/text%3E%3Ctext%20x%3D%22210%22%20y%3D%22170%22%20font-size%3D%2215%22%20font-weight%3D%22700%22%20letter-spacing%3D%223%22%20fill%3D%22rgba%28120%2C120%2C120%2C.16%29%22%3E02-555-1165%20%C2%B7%20r-daum.com%3C/text%3E%3C/g%3E%3C/svg%3E") repeat;background-size:420px 300px;pointer-events:none}
+.band{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding:10px 6px 2px;font-size:12px;color:#8A939A;border-top:1px dashed #E3DBCB}
+.band b{color:#294652}
+.cta{display:flex;gap:10px;margin-top:18px}
+.cta a{flex:1;text-align:center;padding:14px 10px;border-radius:14px;font-weight:700;text-decoration:none;font-size:15px}
+.cta .t{background:#fff;border:1.5px solid #294652;color:#294652}
+.cta .h{background:#294652;color:#fff}
+@media (max-width:760px){.hdIn{padding:10px 14px}.brand img{height:28px}.brand b{font-size:18px}.tel{padding:7px 12px;font-size:13px}.wrap{padding:14px 12px 50px}.card{padding:8px;border-radius:18px}.sheet{border-radius:12px}.crumb em{display:none}.wm{background-size:280px 200px}.band{font-size:11px}}
+@media print{.hd,.crumb,.cta{display:none}body{background:#fff}.card{box-shadow:none;border:0;padding:0}}
 </style>
 </head>
 <body>
-<div class="top"><a href="javascript:history.length>1?history.back():location.href='/'">‹ 돌아가기</a><a href="/">부동산다움</a></div>
-<div class="wrap"><img src="sunlight-guide.jpg" alt="일조사선 규제 완화 인포그래픽: 2026년 11월 12일부터 높이 10~17m 부분은 북쪽 대지경계선에서 높이의 절반 대신 5m만 띄우면 됩니다. 서울시 소규모 건축물 용적률 한시 완화(제2종 200→250%, 제3종 250→300%, 2025.5.19~2028.5.18)와 함께 적용됩니다."></div>
-<div class="cta"><a class="tel" href="tel:025551165">전화 상담 02-555-1165</a><a class="home" href="/">매물 보러 가기</a></div>
+<header class="hd"><div class="hdIn"><a class="brand" href="/"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDQgMTI0IiB3aWR0aD0iMjA4IiBoZWlnaHQ9IjI0OCI+PGRlZnM+CjxtYXNrIGlkPSJ0TCIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iMCIgeT0iMCIgd2lkdGg9IjEwNCIgaGVpZ2h0PSIxMjQiPjxyZWN0IHdpZHRoPSIxMDQiIGhlaWdodD0iMTI0IiBmaWxsPSIjZmZmIi8+PHJlY3QgeD0iMjEuNSIgeT0iMzgiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI0NCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjUwIiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iNTYiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI2MiIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjY4IiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iNzQiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI4MCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9Ijg2IiB3aWR0aD0iMTEiIGhlaWdodD0iMS4zIiBmaWxsPSIjMDAwIi8+PHJlY3QgeD0iMjEuNSIgeT0iOTIiIHdpZHRoPSIxMSIgaGVpZ2h0PSIxLjMiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSIyMS41IiB5PSI5OCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjxyZWN0IHg9IjIxLjUiIHk9IjEwNCIgd2lkdGg9IjExIiBoZWlnaHQ9IjEuMyIgZmlsbD0iIzAwMCIvPjwvbWFzaz4KPG1hc2sgaWQ9ImJMIiBtYXNrVW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4PSIwIiB5PSIwIiB3aWR0aD0iMTA0IiBoZWlnaHQ9IjEyNCI+PHJlY3Qgd2lkdGg9IjEwNCIgaGVpZ2h0PSIxMjQiIGZpbGw9IiNmZmYiLz48cmVjdCB4PSI0OCIgeT0iNDQiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iNTgiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iNzIiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iODYiIHdpZHRoPSI1NiIgaGVpZ2h0PSIzLjQiIGZpbGw9IiMwMDAiLz48cmVjdCB4PSI0OCIgeT0iMTAwIiB3aWR0aD0iNTYiIGhlaWdodD0iMy40IiBmaWxsPSIjMDAwIi8+PC9tYXNrPgo8L2RlZnM+CjxyZWN0IHg9IjI2LjIiIHk9IjIiIHdpZHRoPSIxLjYiIGhlaWdodD0iMTMiIGZpbGw9IiNCRTk2NUMiLz4KPHBhdGggZD0iTTE4IDExMlYzMUwyNyAxNEwzNiAzMVYxMTJaIiBmaWxsPSIjQkU5NjVDIiBtYXNrPSJ1cmwoI3RMKSIvPgo8cGF0aCBkPSJNNDEgMzFINThDODMgMzEgOTggNTAgOTggNzEuNUM5OCA5MyA4MyAxMTIgNTggMTEySDQxWiIgZmlsbD0iIzFGMzY0NCIgbWFzaz0idXJsKCNiTCkiLz4KPHJlY3QgeD0iOCIgeT0iMTE2IiB3aWR0aD0iOTIiIGhlaWdodD0iMy4yIiBmaWxsPSIjMUYzNjQ0Ii8+PC9zdmc+" alt=""><span><b>DAUM</b><small>REAL ESTATE</small></span></a><a class="tel" href="tel:025551165">02-555-1165</a></div></header>
+<main class="wrap">
+<div class="crumb"><a class="back" href="/" onclick="if(history.length>1&&document.referrer.indexOf(location.host)>-1){history.back();return false}">‹ 목록으로</a><em>홈 · 부동산 정보 · 일조사선 규제 완화</em></div>
+<div class="tags"><span>부동산 정보</span><span class="g">2026.11.12 시행</span></div>
+<h1>일조사선 규제 완화 · 용적률 한시 완화</h1>
+<p class="lead">강남·서초 주거지역 꼬마빌딩을 다시 지을 때 무엇이 달라지는지 그림으로 쉽게 정리했습니다.</p>
+<section class="card">
+<div class="sheet"><img src="sunlight-guide.jpg" alt="일조사선 규제 완화 인포그래픽: 2026년 11월 12일부터 높이 10~17m 부분은 북쪽 대지경계선에서 높이의 절반 대신 5m만 띄우면 됩니다. 서울시 소규모 건축물 용적률 한시 완화(제2종 200→250%, 제3종 250→300%, 2025.5.19~2028.5.18)와 함께 적용됩니다."><span class="wm" aria-hidden="true"></span></div>
+<div class="band"><span><b>부동산다움</b> · r-daum.com</span><span>02-555-1165</span></div>
+</section>
+<div class="cta"><a class="t" href="tel:025551165">전화 상담 02-555-1165</a><a class="h" href="/">매물 보러 가기</a></div>
+</main>
 </body>
 </html>
