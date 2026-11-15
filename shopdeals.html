@@ -320,6 +320,8 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
 .sdPin:hover{transform:translate(-50%,-50%) scale(1.06);z-index:9}
 .sdPin.d{background:#B5764F;color:#fff;padding:7px 13px;border:2px solid #fff}.sdPin.d b{font-size:13.5px}.sdPin.d em{font-style:normal;font-size:11.5px;color:#FBE7D6}
 .sdPin.g{background:#fff;color:#7A4424;padding:5px 11px;border:2px solid #C98F69}.sdPin.g b{font-size:12.5px}.sdPin.g em{font-style:normal;font-size:11px;color:#9A5F3A}
+.sdPin.u{background:#FBF6F1;color:#8A5A3A;padding:5px 11px;border:2px dashed #C98F69;box-shadow:0 1px 5px rgba(0,0,0,.15)}.sdPin.u b{font-size:12px}.sdPin.u em{font-style:normal;font-size:10.5px;color:#9A5F3A}
+.lgU{width:14px;height:14px;border-radius:50%;background:#FBF6F1;border:2px dashed #C98F69;display:inline-block}
 .sdPin.on{outline:3px solid #C0533A;outline-offset:1px}
 .sdPin .few{font-size:10.5px;color:#C0533A;font-weight:700}.sdPin.d .few{color:#FFE2CF}
 #grp{border-bottom:1px solid #EFEAE0}
@@ -401,7 +403,7 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
 </div>
 <section class="main" aria-label="실거래 지도와 목록">
  <div class="mapBox"><div id="map" role="application" aria-label="상가·사무실 실거래 지도"></div>
-  <div class="leg sdLeg"><b>지도 보는 법</b><div class="lgRow"><i class="lgD"></i>동 (거래 수 · 전용 평당 중간값)</div><div class="lgRow"><i class="lgB"></i>확대하면 번지대(5**번지 등)로 나뉨</div><button type="button" class="cadBtn" id="cadBtn" aria-pressed="true" title="네이버 지적편집도와 일반지도를 바꿔 봅니다"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3h18v18H3zM3 9h18M9 3v18M15 9v12"></path></svg><span>일반지도로 보기</span></button></div>
+  <div class="leg sdLeg"><b>지도 보는 법</b><div class="lgRow"><i class="lgD"></i>동 (거래 수 · 전용 평당 중간값)</div><div class="lgRow"><i class="lgB"></i>확대하면 번지대(5**번지 등)로 나뉨</div><div class="lgRow"><i class="lgU"></i>번지 미공개 거래 (동 중심에 표시)</div><button type="button" class="cadBtn" id="cadBtn" aria-pressed="true" title="네이버 지적편집도와 일반지도를 바꿔 봅니다"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3h18v18H3zM3 9h18M9 3v18M15 9v12"></path></svg><span>일반지도로 보기</span></button></div>
   <button type="button" class="mapFullBtn" id="fullBtn" aria-pressed="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"></path></svg><span>지도 크게 보기</span></button>
   <div class="mapMsg" id="mapMsg">실거래 자료를 불러오는 중입니다…</div>
  </div>
@@ -488,8 +490,8 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
     if (!ALL.length && LOADED) { $('mapMsg').hidden = false; $('mapMsg').textContent = '상가·사무실 실거래 자료를 준비 중입니다. 잠시 후 다시 확인해 주세요.'; }
   }
   function stat(L) { var v = L.filter(function (o) { return !o.share && o.pp; }).map(function (o) { return o.pp; }); return { n: L.length, m: med(v), few: v.length < 5 }; }
-  function scopeL() { return sel ? VIEW.filter(function (o) { return o.bk === sel || o.dk === sel; }) : VIEW; }
-  function scopeT() { var g0 = scopeL()[0]; return sel && g0 ? (sel.split('|').length > 2 ? g0.gu + ' ' + g0.dong + ' ' + g0.bt : g0.gu + ' ' + g0.dong) : (F.dong ? F.dong.replace('|', ' ') : ''); }
+  function scopeL() { return sel ? VIEW.filter(function (o) { return o.bk === sel || o.dk === sel || (!o.bk && o.dk + '|?' === sel); }) : VIEW; }
+  function scopeT() { var g0 = scopeL()[0]; return sel && g0 ? (/\|\?$/.test(sel) ? g0.gu + ' ' + g0.dong + ' 번지 미공개' : sel.split('|').length > 2 ? g0.gu + ' ' + g0.dong + ' ' + g0.bt : g0.gu + ' ' + g0.dong) : (F.dong ? F.dong.replace('|', ' ') : ''); }
   function kpi() {
     var L = scopeL(), s = stat(L), am = med(L.map(function (o) { return o.amt; })), ar = med(L.map(function (o) { return o.ar; }).filter(Boolean)), t = scopeT();
     $('scope').hidden = !t; $('scope').innerHTML = t ? '<span><small>선택한 지역</small><b>' + esc(t) + '</b></span>' + (sel ? '<button type="button" id="scOff">전체 보기</button>' : '') : '';
@@ -504,7 +506,7 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
   function groups() {
     var z = M ? M.getZoom() : 14, useB = z >= ZB, G = {};
     VIEW.forEach(function (o) {
-      var k = useB && o.bk ? o.bk : o.dk; var g = G[k] || (G[k] = { k: k, L: [], b: useB && !!o.bk, t: useB && o.bk ? o.dong + ' ' + o.bt : o.dong, dk: o.dk });
+      var u = useB && !o.bk, k = useB && o.bk ? o.bk : u ? o.dk + '|?' : o.dk; var g = G[k] || (G[k] = { k: k, L: [], b: useB && !!o.bk, u: u, t: useB && o.bk ? o.dong + ' ' + o.bt : u ? o.dong + ' 번지 미공개' : o.dong, dk: o.dk });
       g.L.push(o);
     });
     return Object.keys(G).map(function (k) { return G[k]; });
@@ -515,9 +517,9 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
     lvl = M.getZoom() >= ZB ? 'b' : 'd';
     groups().forEach(function (g) {
       var p = pos(g); if (!p) return; var s = stat(g.L);
-      var html = '<div class="sdPin ' + (g.b ? 'g' : 'd') + (g.k === sel ? ' on' : '') + '"><b>' + esc(g.b ? g.t.replace(/^\S+\s/, '') : g.t) + ' · ' + s.n + '건</b><em>' + (s.m ? '전용 평당 ' + man(s.m) : '-') + '</em>' + (s.few ? '<span class="few">표본 적음</span>' : '') + '</div>';
+      var html = '<div class="sdPin ' + (g.u ? 'u' : g.b ? 'g' : 'd') + (g.k === sel ? ' on' : '') + '"><b>' + esc(g.b ? g.t.replace(/^\S+\s/, '') : g.t) + ' · ' + s.n + '건</b><em>' + (s.m ? '전용 평당 ' + man(s.m) : '-') + '</em>' + (s.few ? '<span class="few">표본 적음</span>' : '') + '</div>';
       var mk = new NM.Marker({ position: p, map: M, zIndex: g.k === sel ? 50 : g.b ? 20 : 10, icon: { content: html, anchor: new NM.Point(0, 0) } });
-      NM.Event.addListener(mk, 'click', function () { pick(g.k, g.b ? null : p); });
+      NM.Event.addListener(mk, 'click', function () { pick(g.k, g.b || g.u ? null : p); });
       MK.push(mk);
     });
   }
