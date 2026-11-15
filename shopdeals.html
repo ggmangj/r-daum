@@ -311,7 +311,7 @@ body.dlFull .mapFullBtn{display:none}
 .kindSw a small{font-size:12px;font-weight:600;color:#8A939A}.kindSw a:hover{color:#294652}
 .kindSw a.on{background:#294652;color:#fff}.kindSw a.on small{color:#C9D3D6}.kindSw a.on.shopOn{background:#B5764F}.kindSw a.on.shopOn small{color:#FBE7D6}
 .cadBtn{position:absolute;left:12px;top:12px;z-index:5;display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:999px;border:1.5px solid #B5764F;background:#fff;color:#7A4424;font:700 13.5px 'Noto Sans KR',sans-serif;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.14)}
-.cadBtn:hover{background:#FBF1EA}.cadBtn[aria-pressed="true"]{background:#B5764F;color:#fff}
+.cadBtn:hover{background:#FBF1EA}
 .sdInfo{margin-top:12px;padding:12px 14px;border:1px dashed #B9A88A;border-radius:12px;background:#FBF8F2;font-size:12.5px;line-height:1.6;color:#46515B}.sdInfo b{color:#8A6A35}
 .leg{pointer-events:none}.leg b{display:block;margin-bottom:4px}.lgRow{display:flex;align-items:center;gap:6px;color:#46515B;margin-top:3px}
 .lgD{width:14px;height:14px;border-radius:50%;background:#B5764F;display:inline-block}.lgB{width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid #C98F69;display:inline-block}
@@ -379,7 +379,7 @@ body.dlFull .mapFullBtn{display:none}
 <section class="main" aria-label="실거래 지도와 목록">
  <div class="mapBox"><div id="map" role="application" aria-label="상가·사무실 실거래 지도"></div>
   <div class="leg" aria-hidden="true"><b>지도 보는 법</b><div class="lgRow"><i class="lgD"></i>동 (거래 수 · 전용 평당 중간값)</div><div class="lgRow"><i class="lgB"></i>확대하면 번지대(5**번지 등)로 나뉨</div></div>
-  <button type="button" class="cadBtn" id="cadBtn" aria-pressed="false" title="네이버 지적편집도를 겹쳐서 번지 경계를 봅니다"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3h18v18H3zM3 9h18M9 3v18M15 9v12"></path></svg><span>지적편집도</span></button>
+  <button type="button" class="cadBtn" id="cadBtn" aria-pressed="false" title="네이버 지적편집도를 겹쳐서 번지 경계를 봅니다"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 3h18v18H3zM3 9h18M9 3v18M15 9v12"></path></svg><span>지적편집도로 보기</span></button>
   <div class="mapMsg" id="mapMsg">실거래 자료를 불러오는 중입니다…</div>
  </div>
  <div class="list"><div class="lh"><b id="lhT">강남·서초 전체</b><button type="button" class="rst" id="rst">전체 보기</button></div><div id="grp"></div><div id="list"></div></div>
@@ -517,16 +517,17 @@ body.dlFull .mapFullBtn{display:none}
   $('rst').addEventListener('click', function () { sel = ''; shown = 80; markers(); list(); });
   $('list').addEventListener('click', function (e) { if (e.target.id === 'more') { shown += 80; list(); } });
   var CAD = null;   /* 네이버 지적편집도 (번지 경계·지번 번호) */
-  $('cadBtn').addEventListener('click', function () {
-    if (!M || !NM.CadastralLayer) return;
+  function cadSet(on) {   /* 기본은 지적편집도 켜짐 · 버튼으로 일반지도와 바꿔 봄 */
+    if (!M || !NM.CadastralLayer) { $('cadBtn').hidden = true; return; }
     if (!CAD) CAD = new NM.CadastralLayer();
-    var on = !CAD.getMap(); CAD.setMap(on ? M : null);
-    this.setAttribute('aria-pressed', on ? 'true' : 'false'); this.querySelector('span').textContent = on ? '지적편집도 끄기' : '지적편집도';
-    if (on && M.getZoom() < 16) M.setZoom(16, true);   /* 지번 번호가 보이는 확대 단계로 */
-  });
+    CAD.setMap(on ? M : null); var b = $('cadBtn');
+    b.setAttribute('aria-pressed', on ? 'true' : 'false'); b.querySelector('span').textContent = on ? '일반지도로 보기' : '지적편집도로 보기';
+  }
+  $('cadBtn').addEventListener('click', function () { cadSet(!(CAD && CAD.getMap())); });
   function initMap() {
     NM = naver.maps; $('mapMsg').hidden = !!ALL.length || false;
     M = new NM.Map('map', { center: new NM.LatLng(HOME.lat, HOME.lng), zoom: innerWidth < 760 ? 13 : 14, zoomControl: true, zoomControlOptions: { position: NM.Position.TOP_RIGHT } });
+    cadSet(true);
     NM.Event.addListener(M, 'zoom_changed', function () { var l = M.getZoom() >= ZB ? 'b' : 'd'; if (l !== lvl) markers(); });
     if (ALL.length) apply(); else $('mapMsg').hidden = false;
   }
