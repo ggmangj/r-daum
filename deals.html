@@ -304,6 +304,14 @@ body.dlFull .mapFullBtn{display:none}
 /* 두 페이지 공통: 메뉴 글씨 조금 크게 · 고정 메뉴줄 아래 검색 줄까지 여백 24px로 같게 */
 @media (min-width:1101px){.mainNav{font-size:18px!important}main.wrap{padding-top:24px!important}.col .flt{margin-top:0!important}}
 </style>
+<style id="kindSwCss">
+.kindSw{display:inline-flex;gap:4px;background:#fff;border:1px solid #D9D2C4;border-radius:12px;padding:4px;margin-bottom:12px}
+.kindSw a{display:flex;align-items:baseline;gap:6px;padding:9px 16px;border-radius:9px;font-size:14.5px;font-weight:800;color:#46515B;white-space:nowrap}
+.kindSw a small{font-size:12px;font-weight:600;color:#8A939A}.kindSw a:hover{color:#294652}
+.kindSw a.on{background:#294652;color:#fff}.kindSw a.on small{color:#C9D3D6}
+@media (max-width:760px){.kindSw{display:flex}.kindSw a{flex:1;justify-content:center;padding:9px 6px;font-size:13.5px}}
+body.dlFull .kindSw{display:none}
+</style>
 </head>
 <body>
 <div style="font-family: 'Noto Sans KR', sans-serif; color: #14191F; width: 100%; letter-spacing: -0.2px">
@@ -341,6 +349,7 @@ body.dlFull .mapFullBtn{display:none}
 <section class="miniRank qBox" aria-label="분기별 거래량 · 동네 성격"><div class="seg2 qTabs" id="qTabs" role="tablist"><button type="button" class="on" data-t="q" role="tab">분기별 거래량</button><button type="button" data-t="n" role="tab">동네 성격</button></div><div class="qPanes"><div class="qPane on" data-p="q"><h3>분기별 거래량 <small class="qLg"><i class="b"></i>건수<i class="l"></i>금액</small></h3><div id="qChart"></div><p class="qN"><span id="qSub"></span> · 위 숫자는 연도별 건수·금액 합계 · 연한 막대·점선은 신고가 덜 들어온 최근 분기</p></div><div class="qPane" data-p="n"><h3>동네 성격 지도 <small>건수 × 건당 평균금액 · 5년 누적</small></h3><div id="nChart"></div></div></div><a href="#rankBox" class="more2">동별 대지 평당가 및 거래 규모 보기 ↓</a></section>
 </aside>
 <div class="col">
+<div class="kindSw" role="group" aria-label="실거래 종류"><a href="/deals.html" class="on" aria-current="true">빌딩 <small>건물 전체</small></a><a href="/shopdeals.html">상가·사무실 <small>호실</small></a></div>
 <div class="fullHead"><span class="fe">BUILDING DEALS</span><h2>강남·서초 <span>빌딩 매매 실거래가</span></h2><button type="button" class="fullClose" id="fullClose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button></div>
 <div class="flt" role="group" aria-label="검색 조건">
  <div class="seg" id="fPer" role="group" aria-label="기간"><button type="button" data-v="12">1년</button><button type="button" data-v="24">2년</button><button type="button" data-v="36">3년</button><button type="button" data-v="60" class="on">5년</button></div>

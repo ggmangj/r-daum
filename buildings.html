@@ -194,6 +194,8 @@ input,select,textarea,button{font-family:inherit}
 .pvAgree{border:0;background:#294652;color:#FFFFFF}
 @media (max-width:520px){.pvHead,.pvBody,.pvFoot{padding-left:18px;padding-right:18px}.pvTable tbody th{width:88px;white-space:normal}.pvFoot button{flex:1}}
 </style>
+<style>.pinLabel.shopPin{background:#A0582E}.pinLabel.shopPin:after{border-top-color:#A0582E}.pinLabel.shopPin.on{background:#BC975E}.pinLabel.shopPin.on:after{border-top-color:#BC975E}.miTag.shopTag{background:#F6E6DA!important;color:#8A4520!important;margin:0 6px 0 0!important}
+.saleLeg{position:absolute;left:12px;bottom:12px;z-index:400;background:rgba(255,255,255,.95);border-radius:10px;padding:7px 11px;font:600 12px/1.5 'Noto Sans KR',sans-serif;color:#46515B;box-shadow:0 2px 8px rgba(0,0,0,.14);display:flex;gap:12px;pointer-events:none}.saleLeg i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:4px;vertical-align:-1px}</style>
 <style>.pinArea{color:#E8D7B6;font-weight:600;margin-right:5px;padding-right:5px;border-right:1px solid rgba(255,255,255,.3)}.pinLabel.on .pinArea{color:#294652;border-right-color:rgba(41,70,82,.3)}</style>
 <style id="mobileCss">
 body{word-break:keep-all;overflow-wrap:break-word}
@@ -1703,7 +1705,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 
   /* ---------- 추천 매물 카드 ---------- */
   function card(it) {
-    var tg = tagsOf(it), badges = it.sale ? (it.zone ? [String(it.zone).replace(/지역$/, '')] : []) : (it.premium === '무권리' ? ['무권리'] : []).concat(tg);
+    var tg = tagsOf(it), badges = it.sale ? (it.shop ? [it.floor || '상가'] : it.zone ? [String(it.zone).replace(/지역$/, '')] : []) : (it.premium === '무권리' ? ['무권리'] : []).concat(tg);
     if (!badges.length && it.point) badges = [it.point.split(/[·|,]/)[0].trim().slice(0, 10)];
     return '<a href="#item/' + encodeURIComponent(it.id) + '" class="listing" data-id="' + esc(it.id) + '" style="display: flex; flex-direction: column; background: #FFFFFF; border-radius: 14px; overflow: hidden; border: 1px solid #E6E0D4; color: #14191F">' +
       (it.photos && it.photos.length
@@ -1730,6 +1732,11 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   /* 빌딩 매매 카드: 매매가 · 대지 평당가 · 연면적 평당가 / 대지 · 규모 · 준공 */
   function saleCardBody(it) {
     var sep = '<span style="color: #CFC7B6">|</span>', bp = it.bldPy && it.priceMan ? eok2(it.priceMan / it.bldPy) : '-';
+    if (it.shop) return '<div style="background: #FAF7F1; border-radius: 8px; padding: 12px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; text-align: center">' +
+      '<div><div style="font-size: 11px; color: #6B757D">매매가</div><div style="font-size: 15px; font-weight: 700; color: #294652">' + esc(it.depText) + '</div></div>' +
+      '<div style="border-left: 1px solid #E6E0D4; border-right: 1px solid #E6E0D4"><div style="font-size: 11px; color: #6B757D">전용 평당가</div><div style="font-size: 15px; font-weight: 700">' + esc(it.rentText) + '</div></div>' +
+      '<div><div style="font-size: 11px; color: #6B757D">전용면적</div><div style="font-size: 15px; font-weight: 700">' + (it.area ? Math.round(it.area) + '평' : '-') + '</div></div></div>' +
+      '<div style="display: flex; gap: 8px; font-size: 13px; color: #46515B; flex-wrap: wrap; white-space: nowrap"><span>' + esc(it.floor || '층 문의') + '</span>' + sep + '<span>' + (it.ctM2 ? '계약 ' + Math.round(it.ctM2 / PYC) + '평' : '상가점포') + '</span>' + sep + '<span>' + (it.yr ? it.yr + '년 준공' : '준공 문의') + '</span></div>';
     return '<div style="background: #FAF7F1; border-radius: 8px; padding: 12px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; text-align: center">' +
       '<div><div style="font-size: 11px; color: #6B757D">매매가</div><div style="font-size: 15px; font-weight: 700; color: #294652">' + esc(it.depText) + '</div></div>' +
       '<div style="border-left: 1px solid #E6E0D4; border-right: 1px solid #E6E0D4"><div style="font-size: 11px; color: #6B757D">대지 평당가</div><div style="font-size: 15px; font-weight: 700">' + esc(it.rentText) + '</div></div>' +
@@ -1824,6 +1831,11 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 
   /* ---------- 지도 말풍선 내용 ---------- */
   function itemPopup(it) {
+    if (it.shop) return '<div class="mpop"><div class="mpopCat">상가점포 매매 · No.' + esc(it.id) + '</div>' +
+      '<div class="mpopTitle">' + esc(it.title) + '</div>' +
+      '<div class="mpopPrice">매매 ' + esc(it.depText) + ' <span>전용 평당 ' + esc(it.rentText) + '</span></div>' +
+      '<div class="mpopMeta">전용 ' + Math.round(it.area) + '평' + (it.ctM2 ? ' · 계약 ' + Math.round(it.ctM2 / PYC) + '평' : '') + (it.floor ? ' · ' + esc(it.floor) : '') + (it.yr ? ' · ' + it.yr + '년 준공' : '') + '</div>' +
+      '<a class="mpopBtn" href="#item/' + encodeURIComponent(it.id) + '">상세 보기 →</a></div>';
     if (it.sale) return '<div class="mpop"><div class="mpopCat">빌딩 매매 · No.' + esc(it.id) + '</div>' +
       '<div class="mpopTitle">' + esc(it.title) + '</div>' +
       '<div class="mpopPrice">매매 ' + esc(it.depText) + ' <span>대지 평당 ' + esc(it.rentText) + '</span></div>' +
@@ -1846,13 +1858,14 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   function clusterPopup(g) {
     return '<div class="mpop"><div class="mpopCat">이 주변 매물 ' + g.items.length + '건</div><div class="mpopList">' +
       g.items.slice().sort(function (a, b) { return floorKey(a.floor) - floorKey(b.floor) || (a.area || 0) - (b.area || 0); }).slice(0, 12).map(function (it) {
+        if (it.shop) return '<button type="button" data-focus="' + esc(it.id) + '"><b>' + esc(it.floor || '상가') + ' · 전용 ' + Math.round(it.area) + '평</b><span>매매 ' + esc(it.depText) + ' / 전용 평당 ' + esc(it.rentText) + '</span></button>';
         if (it.sale) return '<button type="button" data-focus="' + esc(it.id) + '"><b>' + esc(scShort(it) || '빌딩') + ' · 대지 ' + Math.round(it.area) + '평</b><span>매매 ' + esc(it.depText) + ' / 대지 평당 ' + esc(it.rentText) + '</span></button>';
         return '<button type="button"' + (it.unv ? ' class="unv"' : '') + ' data-focus="' + esc(it.id) + '"><b>' + esc(it.floor || '') + ' · ' + esc(areaText(it.area)) + '</b><span>보 ' + esc(it.depText) + ' / 월 ' + esc(it.rentText) + ' / 관 ' + esc(it.mgmt || (it.unv ? '확인요청' : '문의')) + '</span></button>';
       }).join('') + (g.items.length > 12 ? '<div class="mpopMeta">외 ' + (g.items.length - 12) + '건은 왼쪽 목록에서 확인하세요</div>' : '') +
       '</div><button type="button" class="mpopClose" aria-label="닫기">×</button></div>';
   }
   function pinHtml(it) {
-    if (it.sale) return '<div class="pinWrap"><span class="pinLabel' + (it.id === focusId ? ' on' : '') + '">' + (scShort(it) ? '<span class="pinArea">' + esc(scShort(it)) + '</span>' : '') + esc(it.depText) + '</span></div>';
+    if (it.sale) { var sc = it.shop ? shopFlShort(it) : scShort(it); return '<div class="pinWrap"><span class="pinLabel' + (it.shop ? ' shopPin' : '') + (it.id === focusId ? ' on' : '') + '">' + (sc ? '<span class="pinArea">' + esc(sc) + '</span>' : '') + esc(it.depText) + '</span></div>'; }
     var fl = String(it.floor || '').replace(/\s+/g, '').replace(/^연층\((.*)\)$/, '$1').replace(/^통임대\(.*\)$/, '통임대');   // 층 | 평 (통임대(지하1층~5층) → 통임대)
     var area = it.area ? Math.round(it.area) + '평' : '';
     var main = area || it.catLabel || '';
@@ -2179,9 +2192,9 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   function tagsOf(it) { return (it && it.tags && it.tags.length ? it.tags : []).filter(function (t) { return t && t !== '무권리'; }); }
   function miHtml(it) {
     if (it.sale) return '<button type="button" class="mapItem' + (it.id === focusId ? ' on' : '') + '" data-id="' + esc(it.id) + '">' +
-      '<span class="miMeta">' + (it.src === 'our' ? '다움 매물' : '공동중개') + ' · ' + esc(it.dong) + '</span>' +
+      '<span class="miMeta">' + (it.shop ? '<em class="miTag shopTag">상가점포</em>' : '') + (it.src === 'our' ? '다움 매물' : '공동중개') + ' · ' + esc(it.dong) + '</span>' +
       '<span class="miTitle">' + listTitle(it.title) + '</span>' +
-      '<span class="miPrice">매매 <b class="miDep">' + esc(it.depText) + '</b><i>/</i>대지 평당 <b class="miRent">' + esc(it.rentText) + '</b>' + (it.yr ? '<i>/</i><b class="miMg">' + it.yr + '년</b>' : '') + '</span></button>';
+      '<span class="miPrice">매매 <b class="miDep">' + esc(it.depText) + '</b><i>/</i>' + (it.shop ? '전용 평당' : '대지 평당') + ' <b class="miRent">' + esc(it.rentText) + '</b>' + (it.yr ? '<i>/</i><b class="miMg">' + it.yr + '년</b>' : '') + '</span></button>';
     return '<button type="button" class="mapItem' + (it.id === focusId ? ' on' : '') + '" data-id="' + esc(it.id) + '">' +
       '<span class="miMeta">' + esc(it.catLabel) + ' · ' + esc(it.dong) + tagsOf(it).map(function (t) { return '<em class="miTag">' + esc(t) + '</em>'; }).join('') + '</span>' +
       '<span class="miTitle">' + listTitle(miTitleText(it)) + '</span>' +
@@ -2797,8 +2810,8 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     var office = '<div class="dtOffice">' + OFFICE_INFO.map(function (o) { return '<div><b>' + o[0] + '</b><span>' + o[1] + '</span></div>'; }).join('') + '</div>';
     var callSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>';
     var side = '<aside class="dtSide"><div class="dtCard">' +
-      (it.sale ? '<div class="dtCardTop"><small>No.' + esc(it.id) + '</small><small>대지 ' + Math.round(it.area) + '평 · ' + esc(it.floor || '') + '</small></div>' +
-        '<div class="dtCardPrice">매매가 <em>' + esc(it.depText) + '</em><span class="dtCardSep" aria-hidden="true"></span><span class="dtCardMgmt">대지 평당 ' + esc(it.rentText) + '</span></div>'
+      (it.sale ? '<div class="dtCardTop"><small>No.' + esc(it.id) + '</small><small>' + (it.shop ? '전용 ' : '대지 ') + Math.round(it.area) + '평 · ' + esc(it.floor || '') + '</small></div>' +
+        '<div class="dtCardPrice">매매가 <em>' + esc(it.depText) + '</em><span class="dtCardSep" aria-hidden="true"></span><span class="dtCardMgmt">' + (it.shop ? '전용' : '대지') + ' 평당 ' + esc(it.rentText) + '</span></div>'
       : '<div class="dtCardTop"><small>No.' + esc(it.id) + '</small><small>' + esc(areaText(it.area)) + ' · ' + esc(it.floor || '') + '</small></div>' +
       '<div class="dtCardPrice">보증금 ' + esc(it.depText || '문의') + '<br>월세 <em>' + esc(it.rentText || '문의') + '</em><span class="dtCardSep" aria-hidden="true"></span><span class="dtCardMgmt">관리비 ' + esc(it.mgmt || (it.unv ? '확인요청' : '문의')) + '</span></div>') +
       '<a href="tel:025551165" class="dtCall">' + callSvg + '전화 상담 02-555-1165</a>' +
@@ -2821,9 +2834,9 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       '<div class="dtTools"><button type="button" class="dtTool" data-act="share"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"></path></svg><span>링크 복사</span></button>' +
       '<button type="button" class="dtTool dtPdf" data-act="pdf"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5M12 11v6M9 14l3 3 3-3"></path></svg><span>PDF 저장</span></button></div></div>' +
       '<div class="dtGrid"><div class="dtMain">' + gal +
-      (it.sale ? saleSumHtml(it) + bldMsg + saleCmpHtml(it) + regHtml +
+      (it.sale ? (it.shop ? shopSumHtml(it) + bldMsg : saleSumHtml(it) + bldMsg + saleCmpHtml(it)) + regHtml +
       (it.reg ? flvHtml(it.sale ? { reg: it.reg, floor: '', elev: it.elev, area: 0 } : it) : '') +
-        saleLandHtml(it) +
+        saleLandHtml(it, it.shop) +
       '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
         ''
       : price +
@@ -3212,7 +3225,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       if (b.floors) it.totalFloor = b.floors; if (b.approval) it.approval = b.approval;
       it.usage = b.usage || it.usage; it.structure = b.structure || it.structure; it.totArea = b.totArea || 0;
       it.parkTotal = b.park ? b.park + '대' : ''; it.bldElev = b.elev || 0; it.bldSrc = 1; it.reg = b.reg || null;
-      if (it.sale && it.reg && it.reg.grnd && !it.ff) { it.ff = it.reg.grnd; it.bf = it.reg.ugrnd || 0; it.floor = saleScale(it); }
+      if (it.sale && !it.shop && it.reg && it.reg.grnd && !it.ff) { it.ff = it.reg.grnd; it.bf = it.reg.ugrnd || 0; it.floor = saleScale(it); }
       it.bldBusy = 0;
       if (DT.it === it && DT.el && !DT.el.hidden && document.body.classList.contains('detailMode')) { var y = window.scrollY; paintDetail(it); window.scrollTo(0, y); }
     }).catch(function () { it.bldDone = 0; done('※ 건축물대장 정보를 불러오지 못했습니다. 잠시 후 다시 열어 주세요.'); });
@@ -3729,6 +3742,8 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     '반포역': ['7'], '교대역': ['2', '3'], '서초역': ['2'], '양재역': ['3', '신분당'], '매봉역': ['3'], '도곡역': ['3', '수인분당'], '한티역': ['수인분당'], '남부터미널역': ['3'], '방배역': ['2'], '내방역': ['7'], '사평역': ['9'],
     '신반포역': ['9'], '구반포역': ['9'], '대치역': ['3'], '학여울역': ['3'], '대청역': ['3'], '일원역': ['3'], '수서역': ['3', '수인분당'], '개포동역': ['수인분당'], '구룡역': ['수인분당'], '양재시민의숲역': ['신분당'], '종합운동장역': ['2', '9'] };
   var LCOL = { '2': '#00A84D', '3': '#EF7C1C', '7': '#747F00', '9': '#BDB092', '신분당': '#D4003B', '수인분당': '#F5A200' };
+  function shopFl(f) { var s = String(f || '').trim(), v = parseInt(s.replace(/[^\d-]/g, ''), 10); if (!s) return ''; if (/층/.test(s)) return s.replace(/\s+/g, ''); return /지하|B/i.test(s) || v < 0 ? '지하' + Math.abs(v || 1) + '층' : v ? v + '층' : s; }
+  function shopFlShort(it) { var m = /(지하)?(\d+)/.exec(it.floor || ''); return m ? (m[1] ? 'B' + m[2] : m[2] + 'F') : ''; }
   function saleScale(it) { return it.ff ? (it.bf ? '지하' + it.bf + '층~' : '') + '지상' + it.ff + '층' : ''; }
   function saleItem(r) {
     var it = { id: r.id, sale: 1, src: r.src, cats: ['building'], catLabel: '빌딩 매매', gu: r.gu, dong: r.dong, building: '', bf: r.bf || 0, ff: r.ff || 0, yr: r.yr || 0,
@@ -3740,6 +3755,11 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     it.depText = eokT(it.priceMan); it.rentText = eok2(it.pp);
     it.floor = saleScale(it); it.totalFloor = it.floor; it.approval = it.yr ? it.yr + '년' : '';
     it.title = it.dong + ' ' + (it.ff ? (it.bf ? '지하' + it.bf + '~' : '') + '지상' + it.ff + '층 ' : '') + '빌딩 · 대지 ' + Math.round(it.area) + '평';
+    if (r.kind === 'shop') {   // 상가점포(호실) 매매: 전용면적 기준, 대지·용적률 비교 없음
+      it.shop = 1; it.catLabel = '상가점포 매매'; it.exM2 = r.ex || 0; it.ctM2 = r.ct || 0; it.area = it.exM2 ? it.exM2 / PYC : 0; it.landM2 = 0; it.bldM2 = 0; it.bldPy = 0;
+      it.pp = it.area ? it.priceMan / it.area : 0; it.rent = it.pp / 10000; it.rentText = eok2(it.pp);
+      it.floor = shopFl(r.fl); it.totalFloor = ''; it.title = it.dong + ' ' + (it.floor ? it.floor + ' ' : '') + '상가 · 전용 ' + Math.round(it.area) + '평';
+    }
     return it;
   }
   function saleStart() {
@@ -3767,7 +3787,8 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     var so = document.getElementById('mapSort'); if (so) so.innerHTML = '<option value="d">최근 확인순</option><option value="r">매매가 높은순</option><option value="a">대지 넓은순</option>';
     var ni = document.getElementById('noInput'); if (ni) ni.placeholder = '매물번호 검색 (예: S1A2B3C)';
     var dn = document.getElementById('demoNote'); if (dn) dn.textContent = '';
-    var lt = document.querySelector('#listings [role="tablist"]'); if (lt) lt.style.display = 'none';   // 빌딩 매매: 분류 탭 · 전체 보기(임대 조건 필터) 없이 추천 빌딩만
+    var lt = document.querySelector('#listings [role="tablist"]'); if (lt) lt.style.display = 'none';
+    var lm = document.getElementById('leafletMap'); if (lm && lm.parentNode) { var lg = document.createElement('div'); lg.className = 'saleLeg'; lg.innerHTML = '<span><i style="background:#3A6271"></i>빌딩·건물 전체</span><span><i style="background:#A0582E"></i>상가점포(호실)</span>'; if (getComputedStyle(lm.parentNode).position === 'static') lm.parentNode.style.position = 'relative'; lm.parentNode.appendChild(lg); }   // 빌딩 매매: 분류 탭 · 전체 보기(임대 조건 필터) 없이 추천 빌딩만
     var fa = document.querySelector('#listings .featAll'); if (fa) fa.style.display = 'none';
     var st = document.createElement('style'); st.textContent = '.saleMode #heatBtn,.saleMode #heatPanel,.saleMode .heatLeg{display:none!important}' +
       '.slSt{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}.slSt div{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid #EFEAE0;border-radius:12px;background:#FBFAF7}' +
@@ -3856,7 +3877,15 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       '</section>';
   }
   // ⑤ 토지 (토지대장 + 공시지가 + 개발 여력)
-  function saleLandHtml(it) {
+  function shopSumHtml(it) {
+    var r = it.reg || {}, ch = [it.floor, it.exM2 ? '전용 ' + (Math.round(it.area * 10) / 10) + '평 (' + it.exM2 + '㎡)' : '', it.ctM2 ? '계약 ' + (Math.round(it.ctM2 / PYC * 10) / 10) + '평 (' + it.ctM2 + '㎡)' : '',
+      r.apr ? '사용승인 ' + r.apr : (it.yr ? it.yr + '년 준공' : ''), (it.zone || (it.land && it.land[2]) || '').replace(/지역$/, '')].filter(Boolean);
+    return '<div class="slSum"><div class="slSumT"><span>' + esc((it.gu || '') + ' ' + (it.dong || '')) + '</span><span>상가점포(구분소유 호실)</span><span>거래 형태 매매</span><span class="no">매물번호 ' + esc(it.id) + '</span></div>' +
+      '<div class="slSumP" style="grid-template-columns:1.35fr 1fr 1fr"><div class="main"><small>매매가</small><b>' + esc(it.depText) + '</b></div><div><small>전용 평당가</small><b>' + esc(it.rentText) + '</b></div><div><small>층</small><b>' + esc(it.floor || '-') + '</b></div></div>' +
+      (ch.length ? '<div class="slChips">' + ch.map(function (c) { return '<span>' + esc(c) + '</span>'; }).join('') + '</div>' : '') + '</div>' +
+      '<p class="dtNote">※ 「중개대상물의 표시·광고 명시사항 세부기준」에 따른 표시입니다. 소재지는 동까지만 표시하며, 호수와 정확한 위치는 상담 시 안내해 드립니다. 건물·토지 정보는 건물 전체 기준입니다.</p>';
+  }
+  function saleLandHtml(it, basic) {
     var L = it.land, r = it.reg || {};
     if (!L) return it.bldDone ? '<section class="dtSec"><h2>토지</h2><p class="dtNote">※ 이 필지의 토지특성 자료를 준비 중입니다. 상담 시 토지이용계획확인서와 함께 안내해 드립니다.</p></section>' : '';
     var area = +L[1], j = +L[8], jp = j * PYC / 10000, z1 = L[2] || it.zone || '';
@@ -3867,7 +3896,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       '<div><small>도로 · 지형</small><b>' + esc(L[7] || '-') + '</b><em>' + esc(road ? road + ' (공시지가 조사 기준)' : [L[5], L[6]].filter(Boolean).join(' · ')) + '</em></div>' +
       '<div><small>개별공시지가 (' + esc(L[9] || '') + ')</small><b>평당 ' + Math.round(jp).toLocaleString('ko-KR') + '만원</b><em>' + Math.round(j / 10000).toLocaleString('ko-KR') + '만원/㎡ · 합계 ' + eok2(j * area / 10000) + '</em></div></div>';
     var lim = ZLIM[z1], tmp = FAR_TMP[z1], vl = +r.vl || 0, plat = +r.plat || area, inPlan = /지구단위계획/.test(r.zone || '');
-    if (lim) {
+    if (lim && !basic) {
       var top = Math.max(tmp || lim[1], vl, lim[1]) * 1.08, pc = function (v) { return Math.min(100, v / top * 100).toFixed(1) + '%'; };
       var room = (tmp || lim[1]) - vl, roomPy = room > 0 ? Math.round(plat * room / 100 / PYC) : 0;
       h += '<div class="slFar"><div class="hd"><b>용적률 · 개발 여력</b><span>' + esc(z1) + ' · 건폐율 ' + lim[0] + '% / 용적률 ' + lim[1] + '% 이하 (서울시 조례)</span></div>' +
