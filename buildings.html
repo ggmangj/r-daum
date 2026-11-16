@@ -3905,7 +3905,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     return '<section class="dtSec"><h2>가격 판단 <span class="slBase">대지(토지) 평당가 기준</span></h2><div class="slCmp">' + rows.map(function (r) {
       var g = grpOf(r), hd = g !== pg && g > 0 ? '<div class="slGrp">' + GN[g] + '</div>' : ''; pg = g;
       return hd + '<div class="r' + (r[5] ? ' sub' : '') + '"' + (r[4] ? ' title="' + esc(r[4]) + '"' : '') + '><span>' + (r[3] ? '<b style="color:#294652">' + esc(r[0]) + '</b>' : esc(r[0])) + '</span><div class="bar"><i style="width:' + (r[1] ? Math.max(2, r[1] / mx * 100) : 0) + '%;background:' + r[2] + '"></i></div><b>' + (r[1] ? eok2(r[1]) : '-') + '</b></div>';
-    }).join('') + '</div><p class="slTerms"><b>참고</b>위 시세 비교는 대지 평당가만 본 것으로, 가격 협의 여부·임대 현황(보증금·월세·공실)·임대수익률·리모델링 여부·연면적 등은 반영되지 않았습니다. 단순 참고용으로 봐 주시고, 자세한 내용은 상담 시 자료로 안내해 드립니다.</p>' +
+    }).join('') + '</div><p class="slTerms"><b>참고</b>위 시세 비교는 대지 평당가만 본 것으로, 가격 협의 여부·임대 현황(보증금·월세·공실)·임대수익률·리모델링 여부·연면적·도로 상황(접한 도로 폭·코너 여부) 등은 반영되지 않았습니다. 단순 참고용으로 봐 주시고, 자세한 내용은 상담 시 자료로 안내해 드립니다.</p>' +
       '</section>';
   }
   // ⑤ 토지 (토지대장 + 공시지가 + 개발 여력)
