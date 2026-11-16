@@ -411,7 +411,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 .dtSvIn{position:absolute;inset:0;opacity:0;transition:opacity .3s}
 .dtSv.ok .dtSvIn{opacity:1}
 .panoPin{position:absolute;z-index:6;display:none;transform:translateX(-50%);pointer-events:none;text-align:center;color:#fff;font-weight:700;font-size:13px;text-shadow:0 1px 3px #000}.panoPin.show{display:block}.panoPin .bx{display:inline-block;background:#e5484d;border:2px solid #fff;border-radius:8px;padding:3px 10px;box-shadow:0 2px 6px rgba(0,0,0,.5);white-space:nowrap}.panoPin .ar{display:block;font-size:26px;line-height:1;color:#e5484d;text-shadow:0 0 3px #fff,0 0 3px #fff}
-.dtSvMsg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#C3CAD8;font-size:14px}
+.dtSvRe{margin-left:8px;border:1px solid rgba(255,255,255,.6);background:transparent;color:#fff;border-radius:999px;padding:4px 12px;font:inherit;font-size:13px;cursor:pointer}.dtSvMsg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#C3CAD8;font-size:14px}
 .dtSv.ok .dtSvMsg{display:none}
 @media (max-width:760px){.dtSv{left:-20px;right:-20px;border-radius:0}.dtSvBtn{top:10px;right:-10px;padding:7px 11px;font-size:12px}}
 @media print{.dtSvBtn,.dtSv{display:none!important}}
@@ -2965,8 +2965,8 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
           var dx = (it.lng - p.lng()) * R * Math.cos(la1) * 6371000, dy = (it.lat - p.lat()) * R * 6371000, d = Math.round(Math.sqrt(dx * dx + dy * dy));
           var W = wrap.clientWidth, H = wrap.clientHeight, fov = v.fov || 100, rel = ((brg - (v.pan || 0)) % 360 + 540) % 360 - 180, dm = d < 3 ? '' : ' · 약 ' + d + 'm';
           if (!W || !H) { pin.classList.remove('show'); return; }
-          if (Math.abs(rel) <= fov / 2 * 0.92) { pin.style.left = (50 + rel / fov * 100) + '%'; pin.style.top = Math.round(H * 0.28) + 'px'; pin.innerHTML = '<span class="bx">이 건물' + dm + '</span><span class="ar">▼</span>'; }
-          else { var L = rel < 0; pin.style.left = (L ? 80 : W - 80) + 'px'; pin.style.top = Math.round(H * 0.4) + 'px'; pin.innerHTML = '<span class="bx">' + (L ? '◀ 매물 방향' : '매물 방향 ▶') + dm + '</span>'; }
+          if (Math.abs(rel) <= fov / 2 * 0.92) { pin.style.left = (50 + rel / fov * 100) + '%'; pin.style.top = Math.round(H * 0.28) + 'px'; pin.innerHTML = '<span class="bx">해당 매물</span><span class="ar">▼</span>'; }
+          else { var L = rel < 0; pin.style.left = (L ? 80 : W - 80) + 'px'; pin.style.top = Math.round(H * 0.4) + 'px'; pin.innerHTML = '<span class="bx">' + (L ? '◀ 매물 방향' : '매물 방향 ▶') + '</span>'; }
           pin.classList.add('show');
         } catch (e) { pin.classList.remove('show'); }
       };
@@ -2975,6 +2975,14 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       window.addEventListener('resize', onRs); [400, 1500, 4000].forEach(function (ms) { setTimeout(upd, ms); });
     } catch (e) { }
   }
+  /* 거리뷰 모듈이 늦게 오면(휴대폰 느린 망 등) 거리뷰 모듈만 한 번 더 불러옴 */
+  var PANO_KICK = 0;
+  function panoKick(force) {
+    if (window.naver && naver.maps && naver.maps.Panorama) return;
+    if (PANO_KICK && !force) return; PANO_KICK++;
+    if (!NAVER_KEY || PANO_KICK > 3) return;
+    try { loadScript('https://oapi.map.naver.com/openapi/v3/maps-panorama.js?ncpKeyId=' + encodeURIComponent(NAVER_KEY) + '&t=' + Date.now()).catch(function () { }); } catch (e) { }
+  }
   // 현장 사진이 없으면 네이버 거리뷰(파노라마)를 대신 보여줌 · 거리뷰가 없는 곳은 '사진 준비 중' 유지
   function detailPano(it) {
     var box = $('dtNoPhoto'); if (!box || !isFinite(it.lat) || !it.lat) return;
@@ -2982,7 +2990,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     (function go() {
       if (!$('dtNoPhoto') || $('dtNoPhoto') !== box) return;
       var ok = window.naver && naver.maps && naver.maps.Panorama && M && M.kind === 'naver';
-      if (!ok) { if (++tries < 75 && !(M && M.kind === 'leaflet')) setTimeout(go, 200); return; }
+      if (!ok) { if (++tries === 20) panoKick(); if (tries < 150 && !(M && M.kind === 'leaflet')) setTimeout(go, 200); return; }
       try {
         var target = new naver.maps.LatLng(it.lat, it.lng);
         var host = document.createElement('div'); host.className = 'dtPanoHost';
@@ -3034,7 +3042,12 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     (function go() {
       if (!document.body.contains(box)) return;
       var ok = window.naver && naver.maps && naver.maps.Panorama;
-      if (!ok) { if (++tries < 50) setTimeout(go, 200); else box.querySelector('.dtSvMsg').textContent = '이 위치는 거리뷰를 불러오지 못했습니다'; return; }
+      if (!ok) {
+        if (++tries === 20) panoKick();
+        if (tries < 150) { if (tries === 25) box.querySelector('.dtSvMsg').textContent = '거리뷰를 불러오는 중… (휴대폰에서는 조금 걸릴 수 있어요)'; setTimeout(go, 200); }
+        else { var mm = box.querySelector('.dtSvMsg'); mm.innerHTML = '거리뷰를 불러오지 못했습니다 <button type="button" class="dtSvRe">다시 시도</button>'; mm.querySelector('button').onclick = function () { tries = 0; panoKick(true); mm.textContent = '거리뷰를 다시 불러오는 중…'; go(); }; }
+        return;
+      }
       try {
         var inner = document.createElement('div'); inner.className = 'dtSvIn'; box.appendChild(inner);
         var sz = function () { return new naver.maps.Size(Math.max(200, box.clientWidth), Math.max(150, box.clientHeight)); };
