@@ -322,6 +322,8 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
 .sdPin.g{background:#fff;color:#7A4424;padding:5px 11px;border:2px solid #C98F69}.sdPin.g b{font-size:12.5px}.sdPin.g em{font-style:normal;font-size:11px;color:#9A5F3A}
 .sdPin.u{background:#FBF6F1;color:#8A5A3A;padding:5px 11px;border:2px dashed #C98F69;box-shadow:0 1px 5px rgba(0,0,0,.15)}.sdPin.u b{font-size:12px}.sdPin.u em{font-style:normal;font-size:10.5px;color:#9A5F3A}
 .lgU{width:14px;height:14px;border-radius:50%;background:#FBF6F1;border:2px dashed #C98F69;display:inline-block}
+.sdPin .nm{font-size:11px;font-weight:600;opacity:.92}.sdPin .pr{font-size:16px;font-weight:900;letter-spacing:-.3px;line-height:1.2}.sdPin .pr i{font-style:normal;font-size:10px;font-weight:700;margin-right:3px;opacity:.8;vertical-align:1px}
+.sdPin.d .pr{font-size:17px}.sdPin.g .pr{color:#8A4A22}.sdPin.u .pr{font-size:14.5px;color:#8A5A3A}.sdPin .few{font-size:10.5px!important}
 .sdPin.on{outline:3px solid #C0533A;outline-offset:1px}
 .sdPin .few{font-size:10.5px;color:#C0533A;font-weight:700}.sdPin.d .few{color:#FFE2CF}
 #grp{border-bottom:1px solid #EFEAE0}
@@ -517,7 +519,7 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
     lvl = M.getZoom() >= ZB ? 'b' : 'd';
     groups().forEach(function (g) {
       var p = pos(g); if (!p) return; var s = stat(g.L);
-      var html = '<div class="sdPin ' + (g.u ? 'u' : g.b ? 'g' : 'd') + (g.k === sel ? ' on' : '') + '"><b>' + esc(g.b ? g.t.replace(/^\S+\s/, '') : g.t) + ' · ' + s.n + '건</b><em>' + (s.m ? '전용 평당 ' + man(s.m) : '-') + '</em>' + (s.few ? '<span class="few">표본 적음</span>' : '') + '</div>';
+      var html = '<div class="sdPin ' + (g.u ? 'u' : g.b ? 'g' : 'd') + (g.k === sel ? ' on' : '') + '"><span class="nm">' + esc(g.b ? g.t.replace(/^\S+\s/, '') : g.t) + ' · ' + s.n + '건' + (s.few ? ' · <span class="few">표본 적음</span>' : '') + '</span><b class="pr">' + (s.m ? '<i>전용평당</i>' + man(s.m) : '-') + '</b></div>';
       var mk = new NM.Marker({ position: p, map: M, zIndex: g.k === sel ? 50 : g.b ? 20 : 10, icon: { content: html, anchor: new NM.Point(0, 0) } });
       NM.Event.addListener(mk, 'click', function () { pick(g.k, g.b || g.u ? null : p); });
       MK.push(mk);
