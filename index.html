@@ -2964,7 +2964,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
           var dx = (it.lng - p.lng()) * R * Math.cos(la1) * 6371000, dy = (it.lat - p.lat()) * R * 6371000, d = Math.round(Math.sqrt(dx * dx + dy * dy));
           var W = wrap.clientWidth, H = wrap.clientHeight, fov = v.fov || 100, rel = ((brg - (v.pan || 0)) % 360 + 540) % 360 - 180, dm = d < 3 ? '' : ' · 약 ' + d + 'm';
           if (!W || !H) { pin.classList.remove('show'); return; }
-          if (Math.abs(rel) <= fov / 2 * 0.92) { pin.style.left = (50 + rel / fov * 100) + '%'; pin.style.top = Math.round(H * 0.28) + 'px'; pin.innerHTML = '<span class="bx">해당 매물</span><span class="ar">▼</span>'; }
+          if (Math.abs(rel) <= fov / 2 * 0.92) { pin.style.left = (50 + rel / fov * 100) + '%'; pin.style.top = Math.round(H * 0.28) + 'px'; pin.innerHTML = '<span class="bx">' + (it.sale ? '본 매물' : '임대 매물') + '</span><span class="ar">▼</span>'; }
           else { var L = rel < 0; pin.style.left = (L ? 80 : W - 80) + 'px'; pin.style.top = Math.round(H * 0.4) + 'px'; pin.innerHTML = '<span class="bx">' + (L ? '◀ 매물 방향' : '매물 방향 ▶') + '</span>'; }
           pin.classList.add('show');
         } catch (e) { pin.classList.remove('show'); }
