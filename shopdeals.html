@@ -261,6 +261,7 @@ body.dlFull .mapFullBtn{display:none}
 .mTbl .mTh>*:nth-child(2){background:#E3ECEF}.mTbl .mTh>*:nth-child(3){background:#F3EAD6}.mTbl .mTh>*:nth-child(4){background:#EADFC9}.mTbl .mTh>*:nth-child(5){background:#E9E4DA}
 .mTbl .mRow>.cv{display:grid}
 .mTbl .fewT{color:#B4BBC0!important;font-size:12px;font-weight:400}.mTbl .mRow>.sbc.fewT{justify-content:flex-end}
+@media (max-width:1100px){body:not(.dlFull) .main .list{display:none!important}body:not(.dlFull) .mapBox{border-bottom:0!important}}
 </style>
 
 <style id="fullWide">/* 넓은 화면(1400px 이상)에서는 가운데 1280px 제한 없이 화면 가득 (좌우 여백 48px) */
@@ -333,7 +334,7 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
 .it .yb{display:inline-block;font-size:11px;font-weight:700;padding:1px 6px;border-radius:5px;background:#F1ECE2;color:#8A6A35;margin-left:4px}
 .it .yb.unk{background:#fff;border:1px dashed #B9A88A;color:#8A6A35}
 .it .fb{display:inline-block;font-size:11px;font-weight:700;padding:1px 6px;border-radius:5px;background:#E8EEF0;color:#294652;margin-left:4px}
-@media (max-width:760px){.main .list{display:flex!important}.kindSw{display:flex}.kindSw a{flex:1;justify-content:center;padding:9px 6px;font-size:13.5px}.flt .seg{flex:1 1 100%;overflow-x:auto}.flt .seg button{flex:1}.gS{grid-template-columns:1fr 1fr}}
+@media (max-width:760px){.kindSw{display:flex}.kindSw a{flex:1;justify-content:center;padding:9px 6px;font-size:13.5px}.flt .seg{flex:1 1 100%;overflow-x:auto}.flt .seg button{flex:1}.gS{grid-template-columns:1fr 1fr}}
 </style>
 <style id="navTwo">.mainNav .nvS{font-size:.74em;font-weight:500;color:#9C7A47;margin-left:5px;letter-spacing:-.2px}@media (max-width:760px){.mainNav .nvS{display:none}}</style>
 <style id="navG">:root{--tabBg:#F7F3EC}/* 상단 메뉴: 폴더 탭 (선택 메뉴가 아래 본문과 이어짐) */
