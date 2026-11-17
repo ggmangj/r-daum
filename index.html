@@ -1758,7 +1758,7 @@ window.MGR = (function () {
       .then(function (j) { if (j && j.ok === false && /LOGIN_REQUIRED/.test(j.error || '')) { expire(); throw new Error('LOGIN'); } return j; });
   }
   function toast(t) { var e = $('mgToast'); if (!e) { e = document.createElement('div'); e.id = 'mgToast'; e.style.cssText = 'position:fixed;left:50%;bottom:70px;transform:translateX(-50%);background:rgba(20,25,31,.92);color:#fff;padding:9px 16px;border-radius:10px;font:13px Noto Sans KR,sans-serif;z-index:3000;transition:opacity .2s;pointer-events:none'; document.body.appendChild(e); }
-    e.textContent = t; e.style.opacity = 1; clearTimeout(e._t); e._t = setTimeout(function () { e.style.opacity = 0; }, 2600); }
+    e.textContent = t; e.style.opacity = 1; clearTimeout(e._t); e._t = setTimeout(function () { e.style.opacity = 0; }, /못했|않았|실패/.test(t) ? 9000 : 2600); }
   function expire() { S = null; save(); document.body.classList.remove('mgrMode'); toast('매니저 로그인이 만료되었습니다. 다시 로그인해 주세요'); setTimeout(function () { location.reload(); }, 1500); }
   /* ---------- 매물 분류 ---------- */
   function src(it) { if (it.unv) return 'g'; if (it.sale) return it.src === 'gc' ? 'g' : (it.priv ? 'h' : 'o'); return it.priv ? 'h' : 'o'; }
@@ -1946,6 +1946,7 @@ window.MGR = (function () {
     if (h.SM) {
       call('feed', { w: 'sale' }).then(function (d) {
         if (!d || !d.rows) throw new Error((d && d.error) || '매매 데이터 없음');
+        if (!d.rows.some(function (r) { return 'priv' in r; }) && d.rows.length) throw new Error('홈페이지 연동 스크립트가 아직 새 버전으로 배포되지 않았습니다 (배포 관리 → 새 버전)');
         d.rows.forEach(function (r) { if (r.jb) JB[r.id] = r.jb; });
         EXTRA = d.rows.filter(function (r) { return r.priv; }).map(function (r) { var it = h.saleItem(r); it.priv = 1; it.jb = r.jb; return it; });
         READY = true; hp.load(hp.items(), true, d.updated, true); barCounts(); toast('매니저 모드 — 비공개 매매 ' + EXTRA.length + '건을 더했습니다');
@@ -1955,6 +1956,7 @@ window.MGR = (function () {
     Promise.all([call('feed', { w: 'rent' }), call('feed', { w: 'gs' })]).then(function (r) {
       var a = r[0], g = r[1];
       if (!a || !a.items) throw new Error((a && a.error) || '임대 데이터 없음');
+      if (!a.jb) throw new Error('홈페이지 연동 스크립트가 아직 새 버전으로 배포되지 않았습니다 (배포 관리 → 새 버전)');
       EXTRA = a.items; Object.keys(a.jb || {}).forEach(function (k) { JB[k] = a.jb[k]; }); EXTRA.forEach(function (x) { if (x.jb) JB[x.id] = x.jb; });
       if (g && g.rows) g.rows.forEach(function (x) { if (x[21]) JB[x[0]] = x[21]; if (x[22]) HID[x[0]] = 1; });
       READY = true;
