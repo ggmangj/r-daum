@@ -56,6 +56,7 @@ input,select,textarea,button{font-family:inherit}
 .pinWrap{position:relative;width:0;height:0}
 .pinLabel{position:absolute;left:0;top:0;transform:translate(-50%,-130%);white-space:nowrap;background:#3A6271;color:#FFFFFF;font:700 12px/1 'Noto Sans KR',sans-serif;padding:6px 9px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,.25);cursor:pointer}
 .pinLabel:after{content:"";position:absolute;left:50%;bottom:-5px;margin-left:-5px;border:5px solid transparent;border-top-color:#3A6271;border-bottom:0}
+.ctDong{display:flex;align-items:center;justify-content:center;text-align:center;border-radius:50%;background:rgba(41,70,82,.82);color:#fff;font:800 12px/1.2 'Noto Sans KR',sans-serif;border:2px solid rgba(255,255,255,.9);box-shadow:0 2px 8px rgba(0,0,0,.3);padding:4px;box-sizing:border-box;pointer-events:none}
 .pinLabel.unv{background:#6F8E96}.pinLabel.unv:after{border-top-color:#6F8E96}.pinLabel.on{background:#BC975E;color:#14191F;z-index:2}.pinLabel.on:after{border-top-color:#BC975E}
 .cluster{position:absolute;left:0;top:0;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(58,98,113,.94);color:#FFFFFF;font:900 15px/1 Inter,'Noto Sans KR',sans-serif;border:3px solid #FFFFFF;box-shadow:0 2px 8px rgba(0,0,0,.3);cursor:pointer}
 .officePin{position:absolute;left:0;top:0;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28));cursor:pointer}
@@ -2417,8 +2418,17 @@ window.MGR = (function () {
       if (!paths.length) return;
       HEAT.objs.push(new nm.Polygon({ map: map, paths: paths, fillColor: CTC[i], fillOpacity: i === top ? 0.62 : 0.48, strokeColor: '#FFFFFF', strokeOpacity: 0.9, strokeWeight: 1, clickable: false }));
     });
-    CT.bands[top] && CT.bands[top].forEach(function (poly) {   // 가장 비싼 띠: 진한 테두리로 봉우리를 또렷하게
-      HEAT.objs.push(new nm.Polyline({ map: map, path: LL(poly[0]), strokeColor: '#4A1E05', strokeOpacity: 0.95, strokeWeight: 2.5, clickable: false }));
+    CT.bands[top] && CT.bands[top].forEach(function (poly) {   // 가장 비싼 띠: 흰 테두리로 봉우리를 또렷하게
+      HEAT.objs.push(new nm.Polyline({ map: map, path: LL(poly[0]), strokeColor: '#FFFFFF', strokeOpacity: 1, strokeWeight: 2.5, clickable: false }));
+    });
+    // 동마다 지금 조건에 맞는 매물 수 (동 이름(건수) 동그라미 · 매물 위치의 가운데에)
+    var DG = {}; (VIEW || []).forEach(function (it) { if (!it.dong || !(isFinite(it.lat) && it.lat)) return; var g = DG[it.dong] || (DG[it.dong] = { n: 0, la: [], lo: [] }); g.n++; g.la.push(it.lat); g.lo.push(it.lng); });
+    var med = function (a) { a.sort(function (x, y) { return x - y; }); return a[Math.floor(a.length / 2)]; };
+    Object.keys(DG).forEach(function (d) {
+      var g = DG[d]; if (g.n < 3) return; var la = med(g.la), lo = med(g.lo); if (la < la0 || la > la1 || lo < lo0 || lo > lo1) return;
+      var t = d + '(' + g.n.toLocaleString() + ')', sz = Math.max(64, Math.min(96, 44 + t.length * 5));
+      HEAT.objs.push(new nm.Marker({ map: map, position: new nm.LatLng(la, lo), clickable: false, zIndex: 50,
+        icon: { content: '<div class="ctDong" style="width:' + sz + 'px;height:' + sz + 'px">' + esc(t) + '</div>', size: new nm.Size(sz, sz), anchor: new nm.Point(sz / 2, sz / 2) } }));
     });
     heatUi();
   }
