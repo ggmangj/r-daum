@@ -1743,7 +1743,7 @@ body:not(.mgrMode) #mgBar,body:not(.mgrMode) #mgDr{display:none!important}
    일반 방문자에게는 아무 것도 바뀌지 않습니다. 연락처·중개사메모는 내려오지 않습니다. */
 window.MGR = (function () {
   var API = 'https://script.google.com/macros/s/AKfycbxcrADcmOUogYCPPnEY9Hh6h_NpdV31gaOiP1zNCLn1fKrRsi12m-wi9d6wU8Sbw6dn9Q/exec', KEY = 'daumMgr';
-  var S = null, hp = null, READY = false, GSALL = null, ERR = '', EXTRA = [], JB = {}, HID = {}, FAV = {}, SHOW = { o: 1, h: 1, g: 1 }, CUST = null, HIST = [], SENT = {}, CUSTS = null;
+  var S = null, hp = null, READY = false, HIDROWS = [], ERR = '', EXTRA = [], JB = {}, HID = {}, FAV = {}, SHOW = { o: 1, h: 1, g: 1 }, CUST = null, HIST = [], SENT = {}, CUSTS = null;
   var LBL = { o: '우리 매물', h: '우리 비공개', g: '공클' };
   try { S = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { }
   try { var sv = JSON.parse(localStorage.getItem(KEY + '.show') || 'null'); if (sv) SHOW = sv; } catch (e) { }
@@ -1768,9 +1768,9 @@ window.MGR = (function () {
   function pass(it) { return !on() || SHOW[src(it)] !== 0; }
   function isFav(id) { return !!FAV[id]; }
   function applyJB(it) { if (JB[it.id] && !it.jb) it.jb = JB[it.id]; if (HID[it.id]) it.hid = 1; }
-  function extend(items) { if (!READY) { items.forEach(applyJB); return items; } var ids = {}; items.forEach(function (x) { ids[x.id] = 1; applyJB(x); }); return items.concat(EXTRA.filter(function (x) { return !ids[x.id]; })); }
-  function decorate(add) { add.forEach(applyJB); }
-  function gs(d) { return GSALL || d; }
+  function extend(items) { setTimeout(barCounts, 0); if (!READY) { items.forEach(applyJB); return items; } var ids = {}; items.forEach(function (x) { ids[x.id] = 1; applyJB(x); }); return items.concat(EXTRA.filter(function (x) { return !ids[x.id]; })); }
+  function decorate(add) { add.forEach(applyJB); setTimeout(barCounts, 0); }
+  function gs(d) { if (!HIDROWS.length || !d || !d.rows) return d; var ids = {}; d.rows.forEach(function (r) { ids[r[0]] = 1; }); return { rows: d.rows.concat(HIDROWS.filter(function (r) { return !ids[r[0]]; })) }; }   // 공개 공클 + 노출 안 한 공클
   function pinCls(it) { return ' mg-' + src(it) + (isFav(it.id) ? ' mgFav' : ''); }
   function pinStar(it) { return isFav(it.id) ? '<i class="mgPS">★</i>' : ''; }
   function favBtn(id, small) { var f = isFav(id); return small ? '<span class="mgFavS' + (f ? ' on' : '') + '" data-fav="' + esc(id) + '" role="button" title="즐겨찾기">' + (f ? '★' : '☆') + '</span>' : '<button type="button" class="mgFavBtn' + (f ? ' on' : '') + '" data-fav="' + esc(id) + '">' + (f ? '★ 즐겨찾기됨' : '☆ 즐겨찾기') + '</button>'; }
@@ -1947,29 +1947,41 @@ window.MGR = (function () {
     document.body.classList.add('mgrMode'); bar(); barCounts();
     call('who', {}).then(function (j) { if (j && j.me) { S.me = j.me; save(); barCounts(); } }).catch(function () { });
     call('fav', {}).then(function (j) { if (j && j.fav) { FAV = {}; j.fav.forEach(function (k, i) { FAV[k] = i + 1; }); barCounts(); hp.drawMap(); } }).catch(function () { });
-    toast('매니저 모드 — 비공개 매물·공클을 불러오는 중…');
+    // 이 브라우저에 저장해 둔 매니저 데이터(24시간)가 있으면 바로 씀 → 화면이 곧바로 매니저 모드로 뜨고, 최신 데이터는 뒤에서 받아 바꿈
+    var CK = KEY + '.data.' + (h.SM ? 'sale' : 'rent'), cached = null;
+    try { cached = JSON.parse(localStorage.getItem(CK) || 'null'); if (cached && Date.now() - cached.t > 864e5) cached = null; } catch (e) { cached = null; }
+    var apply = function (o, fresh) {
+      EXTRA = (o.extra || []).map(function (x) { return h.SM ? (function () { var it = h.saleItem(x); it.priv = 1; it.jb = x.jb; return it; })() : x; });
+      JB = o.jb || {}; HIDROWS = o.hid || []; HID = {}; HIDROWS.forEach(function (r) { HID[r[0]] = 1; });
+      READY = true;
+      if (hp.items().length) { hp.items().forEach(applyJB); hp.load(hp.items(), true, new Date().toISOString(), true); if (HIDROWS.length) hp.mergeGs({ rows: HIDROWS }, true); }
+      barCounts(); status('');
+    };
+    if (cached) apply(cached); else toast('매니저 모드 — 비공개 매물·공클을 불러오는 중…');
+    var save = function (o) { o.t = Date.now(); try { localStorage.setItem(CK, JSON.stringify(o)); } catch (e) { try { o.hid = []; localStorage.setItem(CK, JSON.stringify(o)); } catch (x) { } } };
+    var fail = function (e) { if (String(e.message) === 'LOGIN') return; if (cached) { toast('최신 매니저 데이터를 받지 못해 저장본으로 보여 드립니다'); return; } toast('매니저 데이터를 받지 못했습니다: ' + e.message); status(e.message); };
     if (h.SM) {
       call('feed', { w: 'sale' }).then(function (d) {
         if (!d || !d.rows) throw new Error((d && d.error) || '매매 데이터 없음');
         if (!d.rows.some(function (r) { return 'priv' in r; }) && d.rows.length) throw new Error('홈페이지 연동 스크립트가 아직 새 버전으로 배포되지 않았습니다 (배포 관리 → 새 버전)');
-        d.rows.forEach(function (r) { if (r.jb) JB[r.id] = r.jb; });
-        EXTRA = d.rows.filter(function (r) { return r.priv; }).map(function (r) { var it = h.saleItem(r); it.priv = 1; it.jb = r.jb; return it; });
-        READY = true; hp.load(hp.items(), true, d.updated, true); barCounts(); toast('매니저 모드 — 비공개 매매 ' + EXTRA.length + '건을 더했습니다'); status('');
-      }).catch(function (e) { if (String(e.message) !== 'LOGIN') { toast('매니저 데이터를 받지 못했습니다: ' + e.message); status(e.message); } });
+        var jb = {}; d.rows.forEach(function (r) { if (r.jb) jb[r.id] = r.jb; });
+        var o = { extra: d.rows.filter(function (r) { return r.priv; }), jb: jb, hid: [] }; save(o); apply(o, true);
+        if (!cached) toast('매니저 모드 — 비공개 매매 ' + o.extra.length + '건을 더했습니다');
+      }).catch(fail);
       return;
     }
-    Promise.all([call('feed', { w: 'rent' }), call('feed', { w: 'gs' })]).then(function (r) {
+    Promise.all([call('feed', { w: 'rent' }), call('feed', { w: 'gs' }).catch(function () { return null; })]).then(function (r) {
       var a = r[0], g = r[1];
       if (!a || !a.items) throw new Error((a && a.error) || '임대 데이터 없음');
       if (!a.jb) throw new Error('홈페이지 연동 스크립트가 아직 새 버전으로 배포되지 않았습니다 (배포 관리 → 새 버전)');
-      EXTRA = a.items; Object.keys(a.jb || {}).forEach(function (k) { JB[k] = a.jb[k]; }); EXTRA.forEach(function (x) { if (x.jb) JB[x.id] = x.jb; });
-      if (g && g.rows) g.rows.forEach(function (x) { if (x[21]) JB[x[0]] = x[21]; if (x[22]) HID[x[0]] = 1; });
-      READY = true;
-      if (g && g.rows) { GSALL = g; hp.load(hp.items().filter(function (x) { return !x.unv; }), true, a.updated, true); hp.mergeGs(g, true); }
-      else hp.load(hp.items(), true, a.updated, true);
-      barCounts(); toast('매니저 모드 — 비공개 ' + EXTRA.length + '건 · 공클 ' + (g && g.rows ? g.rows.length : 0).toLocaleString() + '건');
-      status(g && g.rows ? '' : '공클 전체 목록을 받지 못함 (공개 공클만 표시)' + (g && g.error ? ': ' + g.error : ''));
-    }).catch(function (e) { if (String(e.message) !== 'LOGIN') { toast('매니저 데이터를 받지 못했습니다: ' + e.message); status(e.message); } });
+      var jb = {}; Object.keys(a.jb).forEach(function (k) { jb[k] = a.jb[k]; }); a.items.forEach(function (x) { if (x.jb) jb[x.id] = x.jb; });
+      var hid = [];
+      if (g && g.rows) g.rows.forEach(function (x) { if (x[21]) jb[x[0]] = x[21]; if (x[22]) hid.push(x); });
+      else if (cached) hid = cached.hid || [];
+      var o = { extra: a.items, jb: jb, hid: hid }; save(o); apply(o, true);
+      if (!cached) toast('매니저 모드 — 비공개 ' + a.items.filter(function (x) { return /비공개/.test(x.orig || ''); }).length + '건 · 광고 안 함 ' + a.items.filter(function (x) { return !/비공개/.test(x.orig || ''); }).length + '건');
+      if (!(g && g.rows)) status('공클 전체 목록을 받지 못함 (공개 공클만 표시)' + (g && g.error ? ': ' + g.error : ''));
+    }).catch(fail);
   }
   return { on: on, start: start, extend: extend, decorate: decorate, gs: gs, pass: pass, pinCls: pinCls, pinStar: pinStar, popRow: popRow, miTag: miTag, dtRow: dtRow };
 })();
