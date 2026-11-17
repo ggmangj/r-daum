@@ -1675,6 +1675,297 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style id="mgrCss">
+body:not(.mgrMode) #mgBar,body:not(.mgrMode) #mgDr{display:none!important}
+.pinLabel.mg-h{background:#7C4DBA}.pinLabel.mg-h:after{border-top-color:#7C4DBA}
+.pinLabel.mg-g{background:#1E8E5A}.pinLabel.mg-g:after{border-top-color:#1E8E5A}
+.pinLabel.mgFav{box-shadow:0 0 0 2px #F5B400,0 2px 6px rgba(0,0,0,.3)}
+.pinLabel .mgPS{color:#FFD24A;margin-right:3px;font-style:normal}
+.mgSrc{display:inline-block;font:800 10.5px/1 'Noto Sans KR',sans-serif;color:#fff;padding:4px 6px;border-radius:4px;white-space:nowrap;background:#3A6271}
+.mgSrc.mg-h{background:#7C4DBA}.mgSrc.mg-g{background:#1E8E5A}
+.mgPop{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:2px 0 6px;font-size:12.5px;color:#14191F}.mgPop b{font-weight:800}.mgPop em{font-style:normal;font-size:11px;color:#C4553A;border:1px solid #C4553A;border-radius:4px;padding:1px 4px}
+.mgFavBtn{margin-left:auto;border:1.5px solid #294652;background:#fff;color:#294652;border-radius:8px;padding:4px 9px;font:700 12px 'Noto Sans KR',sans-serif;cursor:pointer}
+.mgFavBtn.on{border-color:#E6B000;background:#FFF7D6;color:#8a6500}
+.mgFavS{display:inline-block;font-size:17px;line-height:1;color:#C9C2B3;margin-right:5px;cursor:pointer;vertical-align:-2px}.mgFavS.on{color:#F5B400}
+.miTag.mgT{background:#3A6271!important;color:#fff!important;border-color:transparent!important}.miTag.mgT.mg-h{background:#7C4DBA!important}.miTag.mgT.mg-g{background:#1E8E5A!important}
+.mgJb{font-style:normal;font-weight:700;color:#294652;margin-left:4px}
+.dtBadge.mgB{background:#3A6271;color:#fff}.dtBadge.mgB.mg-h{background:#7C4DBA}.dtBadge.mgB.mg-g{background:#1E8E5A}
+#mgBar{position:fixed;left:14px;bottom:14px;z-index:900;display:flex;align-items:center;gap:6px;flex-wrap:wrap;background:#14191F;color:#fff;border-radius:14px;padding:7px 9px;box-shadow:0 8px 24px rgba(0,0,0,.3);font:500 12.5px 'Noto Sans KR',sans-serif;max-width:calc(100vw - 28px)}
+#mgBar .t{background:#BC975E;color:#fff;font-weight:800;font-size:10.5px;letter-spacing:.08em;padding:4px 7px;border-radius:5px}
+#mgBar .who{font-weight:700;margin-right:2px}
+#mgBar label{display:flex;align-items:center;gap:4px;padding:4px 7px;border-radius:8px;background:rgba(255,255,255,.08);cursor:pointer;user-select:none;white-space:nowrap}
+#mgBar label i{width:10px;height:10px;border-radius:3px;display:inline-block}#mgBar label em{font-style:normal;color:#AEB7C0}#mgBar label.off{opacity:.4}
+#mgBar button{border:0;border-radius:8px;padding:6px 10px;font:700 12.5px 'Noto Sans KR',sans-serif;cursor:pointer;background:rgba(255,255,255,.12);color:#fff;white-space:nowrap}
+#mgBar #mgFavB{background:#F5B400;color:#14191F}#mgBar #mgFavB b{color:#7a3d00}
+#mgDr{position:fixed;top:0;right:0;bottom:0;width:400px;max-width:100vw;z-index:950;background:#fff;box-shadow:-10px 0 30px rgba(0,0,0,.25);display:flex;flex-direction:column;font:14px 'Noto Sans KR',sans-serif;color:#14191F;transform:translateX(105%);transition:transform .25s}
+#mgDr.open{transform:none}
+#mgDr .hd{display:flex;align-items:center;gap:8px;padding:14px 16px;background:#294652;color:#fff}#mgDr .hd b{font-size:16px}#mgDr .hd button{margin-left:auto;border:0;background:none;color:#fff;font-size:22px;cursor:pointer}
+#mgDr .ls{flex:1;overflow:auto}
+#mgDr .it{padding:11px 16px;border-top:1px solid #EFEAE0;cursor:pointer;position:relative}#mgDr .it:hover{background:#FBF9F4}
+#mgDr .r1{display:flex;align-items:center;gap:6px;font-size:11.5px;color:#6B757D}#mgDr .tt{font-weight:800;font-size:14.5px;margin:4px 0 2px}#mgDr .pr{font-size:12.8px;color:#46515B}#mgDr .pr b{color:#14191F}#mgDr .pr .red{color:#C4553A}
+#mgDr .rm{margin-left:auto;border:0;background:none;color:#B0A99B;font-size:16px;cursor:pointer;padding:0 2px}
+#mgDr .sent{font-size:10.5px;font-weight:700;color:#1E8E5A;border:1px solid #1E8E5A;border-radius:4px;padding:0 4px;white-space:nowrap}
+#mgDr .empty{padding:40px 20px;text-align:center;color:#6B757D;line-height:1.7}
+#mgDr .cust{border-top:2px solid #294652;padding:10px 16px;background:#F6F2EA;font-size:12.8px;max-height:44%;overflow:auto}
+#mgDr .ch{font-weight:800;font-size:11.5px;color:#6B757D;margin-bottom:4px;display:flex;justify-content:space-between}#mgDr .ch a{color:#294652;cursor:pointer}
+#mgDr .cin{display:grid;grid-template-columns:1fr 1fr;gap:6px}#mgDr .cin input{height:34px;border:1px solid #D9D2C4;border-radius:7px;padding:0 8px;font-size:13px;background:#fff;width:100%;box-sizing:border-box}#mgDr .cin .w{grid-column:1/3}
+#mgDr .cbtn{height:30px;border:1px solid #294652;background:#fff;color:#294652;border-radius:8px;padding:0 10px;font-weight:700;cursor:pointer}
+#mgDr .hh{font-weight:800;font-size:11.5px;color:#6B757D;margin-top:8px}#mgDr .hr{display:flex;gap:8px;margin-top:3px}#mgDr .hr span{color:#BC975E;font-weight:700;white-space:nowrap}
+#mgDr .act{display:grid;grid-template-columns:96px 1fr;gap:8px;padding:10px 16px;background:#F6F2EA}#mgDr .act button{height:44px;border-radius:10px;font-weight:700;font-size:14px;border:1.5px solid #294652;background:#fff;color:#294652;cursor:pointer}#mgDr .act .b1{background:#294652;color:#fff}#mgDr .act button:disabled{opacity:.45}
+.mgCl{position:fixed;z-index:999;background:#fff;border:1px solid #D9D2C4;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.18);max-height:260px;overflow:auto;width:360px;font:13px 'Noto Sans KR',sans-serif}
+.mgCl div{padding:8px 11px;border-top:1px solid #F0ECE3;cursor:pointer}.mgCl div:hover{background:#F6F2EA}.mgCl small{color:#6B757D}
+#mgLogin{position:fixed;inset:0;z-index:1000;background:rgba(20,25,31,.6);display:flex;align-items:center;justify-content:center}
+#mgLogin form{background:#fff;border-radius:16px;padding:26px 24px;width:320px;font:14px 'Noto Sans KR',sans-serif}#mgLogin h3{margin:0 0 4px;color:#294652}#mgLogin p{margin:0 0 14px;color:#6B757D;font-size:13px}
+#mgLogin input{width:100%;box-sizing:border-box;height:42px;border:1px solid #D9D2C4;border-radius:9px;padding:0 12px;margin-bottom:8px;font-size:14px}#mgLogin button{width:100%;height:44px;border:0;border-radius:10px;background:#294652;color:#fff;font-weight:800;font-size:15px;cursor:pointer}#mgLogin .err{color:#C4553A;font-size:12.5px;min-height:18px;margin-top:6px}
+#mgBov{position:fixed;inset:0;z-index:2000;background:#3b3f44;overflow:auto;display:flex;flex-direction:column;align-items:center}
+#mgBov .tool{position:sticky;top:0;width:100%;display:flex;gap:8px;align-items:center;justify-content:center;padding:10px;background:#22262b;color:#fff;z-index:2;flex-wrap:wrap;font:13px 'Noto Sans KR',sans-serif}
+#mgBov .tool button{height:36px;border-radius:9px;border:0;padding:0 14px;font-weight:700;background:#fff;color:#294652;cursor:pointer}#mgBov .tool .pri{background:#BC975E;color:#fff}#mgBov .tool label{display:flex;align-items:center;gap:5px}
+#mgSheet{width:1123px;height:794px;background:#fff;margin:18px 0 30px;position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.4);flex:none;transform-origin:top center}
+#mgSheet .shd{position:absolute;left:0;right:0;top:0;height:56px;background:#1C3A5E;color:#fff;display:flex;align-items:center;padding:0 18px;z-index:3;font-family:'Noto Sans KR',sans-serif}
+#mgSheet .shd b{font-size:30px;font-weight:800;letter-spacing:-.5px}#mgSheet .shd span{margin-left:auto;font-size:19px}#mgSheet .shd small{font-size:15px;margin-left:12px}
+#mgSheet .sft{position:absolute;left:0;right:0;bottom:0;height:8px;background:#1C3A5E;z-index:3}
+#mgBmap{position:absolute!important;left:0;top:56px;width:1123px;height:730px}
+#mgSvg{position:absolute;left:0;top:0;z-index:2;pointer-events:none}
+.mgCard{position:absolute;width:150px;background:#fff;border:1px solid #9aa3ad;box-shadow:2px 3px 8px rgba(0,0,0,.35);z-index:3;font:700 12.5px/1.35 'Noto Sans KR',sans-serif;color:#111}
+.mgCard .tx{padding:4px 7px}.mgCard.r .tx{text-align:right}
+.mgCard .no{position:absolute;top:-10px;width:26px;height:26px;border-radius:50%;background:#C8423B;color:#fff;font:800 13px/26px 'Noto Sans KR',sans-serif;text-align:center;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.4)}.mgCard.l .no{right:-10px}.mgCard.r .no{left:-10px}
+.mgCard .ph{height:96px;background:#EFEDEA center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:#9a958c;font-size:11.5px;font-weight:400;cursor:pointer;position:relative}
+.mgCard .ph input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.mgBpin{width:24px;height:24px;border-radius:50%;background:#C8423B;color:#fff;font:800 12px/24px 'Noto Sans KR',sans-serif;text-align:center;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.45)}
+@media print{@page{size:A4 landscape;margin:0}body.mgPrint>*:not(#mgBov){display:none!important}body.mgPrint #mgBov{position:static;background:#fff;display:block;overflow:visible}body.mgPrint #mgBov .tool{display:none!important}body.mgPrint #mgSheet{margin:0;box-shadow:none;transform:none!important}body.mgPrint .mgCard .ph input{display:none}}
+@media (max-width:760px){#mgBar{left:8px;right:8px;bottom:8px;gap:5px;padding:6px 7px;font-size:11.5px}#mgBar .who,#mgBar #mgListB{display:none}#mgBar label{padding:3px 6px}#mgDr{width:100vw}}
+</style>
+<script>
+/* 홈페이지 매니저 모드 — 다움 매물 리스트 직원 계정으로 로그인하면 같은 화면에
+   비공개 매물(보라) · 모든 공클(초록) · 지번 · ★ 즐겨찾기 · 고객별 브리핑 기능이 더해집니다.
+   일반 방문자에게는 아무 것도 바뀌지 않습니다. 연락처·중개사메모는 내려오지 않습니다. */
+window.MGR = (function () {
+  var API = 'https://script.google.com/macros/s/AKfycbxcrADcmOUogYCPPnEY9Hh6h_NpdV31gaOiP1zNCLn1fKrRsi12m-wi9d6wU8Sbw6dn9Q/exec', KEY = 'daumMgr';
+  var S = null, hp = null, READY = false, GSALL = null, EXTRA = [], JB = {}, HID = {}, FAV = {}, SHOW = { o: 1, h: 1, g: 1 }, CUST = null, HIST = [], SENT = {}, CUSTS = null;
+  var LBL = { o: '우리 매물', h: '우리 비공개', g: '공클' };
+  try { S = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { }
+  try { var sv = JSON.parse(localStorage.getItem(KEY + '.show') || 'null'); if (sv) SHOW = sv; } catch (e) { }
+  var m = /[#&]mgr=([0-9a-f]{40,})/.exec(location.hash);
+  if (m) { S = { tok: m[1], me: null }; save(); try { history.replaceState(null, '', location.pathname + location.search + '#map'); } catch (e) { } }
+  if (S && S.exp && S.exp < Date.now()) S = null;
+  function save() { try { if (S) localStorage.setItem(KEY, JSON.stringify(S)); else localStorage.removeItem(KEY); } catch (e) { } }
+  function on() { return !!(S && S.tok); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function $(id) { return document.getElementById(id); }
+  function call(api, p) {
+    var b = { api: api, tok: S && S.tok }; for (var k in p) b[k] = p[k];
+    return fetch(API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(b) }).then(function (r) { return r.json(); })
+      .then(function (j) { if (j && j.ok === false && /LOGIN_REQUIRED/.test(j.error || '')) { expire(); throw new Error('LOGIN'); } return j; });
+  }
+  function toast(t) { var e = $('mgToast'); if (!e) { e = document.createElement('div'); e.id = 'mgToast'; e.style.cssText = 'position:fixed;left:50%;bottom:70px;transform:translateX(-50%);background:rgba(20,25,31,.92);color:#fff;padding:9px 16px;border-radius:10px;font:13px Noto Sans KR,sans-serif;z-index:3000;transition:opacity .2s;pointer-events:none'; document.body.appendChild(e); }
+    e.textContent = t; e.style.opacity = 1; clearTimeout(e._t); e._t = setTimeout(function () { e.style.opacity = 0; }, 2600); }
+  function expire() { S = null; save(); document.body.classList.remove('mgrMode'); toast('매니저 로그인이 만료되었습니다. 다시 로그인해 주세요'); setTimeout(function () { location.reload(); }, 1500); }
+  /* ---------- 매물 분류 ---------- */
+  function src(it) { if (it.unv) return 'g'; if (it.sale) return it.src === 'gc' ? 'g' : (it.priv ? 'h' : 'o'); return it.priv ? 'h' : 'o'; }
+  function pass(it) { return !on() || SHOW[src(it)] !== 0; }
+  function isFav(id) { return !!FAV[id]; }
+  function applyJB(it) { if (JB[it.id] && !it.jb) it.jb = JB[it.id]; if (HID[it.id]) it.hid = 1; }
+  function extend(items) { if (!READY) { items.forEach(applyJB); return items; } var ids = {}; items.forEach(function (x) { ids[x.id] = 1; applyJB(x); }); return items.concat(EXTRA.filter(function (x) { return !ids[x.id]; })); }
+  function decorate(add) { add.forEach(applyJB); }
+  function gs(d) { return GSALL || d; }
+  function pinCls(it) { return ' mg-' + src(it) + (isFav(it.id) ? ' mgFav' : ''); }
+  function pinStar(it) { return isFav(it.id) ? '<i class="mgPS">★</i>' : ''; }
+  function favBtn(id, small) { var f = isFav(id); return small ? '<span class="mgFavS' + (f ? ' on' : '') + '" data-fav="' + esc(id) + '" role="button" title="즐겨찾기">' + (f ? '★' : '☆') + '</span>' : '<button type="button" class="mgFavBtn' + (f ? ' on' : '') + '" data-fav="' + esc(id) + '">' + (f ? '★ 즐겨찾기됨' : '☆ 즐겨찾기') + '</button>'; }
+  function jbTxt(it) { return it.jb ? esc(it.dong + ' ' + it.jb) : ''; }
+  function popRow(it) { var s = src(it); return '<div class="mgPop"><span class="mgSrc mg-' + s + '">' + LBL[s] + '</span>' + (it.jb ? '<b>' + jbTxt(it) + '</b>' : '') + (it.hid ? '<em>공클 미노출</em>' : '') + favBtn(it.id) + '</div>'; }
+  function miTag(it) { var s = src(it); return favBtn(it.id, 1) + '<em class="miTag mgT mg-' + s + '">' + LBL[s] + '</em>' + (it.jb ? '<em class="mgJb">' + esc(it.jb) + '</em> ' : ''); }
+  function dtRow(it) { var s = src(it); return '<span class="dtBadge mgB mg-' + s + '">' + LBL[s] + '</span>' + (it.jb ? '<span class="dtBadge line">지번 ' + jbTxt(it) + '</span>' : '') + favBtn(it.id); }
+  /* ---------- 즐겨찾기 ---------- */
+  function setFavUi(id) {
+    var f = isFav(id);
+    document.querySelectorAll('[data-fav="' + (window.CSS && CSS.escape ? CSS.escape(id) : id) + '"]').forEach(function (b) {
+      b.classList.toggle('on', f);
+      if (b.classList.contains('mgFavS')) b.textContent = f ? '★' : '☆'; else b.textContent = f ? '★ 즐겨찾기됨' : '☆ 즐겨찾기';
+    });
+    barCounts(); if (hp) hp.drawMap(); if ($('mgDr') && $('mgDr').classList.contains('open')) drawer();
+  }
+  function toggle(id) {
+    var to = !isFav(id); if (to) FAV[id] = Date.now(); else delete FAV[id]; setFavUi(id);
+    call('favset', { k: id, on: to ? 1 : 0 }).then(function (j) { if (j && j.fav) { var n = {}; j.fav.forEach(function (k) { n[k] = 1; }); FAV = n; barCounts(); } }).catch(function () { toast('즐겨찾기 저장에 실패했습니다'); });
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest && e.target.closest('[data-fav]'); if (!b || !on()) return;
+    e.preventDefault(); e.stopPropagation(); toggle(b.getAttribute('data-fav'));
+  }, true);
+  /* ---------- 하단 매니저 막대 ---------- */
+  function bar() {
+    if ($('mgBar')) return;
+    var d = document.createElement('div'); d.id = 'mgBar';
+    d.innerHTML = '<span class="t">MANAGER</span><span class="who" id="mgWho"></span>' +
+      ['o', 'h', 'g'].map(function (s) { return '<label data-s="' + s + '"' + (SHOW[s] === 0 ? ' class="off"' : '') + '><i style="background:' + { o: '#3A6271', h: '#7C4DBA', g: '#1E8E5A' }[s] + '"></i>' + LBL[s] + ' <em id="mgN' + s + '">0</em></label>'; }).join('') +
+      '<button id="mgFavB">★ 즐겨찾기 <b id="mgNf">0</b></button><button id="mgListB">매물 리스트</button><button id="mgOut">로그아웃</button>';
+    document.body.appendChild(d);
+    d.addEventListener('click', function (e) {
+      var l = e.target.closest('label[data-s]');
+      if (l) { var s = l.getAttribute('data-s'); SHOW[s] = SHOW[s] === 0 ? 1 : 0; l.classList.toggle('off', SHOW[s] === 0); try { localStorage.setItem(KEY + '.show', JSON.stringify(SHOW)); } catch (x) { } if (hp) hp.applyFilters(false); return; }
+      if (e.target.closest('#mgFavB')) { drawer(true); return; }
+      if (e.target.closest('#mgListB')) { window.open(API, '_blank'); return; }
+      if (e.target.closest('#mgOut')) { if (!confirm('매니저 모드에서 로그아웃할까요?')) return; call('logout', {}).catch(function () { }); S = null; save(); location.reload(); }
+    });
+  }
+  function barCounts() {
+    if (!hp) return; var c = { o: 0, h: 0, g: 0 }; hp.items().forEach(function (it) { if (it.lat) c[src(it)]++; });
+    ['o', 'h', 'g'].forEach(function (s) { var e = $('mgN' + s); if (e) e.textContent = c[s].toLocaleString(); });
+    var n = $('mgNf'); if (n) n.textContent = Object.keys(FAV).length; if (S && S.me && $('mgWho')) $('mgWho').textContent = S.me.name || S.me.id;
+  }
+  /* ---------- 즐겨찾기 패널 ---------- */
+  function money(it) { return it.sale ? '매매 <b class="red">' + esc(it.depText) + '</b>' + (it.area ? ' · ' + (it.shop ? '전용 ' : '대지 ') + Math.round(it.area) + '평' : '') + (it.bldPy ? ' · 연 ' + Math.round(it.bldPy) + '평' : '') : '보 <b>' + esc(it.depText) + '</b> / 월 <b class="red">' + esc(it.rentText) + '</b> / 관 ' + esc(it.mgmt || '-'); }
+  function favItems() { var all = hp ? hp.items() : [], by = {}; all.forEach(function (x) { by[x.id] = x; }); var l = [], miss = 0; Object.keys(FAV).sort(function (a, b) { return FAV[a] - FAV[b]; }).forEach(function (k) { if (by[k]) l.push(by[k]); else miss++; }); return { l: l, miss: miss }; }
+  function drawer(open) {
+    var d = $('mgDr'); if (!d) { d = document.createElement('div'); d.id = 'mgDr'; document.body.appendChild(d); }
+    if (open) d.classList.add('open');
+    var F = favItems();
+    d.innerHTML = '<div class="hd"><b>★ 즐겨찾기 ' + F.l.length + '건</b>' + (CUST ? '<span style="font-size:12.5px;opacity:.85">· ' + esc(CUST.name) + '님께 보낼 목록</span>' : '') + '<button type="button" id="mgDrX" aria-label="닫기">×</button></div><div class="ls">' +
+      (F.l.length ? F.l.map(function (it) { var s = src(it), sn = SENT[it.id]; return '<div class="it" data-go="' + esc(it.id) + '"><div class="r1"><span class="mgSrc mg-' + s + '">' + LBL[s] + '</span><span>' + esc(it.catLabel || '') + ' · ' + (it.jb ? jbTxt(it) : esc(it.dong)) + '</span>' + (sn ? '<span class="sent">보냄 ' + esc(sn) + '</span>' : '') + '<button type="button" class="rm" data-fav="' + esc(it.id) + '" title="즐겨찾기 빼기">✕</button></div><div class="tt">' + esc(it.title || '') + '</div><div class="pr">' + money(it) + '</div></div>'; }).join('')
+        : '<div class="empty">지도 핀·목록의 ☆를 눌러<br>브리핑에 넣을 매물을 담아 주세요</div>') +
+      (F.miss ? '<div class="empty" style="padding:14px">' + (hp && hp.SM ? '임대' : '매매') + ' 페이지에 담아 둔 매물 ' + F.miss + '건은 그 페이지에서 보입니다</div>' : '') + '</div>' +
+      '<div class="cust" id="mgCust"></div><div class="act"><button type="button" id="mgClr">전체 해제</button><button type="button" class="b1" id="mgBrief"' + (F.l.length ? '' : ' disabled') + '>📄 브리핑 만들기 (' + F.l.length + '건)</button></div>';
+    cust();
+    $('mgDrX').onclick = function () { d.classList.remove('open'); };
+    d.querySelectorAll('[data-go]').forEach(function (x) { x.onclick = function () { if (window.innerWidth < 760) d.classList.remove('open'); hp.focusItem(x.getAttribute('data-go')); }; });
+    $('mgClr').onclick = function () { var n = Object.keys(FAV).length; if (!n || !confirm('즐겨찾기 ' + n + '건을 모두 해제할까요?')) return; var ids = Object.keys(FAV); FAV = {}; ids.forEach(setFavUi); call('favclr', {}).catch(function () { }); };
+    $('mgBrief').onclick = brief;
+  }
+  function cust() {
+    var b = $('mgCust'); if (!b) return;
+    if (CUST) {
+      b.innerHTML = '<div class="ch"><span>고객</span><a id="mgCx">변경</a></div><div><b>' + esc(CUST.name) + '</b>' + (CUST.tel ? ' · ' + esc(CUST.tel) : '') + (CUST.want ? '<br><small style="color:#6B757D">' + esc(CUST.want) + '</small>' : '') + '</div>' +
+        '<div class="hh">발송 이력</div>' + (HIST.length ? HIST.slice(0, 6).map(function (h) { return '<div class="hr"><span>' + esc(String(h.date).slice(5, 10).replace('-', '/')) + '</span>' + esc(h.staff) + ' · ' + esc(h.n) + '건 <small style="color:#6B757D">' + esc(String(h.sum).slice(0, 40)) + '</small></div>'; }).join('') : '<div class="hr" style="color:#6B757D">아직 보낸 브리핑이 없습니다</div>');
+      $('mgCx').onclick = function () { setCust(null); };
+    } else {
+      b.innerHTML = '<div class="ch"><span>고객 (선택)</span></div><div class="cin"><input id="mgCn" placeholder="고객 이름 (검색)" autocomplete="off"><input id="mgCt" placeholder="연락처" inputmode="tel"><input class="w" id="mgCw" placeholder="희망 조건 (선택)"></div>' +
+        '<div style="display:flex;gap:8px;align-items:center;margin-top:6px"><button type="button" class="cbtn" id="mgCok">이 고객으로</button><small style="color:#6B757D">이름을 치면 「임차 희망」 고객을 찾아 줍니다</small></div>';
+      var n = $('mgCn'); n.oninput = n.onfocus = function () { suggest(n); };
+      $('mgCok').onclick = function () { var nm = $('mgCn').value.trim(); if (!nm) { toast('고객 이름을 입력해 주세요'); return; } setCust({ name: nm, tel: $('mgCt').value.trim(), want: $('mgCw').value.trim() }); };
+    }
+  }
+  function suggest(inp) {
+    var go = function () {
+      var q = inp.value.trim(), box = document.querySelector('.mgCl'); if (!box) { box = document.createElement('div'); box.className = 'mgCl'; document.body.appendChild(box); }
+      var l = CUSTS.filter(function (c) { return !q || c.name.indexOf(q) >= 0; }).slice(0, 30);
+      if (!l.length) { box.remove(); return; }
+      var r = inp.getBoundingClientRect(); box.style.left = Math.max(8, Math.min(r.left, innerWidth - 370)) + 'px'; box.style.top = Math.max(8, r.top - 6 - Math.min(260, l.length * 48)) + 'px';
+      box.innerHTML = l.map(function (c) { return '<div data-i="' + CUSTS.indexOf(c) + '"><b>' + esc(c.name) + '</b> · ' + esc(c.tel) + '<br><small>' + esc(c.want || c.src) + (c.date ? ' · ' + esc(c.date) : '') + '</small></div>'; }).join('');
+      box.onclick = function (e) { var x = e.target.closest('[data-i]'); if (!x) return; setCust(CUSTS[+x.getAttribute('data-i')]); box.remove(); };
+    };
+    if (CUSTS) go(); else call('cust', {}).then(function (j) { CUSTS = (j && j.list) || []; go(); }).catch(function () { CUSTS = []; });
+  }
+  document.addEventListener('click', function (e) { if (!e.target.closest('.mgCl') && e.target.id !== 'mgCn') { var b = document.querySelector('.mgCl'); if (b) b.remove(); } });
+  function setCust(c) {
+    CUST = c; HIST = []; SENT = {}; drawer(); if (!c) return;
+    call('hist', { name: c.name, tel: c.tel }).then(function (j) { HIST = (j && j.list) || []; HIST.slice().reverse().forEach(function (h) { (h.keys || []).forEach(function (k) { SENT[k] = String(h.date).slice(5, 10).replace('-', '/'); }); }); drawer(); }).catch(function () { });
+  }
+  /* ---------- 브리핑 (A4 가로 한 장: 지도 + 번호 핀 + 좌우 매물 카드) ---------- */
+  var BI = [], bmap = null;
+  function cardText(x) {
+    if (x.sale) return esc(x.dong + ' ' + (x.jb || '')) + '<br>매매 ' + esc(x.depText) + '<br>' + (x.shop ? '전용 ' + Math.round(x.area) + '평 · ' + esc(x.floor || '') : '대지 ' + Math.round(x.area) + '평' + (x.bldPy ? ' · 연 ' + Math.round(x.bldPy) + '평' : '')) + (x.yr ? '<br>' + x.yr + '년 준공' : '');
+    return esc(x.dong + ' ' + (x.jb || '')) + '<br>' + esc(x.floor || '') + ' / ' + (x.area ? Math.round(x.area * 10) / 10 + ' 평' : '') + '<br>' + esc(x.depText) + ' / ' + esc(x.rentText) + '<br>관리비 ' + esc(x.mgmt || '문의') + '<br>' + esc(x.premium || '');
+  }
+  function brief() {
+    if (!window.naver || !naver.maps) { toast('브리핑 지도는 네이버 지도가 필요합니다 (잠시 후 다시 눌러 주세요)'); return; }
+    var F = favItems().l.filter(function (x) { return x.lat; });
+    if (!F.length) { toast('위치가 있는 즐겨찾기 매물이 없습니다'); return; }
+    if (F.length > 10 && !confirm('한 장에 10건까지 넣습니다. 앞의 10건으로 만들까요?')) return;
+    BI = F.slice(0, 10).map(function (x) { return x; });
+    var o = $('mgBov');
+    if (!o) {
+      o = document.createElement('div'); o.id = 'mgBov';
+      o.innerHTML = '<div class="tool"><b id="mgBt"></b><label><input type="checkbox" id="mgBl" checked> 연결선</label><button type="button" id="mgBf">지도 맞춤</button><button type="button" class="pri" id="mgBp">🖨 인쇄 · PDF 저장</button><button type="button" id="mgBc">닫기</button></div>' +
+        '<div id="mgSheet"><div class="shd"><b>Briefing Information</b><span id="mgBw"></span></div><div id="mgBmap"></div><svg id="mgSvg" width="1123" height="794" viewBox="0 0 1123 794"></svg><div id="mgCards"></div><div class="sft"></div></div>';
+      document.body.appendChild(o);
+      $('mgBl').onchange = lines; $('mgBf').onclick = bfit; $('mgBc').onclick = function () { o.style.display = 'none'; document.body.style.overflow = ''; };
+      $('mgBp').onclick = printIt; window.addEventListener('resize', fitSheet);
+    }
+    o.style.display = 'flex'; document.body.style.overflow = 'hidden';
+    $('mgBt').textContent = '브리핑 ' + BI.length + '건' + (CUST ? ' · ' + CUST.name + '님' : '');
+    var me = (S && S.me) || {}; $('mgBw').innerHTML = '부동산다움 _ ' + esc(me.name || '') + '<small>' + esc(me.tel || '02-555-1165') + '</small>';
+    fitSheet();
+    if (!bmap) { bmap = new naver.maps.Map('mgBmap', { center: new naver.maps.LatLng(BI[0].lat, BI[0].lng), zoom: 16, zoomControl: false, mapDataControl: false, scaleControl: false, logoControlOptions: { position: naver.maps.Position.BOTTOM_RIGHT } }); naver.maps.Event.addListener(bmap, 'idle', lines); }
+    cards(); bfit();
+  }
+  function fitSheet() { var s = $('mgSheet'); if (!s) return; var w = Math.min(1, (innerWidth - 20) / 1123); s.style.transform = w < 1 ? 'scale(' + w + ')' : ''; s.style.marginBottom = w < 1 ? (30 - 794 * (1 - w)) + 'px' : '30px'; }
+  function cards() {
+    var order = BI.map(function (x, i) { return i; }).sort(function (a, b) { return BI[a].lng - BI[b].lng; }), half = Math.ceil(BI.length / 2), L = order.slice(0, half), R = order.slice(half), pos = {};
+    var col = function (arr, side) { arr.sort(function (a, b) { return BI[b].lat - BI[a].lat; }); var H = 794 - 56 - 8 - 20, step = Math.min(186, H / arr.length); arr.forEach(function (i, j) { pos[i] = { side: side, top: 56 + 14 + j * step + (H - step * arr.length) / 2 }; }); };
+    col(L, 'l'); col(R, 'r');
+    $('mgCards').innerHTML = BI.map(function (x, i) {
+      var p = pos[i], img = x._img || (x.photos && x.photos[0] ? hp.photoUrl(x.photos[0], 600) : '');
+      return '<div class="mgCard ' + p.side + '" data-i="' + i + '" style="' + (p.side === 'l' ? 'left:22px' : 'right:22px') + ';top:' + p.top + 'px"><span class="no">' + (i + 1) + '</span><div class="tx">' + cardText(x) + '</div><div class="ph" style="' + (img ? "background-image:url('" + img + "')" : '') + '">' + (img ? '' : '사진 넣기') + '<input type="file" accept="image/*" data-i="' + i + '"></div></div>';
+    }).join('');
+    $('mgCards').querySelectorAll('input[type=file]').forEach(function (inp) { inp.onchange = function () { var f = inp.files[0]; if (!f) return; var r = new FileReader(); r.onload = function () { BI[+inp.getAttribute('data-i')]._img = r.result; var ph = inp.parentNode; ph.style.backgroundImage = "url('" + r.result + "')"; if (ph.firstChild && ph.firstChild.nodeType === 3) ph.firstChild.textContent = ''; }; r.readAsDataURL(f); }; });
+    (bmap.__mk || []).forEach(function (k) { k.setMap(null); });
+    bmap.__mk = BI.map(function (x, i) { return new naver.maps.Marker({ position: new naver.maps.LatLng(x.lat, x.lng), map: bmap, zIndex: 10 + i, icon: { content: '<div class="mgBpin">' + (i + 1) + '</div>', size: new naver.maps.Size(24, 24), anchor: new naver.maps.Point(12, 12) } }); });
+  }
+  function bfit() { naver.maps.Event.trigger(bmap, 'resize'); var b = new naver.maps.LatLngBounds(); BI.forEach(function (x) { b.extend(new naver.maps.LatLng(x.lat, x.lng)); }); if (BI.length === 1) { bmap.setCenter(b.getCenter()); bmap.setZoom(17); } else bmap.fitBounds(b, { top: 70, bottom: 50, left: 220, right: 220 }); setTimeout(lines, 350); }
+  function lines() {
+    var svg = $('mgSvg'); if (!svg || !bmap) return; if (!$('mgBl').checked) { svg.innerHTML = ''; return; }
+    var pr = bmap.getProjection(), h = '';
+    BI.forEach(function (x, i) {
+      var c = document.querySelector('.mgCard[data-i="' + i + '"]'); if (!c) return;
+      var o = pr.fromCoordToOffset(new naver.maps.LatLng(x.lat, x.lng)), px = o.x, py = o.y + 56, cx = c.classList.contains('l') ? c.offsetLeft + c.offsetWidth : c.offsetLeft, cy = c.offsetTop + 14;
+      h += '<line x1="' + cx + '" y1="' + cy + '" x2="' + px + '" y2="' + py + '" stroke="#C8423B" stroke-width="2" stroke-dasharray="6 4"/><circle cx="' + cx + '" cy="' + cy + '" r="3.5" fill="#C8423B"/>';
+    });
+    svg.innerHTML = h;
+  }
+  function printIt() {
+    var t = BI.map(function (x, i) { return (i + 1) + '. ' + x.dong + ' ' + (x.jb || '') + ' ' + (x.sale ? '매매 ' + x.depText : (x.floor || '') + ' ' + x.depText + '/' + x.rentText); });
+    if (CUST) call('brief', { o: { cust: CUST, items: BI.map(function (x, i) { return { k: x.id, t: t[i] }; }) } }).then(function () { toast(CUST.name + '님 발송 이력에 기록했습니다'); setCust(CUST); }).catch(function () { toast('발송 이력 기록 실패'); });
+    else toast('고객을 고르지 않아 발송 이력은 남기지 않았습니다');
+    var s = $('mgSheet'), tr = s.style.transform; s.style.transform = ''; lines();
+    document.body.classList.add('mgPrint');
+    setTimeout(function () { window.print(); document.body.classList.remove('mgPrint'); s.style.transform = tr; }, 250);
+  }
+  /* ---------- 로그인 (r-daum.com/#manager) ---------- */
+  function loginBox() {
+    var d = document.createElement('div'); d.id = 'mgLogin';
+    d.innerHTML = '<form><h3>매니저 모드 로그인</h3><p>다움 매물 리스트 아이디로 로그인하세요</p><input name="id" autocomplete="username" placeholder="아이디"><input name="pw" type="password" autocomplete="current-password" placeholder="비밀번호"><button>로그인</button><div class="err"></div><a href="#" style="display:block;text-align:center;margin-top:10px;color:#6B757D;font-size:12.5px">닫기</a></form>';
+    document.body.appendChild(d);
+    var f = d.querySelector('form'); f.querySelector('a').onclick = function (e) { e.preventDefault(); d.remove(); };
+    f.onsubmit = function (e) {
+      e.preventDefault(); f.querySelector('.err').textContent = '로그인 중…';
+      call('login', { id: f.id.value, pw: f.pw.value }).then(function (j) {
+        if (!j || !j.ok) { f.querySelector('.err').textContent = (j && j.error || '로그인 실패').replace(/^Error:\s*/, ''); return; }
+        S = { tok: j.tok, exp: j.exp, me: j.me }; save(); location.hash = 'map'; location.reload();
+      }).catch(function () { f.querySelector('.err').textContent = '서버에 연결하지 못했습니다'; });
+    };
+    setTimeout(function () { f.id.focus(); }, 50);
+  }
+  if (/^#manager$/.test(location.hash) && !on()) { if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loginBox); else loginBox(); }
+  /* ---------- 시작: 공개 화면을 먼저 그리고, 매니저 데이터를 받아 덧붙임 ---------- */
+  function start(h) {
+    hp = h; if (!on()) return;
+    document.body.classList.add('mgrMode'); bar(); barCounts();
+    call('who', {}).then(function (j) { if (j && j.me) { S.me = j.me; save(); barCounts(); } }).catch(function () { });
+    call('fav', {}).then(function (j) { if (j && j.fav) { FAV = {}; j.fav.forEach(function (k, i) { FAV[k] = i + 1; }); barCounts(); hp.drawMap(); } }).catch(function () { });
+    toast('매니저 모드 — 비공개 매물·공클을 불러오는 중…');
+    if (h.SM) {
+      call('feed', { w: 'sale' }).then(function (d) {
+        if (!d || !d.rows) throw new Error((d && d.error) || '매매 데이터 없음');
+        d.rows.forEach(function (r) { if (r.jb) JB[r.id] = r.jb; });
+        EXTRA = d.rows.filter(function (r) { return r.priv; }).map(function (r) { var it = h.saleItem(r); it.priv = 1; it.jb = r.jb; return it; });
+        READY = true; hp.load(hp.items(), true, d.updated, true); barCounts(); toast('매니저 모드 — 비공개 매매 ' + EXTRA.length + '건을 더했습니다');
+      }).catch(function (e) { if (String(e.message) !== 'LOGIN') toast('매니저 데이터를 받지 못했습니다: ' + e.message); });
+      return;
+    }
+    Promise.all([call('feed', { w: 'rent' }), call('feed', { w: 'gs' })]).then(function (r) {
+      var a = r[0], g = r[1];
+      if (!a || !a.items) throw new Error((a && a.error) || '임대 데이터 없음');
+      EXTRA = a.items; Object.keys(a.jb || {}).forEach(function (k) { JB[k] = a.jb[k]; }); EXTRA.forEach(function (x) { if (x.jb) JB[x.id] = x.jb; });
+      if (g && g.rows) g.rows.forEach(function (x) { if (x[21]) JB[x[0]] = x[21]; if (x[22]) HID[x[0]] = 1; });
+      READY = true;
+      if (g && g.rows) { GSALL = g; hp.load(hp.items().filter(function (x) { return !x.unv; }), true, a.updated, true); hp.mergeGs(g, true); }
+      else hp.load(hp.items(), true, a.updated, true);
+      barCounts(); toast('매니저 모드 — 비공개 ' + EXTRA.length + '건 · 공클 ' + (g && g.rows ? g.rows.length : 0).toLocaleString() + '건');
+    }).catch(function (e) { if (String(e.message) !== 'LOGIN') toast('매니저 데이터를 받지 못했습니다: ' + e.message); });
+  }
+  return { on: on, start: start, extend: extend, decorate: decorate, gs: gs, pass: pass, pinCls: pinCls, pinStar: pinStar, popRow: popRow, miTag: miTag, dtRow: dtRow };
+})();
+</script>
 <script>
 (function () {
   /* ================================================================
@@ -1849,7 +2140,8 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   }
 
   /* ---------- 지도 말풍선 내용 ---------- */
-  function itemPopup(it) {
+  function itemPopup(it) { var h = itemPopup0(it); return window.MGR && MGR.on() ? h.replace('<div class="mpopTitle">', MGR.popRow(it) + '<div class="mpopTitle">') : h; }
+  function itemPopup0(it) {
     if (it.shop) return '<div class="mpop"><div class="mpopCat" style="color:#A0582E">상가점포 매매 · No.' + esc(it.id) + '</div>' +
       '<div class="mpopTitle">' + esc(it.title) + '</div>' +
       '<div class="mpopPrice">매매 ' + esc(it.depText) + ' <span>전용 평당 ' + esc(it.rentText) + '</span></div>' +
@@ -1884,11 +2176,12 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
       '</div><button type="button" class="mpopClose" aria-label="닫기">×</button></div>';
   }
   function pinHtml(it) {
-    if (it.sale) { var sc = it.shop ? shopFlShort(it) : scShort(it); return '<div class="pinWrap"><span class="pinLabel' + (it.shop ? ' shopPin' : '') + (it.id === focusId ? ' on' : '') + '">' + (sc ? '<span class="pinArea">' + esc(sc) + '</span>' : '') + esc(it.depText) + '</span></div>'; }
+    var mc = window.MGR && MGR.on() ? MGR.pinCls(it) : '', ms = mc ? MGR.pinStar(it) : '';
+    if (it.sale) { var sc = it.shop ? shopFlShort(it) : scShort(it); return '<div class="pinWrap"><span class="pinLabel' + (it.shop ? ' shopPin' : '') + mc + (it.id === focusId ? ' on' : '') + '">' + ms + (sc ? '<span class="pinArea">' + esc(sc) + '</span>' : '') + esc(it.depText) + '</span></div>'; }
     var fl = String(it.floor || '').replace(/\s+/g, '').replace(/^연층\((.*)\)$/, '$1').replace(/^통임대\(.*\)$/, '통임대');   // 층 | 평 (통임대(지하1층~5층) → 통임대)
     var area = it.area ? Math.round(it.area) + '평' : '';
     var main = area || it.catLabel || '';
-    return '<div class="pinWrap"><span class="pinLabel' + (it.unv ? ' unv' : '') + (it.id === focusId ? ' on' : '') + '">' + (fl ? '<span class="pinArea">' + esc(fl) + '</span>' : '') + esc(main) + '</span></div>';
+    return '<div class="pinWrap"><span class="pinLabel' + (it.unv ? ' unv' : '') + mc + (it.id === focusId ? ' on' : '') + '">' + ms + (fl ? '<span class="pinArea">' + esc(fl) + '</span>' : '') + esc(main) + '</span></div>';
   }
   function clusterHtml(g) {
     var n = g.items.length, size = n >= 50 ? 62 : n >= 20 ? 54 : n >= 5 ? 46 : 40;
@@ -2181,6 +2474,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     var dong = $('mapDong').value, ar = rngOf('Area'), fl = rngOf('Floor'), dp = rngOf('Dep'), rt = rngOf('Rent');
     var inRange = function (v, r) { return !r || (v != null && isFinite(v) && (r[0] == null || v >= r[0]) && (r[1] == null || v <= r[1])); };
     return ITEMS.filter(function (it) {
+      if (window.MGR && !MGR.pass(it)) return false;
       if (SEARCH.sale) return false;
       if (SEARCH.cat && !has(it, SEARCH.cat)) return false;
       if (SEARCH.gu && it.gu && it.gu !== SEARCH.gu) return false;
@@ -2210,7 +2504,8 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
   }
   // 매물장 「특징」에서 고른 말 (병의원 · 인테리어 · 통임대 등)
   function tagsOf(it) { return (it && it.tags && it.tags.length ? it.tags : []).filter(function (t) { return t && t !== '무권리'; }); }
-  function miHtml(it) {
+  function miHtml(it) { var h = miHtml0(it); return window.MGR && MGR.on() ? h.replace('<span class="miMeta">', '<span class="miMeta">' + MGR.miTag(it)) : h; }
+  function miHtml0(it) {
     if (it.sale) return '<button type="button" class="mapItem' + (it.id === focusId ? ' on' : '') + '" data-id="' + esc(it.id) + '">' +
       '<span class="miMeta">' + (it.shop ? '<em class="miTag shopTag">상가점포</em>' : '<em class="miTag bldTag">빌딩·건물</em>') + esc(it.dong) + '</span>' +
       '<span class="miTitle">' + listTitle(it.title) + '</span>' +
@@ -2392,6 +2687,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     return s.replace(/[ \t]+$/gm, '').trim();
   }
   function load(items, live, updated, soft) {   // soft: 저장본을 먼저 보여준 뒤 최신 데이터로 바꿀 때 — 지도 위치·열린 화면은 그대로 둠
+    if (window.MGR && MGR.on()) items = MGR.extend(items);   // 매니저 모드: 비공개 매물·지번을 더함
     items.forEach(function (it) { ['title', 'point', 'desc', 'options', 'station'].forEach(function (k) { if (it[k]) it[k] = scrubTxt(it[k]); }); });
     ITEMS = items; LIVE = !!live;
     refreshDongs();
@@ -2476,6 +2772,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 
   // 공실매물관(현장 미확인) 매물: 본 목록을 먼저 보여준 뒤 따로 불러와 합침
   function mergeGs(d, soft) {
+      if (window.MGR && MGR.on()) d = MGR.gs(d);   // 매니저 모드: 노출 안 한 공클까지 (지번 포함)
       if (!d || !d.rows || !d.rows.length) return;
       var have = {}; ITEMS.forEach(function (i) { have[i.id] = 1; });
       var add = d.rows.filter(function (r) { return !have[r[0]]; }).map(function (r) {
@@ -2483,6 +2780,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
           dep: r[8], rent: r[9], depText: r[10], rentText: r[11], mgmt: r[12], premium: r[13], parking: r[14], elev: r[15], totalFloor: r[16], approval: r[17], date: r[18],
           direction: '', moveIn: '', toilet: '', station: '', usage: '', structure: '', totArea: 0, parkTotal: '', bldElev: 0, bldSrc: 0, reg: null, photos: [], lat: r[19], lng: r[20] };
       });
+      if (window.MGR && MGR.on()) MGR.decorate(add, d);
       if (!add.length) return;
       ITEMS = ITEMS.concat(add);
       refreshDongs();
@@ -2849,7 +3147,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
     return '<div class="dtWrap' + (it.shop ? ' shopDt' : '') + '"><div class="dtPrintHead" aria-hidden="true"><b>DAUM REAL ESTATE</b><span>부동산다움공인중개사사무소 · 개업공인중개사 안혁준 · 등록번호 제11680-2021-00537호</span><span>서울특별시 강남구 신사동 578-1 일상빌딩 1층 · 02-555-1165 · r-daum.com</span></div>' +
       '<nav class="dtCrumb" aria-label="현재 위치"><button type="button" class="dtBack"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>목록으로</button>' +
       '<span><a href="#top">홈</a> <i>›</i> ' + (DT.from === 'listings' || DT.from === 'fa' ? '<a href="#listings">추천 매물</a>' : '<a href="#map">' + (it.sale ? '빌딩 매매' : '상가·사무실 임대') + '</a>') + ' <i>›</i> No.' + esc(it.id) + '</span></nav>' +
-      '<div class="dtHead"><div><div class="dtBadges">' + badges + '</div><h1 class="dtTitle">' + esc(it.title) + '</h1>' +
+      '<div class="dtHead"><div><div class="dtBadges">' + badges + (window.MGR && MGR.on() ? MGR.dtRow(it) : '') + '</div><h1 class="dtTitle">' + esc(it.title) + '</h1>' +
       '</div>' +
       '<div class="dtTools"><button type="button" class="dtTool" data-act="share"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"></path></svg><span>링크 복사</span></button>' +
       '<button type="button" class="dtTool dtPdf" data-act="pdf"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5M12 11v6M9 14l3 3 3-3"></path></svg><span>PDF 저장</span></button></div></div>' +
@@ -3970,6 +4268,8 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 
   /* ---------- 시작 ---------- */
   ccInit(); bind(); initMap();
+  if (window.MGR) MGR.start({ items: function () { return ITEMS; }, load: load, mergeGs: mergeGs, applyFilters: applyFilters, drawMap: function () { if (M) drawMap(); else renderList(); },
+    renderList: renderList, byId: byId, photoUrl: photoUrl, focusItem: focusItem, saleItem: saleItem, SM: SM, map: function () { return M; } });
   if (SM && SHEET_URL) saleStart();
   else if (SHEET_URL) {
     // 1) 이 브라우저에 저장해 둔 지난 데이터가 있으면 바로 그림 (7일 이내, 공개 데이터만)
