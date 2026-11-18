@@ -2584,14 +2584,25 @@ window.MGR = (function () {
     CT.bands[top] && CT.bands[top].forEach(function (poly) {   // 가장 비싼 띠: 흰 테두리로 봉우리를 또렷하게
       HEAT.objs.push(new nm.Polyline({ map: map, path: LL(poly[0]), strokeColor: '#FFFFFF', strokeOpacity: 1, strokeWeight: 2.5, clickable: false }));
     });
-    // 동마다 지금 조건에 맞는 매물 수 (동 이름(건수) 동그라미 · 매물 위치의 가운데에)
-    var DG = {}; (VIEW || []).forEach(function (it) { if (!it.dong || !(isFinite(it.lat) && it.lat)) return; var g = DG[it.dong] || (DG[it.dong] = { n: 0, la: [], lo: [] }); g.n++; g.la.push(it.lat); g.lo.push(it.lng); });
-    var med = function (a) { a.sort(function (x, y) { return x - y; }); return a[Math.floor(a.length / 2)]; };
-    Object.keys(DG).forEach(function (d) {
-      var g = DG[d]; if (g.n < 3) return; var la = med(g.la), lo = med(g.lo); if (la < la0 || la > la1 || lo < lo0 || lo > lo1) return;
-      var t = d + '(' + g.n.toLocaleString() + ')', sz = Math.max(64, Math.min(96, 44 + t.length * 5));
-      HEAT.objs.push(new nm.Marker({ map: map, position: new nm.LatLng(la, lo), clickable: false, zIndex: 50,
-        icon: { content: '<div class="ctDong" style="width:' + sz + 'px;height:' + sz + 'px">' + esc(t) + '</div>', size: new nm.Size(sz, sz), anchor: new nm.Point(sz / 2, sz / 2) } }));
+    // 법정동마다 지금 조건에 맞는 매물 수 — 법정동 경계(dongs.json)의 가운데에 「동(건수)」 동그라미
+    var DG = {}; (VIEW || []).forEach(function (it) { if (!it.dong || !(isFinite(it.lat) && it.lat)) return; var k = (it.gu || '') + '|' + it.dong, g = DG[k] || (DG[k] = { d: it.dong, gu: it.gu || '', n: 0, la: [], lo: [] }); g.n++; g.la.push(it.lat); g.lo.push(it.lng); });
+    var med = function (a) { a = a.slice().sort(function (x, y) { return x - y; }); return a[Math.floor(a.length / 2)]; };
+    var cen = function (ring) {   // 경계 다각형의 무게중심
+      var A = 0, X = 0, Y = 0; for (var q = 0, m = ring.length - 1; q < m; q++) { var p0 = ring[q], p1 = ring[q + 1], f = p0[0] * p1[1] - p1[0] * p0[1]; A += f; X += (p0[0] + p1[0]) * f; Y += (p0[1] + p1[1]) * f; }
+      return A ? [Y / (3 * A), X / (3 * A)] : null; };
+    var tk = HEAT.tk = (HEAT.tk || 0) + 1;
+    dongGeo().then(function (geo) {
+      if (HEAT.tk !== tk || !heatActive()) return;
+      Object.keys(DG).forEach(function (key) {
+        var g = DG[key]; if (g.n < 3) return;
+        var rings = geo[key] || (function () { var k2 = Object.keys(geo).filter(function (x) { return x.split('|')[1] === g.d; })[0]; return k2 ? geo[k2] : null; })();
+        var big = null, ba = 0; (rings || []).forEach(function (r) { var R = r[0] && r[0][0] && typeof r[0][0] === 'number' ? r : r[0]; if (!R) return; var a = 0; for (var q = 0; q < R.length - 1; q++) a += R[q][0] * R[q + 1][1] - R[q + 1][0] * R[q][1]; if (Math.abs(a) > ba) { ba = Math.abs(a); big = R; } });
+        var c = big && cen(big), la = c ? c[0] : med(g.la), lo = c ? c[1] : med(g.lo);
+        if (la < la0 || la > la1 || lo < lo0 || lo > lo1) return;
+        var t = g.d + '(' + g.n.toLocaleString() + ')', sz = Math.max(60, Math.min(90, 40 + t.length * 5));
+        HEAT.objs.push(new nm.Marker({ map: map, position: new nm.LatLng(la, lo), clickable: false, zIndex: 1200,   // 사무실 핀보다 위에 (가려지지 않게)
+          icon: { content: '<div class="ctDong" style="width:' + sz + 'px;height:' + sz + 'px">' + esc(t) + '</div>', size: new nm.Size(sz, sz), anchor: new nm.Point(sz / 2, sz / 2) } }));
+      });
     });
     heatUi();
   }
