@@ -2315,7 +2315,7 @@ window.MGR = (function () {
       '<div class="mpopTitle">' + esc(it.title) + '</div>' +
       '<div class="mpopPrice">매매 ' + esc(it.depText) + ' <span>전용 평당 ' + esc(it.rentText) + '</span></div>' +
       '<div class="mpopMeta">전용 ' + Math.round(it.area) + '평' + (it.ctM2 ? ' · 계약 ' + Math.round(it.ctM2 / PYC) + '평' : '') + (it.floor ? ' · ' + esc(it.floor) : '') + (it.yr ? ' · ' + it.yr + '년 준공' : '') + '</div>' +
-      '<a class="mpopBtn" href="#item/' + encodeURIComponent(it.id) + '">상세 보기 →</a></div>';
+      '<a class="mpopBtn" href="#item/' + encodeURIComponent(it.id) + '">상세 보기 →</a><button type="button" class="mpopClose" aria-label="닫기">×</button></div>';
     if (it.sale) return '<div class="mpop"><div class="mpopCat">빌딩 매매 · No.' + esc(it.id) + '</div>' +
       '<div class="mpopTitle">' + esc(it.title) + '</div>' +
       '<div class="mpopPrice">매매 ' + esc(it.depText) + ' <span>대지 평당 ' + esc(it.rentText) + '</span></div>' +
