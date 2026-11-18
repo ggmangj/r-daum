@@ -1772,7 +1772,7 @@ window.MGR = (function () {
     e.textContent = t; e.style.opacity = 1; clearTimeout(e._t); e._t = setTimeout(function () { e.style.opacity = 0; }, /못했|않았|실패/.test(t) ? 9000 : 2600); }
   function expire() { S = null; save(); document.body.classList.remove('mgrMode'); toast('매니저 로그인이 만료되었습니다. 다시 로그인해 주세요'); setTimeout(function () { location.reload(); }, 1500); }
   /* ---------- 매물 분류 ---------- */
-  function src(it) { if (it.unv) return 'g'; if (it.sale) return it.src === 'gc' ? 'g' : (it.priv ? 'h' : 'o'); return it.priv && /비공개/.test(it.orig || '') ? 'h' : 'o'; }   // 임대: 매물장 「출처」가 비공개인 매물만 보라
+  function src(it) { if (it.unv) return 'g'; if (it.sale) return it.src === 'gc' ? 'g' : (it.priv && /비공개/.test(it.orig || '') ? 'h' : 'o'); return it.priv && /비공개/.test(it.orig || '') ? 'h' : 'o'; }   // 임대: 매물장 「출처」가 비공개인 매물만 보라
   function pass(it) { return !on() || SHOW[src(it)] !== 0; }
   function isFav(id) { return !!FAV[id]; }
   function applyJB(it) { if (JB[it.id] && !it.jb) it.jb = JB[it.id]; if (HID[it.id]) it.hid = 1; }
@@ -2101,7 +2101,7 @@ window.MGR = (function () {
     var CK = KEY + '.data.' + (h.SM ? 'sale' : 'rent'), cached = null;
     try { cached = JSON.parse(localStorage.getItem(CK) || 'null'); if (cached && Date.now() - cached.t > 864e5) cached = null; } catch (e) { cached = null; }
     var apply = function (o, fresh) {
-      EXTRA = (o.extra || []).map(function (x) { return h.SM ? (function () { var it = h.saleItem(x); it.priv = 1; it.jb = x.jb; return it; })() : x; });
+      EXTRA = (o.extra || []).map(function (x) { return h.SM ? (function () { var it = h.saleItem(x); it.priv = 1; it.jb = x.jb; it.orig = x.orig || ''; return it; })() : x; });
       JB = o.jb || {}; HIDROWS = o.hid || []; HID = {}; HIDROWS.forEach(function (r) { HID[r[0]] = 1; });
       READY = true;
       if (hp.items().length) { hp.items().forEach(applyJB); hp.load(hp.items(), true, new Date().toISOString(), true); if (HIDROWS.length) hp.mergeGs({ rows: HIDROWS }, true); }
@@ -2115,7 +2115,7 @@ window.MGR = (function () {
         if (!d || !d.rows) throw new Error((d && d.error) || '매매 데이터 없음');
         if (!d.rows.some(function (r) { return 'priv' in r; }) && d.rows.length) throw new Error('홈페이지 연동 스크립트가 아직 새 버전으로 배포되지 않았습니다 (배포 관리 → 새 버전)');
         var jb = {}; d.rows.forEach(function (r) { if (r.jb) jb[r.id] = r.jb; });
-        var o = { extra: d.rows.filter(function (r) { return r.priv; }), jb: jb, hid: [] }; save(o); apply(o, true);
+        var o = { extra: d.rows.filter(function (r) { return r.priv; }), jb: jb, hid: [] };   // r.orig: 노출 칸이 「비공개」면 보라 save(o); apply(o, true);
         if (!cached) toast('매니저 모드 — 비공개 매매 ' + o.extra.length + '건을 더했습니다');
       }).catch(fail);
       return;
