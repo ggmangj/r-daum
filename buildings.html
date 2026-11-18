@@ -1683,6 +1683,9 @@ body:not(.mgrMode) #mgBar,body:not(.mgrMode) #mgDr{display:none!important}
 .pinLabel.mg-g{background:#1E8E5A}.pinLabel.mg-g:after{border-top-color:#1E8E5A}
 .pinLabel.mgFav{box-shadow:0 0 0 2px #F5B400,0 2px 6px rgba(0,0,0,.3)}
 .pinLabel .mgPS{color:#FFD24A;margin-right:3px;font-style:normal}
+.mgTools{position:absolute;top:12px;right:52px;z-index:120;display:flex;gap:6px}.mgTools button{height:32px;padding:0 12px;border-radius:16px;border:1px solid #D9D2C4;background:#fff;color:#294652;font:700 12.5px 'Noto Sans KR',sans-serif;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.15)}.mgTools button.on{background:#294652;border-color:#294652;color:#fff}.mgSvOn{cursor:crosshair}
+.mgPano{position:absolute;right:12px;top:54px;width:46%;max-width:560px;height:46%;min-height:240px;z-index:130;background:#000;border-radius:10px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.35);display:none}.mgPano.lg{left:12px;right:12px;top:54px;bottom:12px;width:auto;max-width:none;height:auto}.mgPano .pv{position:absolute;inset:0}.mgPano button{position:absolute;top:8px;z-index:5;width:32px;height:32px;border-radius:50%;border:0;background:rgba(20,25,31,.75);color:#fff;font-size:18px;line-height:32px;cursor:pointer}.mgPano .x{right:8px}.mgPano .big{right:46px;font-size:15px}
+.mgPvMk{width:18px;height:18px;border-radius:50%;background:#2E7CF6;border:3px solid #fff;box-shadow:0 0 0 6px rgba(46,124,246,.25),0 2px 6px rgba(0,0,0,.3)}
 .mgSrc{display:inline-block;font:800 10.5px/1 'Noto Sans KR',sans-serif;color:#fff;padding:4px 6px;border-radius:4px;white-space:nowrap;background:#3A6271}
 .mgSrc.mg-h{background:#7C4DBA}.mgSrc.mg-g{background:#1E8E5A}
 .mgPop{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:2px 0 6px;font-size:12.5px;color:#14191F}.mgPop b{font-weight:800}.mgPop em{font-style:normal;font-size:11px;color:#C4553A;border:1px solid #C4553A;border-radius:4px;padding:1px 4px}
@@ -2031,6 +2034,42 @@ window.MGR = (function () {
     document.body.classList.add('mgPrint'); document.body.classList.toggle('mgSafe', !!($('mgSafe') && $('mgSafe').checked)); try { localStorage.setItem(KEY + '.safe', $('mgSafe').checked ? '1' : '0'); } catch (e) { }
     setTimeout(function () { window.print(); document.body.classList.remove('mgPrint', 'mgSafe'); SS.forEach(function (s, q) { s.style.transform = TR[q]; }); }, 250);
   }
+
+  /* ---------- 매니저 지도 도구: 거리뷰 · 지적편집도 ---------- */
+  var MT = { sv: null, cad: null, pano: null, pmk: null };
+  function mapTools(n) {
+    var M = hp && hp.map && hp.map(), map = M && M.raw;
+    if (!map || !window.naver || !naver.maps || !map.getElement) { if ((n || 0) < 60) setTimeout(function () { mapTools((n || 0) + 1); }, 500); return; }
+    var el = map.getElement(); if (!el || el.querySelector('.mgTools')) return;
+    var box = document.createElement('div'); box.className = 'mgTools';
+    box.innerHTML = '<button type="button" data-t="sv" title="파란 선이 있는 길을 누르면 거리뷰가 열립니다">거리뷰</button><button type="button" data-t="cad" title="지번 경계(지적편집도)를 지도에 겹쳐 봅니다">지적편집도</button>';
+    el.appendChild(box);
+    ['mousedown', 'dblclick', 'wheel', 'touchstart'].forEach(function (ev) { box.addEventListener(ev, function (e) { e.stopPropagation(); }); });
+    box.addEventListener('click', function (e) {
+      e.stopPropagation(); var b = e.target.closest('[data-t]'); if (!b) return; var t = b.getAttribute('data-t'), on = !b.classList.contains('on');
+      b.classList.toggle('on', on);
+      if (t === 'cad') { if (!MT.cad) MT.cad = new naver.maps.CadastralLayer(); MT.cad.setMap(on ? map : null); }
+      if (t === 'sv') { if (!MT.sv) MT.sv = new naver.maps.StreetLayer(); MT.sv.setMap(on ? map : null); el.classList.toggle('mgSvOn', on); if (!on) panoClose(); else toast('지도에서 파란 선 위를 누르면 거리뷰가 열립니다'); }
+    });
+    naver.maps.Event.addListener(map, 'click', function (e) { if (!el.classList.contains('mgSvOn')) return; panoOpen(map, el, e.coord); });
+  }
+  function panoOpen(map, el, at) {
+    var go = function (n) {
+      if (!naver.maps.Panorama) { if (n === 0) { var sc = document.createElement('script'); sc.src = 'https://oapi.map.naver.com/openapi/v3/maps-panorama.js?ncpKeyId=i0aavzp1qg'; document.head.appendChild(sc); } if (n < 40) setTimeout(function () { go(n + 1); }, 250); return; }
+      var w = el.querySelector('.mgPano');
+      if (!w) { w = document.createElement('div'); w.className = 'mgPano'; w.innerHTML = '<div class="pv"></div><button type="button" class="big" title="크게 보기">⤢</button><button type="button" class="x" title="닫기">×</button>'; el.appendChild(w);
+        ['mousedown', 'dblclick', 'wheel', 'touchstart', 'click'].forEach(function (ev) { w.addEventListener(ev, function (e) { e.stopPropagation(); }); });
+        w.querySelector('.x').onclick = panoClose; w.querySelector('.big').onclick = function () { w.classList.toggle('lg'); setTimeout(function () { try { naver.maps.Event.trigger(MT.pano, 'resize'); } catch (x) { } }, 50); }; }
+      if (!MT.pano) {
+        MT.pano = new naver.maps.Panorama(w.querySelector('.pv'), { position: at, pov: { pan: 0, tilt: 0, fov: 100 }, logoControl: false, zoomControl: true, aroundControl: true, flightSpot: false });
+        naver.maps.Event.addListener(MT.pano, 'pano_changed', function () { var q = MT.pano.getPosition(); if (!q) return; if (!MT.pmk) MT.pmk = new naver.maps.Marker({ map: map, position: q, zIndex: 3000, icon: { content: '<div class="mgPvMk"></div>', anchor: new naver.maps.Point(9, 9) } }); else MT.pmk.setPosition(q); });
+        naver.maps.Event.addListener(MT.pano, 'pov_changed', function () { var d = document.querySelector('.mgPvMk'); if (d) d.style.setProperty('--pan', MT.pano.getPov().pan + 'deg'); });
+      } else MT.pano.setPosition(at);
+      w.style.display = 'block'; if (MT.pmk) MT.pmk.setMap(map);
+    };
+    go(0);
+  }
+  function panoClose() { var w = document.querySelector('.mgPano'); if (w) w.style.display = 'none'; if (MT.pmk) MT.pmk.setMap(null); }
   /* ---------- 로그인 (r-daum.com/#manager) ---------- */
   function loginBox() {
     var d = document.createElement('div'); d.id = 'mgLogin';
@@ -2050,7 +2089,7 @@ window.MGR = (function () {
   /* ---------- 시작: 공개 화면을 먼저 그리고, 매니저 데이터를 받아 덧붙임 ---------- */
   function start(h) {
     hp = h; if (!on()) return;
-    document.body.classList.add('mgrMode'); bar(); barCounts();
+    document.body.classList.add('mgrMode'); bar(); barCounts(); mapTools(0);
     call('who', {}).then(function (j) { if (j && j.me) { S.me = j.me; save(); barCounts(); } }).catch(function () { });
     call('fav', {}).then(function (j) { if (j && j.fav) { FAV = {}; j.fav.forEach(function (k, i) { FAV[k] = i + 1; }); barCounts(); hp.drawMap(); } }).catch(function () { });
     // 이 브라우저에 저장해 둔 매니저 데이터(24시간)가 있으면 바로 씀 → 화면이 곧바로 매니저 모드로 뜨고, 최신 데이터는 뒤에서 받아 바꿈
