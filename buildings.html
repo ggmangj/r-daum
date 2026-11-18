@@ -1683,9 +1683,9 @@ body:not(.mgrMode) #mgBar,body:not(.mgrMode) #mgDr{display:none!important}
 .pinLabel.mg-g{background:#1E8E5A}.pinLabel.mg-g:after{border-top-color:#1E8E5A}
 .pinLabel.mgFav{box-shadow:0 0 0 2px #F5B400,0 2px 6px rgba(0,0,0,.3)}
 .pinLabel .mgPS{color:#FFD24A;margin-right:3px;font-style:normal}
-.mgTools{position:absolute;top:12px;right:52px;z-index:120;display:flex;gap:6px}.mgTools button{height:32px;padding:0 12px;border-radius:16px;border:1px solid #D9D2C4;background:#fff;color:#294652;font:700 12.5px 'Noto Sans KR',sans-serif;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.15)}.mgTools button.on{background:#294652;border-color:#294652;color:#fff}.mgSvOn{cursor:crosshair}
+.mgTools{position:absolute;top:12px;right:52px;z-index:120;display:flex;gap:6px}.mgTools button{display:flex;align-items:center;gap:6px;height:32px;padding:0 12px 0 9px;border-radius:16px;border:1px solid #D9D2C4;background:#fff;color:#46515B;font:700 12.5px 'Noto Sans KR',sans-serif;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.15)}.mgTools button i{width:15px;height:15px;border-radius:4px;border:1.5px solid #AEB7C0;background:#fff;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:11px;line-height:1;color:#fff;box-sizing:border-box}.mgTools button.on{border-color:#294652;color:#294652;background:#EEF3F6}.mgTools button.on i{background:#294652;border-color:#294652}.mgTools button.on i:after{content:'✓'}.mgSvOn{cursor:crosshair}
 .mgPano{position:absolute;right:12px;top:54px;width:46%;max-width:560px;height:46%;min-height:240px;z-index:130;background:#000;border-radius:10px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.35);display:none}.mgPano.lg{left:12px;right:12px;top:54px;bottom:12px;width:auto;max-width:none;height:auto}.mgPano .pv{position:absolute;inset:0}.mgPano button{position:absolute;top:8px;z-index:5;width:32px;height:32px;border-radius:50%;border:0;background:rgba(20,25,31,.75);color:#fff;font-size:18px;line-height:32px;cursor:pointer}.mgPano .x{right:8px}.mgPano .big{right:46px;font-size:15px}
-.mgPvMk{width:18px;height:18px;border-radius:50%;background:#2E7CF6;border:3px solid #fff;box-shadow:0 0 0 6px rgba(46,124,246,.25),0 2px 6px rgba(0,0,0,.3)}
+.mgPvMk{position:relative;width:64px;height:64px;pointer-events:none}.mgPvMk .cone{position:absolute;inset:0;transform-origin:50% 50%;transition:transform .08s linear}.mgPvMk b{position:absolute;left:23px;top:23px;width:18px;height:18px;border-radius:50%;background:#2E7CF6;border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.35);box-sizing:border-box}
 .mgSrc{display:inline-block;font:800 10.5px/1 'Noto Sans KR',sans-serif;color:#fff;padding:4px 6px;border-radius:4px;white-space:nowrap;background:#3A6271}
 .mgSrc.mg-h{background:#7C4DBA}.mgSrc.mg-g{background:#1E8E5A}
 .mgPop{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:2px 0 6px;font-size:12.5px;color:#14191F}.mgPop b{font-weight:800}.mgPop em{font-style:normal;font-size:11px;color:#C4553A;border:1px solid #C4553A;border-radius:4px;padding:1px 4px}
@@ -2042,7 +2042,7 @@ window.MGR = (function () {
     if (!map || !window.naver || !naver.maps || !map.getElement) { if ((n || 0) < 60) setTimeout(function () { mapTools((n || 0) + 1); }, 500); return; }
     var el = map.getElement(); if (!el || el.querySelector('.mgTools')) return;
     var box = document.createElement('div'); box.className = 'mgTools';
-    box.innerHTML = '<button type="button" data-t="sv" title="파란 선이 있는 길을 누르면 거리뷰가 열립니다">거리뷰</button><button type="button" data-t="cad" title="지번 경계(지적편집도)를 지도에 겹쳐 봅니다">지적편집도</button>';
+    box.innerHTML = '<button type="button" data-t="sv" title="켜면 거리뷰가 있는 길이 파랗게 표시되고, 그 길을 누르면 거리뷰가 열립니다"><i></i>거리뷰</button><button type="button" data-t="cad" title="지번 경계(지적편집도)를 지도에 겹쳐 봅니다"><i></i>지적편집도</button>';
     el.appendChild(box);
     ['mousedown', 'dblclick', 'wheel', 'touchstart'].forEach(function (ev) { box.addEventListener(ev, function (e) { e.stopPropagation(); }); });
     box.addEventListener('click', function (e) {
@@ -2059,13 +2059,18 @@ window.MGR = (function () {
       var w = el.querySelector('.mgPano');
       if (!w) { w = document.createElement('div'); w.className = 'mgPano'; w.innerHTML = '<div class="pv"></div><button type="button" class="big" title="크게 보기">⤢</button><button type="button" class="x" title="닫기">×</button>'; el.appendChild(w);
         ['mousedown', 'dblclick', 'wheel', 'touchstart', 'click'].forEach(function (ev) { w.addEventListener(ev, function (e) { e.stopPropagation(); }); });
-        w.querySelector('.x').onclick = panoClose; w.querySelector('.big').onclick = function () { w.classList.toggle('lg'); setTimeout(function () { try { naver.maps.Event.trigger(MT.pano, 'resize'); } catch (x) { } }, 50); }; }
+        w.querySelector('.x').onclick = panoClose; w.querySelector('.big').onclick = function () { w.classList.toggle('lg'); setTimeout(function () { try { MT.pano.setSize(new naver.maps.Size(w.clientWidth, w.clientHeight)); } catch (x) { } }, 60); }; }
+      w.style.display = 'block';   // 창이 보이는 상태에서 만들어야 화면이 그려짐 (숨긴 채 만들면 검은 화면)
       if (!MT.pano) {
-        MT.pano = new naver.maps.Panorama(w.querySelector('.pv'), { position: at, pov: { pan: 0, tilt: 0, fov: 100 }, logoControl: false, zoomControl: true, aroundControl: true, flightSpot: false });
-        naver.maps.Event.addListener(MT.pano, 'pano_changed', function () { var q = MT.pano.getPosition(); if (!q) return; if (!MT.pmk) MT.pmk = new naver.maps.Marker({ map: map, position: q, zIndex: 3000, icon: { content: '<div class="mgPvMk"></div>', anchor: new naver.maps.Point(9, 9) } }); else MT.pmk.setPosition(q); });
-        naver.maps.Event.addListener(MT.pano, 'pov_changed', function () { var d = document.querySelector('.mgPvMk'); if (d) d.style.setProperty('--pan', MT.pano.getPov().pan + 'deg'); });
-      } else MT.pano.setPosition(at);
-      w.style.display = 'block'; if (MT.pmk) MT.pmk.setMap(map);
+        MT.pano = new naver.maps.Panorama(w.querySelector('.pv'), { size: new naver.maps.Size(w.clientWidth || 480, w.clientHeight || 300), position: at, pov: { pan: 0, tilt: 0, fov: 100 }, logoControl: false, zoomControl: true, aroundControl: true, flightSpot: false });
+        var dir = function () { var d = document.querySelector('.mgPvMk .cone'); if (d && MT.pano) d.style.transform = 'rotate(' + (MT.pano.getPov().pan || 0) + 'deg)'; };
+        naver.maps.Event.addListener(MT.pano, 'pano_changed', function () { var q = MT.pano.getPosition(); if (!q) return;
+          if (!MT.pmk) MT.pmk = new naver.maps.Marker({ map: map, position: q, zIndex: 3000, clickable: false, icon: { content: '<div class="mgPvMk"><svg class="cone" viewBox="0 0 64 64" width="64" height="64"><defs><radialGradient id="mgCg" cx="50%" cy="100%" r="100%"><stop offset="0" stop-color="#2E7CF6" stop-opacity=".55"/><stop offset="1" stop-color="#2E7CF6" stop-opacity=".08"/></radialGradient></defs><path d="M32 32 L14 4 A34 34 0 0 1 50 4 Z" fill="url(#mgCg)" stroke="#2E7CF6" stroke-opacity=".5"/></svg><b></b></div>', size: new naver.maps.Size(64, 64), anchor: new naver.maps.Point(32, 32) } });
+          else { MT.pmk.setPosition(q); MT.pmk.setMap(map); } setTimeout(dir, 30); });
+        naver.maps.Event.addListener(MT.pano, 'pov_changed', dir);
+        naver.maps.Event.addListener(MT.pano, 'pano_status', function (st) { if (st !== 'OK') toast('이 위치에는 거리뷰가 없습니다 — 파란 선 위를 눌러 주세요'); });
+      } else { MT.pano.setPosition(at); try { MT.pano.setSize(new naver.maps.Size(w.clientWidth, w.clientHeight)); } catch (x) { } }
+      if (MT.pmk) MT.pmk.setMap(map);
     };
     go(0);
   }
