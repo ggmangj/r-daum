@@ -1739,7 +1739,7 @@ body:not(.mgrMode) #mgBar,body:not(.mgrMode) #mgDr{display:none!important}
 #mgPick{position:fixed;inset:0;z-index:2100;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center}#mgPick .pk2{background:#fff;border-radius:14px;width:560px;max-width:94vw;max-height:80vh;display:flex;flex-direction:column;font:14px 'Noto Sans KR',sans-serif}#mgPick .ph2{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid #EEE}#mgPick .x{margin-left:auto;border:0;background:none;font-size:22px;cursor:pointer}#mgPick .gr{padding:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;overflow:auto}#mgPick .gr button{aspect-ratio:4/3;border:2px solid transparent;border-radius:8px;background:#EEE center/cover;cursor:pointer}#mgPick .gr button:hover{border-color:#BC975E}#mgPick .ld{grid-column:1/-1;color:#6B757D;padding:20px;text-align:center}#mgPick .ft{display:flex;gap:8px;padding:12px 16px;border-top:1px solid #EEE}#mgPick .ft button,#mgPick .up{height:38px;border:1.5px solid #294652;background:#fff;color:#294652;border-radius:9px;padding:0 14px;font-weight:700;cursor:pointer;display:flex;align-items:center}#mgPick .up input{display:none}
 .mgBpin{width:16px;height:16px;line-height:16px!important;border-radius:50%;background:#C8423B;color:#fff;font:800 12px/24px 'Noto Sans KR',sans-serif;text-align:center;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.45)}
 @page mgBrief{size:A4 landscape;margin:0;@bottom-left{content:none}@bottom-right{content:none}@top-left{content:none}@top-right{content:none}}
-@media print{body.mgPrint>*:not(#mgBov){display:none!important}body.mgPrint #mgSheet{page:mgBrief;break-inside:avoid;width:297mm!important;height:210mm!important}html:has(body.mgPrint){zoom:1!important}html,body.mgPrint{margin:0!important;padding:0!important;min-width:0!important;width:auto!important}body.mgPrint #mgBov{position:static!important;background:#fff;display:block!important;overflow:visible!important;width:297mm!important;height:210mm!important;inset:auto!important}body.mgPrint #mgBov .tool{display:none!important}body.mgPrint #mgSheet{margin:0!important;box-shadow:none;transform:none!important}body.mgPrint .mgCard .ph .pk,body.mgPrint .mgCard .ph .pv{display:none}}
+@media print{body.mgPrint>*:not(#mgBov){display:none!important}body.mgPrint #mgSheet{page:mgBrief;break-inside:avoid;width:297mm!important;height:210mm!important}html:has(body.mgPrint){zoom:1!important}html,body.mgPrint{margin:0!important;padding:0!important;min-width:0!important;width:auto!important}body.mgPrint #mgBov{position:static!important;background:#fff;display:block!important;overflow:visible!important;width:297mm!important;height:210mm!important;inset:auto!important}body.mgPrint #mgBov .tool{display:none!important}body.mgPrint #mgSheet{margin:0!important;box-shadow:none;transform:none!important}body.mgPrint.mgSafe #mgSheet{transform:translateY(6mm) scale(.94)!important;transform-origin:50% 0!important}body.mgPrint .mgCard .ph .pk,body.mgPrint .mgCard .ph .pv{display:none}}
 @media (max-width:760px){#mgBar{left:8px;right:8px;bottom:8px;gap:5px;padding:6px 7px;font-size:11.5px}#mgBar .who,#mgBar #mgListB{display:none}#mgBar label{padding:3px 6px}#mgDr{width:100vw}}
 </style>
 <script>
@@ -1886,10 +1886,10 @@ window.MGR = (function () {
     var o = $('mgBov');
     if (!o) {
       o = document.createElement('div'); o.id = 'mgBov';
-      o.innerHTML = '<div class="tool"><b id="mgBt"></b><label><input type="checkbox" id="mgBl" checked> 연결선</label><button type="button" id="mgBf">지도 맞춤</button><button type="button" class="pri" id="mgBp">🖨 인쇄 · PDF 저장</button><button type="button" id="mgBc">닫기</button><span style="color:#AEB7C0;font-size:12px">지도를 끌어 위치를 맞추면 선도 따라옵니다 · 사진 칸의 📷로 사진을 바꿀 수 있어요</span></div>' +
+      o.innerHTML = '<div class="tool"><b id="mgBt"></b><label><input type="checkbox" id="mgBl" checked> 연결선</label><label title="프린터가 종이 가장자리를 못 찍어 잘릴 때 켜 두세요 (PDF 저장·테두리 없는 인쇄는 끄기)"><input type="checkbox" id="mgSafe"> 프린터 여백 맞춤</label><button type="button" id="mgBf">지도 맞춤</button><button type="button" class="pri" id="mgBp">🖨 인쇄 · PDF 저장</button><button type="button" id="mgBc">닫기</button><span style="color:#AEB7C0;font-size:12px">지도를 끌어 위치를 맞추면 선도 따라옵니다 · 사진 칸의 📷로 사진을 바꿀 수 있어요</span></div>' +
         '<div id="mgSheet"><div class="shd">' + logoHtml() + '<b>Briefing Information</b><span id="mgBw"></span></div><div id="mgBmap"></div><svg id="mgSvg" width="1123" height="794" viewBox="0 0 1123 794"></svg><div id="mgCards"></div><div class="sft"><span>부동산다움공인중개사사무소 · 서울 강남구 신사동 578-1 일상빌딩 1층 (압구정역 5번출구) · 02-555-1165 · r-daum.com</span></div></div>';
       document.body.appendChild(o);
-      $('mgBl').onchange = lines; $('mgBf').onclick = bfit; $('mgBc').onclick = function () { o.style.display = 'none'; document.body.style.overflow = ''; };
+      $('mgBl').onchange = lines; $('mgBf').onclick = bfit; try { $('mgSafe').checked = localStorage.getItem(KEY + '.safe') !== '0'; } catch (e) { $('mgSafe').checked = true; } $('mgBc').onclick = function () { o.style.display = 'none'; document.body.style.overflow = ''; };
       $('mgBp').onclick = printIt; window.addEventListener('resize', function () { fitSheet(); lines(); });
     }
     o.style.display = 'flex'; document.body.style.overflow = 'hidden';
@@ -1973,8 +1973,8 @@ window.MGR = (function () {
     if (CUST) call('brief', { o: { cust: CUST, items: BI.map(function (x, i) { return { k: x.id, t: t[i] }; }) } }).then(function () { toast(CUST.name + '님 발송 이력에 기록했습니다'); setCust(CUST); }).catch(function () { toast('발송 이력 기록 실패'); });
     else toast('고객을 고르지 않아 발송 이력은 남기지 않았습니다');
     var s = $('mgSheet'), tr = s.style.transform; s.style.transform = ''; lines();
-    document.body.classList.add('mgPrint');
-    setTimeout(function () { window.print(); document.body.classList.remove('mgPrint'); s.style.transform = tr; }, 250);
+    document.body.classList.add('mgPrint'); document.body.classList.toggle('mgSafe', !!($('mgSafe') && $('mgSafe').checked)); try { localStorage.setItem(KEY + '.safe', $('mgSafe').checked ? '1' : '0'); } catch (e) { }
+    setTimeout(function () { window.print(); document.body.classList.remove('mgPrint', 'mgSafe'); s.style.transform = tr; }, 250);
   }
   /* ---------- 로그인 (r-daum.com/#manager) ---------- */
   function loginBox() {
