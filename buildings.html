@@ -1722,24 +1722,24 @@ body:not(.mgrMode) #mgBar,body:not(.mgrMode) #mgDr{display:none!important}
 #mgBov{position:fixed;inset:0;z-index:2000;background:#3b3f44;overflow:auto;display:flex;flex-direction:column;align-items:center}
 #mgBov .tool{position:sticky;top:0;width:100%;display:flex;gap:8px;align-items:center;justify-content:center;padding:10px;background:#22262b;color:#fff;z-index:2;flex-wrap:wrap;font:13px 'Noto Sans KR',sans-serif}
 #mgBov .tool button{height:36px;border-radius:9px;border:0;padding:0 14px;font-weight:700;background:#fff;color:#294652;cursor:pointer}#mgBov .tool .pri{background:#BC975E;color:#fff}#mgBov .tool label{display:flex;align-items:center;gap:5px}
-#mgSheet{width:1123px;height:794px;background:#fff;margin:18px 0 30px;position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.4);flex:none;transform-origin:top center}
-#mgSheet .shd{position:absolute;left:0;right:0;top:0;height:56px;background:#294652;color:#fff;display:flex;align-items:center;gap:16px;padding:0 20px;z-index:3;font-family:'Noto Sans KR',sans-serif;border-bottom:3px solid #BC975E}
-#mgSheet .mgLogo{margin:0!important;display:flex;align-items:center;gap:9px;padding-right:18px;border-right:1px solid rgba(255,255,255,.3);height:38px}#mgSheet .mgLogo img{height:38px;width:auto}#mgSheet .mgLogo span{display:flex;flex-direction:column;line-height:1}#mgSheet .mgLogo b{font:700 21px/1 'Cormorant Garamond','Times New Roman',serif;letter-spacing:.2em;color:#fff}#mgSheet .mgLogo i{font:600 8.5px/1 'Noto Sans KR',sans-serif;font-style:normal;letter-spacing:.32em;color:#BC975E;margin-top:5px}
-#mgSheet .shd>b{font-size:26px;font-weight:800;letter-spacing:-.3px}#mgSheet #mgBw{margin-left:auto;font-size:19px}#mgSheet #mgBw small{font-size:15px;margin-left:12px}
-#mgSheet .sft{position:absolute;left:0;right:0;bottom:0;height:30px;background:#294652;z-index:3;border-top:3px solid #BC975E;color:#D9DEE3;font:500 11.5px/27px 'Noto Sans KR',sans-serif;text-align:center}
-#mgBmap{position:absolute!important;left:0;top:56px;width:1123px;height:708px}
-#mgSvg{position:absolute;left:0;top:0;z-index:2;pointer-events:none}
+#mgSheets{display:flex;flex-direction:column;align-items:center}.mgSheet{width:1123px;height:794px;background:#fff;margin:18px 0 30px;position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.4);flex:none;transform-origin:top center}
+.mgSheet .shd{position:absolute;left:0;right:0;top:0;height:56px;background:#294652;color:#fff;display:flex;align-items:center;gap:16px;padding:0 20px;z-index:3;font-family:'Noto Sans KR',sans-serif;border-bottom:3px solid #BC975E}
+.mgSheet .mgLogo{margin:0!important;display:flex;align-items:center;gap:9px;padding-right:18px;border-right:1px solid rgba(255,255,255,.3);height:38px}.mgSheet .mgLogo img{height:38px;width:auto}.mgSheet .mgLogo span{display:flex;flex-direction:column;line-height:1}.mgSheet .mgLogo b{font:700 21px/1 'Cormorant Garamond','Times New Roman',serif;letter-spacing:.2em;color:#fff;position:relative;top:3px}.mgSheet .mgLogo i{font:600 8.5px/1 'Noto Sans KR',sans-serif;font-style:normal;letter-spacing:.32em;color:#BC975E;margin-top:2px}
+.mgSheet .bw .ed{outline:none;border-radius:4px;padding:0 3px;cursor:text}.mgSheet .bw .ed:hover,.mgSheet .bw .ed:focus{background:rgba(255,255,255,.14);box-shadow:inset 0 -1px 0 #BC975E}.mgSheet .shd .pgn{font-style:normal;font-size:13px;font-weight:700;color:#294652;background:#BC975E;border-radius:10px;padding:2px 9px}.mgSheet .shd>b{font-size:26px;font-weight:800;letter-spacing:-.3px}.mgSheet .bw{margin-left:auto;font-size:19px}.mgSheet .bw small{font-size:15px;margin-left:12px}
+.mgSheet .sft{position:absolute;left:0;right:0;bottom:0;height:30px;background:#294652;z-index:3;border-top:3px solid #BC975E;color:#D9DEE3;font:500 11.5px/27px 'Noto Sans KR',sans-serif;text-align:center}
+.mgBmap{position:absolute!important;left:0;top:56px;width:1123px;height:708px}
+.mgSvg{position:absolute;left:0;top:0;z-index:2;pointer-events:none}
 .mgCard{position:absolute;width:168px;background:#fff;border:2px solid #294652;outline:1px solid rgba(255,255,255,.9);box-shadow:0 0 0 3px rgba(188,151,94,.55),2px 4px 12px rgba(0,0,0,.3);padding-bottom:6px;box-sizing:border-box;z-index:3;font:600 12.5px/1.4 'Noto Sans KR',sans-serif;color:#111;display:flex;flex-direction:column;border-radius:4px;overflow:visible}
 .mgCard .tx .ad{font-size:13.5px;font-weight:800;color:#294652}
 .mgCard .tx{padding:6px 9px 5px}.mgCard.r .tx{text-align:right}
-.mgCard .no{position:absolute;top:-10px;width:26px;height:26px;border-radius:50%;background:#C8423B;color:#fff;font:800 13px/26px 'Noto Sans KR',sans-serif;text-align:center;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.4)}.mgCard.l .no{right:-10px}.mgCard.r .no{left:-10px}
+.mgCard .no{position:absolute;top:-10px;width:26px;height:26px;border-radius:50%;background:#C8423B;color:#fff;font:800 13px/26px 'Noto Sans KR',sans-serif;text-align:center;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.4)}.mgCard.l .no{right:-10px}.mgCard.r .no{left:-10px}.mgCard.t .no,.mgCard.b .no{left:-10px}.mgCard.t .tx,.mgCard.b .tx{text-align:left;padding-left:20px!important}.mgCards.sm .mgCard{font-size:11.3px;line-height:1.32}.mgCards.sm .mgCard .tx .ad{font-size:12.3px}.mgCards.sm .mgCard .tx{padding:5px 7px 4px}
 .mgCard .ph{flex:1;min-height:56px;margin:0 6px;border:1px solid #D9D2C4;filter:brightness(1.18) contrast(1.04) saturate(1.06);background:#EFEDEA center/cover no-repeat;display:flex;align-items:center;justify-content:center;color:#9a958c;font-size:11.5px;font-weight:400;position:relative;overflow:hidden;border-radius:3px}
 .mgCard .ph .pbox{position:absolute;inset:0}.mgCard .ph .pv{position:relative;z-index:1}
 .mgCard .ph .pk{position:absolute;right:4px;bottom:4px;z-index:5;width:28px;height:28px;border:0;border-radius:50%;background:rgba(20,25,31,.7);color:#fff;font-size:14px;cursor:pointer}
 #mgPick{position:fixed;inset:0;z-index:2100;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center}#mgPick .pk2{background:#fff;border-radius:14px;width:560px;max-width:94vw;max-height:80vh;display:flex;flex-direction:column;font:14px 'Noto Sans KR',sans-serif}#mgPick .ph2{display:flex;align-items:center;padding:12px 16px;border-bottom:1px solid #EEE}#mgPick .x{margin-left:auto;border:0;background:none;font-size:22px;cursor:pointer}#mgPick .gr{padding:14px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;overflow:auto}#mgPick .gr button{aspect-ratio:4/3;border:2px solid transparent;border-radius:8px;background:#EEE center/cover;cursor:pointer}#mgPick .gr button:hover{border-color:#BC975E}#mgPick .ld{grid-column:1/-1;color:#6B757D;padding:20px;text-align:center}#mgPick .ft{display:flex;gap:8px;padding:12px 16px;border-top:1px solid #EEE}#mgPick .ft button,#mgPick .up{height:38px;border:1.5px solid #294652;background:#fff;color:#294652;border-radius:9px;padding:0 14px;font-weight:700;cursor:pointer;display:flex;align-items:center}#mgPick .up input{display:none}
 .mgBpin{width:16px;height:16px;line-height:16px!important;border-radius:50%;background:#C8423B;color:#fff;font:800 12px/24px 'Noto Sans KR',sans-serif;text-align:center;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.45)}
 @page mgBrief{size:A4 landscape;margin:0;@bottom-left{content:none}@bottom-right{content:none}@top-left{content:none}@top-right{content:none}}
-@media print{body.mgPrint>*:not(#mgBov){display:none!important}body.mgPrint #mgSheet{page:mgBrief;break-inside:avoid;width:297mm!important;height:210mm!important}html:has(body.mgPrint){zoom:1!important}html,body.mgPrint{margin:0!important;padding:0!important;min-width:0!important;width:auto!important}body.mgPrint #mgBov{position:static!important;background:#fff;display:block!important;overflow:visible!important;width:297mm!important;height:210mm!important;inset:auto!important}body.mgPrint #mgBov .tool{display:none!important}body.mgPrint #mgSheet{margin:0!important;box-shadow:none;transform:none!important}body.mgPrint.mgSafe #mgSheet{transform:translateY(6mm) scale(.94)!important;transform-origin:50% 0!important}body.mgPrint .mgCard .ph .pk,body.mgPrint .mgCard .ph .pv{display:none}}
+@media print{body.mgPrint>*:not(#mgBov){display:none!important}body.mgPrint .mgSheets{display:flex;flex-direction:column;align-items:center}.mgSheet{page:mgBrief;break-inside:avoid;width:297mm!important;height:210mm!important}html:has(body.mgPrint){zoom:1!important}html,body.mgPrint{margin:0!important;padding:0!important;min-width:0!important;width:auto!important}body.mgPrint #mgBov{position:static!important;background:#fff;display:block!important;overflow:visible!important;width:297mm!important;height:auto!important;inset:auto!important}body.mgPrint #mgSheets{display:block!important}body.mgPrint .mgSheet{break-after:page}body.mgPrint .mgSheet:last-child{break-after:auto}body.mgPrint #mgBov .tool{display:none!important}body.mgPrint .mgSheets{display:flex;flex-direction:column;align-items:center}.mgSheet{margin:0!important;box-shadow:none;transform:none!important}body.mgPrint.mgSafe .mgSheets{display:flex;flex-direction:column;align-items:center}.mgSheet{transform:translateY(6mm) scale(.94)!important;transform-origin:50% 0!important}body.mgPrint .mgCard .ph .pk,body.mgPrint .mgCard .ph .pv{display:none}}
 @media (max-width:760px){#mgBar{left:8px;right:8px;bottom:8px;gap:5px;padding:6px 7px;font-size:11.5px}#mgBar .who,#mgBar #mgListB{display:none}#mgBar label{padding:3px 6px}#mgDr{width:100vw}}
 </style>
 <script>
@@ -1877,48 +1877,102 @@ window.MGR = (function () {
     return '<b class="ad">' + esc(x.dong + ' ' + (x.jb || '')) + '</b><br>' + esc(x.floor || '') + ' / ' + (x.area ? Math.round(x.area * 10) / 10 + '평' : '') + '<br>' + esc(x.depText) + ' / ' + esc(x.rentText) + '<br>관리비 ' + esc(x.mgmt || '문의') + (x.premium ? ' · ' + esc(x.premium) : '');
   }
   function logoHtml() { var m = document.querySelector('.dmLock.dmDark .dmMark') || document.querySelector('.dmMark'); return '<span class="mgLogo">' + (m ? '<img src="' + m.getAttribute('src') + '" alt="">' : '') + '<span><b>DAUM</b><i>REAL ESTATE</i></span></span>'; }
+  var PG = [], SPLIT = '1';
   function brief() {
     if (!window.naver || !naver.maps) { toast('브리핑 지도는 네이버 지도가 필요합니다 (잠시 후 다시 눌러 주세요)'); return; }
     var F = favItems().l.filter(function (x) { return x.lat; });
     if (!F.length) { toast('위치가 있는 즐겨찾기 매물이 없습니다'); return; }
-    if (F.length > 10 && !confirm('한 장에 10건까지 넣습니다. 앞의 10건으로 만들까요?')) return;
-    BI = F.slice(0, 10);
+    if (F.length > 32 && !confirm('브리핑은 32건(2장)까지 만들 수 있습니다. 앞의 32건으로 만들까요?')) return;
+    F = F.slice(0, 32);
     var o = $('mgBov');
     if (!o) {
       o = document.createElement('div'); o.id = 'mgBov';
-      o.innerHTML = '<div class="tool"><b id="mgBt"></b><label><input type="checkbox" id="mgBl" checked> 연결선</label><label title="프린터가 종이 가장자리를 못 찍어 잘릴 때 켜 두세요 (PDF 저장·테두리 없는 인쇄는 끄기)"><input type="checkbox" id="mgSafe"> 프린터 여백 맞춤</label><button type="button" id="mgBf">지도 맞춤</button><button type="button" class="pri" id="mgBp">🖨 인쇄 · PDF 저장</button><button type="button" id="mgBc">닫기</button><span style="color:#AEB7C0;font-size:12px">지도를 끌어 위치를 맞추면 선도 따라옵니다 · 사진 칸의 📷로 사진을 바꿀 수 있어요</span></div>' +
-        '<div id="mgSheet"><div class="shd">' + logoHtml() + '<b>Briefing Information</b><span id="mgBw"></span></div><div id="mgBmap"></div><svg id="mgSvg" width="1123" height="794" viewBox="0 0 1123 794"></svg><div id="mgCards"></div><div class="sft"><span>부동산다움공인중개사사무소 · 서울 강남구 신사동 578-1 일상빌딩 1층 (압구정역 5번출구) · 02-555-1165 · r-daum.com</span></div></div>';
+      o.innerHTML = '<div class="tool"><b id="mgBt"></b><select id="mgSplit" title="매물이 많을 때 한 장에 모두 넣을지, 두 장으로 나눌지"><option value="1">한 장에 모두</option><option value="2">2장으로 나누기</option></select><label><input type="checkbox" id="mgBl" checked> 연결선</label><label title="프린터가 종이 가장자리를 못 찍어 잘릴 때 켜 두세요 (PDF 저장·테두리 없는 인쇄는 끄기)"><input type="checkbox" id="mgSafe"> 프린터 여백 맞춤</label><button type="button" id="mgBf">지도 맞춤</button><button type="button" class="pri" id="mgBp">🖨 인쇄 · PDF 저장</button><button type="button" id="mgBc">닫기</button><span style="color:#AEB7C0;font-size:12px">지도를 끌어 위치를 맞추면 선도 따라옵니다 · 사진 칸의 📷로 사진을 바꿀 수 있어요</span></div><div id="mgSheets"></div>';
       document.body.appendChild(o);
-      $('mgBl').onchange = lines; $('mgBf').onclick = bfit; try { $('mgSafe').checked = localStorage.getItem(KEY + '.safe') !== '0'; } catch (e) { $('mgSafe').checked = true; } $('mgBc').onclick = function () { o.style.display = 'none'; document.body.style.overflow = ''; };
-      $('mgBp').onclick = printIt; window.addEventListener('resize', function () { fitSheet(); lines(); });
+      $('mgBl').onchange = linesAll; $('mgBf').onclick = function () { PG.forEach(bfit); };
+      try { $('mgSafe').checked = localStorage.getItem(KEY + '.safe') !== '0'; } catch (e) { $('mgSafe').checked = true; }
+      $('mgSplit').onchange = function () { SPLIT = this.value; try { localStorage.setItem(KEY + '.split', SPLIT); } catch (e) { } build(); };
+      $('mgBc').onclick = function () { o.style.display = 'none'; document.body.style.overflow = ''; };
+      $('mgBp').onclick = printIt; window.addEventListener('resize', function () { fitSheet(); linesAll(); });
     }
     o.style.display = 'flex'; document.body.style.overflow = 'hidden';
-    $('mgBt').textContent = '브리핑 ' + BI.length + '건' + (CUST ? ' · ' + CUST.name + '님' : '');
-    var me = (S && S.me) || {}; $('mgBw').innerHTML = '부동산다움 _ ' + esc(me.name || '') + '<small>' + esc(me.tel || '02-555-1165') + '</small>';
-    fitSheet();
-    if (!bmap) { bmap = new naver.maps.Map('mgBmap', { center: new naver.maps.LatLng(BI[0].lat, BI[0].lng), zoom: 16, zoomControl: false, mapDataControl: false, scaleControl: false, logoControlOptions: { position: naver.maps.Position.BOTTOM_RIGHT } }); naver.maps.Event.addListener(bmap, 'idle', lines); naver.maps.Event.addListener(bmap, 'bounds_changed', lines); }
-    cards(); bfit();
+    BI = F; try { SPLIT = localStorage.getItem(KEY + '.split') || '1'; } catch (e) { }
+    $('mgSplit').style.display = BI.length > 8 ? '' : 'none'; $('mgSplit').value = SPLIT;
+    if (BI.length > 16) { SPLIT = '2'; $('mgSplit').value = '2'; $('mgSplit').disabled = true; } else $('mgSplit').disabled = false;
+    build();
   }
-  function fitSheet() { var s = $('mgSheet'); if (!s) return; var w = Math.min(1, (innerWidth - 20) / 1123); s.style.transform = w < 1 ? 'scale(' + w + ')' : ''; s.style.marginBottom = w < 1 ? (30 - 794 * (1 - w)) + 'px' : '30px'; }
-  var LAY = { padL: 220, padR: 220 };
-  function cards() {
-    var CW = 168, GAP = 16, TOP = 56 + 16, H = 794 - 56 - 30 - 32, order = BI.map(function (x, i) { return i; }).sort(function (a, b) { return BI[a].lng - BI[b].lng; }), half = Math.ceil(BI.length / 2), pos = {};
-    var side = function (arr, sd) {
-      arr.sort(function (a, b) { return BI[b].lat - BI[a].lat; });
-      var cols = arr.length > 3 ? 2 : 1, rows = Math.ceil(arr.length / cols), ch = Math.min(232, (H - GAP * (rows - 1)) / rows);
-      arr.forEach(function (i, j) { var c = j % cols, r = Math.floor(j / cols), x = 18 + c * (CW + 12); pos[i] = { side: sd, x: x, top: TOP + r * (ch + GAP) + (H - rows * ch - GAP * (rows - 1)) / 2, h: ch }; });
-      return 18 + cols * (CW + 12) + 30;
-    };
-    LAY.padL = side(order.slice(0, half), 'l'); LAY.padR = side(order.slice(half), 'r');
-    $('mgCards').innerHTML = BI.map(function (x, i) {
-      var p = pos[i], img = x._img || (x.photos && x.photos[0] ? hp.photoUrl(x.photos[0], 600) : '');
-      return '<div class="mgCard ' + p.side + '" data-i="' + i + '" style="' + (p.side === 'l' ? 'left' : 'right') + ':' + p.x + 'px;top:' + p.top + 'px;height:' + p.h + 'px"><span class="no">' + (i + 1) + '</span><div class="tx">' + cardText(x) + '</div>' +
+  // 두 장으로 나눌 때: 지도에서 더 넓게 퍼진 방향(동서 또는 남북)으로 반씩 나눔 → 장마다 가까운 매물끼리
+  function build() {
+    var two = BI.length > 8 && SPLIT === '2', groups = [BI.slice()];
+    if (two) {
+      var la = BI.map(function (x) { return x.lat; }), lo = BI.map(function (x) { return x.lng; });
+      var ew = (Math.max.apply(null, lo) - Math.min.apply(null, lo)) * Math.cos(37.5 * Math.PI / 180) >= (Math.max.apply(null, la) - Math.min.apply(null, la));
+      var srt = BI.slice().sort(function (a, b) { return ew ? a.lng - b.lng : b.lat - a.lat; }), h = Math.ceil(srt.length / 2);
+      groups = [srt.slice(0, h), srt.slice(h)];
+    }
+    BI = [].concat.apply([], groups);   // 번호가 1장 → 2장 순서로 이어지게
+    var me = (S && S.me) || {}, W = {}; try { W = JSON.parse(localStorage.getItem(KEY + '.who') || '{}') || {}; } catch (e) { }
+    var who = '부동산다움 _ <span class="ed" contenteditable="true" spellcheck="false" data-w="name" title="눌러서 고칠 수 있어요">' + esc(W.name || me.name || '') + '</span><small class="ed" contenteditable="true" spellcheck="false" data-w="tel" title="눌러서 고칠 수 있어요">' + esc(W.tel || me.tel || '02-555-1165') + '</small>';
+    PG.forEach(function (g) { (g.map && g.map.__mk || []).forEach(function (k) { k.setMap(null); }); try { g.map && g.map.destroy && g.map.destroy(); } catch (e) { } });
+    PG = []; var off = 0, box = $('mgSheets'); box.innerHTML = '';
+    groups.forEach(function (gr, gi) {
+      var el = document.createElement('div'); el.className = 'mgSheet';
+      el.innerHTML = '<div class="shd">' + logoHtml() + '<b>Briefing Information</b>' + (groups.length > 1 ? '<em class="pgn">' + (gi + 1) + ' / ' + groups.length + '</em>' : '') + '<span class="bw">' + who + '</span></div><div class="mgBmap"></div><svg class="mgSvg" width="1123" height="794" viewBox="0 0 1123 794"></svg><div class="mgCards"></div><div class="sft"><span>부동산다움공인중개사사무소 · 서울 강남구 신사동 578-1 일상빌딩 1층 (압구정역 5번출구) · 02-555-1165 · r-daum.com</span></div>';
+      box.appendChild(el);
+      var g = { el: el, idx: gr.map(function (x, k) { return off + k; }) }; off += gr.length; PG.push(g);
+    });
+    box.querySelectorAll('.ed').forEach(function (e) {   // 이름·연락처: 브리핑에서 바로 고치면 모든 장에 같이 바뀌고 다음에도 기억
+      e.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') { ev.preventDefault(); e.blur(); } });
+      e.addEventListener('input', function () { var k = e.getAttribute('data-w'), v = e.textContent.trim(); box.querySelectorAll('.ed[data-w="' + k + '"]').forEach(function (o) { if (o !== e) o.textContent = v; }); try { var w = JSON.parse(localStorage.getItem(KEY + '.who') || '{}') || {}; w[k] = v; localStorage.setItem(KEY + '.who', JSON.stringify(w)); } catch (x) { } });
+    });
+    $('mgBt').textContent = '브리핑 ' + BI.length + '건' + (PG.length > 1 ? ' · 2장' : '') + (CUST ? ' · ' + CUST.name + '님' : '');
+    fitSheet();
+    PG.forEach(function (g) {
+      var f = BI[g.idx[0]];
+      g.map = new naver.maps.Map(g.el.querySelector('.mgBmap'), { center: new naver.maps.LatLng(f.lat, f.lng), zoom: 16, zoomControl: false, mapDataControl: false, scaleControl: false, logoControlOptions: { position: naver.maps.Position.BOTTOM_RIGHT } });
+      naver.maps.Event.addListener(g.map, 'idle', function () { lines(g); }); naver.maps.Event.addListener(g.map, 'bounds_changed', function () { lines(g); });
+      cards(g); bfit(g);
+    });
+  }
+  function fitSheet() { var w = Math.min(1, (innerWidth - 20) / 1123); document.querySelectorAll('.mgSheet').forEach(function (s) { s.style.transform = w < 1 ? 'scale(' + w + ')' : ''; s.style.marginBottom = w < 1 ? (30 - 794 * (1 - w)) + 'px' : '30px'; }); }
+  // 매물 수에 따라 카드 크기·자리를 자동으로: 6건까지 좌우 · 10건까지 +아래줄 · 14건까지 +위줄 · 16건까지 좌우 4칸씩
+  function plan(n) {
+    if (n <= 6) return { L: 3, R: 3, T: 0, B: 0, CW: 168 };
+    if (n <= 10) return { L: 3, R: 3, T: 0, B: 4, CW: 158 };
+    if (n <= 14) return { L: 3, R: 3, T: 4, B: 4, CW: 148 };
+    return { L: 4, R: 4, T: 4, B: 4, CW: 140 };
+  }
+  function cards(g) {
+    var I = g.idx, n = I.length, P = plan(n), CW = P.CW, GAP = 16, M0 = 56, MH = 708, X0 = 16, pos = {};
+    var la = I.map(function (i) { return BI[i].lat; }), lo = I.map(function (i) { return BI[i].lng; });
+    var cy = (Math.max.apply(null, la) + Math.min.apply(null, la)) / 2, cx = (Math.max.apply(null, lo) + Math.min.apply(null, lo)) / 2;
+    var sy = (Math.max.apply(null, la) - Math.min.apply(null, la)) || 1e-4, sx = (Math.max.apply(null, lo) - Math.min.apply(null, lo)) || 1e-4;
+    var cap = { l: P.L, r: P.R, t: P.T, b: P.B }, pairs = [], side = {};
+    I.forEach(function (i) { var x = BI[i], dx = (x.lng - cx) / sx, dy = (x.lat - cy) / sy; pairs.push([i, 'l', -dx], [i, 'r', dx], [i, 't', dy * 0.9], [i, 'b', -dy * 0.9]); });
+    pairs.sort(function (a, b) { return b[2] - a[2]; });
+    pairs.forEach(function (p) { if (side[p[0]] || !cap[p[1]]) return; side[p[0]] = p[1]; cap[p[1]]--; });
+    var grp = { l: [], r: [], t: [], b: [] }; I.forEach(function (i) { grp[side[i]].push(i); });
+    var used = function (k) { return grp[k].length; };
+    ['l', 'r'].forEach(function (k) {
+      var a = grp[k].sort(function (p, q) { return BI[q].lat - BI[p].lat; }), rows = Math.max(a.length, 1), H = MH - 24, ch = Math.min(232, (H - GAP * (rows - 1)) / rows), top = M0 + 12 + (H - rows * ch - GAP * (rows - 1)) / 2;
+      a.forEach(function (i, j) { pos[i] = { side: k, x: X0, top: top + j * (ch + GAP), h: ch }; });
+    });
+    var midL = used('l') ? X0 + CW + 18 : X0, midR = used('r') ? X0 + CW + 18 : X0, midW = 1123 - midL - midR, HB = n <= 10 ? 196 : 176;
+    ['t', 'b'].forEach(function (k) {
+      var a = grp[k].sort(function (p, q) { return BI[p].lng - BI[q].lng; }), m = a.length; if (!m) return;
+      var gap = Math.min(28, (midW - m * CW) / (m + 1)), x0 = midL + (midW - m * CW - gap * (m - 1)) / 2;
+      a.forEach(function (i, j) { pos[i] = { side: k, x: x0 + j * (CW + gap), top: k === 't' ? M0 + 12 : M0 + MH - 12 - HB, h: HB }; });
+    });
+    g.pad = { left: used('l') ? X0 + CW + 34 : 60, right: used('r') ? X0 + CW + 34 : 60, top: used('t') ? HB + 40 : 70, bottom: used('b') ? HB + 40 : 60 };
+    var box = g.el.querySelector('.mgCards'); box.className = 'mgCards' + (n > 10 ? ' sm' : '');
+    box.innerHTML = I.map(function (i) {
+      var x = BI[i], p = pos[i], img = x._img || (x.photos && x.photos[0] ? hp.photoUrl(x.photos[0], 600) : '');
+      return '<div class="mgCard ' + p.side + '" data-i="' + i + '" style="' + (p.side === 'r' ? 'right' : 'left') + ':' + p.x + 'px;top:' + p.top + 'px;height:' + p.h + 'px;width:' + CW + 'px"><span class="no">' + (i + 1) + '</span><div class="tx">' + cardText(x) + '</div>' +
         '<div class="ph" id="mgPh' + i + '" style="' + (img ? "background-image:url('" + img + "')" : '') + '">' + (img ? '' : '<span class="pv">거리뷰 불러오는 중…</span>') + '<button type="button" class="pk" data-pick="' + i + '" title="사진 바꾸기">📷</button></div></div>';
     }).join('');
-    (bmap.__mk || []).forEach(function (k) { k.setMap(null); });
-    bmap.__mk = BI.map(function (x, i) { return new naver.maps.Marker({ position: new naver.maps.LatLng(x.lat, x.lng), map: bmap, zIndex: 10 + i, icon: { content: '<div class="mgBpin" data-i="' + i + '"></div>', size: new naver.maps.Size(16, 16), anchor: new naver.maps.Point(8, 8) } }); });
-    BI.forEach(function (x, i) { if (!x._img && !(x.photos && x.photos[0])) pano(i); });
-    $('mgCards').querySelectorAll('[data-pick]').forEach(function (b) { b.onclick = function (e) { e.stopPropagation(); picker(+b.getAttribute('data-pick')); }; });
+    g.map.__mk = I.map(function (i) { var x = BI[i]; return new naver.maps.Marker({ position: new naver.maps.LatLng(x.lat, x.lng), map: g.map, zIndex: 10 + i, icon: { content: '<div class="mgBpin" data-i="' + i + '"></div>', size: new naver.maps.Size(16, 16), anchor: new naver.maps.Point(8, 8) } }); });
+    I.forEach(function (i) { var x = BI[i]; x._pano = null; if (!x._img && !(x.photos && x.photos[0])) pano(i); });
+    box.querySelectorAll('[data-pick]').forEach(function (b) { b.onclick = function (e) { e.stopPropagation(); picker(+b.getAttribute('data-pick')); }; });
   }
   // 사진이 없는 매물: 네이버 거리뷰를 사진 칸에 띄움 (건물 쪽을 바라보게)
   function pano(i) {
@@ -1954,16 +2008,17 @@ window.MGR = (function () {
       $('mgPg').querySelectorAll('[data-f]').forEach(function (b) { b.onclick = function () { setImg(hp.photoUrl(b.getAttribute('data-f'), 800)); }; });
     }).catch(function () { $('mgPg').innerHTML = own.length ? '' : '<div class="ld">사진을 불러오지 못했습니다</div>'; });
   }
-  function bfit() { naver.maps.Event.trigger(bmap, 'resize'); var b = new naver.maps.LatLngBounds(); BI.forEach(function (x) { b.extend(new naver.maps.LatLng(x.lat, x.lng)); }); if (BI.length === 1) { bmap.setCenter(b.getCenter()); bmap.setZoom(17); } else bmap.fitBounds(b, { top: 80, bottom: 70, left: LAY.padL, right: LAY.padR }); setTimeout(lines, 400); }
-  // 연결선: 지도 위 번호 핀의 실제 화면 위치를 재서 카드와 잇기 (지도를 움직여도 따라옴)
-  function lines() {
-    var svg = $('mgSvg'), sh = $('mgSheet'); if (!svg || !bmap || !sh) return; if (!$('mgBl').checked) { svg.innerHTML = ''; return; }
+  function bfit(g) { naver.maps.Event.trigger(g.map, 'resize'); var b = new naver.maps.LatLngBounds(); g.idx.forEach(function (i) { b.extend(new naver.maps.LatLng(BI[i].lat, BI[i].lng)); }); if (g.idx.length === 1) { g.map.setCenter(b.getCenter()); g.map.setZoom(17); } else g.map.fitBounds(b, g.pad); setTimeout(function () { lines(g); }, 400); }
+  function linesAll() { PG.forEach(lines); }
+  // 연결선: 지도 위 점의 실제 화면 위치를 재서 카드와 잇기 (지도를 움직여도 따라옴)
+  function lines(g) {
+    var sh = g.el, svg = sh.querySelector('.mgSvg'); if (!svg || !g.map) return; if (!$('mgBl').checked) { svg.innerHTML = ''; return; }
     var R0 = sh.getBoundingClientRect(), k = R0.width / 1123 || 1, h = '';
-    BI.forEach(function (x, i) {
-      var c = document.querySelector('.mgCard[data-i="' + i + '"]'), pin = sh.querySelector('.mgBpin[data-i="' + i + '"]'); if (!c || !pin) return;
+    g.idx.forEach(function (i) {
+      var c = sh.querySelector('.mgCard[data-i="' + i + '"]'), pin = sh.querySelector('.mgBpin[data-i="' + i + '"]'); if (!c || !pin) return;
       var pr = pin.getBoundingClientRect(); if (!pr.width) return;
       var px = (pr.left + pr.width / 2 - R0.left) / k, py = (pr.top + pr.height / 2 - R0.top) / k;
-      var cr = c.getBoundingClientRect(), cx = ((c.classList.contains('l') ? cr.right : cr.left) - R0.left) / k, cy = (cr.top - R0.top) / k + 16;
+      var cr = c.getBoundingClientRect(), sd = c.classList.contains('l') ? 'l' : c.classList.contains('r') ? 'r' : c.classList.contains('t') ? 't' : 'b', cx = ((sd === 'l' ? cr.right : sd === 'r' ? cr.left : cr.left + cr.width / 2) - R0.left) / k, cy = (sd === 't' ? cr.bottom - R0.top : sd === 'b' ? cr.top - R0.top : cr.top - R0.top + 16 * k) / k;
       h += '<line x1="' + cx + '" y1="' + cy + '" x2="' + px + '" y2="' + py + '" stroke="#C8423B" stroke-width="2" stroke-dasharray="6 4"/><circle cx="' + cx + '" cy="' + cy + '" r="3.5" fill="#C8423B"/>';
     });
     svg.innerHTML = h;
@@ -1972,9 +2027,9 @@ window.MGR = (function () {
     var t = BI.map(function (x, i) { return (i + 1) + '. ' + x.dong + ' ' + (x.jb || '') + ' ' + (x.sale ? '매매 ' + x.depText : (x.floor || '') + ' ' + x.depText + '/' + x.rentText); });
     if (CUST) call('brief', { o: { cust: CUST, items: BI.map(function (x, i) { return { k: x.id, t: t[i] }; }) } }).then(function () { toast(CUST.name + '님 발송 이력에 기록했습니다'); setCust(CUST); }).catch(function () { toast('발송 이력 기록 실패'); });
     else toast('고객을 고르지 않아 발송 이력은 남기지 않았습니다');
-    var s = $('mgSheet'), tr = s.style.transform; s.style.transform = ''; lines();
+    var SS = [].slice.call(document.querySelectorAll('.mgSheet')), TR = SS.map(function (s) { var t = s.style.transform; s.style.transform = ''; return t; }); linesAll();
     document.body.classList.add('mgPrint'); document.body.classList.toggle('mgSafe', !!($('mgSafe') && $('mgSafe').checked)); try { localStorage.setItem(KEY + '.safe', $('mgSafe').checked ? '1' : '0'); } catch (e) { }
-    setTimeout(function () { window.print(); document.body.classList.remove('mgPrint', 'mgSafe'); s.style.transform = tr; }, 250);
+    setTimeout(function () { window.print(); document.body.classList.remove('mgPrint', 'mgSafe'); SS.forEach(function (s, q) { s.style.transform = TR[q]; }); }, 250);
   }
   /* ---------- 로그인 (r-daum.com/#manager) ---------- */
   function loginBox() {
