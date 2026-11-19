@@ -458,7 +458,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 .dtDesc{font-size:15.5px;line-height:1.9;color:#2D3A44;white-space:pre-line;word-break:keep-all}
 .dtMap{height:340px;border-radius:14px;overflow:hidden;background:#ECE6DA;border:1px solid #E6E0D4}
 .dtNote{margin-top:10px;font-size:12.5px;color:#6B757D;line-height:1.6}
-.dtOffice{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border:1px solid #E6E0D4;border-radius:14px;overflow:hidden;font-size:14px}
+.dtOffice{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border:1px solid #E6E0D4;border-radius:14px;overflow:hidden;font-size:14px;background:#FBF8F2}
 .dtOffice>div{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid #EFEAE0}
 .dtOffice>div:nth-last-child(-n+2){border-bottom:0}
 .dtOffice b{flex:none;width:96px;color:#6B757D;font-weight:600}
@@ -504,6 +504,15 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 .simP{text-align:right;font-size:13px;color:#294652;white-space:nowrap}.simP b{color:#C4553A;font-weight:800}.simP small{display:block;font-size:11px;color:#8A8272;margin-top:2px}
 @media (max-width:760px){.simG{grid-template-columns:1fr}.simR{grid-template-columns:52px minmax(0,1fr) auto;gap:10px}.simT{width:52px;height:42px}.simPv{transform:scale(.2167,.2283)}}
 @media print{.dtSim2{display:none!important}}
+.dtSec h2.dtHi{display:flex;align-items:center;gap:12px;margin-bottom:16px}.dtSec h2.dtHi:before{display:none}
+.dtIc{flex:none;width:40px;height:40px;border-radius:50%;background:#294652;color:#E9D3A8;display:flex;align-items:center;justify-content:center}
+.dtHt{display:flex;flex-direction:column;min-width:0}.dtHn{color:#294652;font-size:21px;font-weight:800;line-height:1.25;letter-spacing:-.5px}.dtHn small{font-size:14px}
+.dtHd{font-size:12.5px;font-weight:400;color:#8A8272;letter-spacing:0;margin-top:2px}
+.dtSim2 .simCond{margin-top:-8px}
+.dtPrice{background:#294652;border-color:#294652}.dtPrice>div{border-left-color:#3D5E6B!important;border-top-color:#3D5E6B!important}
+.dtPrice small{color:#B8C6CC}.dtPrice b{color:#fff;font-size:24px}.dtPrice .rent b,.dtPrice .prem b{color:#E9C98F}
+@media (max-width:760px){.dtIc{width:34px;height:34px}.dtIc svg{width:17px;height:17px}.dtHn{font-size:18.5px}.dtHd{font-size:12px}.dtPrice b{font-size:20px}}
+@media print{.dtPrice{background:#fff;border-color:#E6E0D4}.dtPrice b{color:#14191F}.dtPrice .rent b{color:#C4553A}.dtPrice .prem b{color:#A27D48}.dtPrice small{color:#6B757D}.dtIc{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 .dtSim{margin-top:56px;padding-top:40px;border-top:1px solid #E6E0D4}
 .dtSimGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .dtSimGrid .listing{transition:transform .2s,box-shadow .2s;box-shadow:0 1px 2px rgba(41,70,82,.12),0 3px 6px rgba(41,70,82,.12)}
@@ -3367,13 +3376,13 @@ window.MGR = (function () {
       (it.sale ? (it.shop ? shopSumHtml(it) + bldMsg : saleSumHtml(it) + bldMsg + saleCmpHtml(it)) +
       bldGroup(it.reg ? flvHtml(it.sale ? { reg: it.reg, floor: it.shop ? it.floor : '', elev: it.elev, area: it.shop ? it.area : 0 } : it) : '', regHtml) +
         saleLandHtml(it, it.shop) +
-      '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' + simHtml(it) +
+      '<section class="dtSec"><h2>위치 정보</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' + simHtml(it) +
         ''
       : price +
       '<section class="dtSec"><div class="dtH2r"><h2>매물 정보</h2><span class="dtNo"><small>매물번호</small><b>' + esc(it.id) + '</b><button type="button" class="dtNoCp" onclick="var b=this;try{navigator.clipboard.writeText(\'' + esc(it.id) + '\').then(function(){b.textContent=\'복사됨\';setTimeout(function(){b.textContent=\'복사\'},1500)})}catch(e){}">복사</button></span></div>' + (it.sale ? '' : bldMsg) + '<div class="dtInfoGrid solo">' + info + '</div>' +
       '<p class="dtNote">※ 「중개대상물의 표시·광고 명시사항 세부기준」에 따른 표시입니다. 소재지는 동까지만 표시하며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
       bldGroup(it.reg ? flvHtml(it) : '', regHtml, addHtml(it)) +
-      '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' + simHtml(it)) +
+      '<section class="dtSec"><h2>위치 정보</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' + simHtml(it)) +
       '<section class="dtSec"><h2>중개사무소 정보</h2>' + office + '</section>' +
       '</div>' + side + '</div>' +
       '</div>';
@@ -3812,8 +3821,31 @@ window.MGR = (function () {
       .then(function () { it.shopsBusy = 0; if (it.shops && it.shops.error) setTimeout(function () { if (it.shops && it.shops.error) delete it.shops; }, 60000);
         var box = DT.it === it && DT.el && DT.el.querySelector('#dtShopsIn'); if (box) box.innerHTML = shopsInner(it); });
   }
+  // 단락 제목: 남색 원 아이콘 + 남색 제목 + 한 줄 설명
+  var DT_HEADS = [
+    [/^매물 정보/, 'M3 9l1.5-5h15L21 9M3 9h18v1.5a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0zM5 13v8h14v-8M10 21v-5h4v5', function (it) { return it.sale ? '매매가·면적·층·용도 등 기본 조건' : '면적·층·금액·관리비·주차 등 기본 조건'; }],
+    [/^건축물 ?정보|^건물/, 'M4 21V5l8-3 8 3v16M9 21v-4h6v4M8 8h2M14 8h2M8 12h2M14 12h2', '건축물대장 기준 층별 용도와 건물 개요'],
+    [/^위치/, 'M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11zM12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z', '지하철 출구까지 도보 동선 · 동 단위 표시'],
+    [/^이 매물과 비슷한|^주변 비슷한/, 'M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z', ''],
+    [/^중개사무소/, 'M5 3h14v18H5zM9 3v3h6V3M12 13a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM8 18c.8-2 2.2-3 4-3s3.2 1 4 3', '「공인중개사법」에 따른 중개사무소 표시사항'],
+    [/^가격 판단|^이달의/, 'M4 20V10M10 20V4M16 20v-8M3 20h18', '주변 실거래·시세와 비교'],
+    [/^토지/, 'M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2zM9 4v14M15 6v14', '토지특성 · 용도지역 · 공시지가'],
+    [/^업종/, 'M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01', '이 건물에 입점한 업종'],
+    [/^같은 건물|^층별/, 'M12 3l9 5-9 5-9-5zM3 13l9 5 9-5', '이 건물의 다른 층 현황']
+  ];
+  function dtHeads(root, it) {
+    if (!root) return;
+    root.querySelectorAll('.dtSec h2').forEach(function (h) {
+      if (h.classList.contains('dtHi')) return;
+      var t = h.textContent.replace(/\s+/g, ' ').trim(), m = null;
+      DT_HEADS.some(function (d) { if (d[0].test(t)) { m = d; return true; } return false; }); if (!m) return;
+      var desc = typeof m[2] === 'function' ? m[2](it || {}) : m[2];
+      h.classList.add('dtHi');
+      h.innerHTML = '<span class="dtIc" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="' + m[1] + '"/></svg></span><span class="dtHt"><span class="dtHn">' + h.innerHTML + '</span>' + (desc ? '<span class="dtHd">' + desc + '</span>' : '') + '</span>';
+    });
+  }
   function paintDetail(it) {
-    DT.el.innerHTML = detailHtml(it);
+    DT.el.innerHTML = detailHtml(it); dtHeads(DT.el, it);
     bindDetail(it); detailMap(it); renderFloors(); simPanos(); renderAddSum(it); DT.el.querySelectorAll('input[data-add]').forEach(function (c) { c.addEventListener('change', function () { renderAddSum(it); }); }); if (!(it.photos && it.photos.length)) detailPano(it);
   }
   // 공실매물관 매물: 상세를 열 때 건축물대장(층별 현황·건축물정보)을 불러와 다시 그림
