@@ -1131,7 +1131,7 @@ body.mapFull:not(.detailMode) .ccNav{visibility:hidden}   /* 추천 매물 화�
 }
 @media print{.mapFullBtn,.mapFullClose,.autoSearch{display:none!important}}
 </style>
-<style id="walkCss">.walkTag{position:relative;transform:translate(-50%,calc(-100% - 10px));white-space:nowrap;color:#FFFFFF;font:600 12.5px/1 'Noto Sans KR',sans-serif;padding:7px 10px;border-radius:6px;box-shadow:0 3px 10px rgba(0,0,0,.25)}.walkTag b{font-weight:800;margin-right:2px}.walkTag i{position:absolute;left:50%;bottom:-6px;margin-left:-6px;border:6px solid transparent;border-bottom:0}.walkLegend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 2px 0;font-size:13.5px;color:#46515B}.walkLegend span{display:inline-flex;align-items:center;gap:6px}.walkLegend i{width:18px;height:4px;border-radius:2px;display:inline-block}@media print{.walkLegend{display:none}}@media (max-width:760px){.walkTag{font-size:11.5px;padding:6px 8px}.walkLegend{flex-direction:column;font-size:13px}}</style>
+<style id="walkCss">.walkTag{position:relative;transform:translate(-50%,calc(-100% - 10px));white-space:nowrap;color:#FFFFFF;font:600 12.5px/1 'Noto Sans KR',sans-serif;padding:7px 10px;border-radius:6px;box-shadow:0 3px 10px rgba(0,0,0,.25)}.walkTag b{font-weight:800;margin-right:2px}.walkEnd{width:12px;height:12px;border-radius:50%;border:2.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35);transform:translate(-50%,-50%)}.walkBox{transform:translate(22px,-50%);background:#fff;border:1px solid #D9D2C4;border-radius:8px;box-shadow:0 3px 10px rgba(0,0,0,.18);padding:6px 9px;display:flex;flex-direction:column;gap:4px;white-space:nowrap}.walkBox.w{transform:translate(calc(-100% - 22px),-50%)}.walkRow{display:flex;align-items:center;gap:6px;font:600 12px/1.25 'Noto Sans KR',sans-serif;color:#2A333C}.walkRow i{width:10px;height:10px;border-radius:50%;flex:none}.walkRow b{font-weight:800;color:#14191F}.walkTag i{position:absolute;left:50%;bottom:-6px;margin-left:-6px;border:6px solid transparent;border-bottom:0}.walkLegend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:10px 2px 0;font-size:13.5px;color:#46515B}.walkLegend span{display:inline-flex;align-items:center;gap:6px}.walkLegend i{width:18px;height:4px;border-radius:2px;display:inline-block}@media print{.walkLegend{display:none}}@media (max-width:760px){.walkTag{font-size:11.5px;padding:6px 8px}.walkLegend{flex-direction:column;font-size:13px}}</style>
 <style id="rngCss">
 /* 검색 조건: 최소 ~ 최대 직접 입력 */
 .rng{flex:1 1 0;min-width:0;display:flex;align-items:center;gap:4px;height:44px;padding:0 12px 0 14px;border:1px solid #D9D2C4;border-radius:999px;background:#FFFFFF;transition:border-color .18s,box-shadow .18s,background-color .18s}
@@ -3510,16 +3510,19 @@ window.MGR = (function () {
       list = list.filter(function (x) { return x && x.r.pts && x.r.pts.length > 1 && Math.max(1, Math.round(x.r.d / 67)) <= 10; })   // 도보 10분 이내만
         .sort(function (a, b) { return a.r.d - b.r.d; }).slice(0, 3);
       if (!list.length) return;
-      var bounds = new naver.maps.LatLngBounds(new naver.maps.LatLng(it.lat, it.lng), new naver.maps.LatLng(it.lat, it.lng)), legend = [];
+      var bounds = new naver.maps.LatLngBounds(new naver.maps.LatLng(it.lat, it.lng), new naver.maps.LatLng(it.lat, it.lng)), legend = [], tags = [];
       list.forEach(function (x, k) {
         var col = WALK_COL[k], min = Math.max(1, Math.round(x.r.d / 67)), name = x.st + ' ' + x.no + '번 출구';
         var path = x.r.pts.map(function (p) { var ll = new naver.maps.LatLng(p[1], p[0]); bounds.extend(ll); return ll; });
         new naver.maps.Polyline({ map: mp, path: path, strokeColor: '#FFFFFF', strokeWeight: 8, strokeOpacity: .9, strokeLineCap: 'round', strokeLineJoin: 'round' });
         new naver.maps.Polyline({ map: mp, path: path, strokeColor: col, strokeWeight: 4.5, strokeOpacity: 1, strokeStyle: 'shortdot', strokeLineCap: 'round', strokeLineJoin: 'round' });
-        new naver.maps.Marker({ position: path[path.length - 1], map: mp, zIndex: 200 + k, icon: { content: '<div class="walkTag" style="background:' + col + '"><b>' + esc(name) + '</b> 도보 ' + min + '분<i style="border-top-color:' + col + '"></i></div>', anchor: new naver.maps.Point(0, 0) } });
+        new naver.maps.Marker({ position: path[path.length - 1], map: mp, zIndex: 200 + k, icon: { content: '<div class="walkEnd" style="background:' + col + '"></div>', anchor: new naver.maps.Point(0, 0) } });   // 출구 쪽은 작은 점만
+        tags.push('<div class="walkRow"><i style="background:' + col + '"></i><b>' + esc(x.st) + ' ' + esc(x.no) + '번 출구</b> 도보 ' + min + '분</div>');
         legend.push('<span><i style="background:' + col + '"></i>' + esc(name) + ' 약 ' + x.r.d.toLocaleString() + 'm · 도보 약 ' + min + '분</span>');
       });
-      try { mp.fitBounds(bounds, { top: 56, right: 60, bottom: 30, left: 40 }); } catch (e) { mp.fitBounds(bounds); }
+      var east = false; try { east = it.lng > (bounds.getMin().x + bounds.getMax().x) / 2; } catch (e) { }   // 매물이 동선의 오른쪽이면 글자 상자를 왼쪽에
+      try { mp.fitBounds(bounds, east ? { top: 40, right: 60, bottom: 30, left: 200 } : { top: 40, right: 220, bottom: 30, left: 40 }); } catch (e) { mp.fitBounds(bounds); }
+      new naver.maps.Marker({ position: new naver.maps.LatLng(it.lat, it.lng), map: mp, zIndex: 300, icon: { content: '<div class="walkBox' + (east ? ' w' : '') + '">' + tags.join('') + '</div>', anchor: new naver.maps.Point(0, 0) } });   // 역·출구·도보 시간은 매물 바로 옆에 모아서
       var lg = document.createElement('div'); lg.className = 'walkLegend'; lg.innerHTML = legend.join('');
       var host = $('dtMap'); if (host && host.parentNode) host.parentNode.insertBefore(lg, host.nextSibling);
     });
