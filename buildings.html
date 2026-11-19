@@ -1459,7 +1459,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 <div class="rng" id="rgFloor" title="지하층은 B1 또는 -1 로 입력"><span class="rgL">층</span><input id="mapFloorMin" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최저" aria-label="층 최소"><i>~</i><input id="mapFloorMax" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최고" aria-label="층 최대"><span class="rgU">층</span></div>
 <div class="rng" id="rgDep"><span class="rgL">보증금</span><input id="mapDepMin" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최소" aria-label="보증금 최소"><i>~</i><input id="mapDepMax" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최대" aria-label="보증금 최대"><span class="rgU">만</span></div>
 <div class="rng" id="rgRent"><span class="rgL">월세</span><input id="mapRentMin" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최소" aria-label="월세 최소"><i>~</i><input id="mapRentMax" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최대" aria-label="월세 최대"><span class="rgU">만</span></div>
-<form class="noSearch" id="noSearch" role="search"><label class="sr" for="noInput">매물번호 검색</label><input id="noInput" type="search" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="12" placeholder="매물번호 검색 (예: D5B531F)"><button type="submit" aria-label="매물번호로 찾기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></button></form>
+<form class="noSearch" id="noSearch" role="search"><label class="sr" for="noInput">매물번호 검색</label><input id="noInput" type="search" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="20" placeholder="매물번호 검색 (예: D5B531F)"><button type="submit" aria-label="매물번호로 찾기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></button></form>
 </div>
 <div class="elev" style="display: flex; flex-wrap: wrap; gap: 0; border: 1px solid #E6E0D4; border-radius: 18px; overflow: hidden; background: #FFFFFF">
 <div class="mlCol" style="flex: 1 1 250px; min-width: 0; display: flex; flex-direction: column; border-right: 1px solid #E6E0D4">
@@ -2102,6 +2102,7 @@ window.MGR = (function () {
   if (/^#manager$/.test(location.hash) && !on()) { if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', loginBox); else loginBox(); }
   /* ---------- 시작: 공개 화면을 먼저 그리고, 매니저 데이터를 받아 덧붙임 ---------- */
   function start(h) {
+    if (on()) setTimeout(function () { var ni = document.getElementById('noInput'); if (ni) { ni.placeholder = '매물번호·지번 검색 (예: 517-15)'; ni.title = '매니저 모드: 지번(517-15, 신사동 575)으로도 찾을 수 있어요'; } }, 0);
     hp = h; if (!on()) return;
     document.body.classList.add('mgrMode'); bar(); barCounts(); mapTools(0);
     call('who', {}).then(function (j) { if (j && j.me) { S.me = j.me; save(); barCounts(); } }).catch(function () { });
@@ -3020,8 +3021,9 @@ window.MGR = (function () {
     if (/통임대|사옥/.test(k)) return has(it, 'building');
     var pl = placeOf(k);
     if (pl) return isFinite(it.lat) && it.lat && distToLine(it.lat, it.lng, pl[0]) <= pl[1];
-    var hay = [it.id, it.title, it.point, it.dong, it.gu, it.station, it.usage, it.options, it.desc, it.catLabel].join(' ').toLowerCase().replace(/\s+/g, '');
-    return k.toLowerCase().split(/\s+/).every(function (w) { return hay.indexOf(w) >= 0; });
+    var mj = window.MGR && MGR.on() && it.jb ? String(it.jb).split(/[,，\/·\s]+/).map(function (j) { return j.replace(/번지$/, ''); }) : [];   /* 매니저 모드: 지번으로도 찾기 (517-15 · 신사동 517-15) */
+    var hay = [it.id, it.title, it.point, it.dong, it.gu, it.station, it.usage, it.options, it.desc, it.catLabel].concat(mj.map(function (j) { return (it.dong || '') + j; })).join(' ').toLowerCase().replace(/\s+/g, '');
+    return k.toLowerCase().replace(/(동)(\d)/g, '$1 $2').split(/\s+/).every(function (w) { w = w.replace(/번지$/, ''); if (mj.length && /^(산)?\d+-\d+$/.test(w)) return mj.indexOf(w) >= 0; if (mj.length && /^(산)?\d+$/.test(w) && mj.indexOf(w) >= 0) return true; return hay.indexOf(w) >= 0; });
   }
   function setSel(id, val, label) {
     var el = $(id); if (!el) return;
@@ -3105,6 +3107,8 @@ window.MGR = (function () {
     if (/무권리|권리금\s*(없|x|X|0)/.test(t)) { c.noPrem = 1; c.chips.push('무권리'); }
     if (/엘리베이터|엘베|승강기/.test(t) && !/(엘리베이터|엘베|승강기)\s*(없|x|X|무관)/.test(t)) { c.elev = 1; c.chips.push('엘리베이터'); }
     if ((m = /주차\s*(\d{1,3})\s*대/.exec(t))) { c.park = +m[1]; c.chips.push('주차 ' + m[1] + '대 이상'); } else if (/주차\s*(가능|필수|되는|있는|O)/i.test(t)) { c.park = 1; c.chips.push('주차 가능'); }
+    // 매니저 모드: 지번 (517-15 · 신사동 517-15번지)
+    if (window.MGR && MGR.on()) { var jq = []; t.replace(/(?:^|[^\d~\-])((?:산\s*)?\d{1,4}-\d{1,4})(?!\s*(?:평|층|\d))/g, function (_, j) { j = j.replace(/\s+/g, ''); if (jq.indexOf(j) < 0) jq.push(j); return _; }); if (jq.length) { c.jbq = jq; c.chips.push('지번 ' + jq.join('·')); } }
     if (!c.chips.length) return { chips: [], none: true, raw: t };
     return c;
   }
@@ -3126,6 +3130,7 @@ window.MGR = (function () {
   }
   function autoMatch(it, c) {
     if (c.none) return kwMatch(it, c.raw);
+    if (c.jbq) { var ij = String(it.jb || '').split(/[,，\/·\s]+/).map(function (j) { return j.replace(/번지$/, ''); }); if (!c.jbq.some(function (j) { return ij.indexOf(j) >= 0; })) return false; }
     if (c.sts && !(isFinite(it.lat) && it.lat && walkMinEst(it, c.sts) <= c.min + 0.49)) return false;
     var a = it.area || 0;
     if (c.aMin != null && a < c.aMin) return false;
@@ -4132,7 +4137,16 @@ window.MGR = (function () {
     var f = document.getElementById('noSearch'); if (!f) return;
     f.addEventListener('submit', function (e) {
       e.preventDefault();
-      var inp = document.getElementById('noInput'), r = findNo(inp.value);
+      var inp = document.getElementById('noInput');
+      var jm = window.MGR && MGR.on() && /^\s*(?:([가-힣]+동)\s*)?((?:산\s*)?\d{1,4}(?:-\d{1,4})?)\s*(?:번지)?\s*$/.exec(inp.value);   /* 매니저 모드: 지번 검색 (517-15 · 신사동 517-15 · 신사동 575) */
+      if (jm && (jm[1] || /-/.test(jm[2]))) {
+        var jd = jm[1] || '', jj = jm[2].replace(/\s+/g, ''), hit = ITEMS.filter(function (x) { return x.jb && (!jd || x.dong === jd) && String(x.jb).split(/[,，\/·\s]+/).map(function (j) { return j.replace(/번지$/, ''); }).indexOf(jj) >= 0; });
+        if (hit.length === 1) { inp.blur(); location.hash = '#item/' + encodeURIComponent(hit[0].id); inp.value = ''; return; }
+        if (hit.length) { inp.blur(); SEARCH.auto = { chips: ['지번 ' + (jd ? jd + ' ' : '') + jj], jbq: [jj] }; if (jd) SEARCH.auto.dongs = [jd]; renderSearchBar(); applyFilters(true);
+          if (window.bdToast) window.bdToast('지번 <b>' + esc((jd ? jd + ' ' : '') + jj) + '</b> 매물 <b>' + hit.length + '건</b>을 찾았습니다. 지도·목록에서 고르세요.'); return; }
+        if (window.bdToast) window.bdToast('지번 <b>' + esc((jd ? jd + ' ' : '') + jj) + '</b> 매물이 없습니다.'); return;
+      }
+      var r = findNo(inp.value);
       if (typeof r === 'string') { inp.blur(); location.hash = '#item/' + encodeURIComponent(r); inp.value = ''; }
       else if (window.bdToast) window.bdToast(typeof r === 'number' ? '번호가 겹치는 매물이 <b>' + r + '건</b> 있습니다. 매물번호를 끝까지 입력해 주세요.' : '<b>' + (inp.value || '') + '</b> 매물을 찾을 수 없습니다. 번호를 다시 확인해 주세요.');
     });
