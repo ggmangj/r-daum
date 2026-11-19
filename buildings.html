@@ -496,6 +496,14 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 .dtTrap{position:absolute!important;left:0;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;clip-path:inset(50%)}
 .dtSide .dtSmall{font-size:12px;color:#6B757D;line-height:1.6;padding:0 4px}
 /* 비슷한 매물 */
+.dtSub{margin-top:22px}.dtSub:first-of-type{margin-top:6px}.dtSub>h3{font-size:16px;font-weight:800;color:#294652;margin:0 0 12px;display:flex;align-items:center;gap:8px}.dtSub>h3:before{content:"";width:7px;height:7px;border-radius:50%;background:#BC975E}
+.simCond{margin:-6px 0 4px;font-size:12.5px;color:#6B757D}.simG{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px;border-top:2px solid #294652}
+.simR{display:grid;grid-template-columns:60px minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 4px;border-bottom:1px solid #E6E0D4;color:#14191F;text-decoration:none}.simR:hover{background:#FBF8F2}
+.simT{width:60px;height:46px;border-radius:7px;background:#ECE6DA url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%23A89F8E' stroke-width='1.6' viewBox='0 0 24 24'%3E%3Cpath d='M4 21V6l8-3 8 3v15M9 21v-5h6v5M8 9h2M14 9h2M8 13h2M14 13h2'/%3E%3C/svg%3E") center no-repeat;overflow:hidden}.simT img{width:100%;height:100%;object-fit:cover;display:block}
+.simM{min-width:0}.simM .m1{display:flex;align-items:center;gap:4px;font-size:11.5px;color:#8A8272;white-space:nowrap;overflow:hidden}.simM .m2{display:block;font-size:13.5px;font-weight:700;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.simP{text-align:right;font-size:13px;color:#294652;white-space:nowrap}.simP b{color:#C4553A;font-weight:800}.simP small{display:block;font-size:11px;color:#8A8272;margin-top:2px}
+@media (max-width:760px){.simG{grid-template-columns:1fr}.simR{grid-template-columns:52px minmax(0,1fr) auto;gap:10px}.simT{width:52px;height:42px}}
+@media print{.dtSim2{display:none!important}}
 .dtSim{margin-top:56px;padding-top:40px;border-top:1px solid #E6E0D4}
 .dtSimGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
 .dtSimGrid .listing{transition:transform .2s,box-shadow .2s;box-shadow:0 1px 2px rgba(41,70,82,.12),0 3px 6px rgba(41,70,82,.12)}
@@ -3356,21 +3364,65 @@ window.MGR = (function () {
       '<div class="dtTools"><button type="button" class="dtTool" data-act="share"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"></path></svg><span>링크 복사</span></button>' +
       '<button type="button" class="dtTool dtPdf" data-act="pdf"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5M12 11v6M9 14l3 3 3-3"></path></svg><span>PDF 저장</span></button></div></div>' +
       '<div class="dtGrid"><div class="dtMain">' + gal +
-      (it.sale ? (it.shop ? shopSumHtml(it) + bldMsg : saleSumHtml(it) + bldMsg + saleCmpHtml(it)) + regHtml +
-      (it.reg ? flvHtml(it.sale ? { reg: it.reg, floor: it.shop ? it.floor : '', elev: it.elev, area: it.shop ? it.area : 0 } : it) : '') +
-        saleLandHtml(it, it.shop) +
+      (it.sale ? (it.shop ? shopSumHtml(it) + bldMsg : saleSumHtml(it) + bldMsg + saleCmpHtml(it)) +
+      bldGroup(it.reg ? flvHtml(it.sale ? { reg: it.reg, floor: it.shop ? it.floor : '', elev: it.elev, area: it.shop ? it.area : 0 } : it) : '', regHtml) +
+        saleLandHtml(it, it.shop) + simHtml(it) +
       '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
         ''
       : price +
       '<section class="dtSec"><div class="dtH2r"><h2>매물 정보</h2><span class="dtNo"><small>매물번호</small><b>' + esc(it.id) + '</b><button type="button" class="dtNoCp" onclick="var b=this;try{navigator.clipboard.writeText(\'' + esc(it.id) + '\').then(function(){b.textContent=\'복사됨\';setTimeout(function(){b.textContent=\'복사\'},1500)})}catch(e){}">복사</button></span></div>' + (it.sale ? '' : bldMsg) + '<div class="dtInfoGrid solo">' + info + '</div>' +
       '<p class="dtNote">※ 「중개대상물의 표시·광고 명시사항 세부기준」에 따른 표시입니다. 소재지는 동까지만 표시하며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
-      (it.reg ? flvHtml(it.sale ? { reg: it.reg, floor: it.shop ? it.floor : '', elev: it.elev, area: it.shop ? it.area : 0 } : it) : '') +
       addHtml(it) +
-      '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
-      regHtml) +
+      bldGroup(it.reg ? flvHtml(it) : '', regHtml) + simHtml(it) +
+      '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>') +
       '<section class="dtSec"><h2>중개사무소 정보</h2>' + office + '</section>' +
       '</div>' + side + '</div>' +
       '</div>';
+  }
+  // ── 이 매물과 비슷한 매물: 반경 500m · 같은 층 구분(지하/1층/2층 이상/통) · 엘리베이터 같음 · 보증금·월(월세+관리비)·면적 ±15% (매매: 매매가·면적) · 최대 8건 ──
+  function simFc(t) {
+    t = String(t || '').replace(/\s+/g, ''); if (!t) return null;
+    if (/통|전체|전층|건물/.test(t)) return 'T';
+    var g = t.replace(/(지하|B)\d*층?/gi, '');
+    if (/(^|[^\d])1층|^1$|^1[~\-]/.test(g)) return '1';
+    if (/지하|^B\d/i.test(t)) return 'B';
+    var m = /(\d+)/.exec(g); return m ? (+m[1] >= 2 ? '2' : '1') : null;
+  }
+  function simEv(v) { v = String(v == null ? '' : v).trim(); return /^(O|Y|유|있|true|1)/i.test(v) ? 1 : /^(X|N|무|없|false|0)/i.test(v) ? 0 : null; }
+  function simNear(a, b) { return a > 0 && b > 0 && Math.abs(b - a) <= a * 0.15; }
+  function simList(it) {
+    if (!it || !isFinite(it.lat) || !it.lat) return [];
+    var fc = simFc(it.floor), ev = simEv(it.elev), ar = +it.area || 0;
+    var dp = manOf(it.dep, it.depText), rt = manOf(it.rent, it.rentText), mg = manOf(null, it.mgmt), mo = rt != null ? rt + (mg || 0) : null;
+    return ITEMS.filter(function (x) {
+      if (x.id === it.id || !!x.sale !== !!it.sale || (it.sale && !!x.shop !== !!it.shop)) return false;
+      if (!isFinite(x.lat) || !x.lat) return false;
+      if (fc && simFc(x.floor) !== fc) return false;
+      if (ev != null && simEv(x.elev) !== ev) return false;
+      if (ar && !simNear(ar, +x.area || 0)) return false;
+      if (dp > 0 && !simNear(dp, manOf(x.dep, x.depText) || 0)) return false;
+      if (!it.sale && mo > 0) { var r2 = manOf(x.rent, x.rentText); if (r2 == null || !simNear(mo, r2 + (mg != null ? (manOf(null, x.mgmt) || 0) : 0))) return false; }
+      return true;
+    }).map(function (x) { return [x, distM(it.lat, it.lng, x.lat, x.lng)]; })
+      .filter(function (p) { return p[1] <= 500; }).sort(function (a, b) { return a[1] - b[1]; }).slice(0, 8);
+  }
+  function simHtml(it) {
+    var l = simList(it); if (!l.length) return '';
+    var fc = simFc(it.floor), ev = simEv(it.elev), mgr = window.MGR && MGR.on();
+    var cond = ['반경 500m', { B: '지하', 1: '1층', 2: '2층 이상', T: '통임대·건물' }[fc] || '', it.sale ? '매매가·면적 ±15%' : '보증금·월(월세+관리비)·면적 ±15%', ev === 1 ? '엘리베이터 있음' : ev === 0 ? '엘리베이터 없음' : ''].filter(Boolean).join(' · ');
+    return '<section class="dtSec dtSim2"><h2>이 매물과 비슷한 매물 <small class="dtH2s">' + l.length + '건</small></h2><p class="simCond">' + esc(cond) + ' · 가까운 순</p><div class="simG">' +
+      l.map(function (p) {
+        var x = p[0], d = p[1], ph = x.photos && x.photos.length ? '<img src="' + photoUrl(x.photos[0], 200) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">' : '';
+        var pr = x.sale ? '매매 <b>' + esc(x.depText || '문의') + '</b><small>' + (x.shop ? '전용 ' : '대지 ') + Math.round(+x.area || 0) + '평</small>'
+          : '보 ' + esc(x.depText || '문의') + ' / <b>월 ' + esc(x.rentText || '문의') + '</b><small>관리 ' + esc(x.mgmt || '문의') + '</small>';
+        var tag = mgr && MGR.miTag ? MGR.miTag(x) : '';
+        return '<a class="simR" href="#item/' + encodeURIComponent(x.id) + '"><span class="simT">' + ph + '</span><span class="simM"><span class="m1">' + tag + esc((x.dong || '') + (x.floor ? ' · ' + x.floor : '') + ' · ' + (d < 1000 ? Math.max(10, Math.round(d / 10) * 10) + 'm' : (d / 1000).toFixed(1) + 'km')) + '</span><span class="m2">' + esc(x.title || '') + '</span></span><span class="simP">' + pr + '</span></a>';
+      }).join('') + '</div></section>';
+  }
+  function bldGroup(flv, reg) {
+    if (!flv && !reg) return '';
+    var sub = function (h, t) { return h.replace(/^<section class="dtSec([^"]*)"><h2>[\s\S]*?<\/h2>/, '<div class="dtSub$1"><h3>' + t + '</h3>').replace(/<\/section>\s*$/, '</div>'); };
+    return '<section class="dtSec dtBldG"><h2>건축물 정보</h2>' + (flv ? sub(flv, '층별 현황') : '') + (reg ? sub(reg, '건축물 대장') : '') + '</section>';
   }
   function renderSimilar(it) {
     var box = $('dtSim'); if (!box) return;
