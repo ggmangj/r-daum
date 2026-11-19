@@ -4197,7 +4197,7 @@ window.MGR = (function () {
   }
   function closeByUser() {
     if (innerWidth > 760 && DT.from !== 'fa') document.body.classList.add('mapFull');   // 목록으로 → 지도 크게 보기로 (컴퓨터 화면만, 추천 매물 전체 보기에서 온 경우는 그 창으로)
-    if (DT.internal) { DT.internal = false; DT.restore = true; history.back(); return; }
+    if (DT.internal) { var dp = DT.depth || 0; DT.depth = 0; DT.internal = false; DT.restore = true; history.go(-(1 + dp)); return; }   // 상세끼리 이동한 만큼 한 번에 목록으로
     // 공유 링크로 바로 들어온 경우: 지도(또는 추천 매물) 목록으로
     location.hash = DT.from === 'listings' || DT.from === 'fa' ? '#listings' : '#map';
   }
@@ -4240,19 +4240,21 @@ window.MGR = (function () {
         var old = ev && ev.oldURL && ev.oldURL.indexOf('#') >= 0 ? '#' + ev.oldURL.split('#')[1] : '';
         DT.hashBefore = /^#item\//.test(old) ? '' : old;
       }
+      if (fromEvent && document.body.classList.contains('detailMode')) { if (DT.pushNav) DT.depth = (DT.depth || 0) + 1; else if (DT.depth) DT.depth--; }
+      DT.pushNav = 0;
       var id = decodeURIComponent(m[1]);
       if (!ITEMS.length) { DT.pending = id; return; }
       openDetail(id);
     } else {
       if (document.body.classList.contains('detailMode') && DT.internal && location.hash === DT.hashBefore) DT.restore = true;
-      DT.internal = false; closeDetail();
+      DT.internal = false; DT.depth = 0; closeDetail();
     }
   }
   window.addEventListener('hashchange', function (e) { route(true, e); });
   // 상세로 들어간 곳 기억 (지도 / 추천 매물). 상세 안에서 다른 매물로 갈 때는 기록을 쌓지 않음
   document.addEventListener('click', function (e) {
     var a = e.target.closest('a[href^="#item/"]'); if (!a || e.defaultPrevented) return;
-    if (a.closest('#itemDetail')) { e.preventDefault(); location.replace(a.getAttribute('href')); return; }
+    if (a.closest('#itemDetail')) { e.preventDefault(); if (a.getAttribute('href') === location.hash) return; DT.pushNav = 1; location.hash = a.getAttribute('href'); return; }   // 상세 → 다른 매물 상세: 기록을 쌓아서 브라우저 ← 로 이전 매물로
     DT.from = a.closest('#faOv') ? 'fa' : a.closest('#listings') ? 'listings' : 'map';
   });
   // 상세 화면에서 '빠른 문의'를 누르면 상세 페이지의 문의 폼으로
