@@ -3397,7 +3397,7 @@ window.MGR = (function () {
       if (x.id === it.id || !!x.sale !== !!it.sale || (it.sale && !!x.shop !== !!it.shop)) return false;
       if (!isFinite(x.lat) || !x.lat) return false;
       if (fc && simFc(x.floor) !== fc) return false;
-      if (ev != null && simEv(x.elev) !== ev) return false;
+      if (ev === 1 && simEv(x.elev) !== 1) return false;   // 엘리베이터 있는 매물 → 있는 매물만 · 없는(모르는) 매물 → 있는 매물도 추천
       if (ar && !simNear(ar, +x.area || 0)) return false;
       if (dp > 0 && !simNear(dp, manOf(x.dep, x.depText) || 0)) return false;
       if (!it.sale && mo > 0) { var r2 = manOf(x.rent, x.rentText); if (r2 == null || !simNear(mo, r2 + (mg != null ? (manOf(null, x.mgmt) || 0) : 0))) return false; }
@@ -3408,7 +3408,7 @@ window.MGR = (function () {
   function simHtml(it) {
     if (!it || !isFinite(it.lat) || !it.lat) return '';
     var l = simList(it), fc = simFc(it.floor), ev = simEv(it.elev), mgr = window.MGR && MGR.on();
-    var cond = ['반경 500m', { B: '지하', 1: '1층', 2: '2층 이상', T: '통임대·건물' }[fc] || '', it.sale ? '매매가·면적 ±15%' : '보증금·월(월세+관리비)·면적 ±15%', ev === 1 ? '엘리베이터 있음' : ev === 0 ? '엘리베이터 없음' : ''].filter(Boolean).join(' · ');
+    var cond = ['반경 500m', { B: '지하', 1: '1층', 2: '2층 이상', T: '통임대·건물' }[fc] || '', it.sale ? '매매가·면적 ±15%' : '보증금·월(월세+관리비)·면적 ±15%', ev === 1 ? '엘리베이터 있음' : ''].filter(Boolean).join(' · ');
     if (!l.length) return '<section class="dtSec dtSim2"><h2>이 매물과 비슷한 매물</h2><p class="simCond">' + esc(cond) + '</p><p class="simNone">이 조건에 맞는 매물이 지금은 없습니다.' + (mgr ? '' : ' 비슷한 매물은 상담 시 함께 찾아 드립니다.') + '</p></section>';
     return '<section class="dtSec dtSim2"><h2>이 매물과 비슷한 매물 <small class="dtH2s">' + l.length + '건</small></h2><p class="simCond">' + esc(cond) + ' · 가까운 순</p><div class="simG">' +
       l.map(function (p) {
