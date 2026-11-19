@@ -497,11 +497,11 @@ body.detailMode #top,body.detailMode #map,body.detailMode #listings,body.detailM
 /* 비슷한 매물 */
 .dtPart{margin-top:26px;display:block}.dtPart:first-of-type{margin-top:6px}.dtPart>h3{font-size:16px;font-weight:800;color:#294652;margin:0 0 12px;display:flex;align-items:center;gap:8px}.dtPart>h3:before{content:"";width:7px;height:7px;border-radius:50%;background:#BC975E}
 .simNone{margin:0;padding:18px 4px;border-top:2px solid #294652;font-size:14px;color:#5B6670}.dtBldG .dtI2{grid-template-columns:max-content max-content max-content minmax(0,1fr)}.dtBldG .dtI2 dd:nth-child(2){white-space:nowrap}@media (max-width:760px){.dtBldG .dtI2{grid-template-columns:max-content minmax(0,1fr)}.dtBldG .dtI2 dd:nth-child(2){white-space:normal}}.simCond{margin:-6px 0 4px;font-size:12.5px;color:#6B757D}.simG{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px;border-top:2px solid #294652}
-.simR{display:grid;grid-template-columns:60px minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px 4px;border-bottom:1px solid #E6E0D4;color:#14191F;text-decoration:none}.simR:hover{background:#FBF8F2}
-.simT{width:60px;height:46px;border-radius:7px;background:#ECE6DA url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%23A89F8E' stroke-width='1.6' viewBox='0 0 24 24'%3E%3Cpath d='M4 21V6l8-3 8 3v15M9 21v-5h6v5M8 9h2M14 9h2M8 13h2M14 13h2'/%3E%3C/svg%3E") center no-repeat;overflow:hidden}.simT{position:relative}.simPv{position:absolute;left:0;top:0;width:240px;height:184px;transform:scale(.25);transform-origin:0 0;pointer-events:none}.simT.pvOn{background-image:none}.simT img{width:100%;height:100%;object-fit:cover;display:block}
-.simM{min-width:0}.simM .m1{display:flex;align-items:center;gap:4px;font-size:11.5px;color:#8A8272;white-space:nowrap;overflow:hidden}.simM .m2{display:block;font-size:13.5px;font-weight:700;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.simP{text-align:right;font-size:13px;color:#294652;white-space:nowrap}.simP b{color:#C4553A;font-weight:800}.simP small{display:block;font-size:11px;color:#8A8272;margin-top:2px}
-@media (max-width:760px){.simG{grid-template-columns:1fr}.simR{grid-template-columns:52px minmax(0,1fr) auto;gap:10px}.simT{width:52px;height:42px}.simPv{transform:scale(.2167,.2283)}}
+.simR{display:grid;grid-template-columns:96px minmax(0,1fr);gap:14px;align-items:center;padding:11px 4px;border-bottom:1px solid #E6E0D4;color:#14191F;text-decoration:none}.simR:hover{background:#FBF8F2}
+.simT{width:96px;height:72px;border-radius:8px;background:#ECE6DA url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='none' stroke='%23A89F8E' stroke-width='1.6' viewBox='0 0 24 24'%3E%3Cpath d='M4 21V6l8-3 8 3v15M9 21v-5h6v5M8 9h2M14 9h2M8 13h2M14 13h2'/%3E%3C/svg%3E") center no-repeat;overflow:hidden}.simT{position:relative}.simPv{position:absolute;left:0;top:0;width:240px;height:184px;transform:scale(.4,.392);transform-origin:0 0;pointer-events:none}.simT.pvOn{background-image:none}.simT img{width:100%;height:100%;object-fit:cover;display:block}
+.simM{min-width:0}.simM .m1{display:flex;align-items:center;gap:4px;font-size:12.5px;color:#8A8272;white-space:nowrap;overflow:hidden}.simM .m2{display:block;font-size:14.5px;font-weight:700;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.simP{display:block;margin-top:3px;font-size:13px;color:#294652;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.simP b{color:#C4553A;font-weight:800}
+@media (max-width:760px){.simG{grid-template-columns:1fr}.simR{grid-template-columns:84px minmax(0,1fr);gap:12px}.simT{width:84px;height:64px}.simPv{transform:scale(.35,.348)}}
 @media print{.dtSim2{display:none!important}}
 .dtSec h2.dtHi{display:flex;align-items:center;gap:12px;margin-bottom:16px}.dtSec h2.dtHi:before{display:none}
 .dtIc{flex:none;width:40px;height:40px;border-radius:50%;background:#294652;color:#E9D3A8;display:flex;align-items:center;justify-content:center}
@@ -3425,6 +3425,7 @@ window.MGR = (function () {
       all.forEach(function (p) { if (out.length < 8 && !seen[p[0].id] && p[1] <= st[0] && p[2] <= st[1] + 1e-9) { seen[p[0].id] = 1; out.push(p); used = st; } });
       return out.length >= 8;
     });
+    out.sort(function (a, b) { return a[1] - b[1]; });   // 최종 목록은 거리순
     out.r = used[0]; out.t = used[1]; out.wide = used !== ST[0]; out.mx = ST[3][1]; return out;
   }
   function simHtml(it) {
@@ -3435,10 +3436,10 @@ window.MGR = (function () {
     return '<section class="dtSec dtSim2"><h2>이 매물과 비슷한 매물 <small class="dtH2s">' + l.length + '건</small></h2><p class="simCond">' + esc(cond) + ' · 가까운 순</p><div class="simG">' +
       l.map(function (p) {
         var x = p[0], d = p[1], ph = x.photos && x.photos.length ? '<img src="' + photoUrl(x.photos[0], 200) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">' : '', pv = !ph && isFinite(x.lat) && x.lat ? ' data-pv="' + x.lat + ',' + x.lng + '"' : '';
-        var pr = x.sale ? '매매 <b>' + esc(x.depText || '문의') + '</b><small>' + (x.shop ? '전용 ' : '대지 ') + Math.round(+x.area || 0) + '평</small>'
-          : '보 ' + esc(x.depText || '문의') + ' / <b>월 ' + esc(x.rentText || '문의') + '</b><small>관리 ' + esc(x.mgmt || '문의') + '</small>';
+        var pr = x.sale ? '매매 <b>' + esc(x.depText || '문의') + '</b> / ' + (x.shop ? '전용 ' : '대지 ') + Math.round(+x.area || 0) + '평'
+          : '보 ' + esc(x.depText || '문의') + ' / <b>월 ' + esc(x.rentText || '문의') + '</b> / 관리 ' + esc(x.mgmt || '문의');
         var tag = mgr && MGR.miTag ? MGR.miTag(x) : '';
-        return '<a class="simR" href="#item/' + encodeURIComponent(x.id) + '"><span class="simT"' + pv + '>' + ph + '</span><span class="simM"><span class="m1">' + tag + esc((x.dong || '') + (x.floor ? ' · ' + x.floor : '') + ' · ' + (d < 1000 ? Math.max(10, Math.round(d / 10) * 10) + 'm' : (d / 1000).toFixed(1) + 'km')) + '</span><span class="m2" title="' + esc(x.title || '') + '">' + esc(String(x.title || '').replace(new RegExp('^\\s*' + String(x.dong || '').replace(/[.*+?^${}()|[\]\\]/g, '') + '\\s*'), '').replace(new RegExp('^' + String(x.floor || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*'), '') || x.title || '') + '</span></span><span class="simP">' + pr + '</span></a>';
+        return '<a class="simR" href="#item/' + encodeURIComponent(x.id) + '"><span class="simT"' + pv + '>' + ph + '</span><span class="simM"><span class="m1">' + tag + esc((x.dong || '') + (x.floor ? ' · ' + x.floor : '') + ' · ' + (d < 1000 ? Math.max(10, Math.round(d / 10) * 10) + 'm' : (d / 1000).toFixed(1) + 'km')) + '</span><span class="m2" title="' + esc(x.title || '') + '">' + esc(String(x.title || '').replace(new RegExp('^\\s*' + String(x.dong || '').replace(/[.*+?^${}()|[\]\\]/g, '') + '\\s*'), '').replace(new RegExp('^' + String(x.floor || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*'), '') || x.title || '') + '</span><span class="simP">' + pr + '</span></span></a>';
       }).join('') + '</div></section>';
   }
   // 비슷한 매물 사진이 없으면 작은 거리뷰 (건물 쪽을 바라보게) · 화면에 보일 때만 띄움
