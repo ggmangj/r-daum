@@ -3388,7 +3388,7 @@ window.MGR = (function () {
   }
   function simEv(v) { v = String(v == null ? '' : v).trim(); return /^(O|Y|유|있|true|1)/i.test(v) ? 1 : /^(X|N|무|없|false|0)/i.test(v) ? 0 : null; }
   function simNear(a, b) { return a > 0 && b > 0 && Math.abs(b - a) <= a * 0.15; }
-  function simList(it) {
+  function simAll(it) {
     if (!it || !isFinite(it.lat) || !it.lat) return [];
     var fc = simFc(it.floor), ev = simEv(it.elev), ar = +it.area || 0;
     var dp = manOf(it.dep, it.depText), rt = manOf(it.rent, it.rentText), mg = manOf(null, it.mgmt), mo = rt != null ? rt + (mg || 0) : null;
@@ -3402,13 +3402,17 @@ window.MGR = (function () {
       if (!it.sale && mo > 0) { var r2 = manOf(x.rent, x.rentText); if (r2 == null || !simNear(mo, r2 + (mg != null ? (manOf(null, x.mgmt) || 0) : 0))) return false; }
       return true;
     }).map(function (x) { return [x, distM(it.lat, it.lng, x.lat, x.lng)]; })
-      .filter(function (p) { return p[1] <= 500; }).sort(function (a, b) { return a[1] - b[1]; }).slice(0, 8);
+      .filter(function (p) { return p[1] <= 1000; }).sort(function (a, b) { return a[1] - b[1]; });
+  }
+  function simList(it) {   // 반경 500m 안에 있으면 500m만, 없으면 1km까지 넓혀서 (최대 8건)
+    var a = simAll(it), n = a.filter(function (p) { return p[1] <= 500; });
+    var l = (n.length ? n : a).slice(0, 8); l.r = n.length || !a.length ? 500 : 1000; return l;
   }
   function simHtml(it) {
     if (!it || !isFinite(it.lat) || !it.lat) return '';
     var l = simList(it), fc = simFc(it.floor), ev = simEv(it.elev), mgr = window.MGR && MGR.on();
-    var cond = ['반경 500m', { B: '지하', 1: '1층', 2: '2층 이상', T: '통임대·건물' }[fc] || '', it.sale ? '매매가·면적 ±15%' : '보증금·월(월세+관리비)·면적 ±15%', ev === 1 ? '엘리베이터 있음' : ''].filter(Boolean).join(' · ');
-    if (!l.length) return '<section class="dtSec dtSim2"><h2>이 매물과 비슷한 매물</h2><p class="simCond">' + esc(cond) + '</p><p class="simNone">이 조건에 맞는 매물이 지금은 없습니다.' + (mgr ? '' : ' 비슷한 매물은 상담 시 함께 찾아 드립니다.') + '</p></section>';
+    var cond = ['반경 ' + (l.r === 1000 ? '1km (500m 안에 없어 넓혀 찾음)' : '500m'), { B: '지하', 1: '1층', 2: '2층 이상', T: '통임대·건물' }[fc] || '', it.sale ? '매매가·면적 ±15%' : '보증금·월(월세+관리비)·면적 ±15%', ev === 1 ? '엘리베이터 있음' : ''].filter(Boolean).join(' · ');
+    if (!l.length) return '<section class="dtSec dtSim2"><h2>이 매물과 비슷한 매물</h2><p class="simCond">' + esc(cond.replace('반경 500m', '반경 1km')) + '</p><p class="simNone">이 조건에 맞는 매물이 지금은 없습니다.' + (mgr ? '' : ' 비슷한 매물은 상담 시 함께 찾아 드립니다.') + '</p></section>';
     return '<section class="dtSec dtSim2"><h2>이 매물과 비슷한 매물 <small class="dtH2s">' + l.length + '건</small></h2><p class="simCond">' + esc(cond) + ' · 가까운 순</p><div class="simG">' +
       l.map(function (p) {
         var x = p[0], d = p[1], ph = x.photos && x.photos.length ? '<img src="' + photoUrl(x.photos[0], 200) + '" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">' : '';
