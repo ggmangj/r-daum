@@ -3670,7 +3670,16 @@ window.MGR = (function () {
   }
   // 같은 건물 추가 임대 + 합산 정보
   // 단지 상가(호실별 집합건물): 호수가 있거나 같은 건물 매물이 4건 이상
-  function isDanji(it) { var xs = sameBldg(it); return !!(it && (it.ho || xs.some(function (o) { return o.ho; }) || xs.length >= 4)); }
+  function isDanji(it) {
+    if (!it) return false;
+    if (it.reg) {   // 건축물대장이 있으면 대장으로 판단: 집합건물이거나, 이 층 용도가 계단실·승강기처럼 상가가 아닌 경우(다른 동 대장)만 단지 상가
+      if (/집합/.test(String(it.reg.kind || ''))) return true;
+      var here = floorRows(it.reg).filter(function (r) { return isHereFloor(r.name, it.floor); });
+      return here.length > 0 && here.every(function (r) { return r.segs.every(function (g) { return /계단|승강기|엘리베이터|기계실|전기실|주차|공용/.test(g.full) && !/근린|판매|업무|의료|교육|숙박|위락|운동/.test(g.full); }); });
+    }
+    var xs = sameBldg(it), hs = xs.filter(function (o) { return o.ho; }).length + (it.ho ? 1 : 0);   // 대장이 없을 때: 같은 건물 매물 4건 이상 + 호수 있는 매물 2건 이상
+    return xs.length >= 4 && hs >= 2;
+  }
   function hoText(o) { return o.ho ? (/^\d/.test(o.ho) ? o.ho + '호' : o.ho + (/호$/.test(o.ho) ? '' : '호')) : ''; }
   function addHtml(it) {
     var xs = sameBldg(it); if (!xs.length) return '';
