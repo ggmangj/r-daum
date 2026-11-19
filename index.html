@@ -955,7 +955,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 <style id="addCss">
 .flAdd{cursor:pointer}
 .flAdd:hover path{fill-opacity:.24}
-.dtAdd h2 small{font-size:14px;font-weight:700;color:#A27D48;margin-left:6px}
+.dtAdd h2 small,.dtAdd h3 small{font-size:14px;font-weight:700;color:#A27D48;margin-left:6px}
 .adLead{margin:0 0 12px;font-size:14px;color:#5B6670;line-height:1.6}
 .adList{list-style:none;margin:0;padding:0;border-top:2px solid #294652}
 .adList li{display:grid;grid-template-columns:60px minmax(0,1fr) auto;align-items:center;gap:10px;padding:12px 6px;border-bottom:1px solid #EFEAE0}
@@ -3365,15 +3365,14 @@ window.MGR = (function () {
       '<div class="dtGrid"><div class="dtMain">' + gal +
       (it.sale ? (it.shop ? shopSumHtml(it) + bldMsg : saleSumHtml(it) + bldMsg + saleCmpHtml(it)) +
       bldGroup(it.reg ? flvHtml(it.sale ? { reg: it.reg, floor: it.shop ? it.floor : '', elev: it.elev, area: it.shop ? it.area : 0 } : it) : '', regHtml) +
-        saleLandHtml(it, it.shop) + simHtml(it) +
-      '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
+        saleLandHtml(it, it.shop) +
+      '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' + simHtml(it) +
         ''
       : price +
       '<section class="dtSec"><div class="dtH2r"><h2>매물 정보</h2><span class="dtNo"><small>매물번호</small><b>' + esc(it.id) + '</b><button type="button" class="dtNoCp" onclick="var b=this;try{navigator.clipboard.writeText(\'' + esc(it.id) + '\').then(function(){b.textContent=\'복사됨\';setTimeout(function(){b.textContent=\'복사\'},1500)})}catch(e){}">복사</button></span></div>' + (it.sale ? '' : bldMsg) + '<div class="dtInfoGrid solo">' + info + '</div>' +
       '<p class="dtNote">※ 「중개대상물의 표시·광고 명시사항 세부기준」에 따른 표시입니다. 소재지는 동까지만 표시하며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
-      addHtml(it) +
-      bldGroup(it.reg ? flvHtml(it) : '', regHtml) + simHtml(it) +
-      '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>') +
+      bldGroup(it.reg ? flvHtml(it) : '', regHtml, addHtml(it)) +
+      '<section class="dtSec"><h2>위치</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' + simHtml(it)) +
       '<section class="dtSec"><h2>중개사무소 정보</h2>' + office + '</section>' +
       '</div>' + side + '</div>' +
       '</div>';
@@ -3418,10 +3417,11 @@ window.MGR = (function () {
         return '<a class="simR" href="#item/' + encodeURIComponent(x.id) + '"><span class="simT">' + ph + '</span><span class="simM"><span class="m1">' + tag + esc((x.dong || '') + (x.floor ? ' · ' + x.floor : '') + ' · ' + (d < 1000 ? Math.max(10, Math.round(d / 10) * 10) + 'm' : (d / 1000).toFixed(1) + 'km')) + '</span><span class="m2">' + esc(x.title || '') + '</span></span><span class="simP">' + pr + '</span></a>';
       }).join('') + '</div></section>';
   }
-  function bldGroup(flv, reg) {
-    if (!flv && !reg) return '';
+  function bldGroup(flv, reg, mid) {
+    if (!flv && !reg) return mid || '';
+    if (mid) mid = mid.replace(/^<section class="dtSec([^"]*)"><h2>/, '<div class="dtSub$1"><h3>').replace('</h2>', '</h3>').replace(/<\/section>\s*$/, '</div>');
     var sub = function (h, t) { return h.replace(/^<section class="dtSec([^"]*)"><h2>[\s\S]*?<\/h2>/, '<div class="dtSub$1"><h3>' + t + '</h3>').replace(/<\/section>\s*$/, '</div>'); };
-    return '<section class="dtSec dtBldG"><h2>건축물 정보</h2>' + (flv ? sub(flv, '층별 현황') : '') + (reg ? sub(reg, '건축물 대장') : '') + '</section>';
+    return '<section class="dtSec dtBldG"><h2>건축물 정보</h2>' + (flv ? sub(flv, '층별 현황') : '') + (mid || '') + (reg ? sub(reg, '건축물 대장') : '') + '</section>';
   }
   function renderSimilar(it) {
     var box = $('dtSim'); if (!box) return;
