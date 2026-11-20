@@ -1769,7 +1769,7 @@ body:not(.mgrMode) #mgBar,body:not(.mgrMode) #mgDr{display:none!important}
    일반 방문자에게는 아무 것도 바뀌지 않습니다. 연락처·중개사메모는 내려오지 않습니다. */
 window.MGR = (function () {
   var API = 'https://script.google.com/macros/s/AKfycbxcrADcmOUogYCPPnEY9Hh6h_NpdV31gaOiP1zNCLn1fKrRsi12m-wi9d6wU8Sbw6dn9Q/exec', KEY = 'daumMgr';
-  var S = null, hp = null, READY = false, HIDROWS = [], ERR = '', EXTRA = [], JB = {}, HID = {}, FAV = {}, SHOW = { o: 1, h: 1, g: 1 }, CUST = null, HIST = [], SENT = {}, CUSTS = null;
+  var S = null, hp = null, READY = false, HIDROWS = [], ERR = '', EXTRA = [], JB = {}, PM = {}, HID = {}, FAV = {}, SHOW = { o: 1, h: 1, g: 1 }, CUST = null, HIST = [], SENT = {}, CUSTS = null;
   var LBL = { o: '우리 매물', h: '우리 비공개', g: '공클' };
   try { S = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { }
   try { var sv = JSON.parse(localStorage.getItem(KEY + '.show') || 'null'); if (sv) SHOW = sv; } catch (e) { }
@@ -1793,7 +1793,7 @@ window.MGR = (function () {
   function src(it) { if (it.unv) return 'g'; if (it.sale) return it.src === 'gc' ? 'g' : (it.priv && /비공개/.test(it.orig || '') ? 'h' : 'o'); return it.priv && /비공개/.test(it.orig || '') ? 'h' : 'o'; }   // 임대: 매물장 「출처」가 비공개인 매물만 보라
   function pass(it) { return !on() || SHOW[src(it)] !== 0; }
   function isFav(id) { return !!FAV[id]; }
-  function applyJB(it) { if (JB[it.id] && !it.jb) it.jb = JB[it.id]; if (HID[it.id]) it.hid = 1; }
+  function applyJB(it) { if (JB[it.id] && !it.jb) it.jb = JB[it.id]; if (PM[it.id] && !it.pm) it.pm = PM[it.id]; if (HID[it.id]) it.hid = 1; }
   function extend(items) { setTimeout(barCounts, 0); if (!READY) { items.forEach(applyJB); return items; } var ids = {}; items.forEach(function (x) { ids[x.id] = 1; applyJB(x); }); return items.concat(EXTRA.filter(function (x) { return !ids[x.id]; })); }
   function decorate(add) { add.forEach(applyJB); setTimeout(barCounts, 0); }
   function gs(d) { if (!HIDROWS.length || !d || !d.rows) return d; var ids = {}; d.rows.forEach(function (r) { ids[r[0]] = 1; }); return { rows: d.rows.concat(HIDROWS.filter(function (r) { return !ids[r[0]]; })) }; }   // 공개 공클 + 노출 안 한 공클
@@ -2130,7 +2130,7 @@ window.MGR = (function () {
     try { cached = JSON.parse(localStorage.getItem(CK) || 'null'); if (cached && Date.now() - cached.t > 864e5) cached = null; } catch (e) { cached = null; }
     var apply = function (o, fresh) {
       EXTRA = (o.extra || []).map(function (x) { return h.SM ? (function () { var it = h.saleItem(x); it.priv = 1; it.jb = x.jb; it.orig = x.orig || ''; return it; })() : x; });
-      JB = o.jb || {}; HIDROWS = o.hid || []; HID = {}; HIDROWS.forEach(function (r) { HID[r[0]] = 1; });
+      JB = o.jb || {}; PM = o.pm || {}; HIDROWS = o.hid || []; HID = {}; HIDROWS.forEach(function (r) { HID[r[0]] = 1; });
       READY = true;
       if (hp.items().length) { hp.items().forEach(applyJB); hp.load(hp.items(), true, new Date().toISOString(), true); if (HIDROWS.length) hp.mergeGs({ rows: HIDROWS }, true); }
       barCounts(); status('');
@@ -2153,10 +2153,10 @@ window.MGR = (function () {
       if (!a || !a.items) throw new Error((a && a.error) || '임대 데이터 없음');
       if (!a.jb) throw new Error('홈페이지 연동 스크립트가 아직 새 버전으로 배포되지 않았습니다 (배포 관리 → 새 버전)');
       var jb = {}; Object.keys(a.jb).forEach(function (k) { jb[k] = a.jb[k]; }); a.items.forEach(function (x) { if (x.jb) jb[x.id] = x.jb; });
-      var hid = [];
-      if (g && g.rows) g.rows.forEach(function (x) { if (x[21]) jb[x[0]] = x[21]; if (x[22]) hid.push(x); });
-      else if (cached) hid = cached.hid || [];
-      var o = { extra: a.items, jb: jb, hid: hid }; save(o); apply(o, true);
+      var hid = [], pm = {}; Object.keys(a.pm || {}).forEach(function (k) { pm[k] = a.pm[k]; }); a.items.forEach(function (x) { if (x.pm) pm[x.id] = x.pm; });   // 실제 권리금 (매니저 모드만)
+      if (g && g.rows) g.rows.forEach(function (x) { if (x[21]) jb[x[0]] = x[21]; if (x[22]) hid.push(x); if (x[24]) pm[x[0]] = x[24]; });
+      else if (cached) { hid = cached.hid || []; Object.keys(cached.pm || {}).forEach(function (k) { if (!pm[k]) pm[k] = cached.pm[k]; }); }
+      var o = { extra: a.items, jb: jb, hid: hid, pm: pm }; save(o); apply(o, true);
       if (!cached) toast('매니저 모드 — 비공개 ' + a.items.filter(function (x) { return /비공개/.test(x.orig || ''); }).length + '건 · 광고 안 함 ' + a.items.filter(function (x) { return !/비공개/.test(x.orig || ''); }).length + '건');
       if (!(g && g.rows)) status('공클 전체 목록을 받지 못함 (공개 공클만 표시)' + (g && g.error ? ': ' + g.error : ''));
     }).catch(fail);
@@ -3272,7 +3272,7 @@ window.MGR = (function () {
         (photos.length > 1 ? '<div class="dtThumbs dtThumb5" role="list">' + photos.map(function (p, i) { return p ? '<button type="button" role="listitem" data-i="' + i + '" class="' + (i ? '' : 'on') + '" aria-label="' + (i + 1) + '번째 사진"><img src="' + photoUrl(p, 400) + '" alt="" loading="lazy" referrerpolicy="no-referrer"></button>' : '<span class="dtThumbEmpty" aria-hidden="true"></span>'; }).join('') + '</div>' : '') + '</div>'
       : '<div class="dtNoPhoto" id="dtNoPhoto"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#BC975E" stroke-width="1.5" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><circle cx="9" cy="10" r="2"></circle><path d="M21 16l-5-5-8 8"></path></svg><b>현장 사진 준비 중</b><span>실제 내부 사진과 도면은 상담 시 바로 보내드립니다.<br>02-555-1165</span></div>';
     var price = it.sale ? salePriceHtml(it) : '<div class="dtPrice"><div><small>보증금</small><b>' + esc(it.depText || '문의') + '</b></div><div class="rent"><small>월세</small><b>' + esc(it.rentText || '문의') + '</b></div>' +
-      '<div><small>관리비</small><b>' + esc(it.mgmt || (it.unv ? '확인요청' : '문의')) + '</b></div><div class="prem"><small>권리금</small><b>' + esc(it.premium || (it.unv ? '확인요청' : '문의')) + '</b></div></div>';
+      '<div><small>관리비</small><b>' + esc(it.mgmt || (it.unv ? '확인요청' : '문의')) + '</b></div><div class="prem"><small>권리금</small><b>' + esc(premMgr(it) || it.premium || (it.unv ? '확인요청' : '문의')) + '</b></div></div>';
     var desc = nz(it.desc) ? esc(it.desc) :
       esc((it.dong || '') + ' ' + (it.floor || '') + ' ' + (it.catLabel || '') + ' 임대 매물입니다.\n' +
         (it.area ? '전용 ' + Math.round(it.area) + '평' : '') + (it.parking ? ', 주차 ' + it.parking : '') + (elev === '있음' ? ', 엘리베이터 있음' : '') + (it.premium === '무권리' ? ', 무권리' : '') + '.\n' +
@@ -3290,7 +3290,7 @@ window.MGR = (function () {
       infoRow('거래 형태', '임대차 (월세)') +
       infoRow('관리비', it.mgmt) +
       infoRow('해당층 / 총 층수', floorTxt) +
-      infoRow('권리금', it.premium === '무권리' ? '없음' : (it.unv && !it.premium ? '' : '유선문의')) +
+      infoRow('권리금', premMgr(it) ? premMgr(it) : it.premium === '무권리' ? '없음' : (it.unv && !it.premium ? '' : '유선문의')) +
       infoRow('전용면적', m2(it.area)) +
       infoRow('주차대수', it.parking) +
       infoRow('중개대상물 종류', kindTxt ? '건축물 · ' + kindTxt : '건축물 · ' + (it.catLabel || '')) +
@@ -3462,6 +3462,13 @@ window.MGR = (function () {
     };
     if (window.IntersectionObserver) { var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { io.unobserve(e.target); make(e.target); } }); }, { rootMargin: '200px' }); ts.forEach(function (t) { io.observe(t); }); }
     else ts.forEach(make);
+  }
+  // 권리금 표시: 매니저 모드에서는 실제 권리금(예: 2,000만), 일반 화면은 무권리 / 권리금 협의
+  function premMgr(it) {
+    if (!(window.MGR && MGR.on()) || !it || !it.pm) return '';
+    var v = String(it.pm).replace(/\s+/g, ''); if (!v) return '';
+    if (/^[\d,.]+$/.test(v)) v = v + '만'; else v = v.replace(/만원$/, '만');
+    return v;
   }
   function bldGroup(flv, reg, mid) {
     if (!flv && !reg) return mid || '';
