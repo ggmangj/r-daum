@@ -992,6 +992,11 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
 @media print{.adChk,.adGo{display:none!important}.adList li{grid-template-columns:minmax(0,1fr)}}
 </style>
 <style id="asHeadWrap">@media (max-width:760px){.autoSearch .asHead{flex-wrap:wrap!important;white-space:normal!important;overflow:visible!important}.autoSearch .asHead span{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;display:block!important;flex:1 1 100%!important}.autoSearch .asHead em{white-space:normal!important;display:inline!important}}</style>
+<style id="jbPickCss">#jbPick{position:absolute;top:64px;left:50%;transform:translateX(-50%);z-index:60;background:#fff;border:1px solid #d8dee4;border-radius:14px;box-shadow:0 12px 32px rgba(20,35,45,.22);padding:14px;width:min(340px,calc(100% - 24px));display:flex;flex-direction:column;gap:8px}
+#jbPick .jpT{font-size:15px;color:#1f2a30;font-weight:700;line-height:1.4}#jbPick .jpT small{display:block;font-size:12px;color:#6b757d;font-weight:500}
+#jbPick button{display:flex;align-items:center;justify-content:space-between;width:100%;border:1px solid #c9d4d9;background:#f6f9fa;border-radius:10px;padding:11px 14px;font-size:15px;color:#294652;cursor:pointer;font-family:inherit}
+#jbPick button:hover{background:#294652;color:#fff;border-color:#294652}#jbPick button span{font-size:13px;opacity:.8}
+#jbPick .jpX{justify-content:center;background:none;border:0;font-size:13px;color:#6b757d;padding:4px}#jbPick .jpX:hover{background:none;color:#294652}</style>
 <style id="fullBtnRow">
 .heroMap .mapTools>label{flex:1 1 0;min-width:0}.heroMap .mapTools>label .mapSel{width:100%}
 .mapTools .mapFullBtn{flex:none;height:44px;background:#E6EEF0!important;border-color:#3A6271!important;color:#294652!important;box-shadow:0 1px 0 rgba(41,70,82,.06)}
@@ -4391,16 +4396,41 @@ window.MGR = (function () {
     var part = ITEMS.filter(function (x) { return String(x.id).toUpperCase().indexOf(q) >= 0; });
     return part.length === 1 ? part[0].id : (part.length ? part.length : null);
   }
-  // 지번 검색 결과로 지도 확대: 한 건물(150m 안)이면 건물이 보이게 크게, 여러 곳이면 그 곳들이 다 보이게
-  function jbZoom(hit) {
-    var P = hit.filter(function (x) { return isFinite(+x.lat) && isFinite(+x.lng) && +x.lat; }); if (!P.length || !M) return;
-    var go = function () {
-      var la = 0, lo = 0; P.forEach(function (x) { la += +x.lat; lo += +x.lng; }); la /= P.length; lo /= P.length;
-      var far = P.some(function (x) { return distM(la, lo, +x.lat, +x.lng) > 150; });
-      if (!far && M.set) M.set({ lat: la, lng: lo }, 18); else if (M.fit) M.fit(P);
-    };
-    var mp = document.getElementById('map'); if (mp && mp.scrollIntoView && innerWidth < 760) mp.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    setTimeout(go, 250); setTimeout(go, 700);   // 목록·핀을 다시 그리며 지도가 다시 맞춰지는 것보다 뒤에 확대
+  // 매니저 모드 지번 검색: 같은 지번이 여러 동에 있으면 「잠원동 15-7 · 역삼동 15-7」 중 고르게 → 고른 동만 걸러서 지도를 매물 카드가 보이게 확대 (상세로 바로 가지 않음)
+  function jbPick(hit, jj) {
+    var G = {}, K = []; hit.forEach(function (x) { var k = x.dong || ''; if (!G[k]) { G[k] = []; K.push(k); } G[k].push(x); });
+    jbClose();
+    if (K.length === 1) return jbGo(G[K[0]], K[0], jj);
+    var host = (document.getElementById('leafletMap') || document.body).parentElement || document.body;
+    if (getComputedStyle(host).position === 'static') host.style.position = 'relative';
+    var el = document.createElement('div'); el.id = 'jbPick';
+    el.innerHTML = '<div class="jpT">지번 <b>' + esc(jj) + '</b>이 ' + K.length + '개 동에 있습니다<small>어느 곳인지 골라 주세요</small></div>'
+      + K.map(function (k) { var g = G[k][0]; return '<button type="button" data-jd="' + esc(k) + '"><b>' + esc((g.gu ? g.gu + ' ' : '') + k + ' ' + jj) + '</b><span>' + G[k].length + '건</span></button>'; }).join('')
+      + '<button type="button" class="jpX" data-jx>닫기</button>';
+    host.appendChild(el);
+    el.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      if (b.hasAttribute('data-jx')) return jbClose();
+      var k = b.getAttribute('data-jd'); jbClose(); jbGo(G[k], k, jj);
+    });
+    jbShow();
+    if (window.bdToast) window.bdToast('지번 <b>' + esc(jj) + '</b> 매물이 ' + K.map(function (k) { return k + ' ' + G[k].length + '건'; }).join(' · ') + ' 있습니다. 동을 골라 주세요.');
+  }
+  function jbClose() { var o = document.getElementById('jbPick'); if (o) o.remove(); }
+  function jbShow() { var mp = document.getElementById('leafletMap'); if (mp && mp.getBoundingClientRect) { var r = mp.getBoundingClientRect(); if (r.top < 0 || r.bottom > innerHeight) mp.scrollIntoView({ behavior: 'smooth', block: 'center' }); } }
+  function jbGo(P, dong, jj) {
+    SEARCH.auto = { chips: ['지번 ' + (dong ? dong + ' ' : '') + jj], jbq: [jj] }; if (dong) SEARCH.auto.dongs = [dong];
+    renderSearchBar(); applyFilters(true); jbShow();
+    var Q = P.filter(function (x) { return isFinite(+x.lat) && +x.lat; });
+    if (Q.length && M) {
+      var go = function () {
+        var la = 0, lo = 0; Q.forEach(function (x) { la += +x.lat; lo += +x.lng; }); la /= Q.length; lo /= Q.length;
+        var far = Q.some(function (x) { return distM(la, lo, +x.lat, +x.lng) > 150; });
+        if (!far && M.set) M.set({ lat: la, lng: lo }, 18); else if (M.fit) M.fit(Q);   // 18단계: 핀이 「3층 26평」 카드로 보이는 크기
+      };
+      setTimeout(go, 250); setTimeout(go, 700);   // 목록·핀을 다시 그리며 지도가 맞춰지는 것보다 뒤에 확대
+    }
+    if (window.bdToast) window.bdToast('<b>' + esc((dong ? dong + ' ' : '') + jj) + '</b> 매물 <b>' + P.length + '건</b> · 지도에서 매물 카드를 눌러 보세요.');
   }
   (function () {
     var f = document.getElementById('noSearch'); if (!f) return;
@@ -4410,10 +4440,7 @@ window.MGR = (function () {
       var jm = window.MGR && MGR.on() && /^\s*(?:([가-힣]+동)\s*)?((?:산\s*)?\d{1,4}(?:-\d{1,4})?)\s*(?:번지)?\s*$/.exec(inp.value);   /* 매니저 모드: 지번 검색 (517-15 · 신사동 517-15 · 신사동 575) */
       if (jm && (jm[1] || /-/.test(jm[2]))) {
         var jd = jm[1] || '', jj = jm[2].replace(/\s+/g, ''), hit = ITEMS.filter(function (x) { return x.jb && (!jd || x.dong === jd) && String(x.jb).split(/[,，\/·\s]+/).map(function (j) { return j.replace(/번지$/, ''); }).indexOf(jj) >= 0; });
-        if (hit.length === 1) { inp.blur(); location.hash = '#item/' + encodeURIComponent(hit[0].id); inp.value = ''; return; }
-        if (hit.length) { inp.blur(); SEARCH.auto = { chips: ['지번 ' + (jd ? jd + ' ' : '') + jj], jbq: [jj] }; if (jd) SEARCH.auto.dongs = [jd]; renderSearchBar(); applyFilters(true);
-          jbZoom(hit);
-          if (window.bdToast) window.bdToast('지번 <b>' + esc((jd ? jd + ' ' : '') + jj) + '</b> 매물 <b>' + hit.length + '건</b>을 찾았습니다. 지도·목록에서 고르세요.'); return; }
+        if (hit.length) { inp.blur(); jbPick(hit, jj); return; }
         if (window.bdToast) window.bdToast('지번 <b>' + esc((jd ? jd + ' ' : '') + jj) + '</b> 매물이 없습니다.'); return;
       }
       var r = findNo(inp.value);
