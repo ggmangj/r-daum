@@ -1075,7 +1075,7 @@ body.mapFull .mapTools .mapFullBtn{display:none}
 .heatBtn svg{flex:none;width:17px;height:17px}.heatBtn:hover{background:#BA9862}.heatBtn.on,.heatBtn.on:hover{background:#9C6F2E}.heatBtn.on:before{opacity:0}.heatBtn.on .hbDot{fill:#E5452B;opacity:1}
 .heatBtn[hidden]{display:none!important}
 .hvChip{display:inline-flex;align-items:baseline;gap:3px;padding:4px 8px;border-radius:999px;border:1.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.25);font:700 12px/1 'Noto Sans KR',sans-serif;color:#3E2812;text-decoration:none;white-space:nowrap}.hvChip.d{color:#fff}.hvChip small{font-size:9.5px;font-weight:600;opacity:.8}
-.hsPt{width:18px;height:18px;border-radius:50%;background:#C4553A;border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.35);box-sizing:border-box}
+.hsDot{display:block;width:10px;height:10px;border-radius:50%;border:1.5px solid #294652;box-sizing:border-box;box-shadow:0 0 0 1.5px #fff}.hpMgr{margin:-2px 0 8px;padding:5px 8px;border-radius:7px;background:#294652;color:#fff;font-size:11.5px;font-weight:600}.hsPt{width:18px;height:18px;border-radius:50%;background:#C4553A;border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.35);box-sizing:border-box}
 .hsBox{position:absolute;right:58px;top:12px;z-index:31;width:300px;max-height:calc(100% - 24px);overflow:auto;background:#fff;border-radius:14px;box-shadow:0 6px 22px rgba(20,25,31,.25);font:12.5px/1.5 'Noto Sans KR',sans-serif;color:#2A333C}.hsBox[hidden]{display:none}
 .hsHd{background:#294652;color:#fff;padding:12px 14px;position:relative}.hsHd small{display:block;font-size:11.5px;color:#B8C6CC;padding-right:22px}.hsX{position:absolute;right:8px;top:6px;border:0;background:none;color:#fff;font-size:20px;cursor:pointer;line-height:1}
 .hsN{font-size:27px;font-weight:800;color:#E9C98F;margin:3px 0 1px;letter-spacing:-.5px}.hsN span{font-size:12px;font-weight:500;color:#fff;margin-left:5px;letter-spacing:0}
@@ -2639,7 +2639,7 @@ window.MGR = (function () {
     var G = heatScale();
     use.forEach(function (x) {
       var st = heatStep(x.p.v, G), bg = CTC[Math.min(CTC.length - 1, Math.round(st / 4 * (CTC.length - 1)))];
-      HS.objs.push(new nm.Marker({ map: map, position: new nm.LatLng(x.p.lat, x.p.lng), zIndex: 1250 + st, icon: { content: '<a class="hvChip' + (st >= 3 ? ' d' : '') + '" style="background:' + bg + '" href="#item/' + encodeURIComponent(x.p.it.id) + '">' + hf1(x.p.v) + '만</a>', anchor: new nm.Point(24, 12) } }));
+      HS.objs.push(new nm.Marker({ map: map, position: new nm.LatLng(x.p.lat, x.p.lng), zIndex: 1250 + st, clickable: false, icon: { content: '<i class="hsDot" style="background:' + bg + '"></i>', anchor: new nm.Point(5, 5) } }));   // 계산에 쓴 매물: 작은 점만 (숫자는 오른쪽 상자 목록에)
     });
     var box = $('hsBox'); if (!box) { box = document.createElement('div'); box.id = 'hsBox'; box.className = 'hsBox'; $('leafletMap').parentNode.appendChild(box);
       box.addEventListener('click', function (e) { var c = e.target.closest('[data-hsf]'); if (c) { HEAT.fl = c.dataset.hsf; drawMap(); if (HS.pt) setTimeout(function () { hsRun(HS.pt[0], HS.pt[1]); }, 80); return; } if (e.target.closest('.hsX')) hsClear(); if (e.target.closest('.hsMore')) box.classList.add('all'); }); }
@@ -2659,7 +2659,6 @@ window.MGR = (function () {
   function heatRender() {
     var nm = naver.maps, map = M.raw; heatClear();
     hsBind(); if (!heatMgr()) hsClear();
-    if (heatMgr() && map.getZoom() >= HEAT_PIN_Z) { heatPins(); return; }
     if (!(window.d3 && d3.contours)) { ctLib(function () { if (heatActive()) heatRender(); }); heatUi(); return; }
     ctBuild();
     var G = heatScale(), b = map.getBounds(), mn = b.getMin ? b.getMin() : b.getSW(), mx = b.getMax ? b.getMax() : b.getNE();
@@ -2701,7 +2700,7 @@ window.MGR = (function () {
   }
   function heatSet(on) {   // 켤 때 너무 가까이 있으면 동네가 보이도록 한 단계 멀리
     HEAT.on = !!on; if (M && M.closePopup) M.closePopup();
-    if (heatActive() && M.raw.getZoom() > 15) M.raw.setZoom(15, true);
+    if (heatActive() && !heatMgr() && M.raw.getZoom() > 15) M.raw.setZoom(15, true);   // 매니저 모드는 지금 확대 그대로 (등고선 위에서 지역을 눌러 시세 보기)
     drawMap();
   }
   function heatUi() {
@@ -2720,7 +2719,7 @@ window.MGR = (function () {
     if ($('dongPick')) $('dongPick').classList.toggle('dpGrp', !btn.hidden);
     if (pn.hidden) return;
     var S = act ? (HEAT.stat || { n: 0, cells: 0 }) : (function () { var q = heatScale().qs || []; return { n: 0, cells: q.some(function (v) { return v > 0; }) ? 1 : 0, qs: CT.qs || q, pins: 1 }; })(), f1 = function (v) { return (Math.round(v * 10) / 10).toLocaleString('ko-KR'); }, chip = function (v, t) { return '<button type="button" data-hf="' + v + '"' + (HEAT.fl === v ? ' class="on"' : '') + '>' + t + '</button>'; };
-    pn.innerHTML = '<div class="hpTitle">매물 임대 평단가 <span>' + ({ all: '전체 층', '1': '1층', up: '2층 이상', b: '지하' })[HEAT.fl] + '</span></div><div class="hpSub">지금 나와 있는 매물의 호가 기준 · 실거래가 아님</div>' +
+    pn.innerHTML = '<div class="hpTitle">매물 임대 평단가 <span>' + ({ all: '전체 층', '1': '1층', up: '2층 이상', b: '지하' })[HEAT.fl] + '</span></div><div class="hpSub">지금 나와 있는 매물의 호가 기준 · 실거래가 아님</div>' + (heatMgr() && act ? '<div class="hpMgr">지도에서 지역을 누르면 그 주변 시세가 나와요</div>' : '') +
       '<div class="hpRow">' + chip('all', '전체') + chip('1', '1층') + chip('up', '2층 이상') + chip('b', '지하') + '</div>' +
       (S.cells ? '<div class="hpBar">' + CTC.map(function (c) { return '<i style="background:' + c + '"></i>'; }).join('') + '</div>' +
         '<div class="hpTick"><span>낮음</span>' + (S.qs || []).map(function (q) { return '<span>' + f1(q) + '</span>'; }).join('') + '<span>높음</span></div>' +
