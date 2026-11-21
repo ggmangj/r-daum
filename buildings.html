@@ -4391,6 +4391,17 @@ window.MGR = (function () {
     var part = ITEMS.filter(function (x) { return String(x.id).toUpperCase().indexOf(q) >= 0; });
     return part.length === 1 ? part[0].id : (part.length ? part.length : null);
   }
+  // 지번 검색 결과로 지도 확대: 한 건물(150m 안)이면 건물이 보이게 크게, 여러 곳이면 그 곳들이 다 보이게
+  function jbZoom(hit) {
+    var P = hit.filter(function (x) { return isFinite(+x.lat) && isFinite(+x.lng) && +x.lat; }); if (!P.length || !M) return;
+    var go = function () {
+      var la = 0, lo = 0; P.forEach(function (x) { la += +x.lat; lo += +x.lng; }); la /= P.length; lo /= P.length;
+      var far = P.some(function (x) { return distM(la, lo, +x.lat, +x.lng) > 150; });
+      if (!far && M.set) M.set({ lat: la, lng: lo }, 18); else if (M.fit) M.fit(P);
+    };
+    var mp = document.getElementById('map'); if (mp && mp.scrollIntoView && innerWidth < 760) mp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(go, 250); setTimeout(go, 700);   // 목록·핀을 다시 그리며 지도가 다시 맞춰지는 것보다 뒤에 확대
+  }
   (function () {
     var f = document.getElementById('noSearch'); if (!f) return;
     f.addEventListener('submit', function (e) {
@@ -4401,6 +4412,7 @@ window.MGR = (function () {
         var jd = jm[1] || '', jj = jm[2].replace(/\s+/g, ''), hit = ITEMS.filter(function (x) { return x.jb && (!jd || x.dong === jd) && String(x.jb).split(/[,，\/·\s]+/).map(function (j) { return j.replace(/번지$/, ''); }).indexOf(jj) >= 0; });
         if (hit.length === 1) { inp.blur(); location.hash = '#item/' + encodeURIComponent(hit[0].id); inp.value = ''; return; }
         if (hit.length) { inp.blur(); SEARCH.auto = { chips: ['지번 ' + (jd ? jd + ' ' : '') + jj], jbq: [jj] }; if (jd) SEARCH.auto.dongs = [jd]; renderSearchBar(); applyFilters(true);
+          jbZoom(hit);
           if (window.bdToast) window.bdToast('지번 <b>' + esc((jd ? jd + ' ' : '') + jj) + '</b> 매물 <b>' + hit.length + '건</b>을 찾았습니다. 지도·목록에서 고르세요.'); return; }
         if (window.bdToast) window.bdToast('지번 <b>' + esc((jd ? jd + ' ' : '') + jj) + '</b> 매물이 없습니다.'); return;
       }
