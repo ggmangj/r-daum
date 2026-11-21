@@ -2079,12 +2079,13 @@ window.MGR = (function () {
     if (!map || !window.naver || !naver.maps || !map.getElement) { if ((n || 0) < 60) setTimeout(function () { mapTools((n || 0) + 1); }, 500); return; }
     var el = map.getElement(); if (!el || el.querySelector('.mgTools')) return;
     var box = document.createElement('div'); box.className = 'mgTools';
-    box.innerHTML = '<button type="button" data-t="sv" title="켜면 거리뷰가 있는 길이 파랗게 표시되고, 그 길을 누르면 거리뷰가 열립니다"><i></i>거리뷰</button><button type="button" data-t="cad" title="지번 경계(지적편집도)를 지도에 겹쳐 봅니다"><i></i>지적편집도</button>';
+    box.innerHTML = '<button type="button" data-t="sv" title="켜면 거리뷰가 있는 길이 파랗게 표시되고, 그 길을 누르면 거리뷰가 열립니다"><i></i>거리뷰</button><button type="button" data-t="cad" title="지번 경계(지적편집도)를 지도에 겹쳐 봅니다"><i></i>지적편집도</button><button type="button" data-t="heat" title="켜면 매물 대신 임대 평단가 등고선이 보이고, 지역을 누르면 그 주변 시세가 나옵니다"><i></i>임대평단가</button>';
     el.appendChild(box);
     ['mousedown', 'dblclick', 'wheel', 'touchstart'].forEach(function (ev) { box.addEventListener(ev, function (e) { e.stopPropagation(); }); });
     box.addEventListener('click', function (e) {
       e.stopPropagation(); var b = e.target.closest('[data-t]'); if (!b) return; var t = b.getAttribute('data-t'), on = !b.classList.contains('on');
       b.classList.toggle('on', on);
+      if (t === 'heat') { hp.heat(on); if (on) toast('지도에서 지역을 누르면 그 주변 임대 평단가 시세가 나옵니다'); }
       if (t === 'cad') { if (!MT.cad) MT.cad = new naver.maps.CadastralLayer(); MT.cad.setMap(on ? map : null); }
       if (t === 'sv') { if (!MT.sv) MT.sv = new naver.maps.StreetLayer(); MT.sv.setMap(on ? map : null); el.classList.toggle('mgSvOn', on); if (!on) panoClose(); else toast('지도에서 파란 선 위를 누르면 거리뷰가 열립니다'); }
     });
@@ -2626,7 +2627,7 @@ window.MGR = (function () {
   function hsClear(keep) { HS.objs.forEach(function (o) { o.setMap(null); }); HS.objs = []; if (!keep) HS.pt = null; var bx = $('hsBox'); if (bx && !keep) bx.hidden = true; }
   function hsBind() {
     var map = M && M.raw; if (!map || map._hsOn || !window.naver) return; map._hsOn = 1;
-    naver.maps.Event.addListener(map, 'click', function (e) { if (!(heatActive() && heatMgr()) || !e || !e.coord) return; hsRun(e.coord.lat ? e.coord.lat() : e.coord.y, e.coord.lng ? e.coord.lng() : e.coord.x); });
+    naver.maps.Event.addListener(map, 'click', function (e) { if (!(HEAT.on && heatActive() && heatMgr()) || !e || !e.coord) return; hsRun(e.coord.lat ? e.coord.lat() : e.coord.y, e.coord.lng ? e.coord.lng() : e.coord.x); });
   }
   function hsRun(la, lo) {
     var nm = naver.maps, map = M.raw; hsClear(); HS.pt = [la, lo];
@@ -2698,7 +2699,7 @@ window.MGR = (function () {
     heatUi();
   }
   function heatSet(on) {   // 켤 때 너무 가까이 있으면 동네가 보이도록 한 단계 멀리
-    HEAT.on = !!on; if (M && M.closePopup) M.closePopup();
+    HEAT.on = !!on; if (M && M.closePopup) M.closePopup(); if (!on) hsClear();
     if (heatActive() && !heatMgr() && M.raw.getZoom() > 15) M.raw.setZoom(15, true);   // 매니저 모드는 지금 확대 그대로 (등고선 위에서 지역을 눌러 시세 보기)
     drawMap();
   }
@@ -2714,11 +2715,12 @@ window.MGR = (function () {
       pn = document.createElement('div'); pn.id = 'heatPanel'; pn.className = 'heatPanel'; wrap.appendChild(pn);
       pn.addEventListener('click', function (e) { var b = e.target.closest('[data-hf]'); if (!b) return; HEAT.fl = b.dataset.hf; drawMap(); });
     }
+    var mtb = document.querySelector('.mgTools [data-t="heat"]'); if (mtb) mtb.classList.toggle('on', !!HEAT.on);   // 매니저 지도 도구의 「임대평단가」 버튼과 같이 켜고 끄기
     var act = !!heatActive(); btn.classList.toggle('on', act); btn.setAttribute('aria-pressed', act ? 'true' : 'false'); btn.hidden = !(M && M.kind === 'naver'); pn.hidden = !(M && M.kind === 'naver');   // 안내판은 처음부터 항상
     if ($('dongPick')) $('dongPick').classList.toggle('dpGrp', !btn.hidden);
     if (pn.hidden) return;
     var S = act ? (HEAT.stat || { n: 0, cells: 0 }) : (function () { var q = heatScale().qs || []; return { n: 0, cells: q.some(function (v) { return v > 0; }) ? 1 : 0, qs: CT.qs || q, pins: 1 }; })(), f1 = function (v) { return (Math.round(v * 10) / 10).toLocaleString('ko-KR'); }, chip = function (v, t) { return '<button type="button" data-hf="' + v + '"' + (HEAT.fl === v ? ' class="on"' : '') + '>' + t + '</button>'; };
-    pn.innerHTML = '<div class="hpTitle">매물 임대 평단가 <span>' + ({ all: '전체 층', '1': '1층', up: '2층 이상', b: '지하' })[HEAT.fl] + '</span></div><div class="hpSub">지금 나와 있는 매물의 호가 기준 · 실거래가 아님</div>' + (heatMgr() && act ? '<div class="hpMgr">지도에서 지역을 누르면 그 주변 시세가 나와요</div>' : '') +
+    pn.innerHTML = '<div class="hpTitle">매물 임대 평단가 <span>' + ({ all: '전체 층', '1': '1층', up: '2층 이상', b: '지하' })[HEAT.fl] + '</span></div><div class="hpSub">지금 나와 있는 매물의 호가 기준 · 실거래가 아님</div>' + (heatMgr() && HEAT.on ? '<div class="hpMgr">지도에서 지역을 누르면 그 주변 시세가 나와요</div>' : '') +
       '<div class="hpRow">' + chip('all', '전체') + chip('1', '1층') + chip('up', '2층 이상') + chip('b', '지하') + '</div>' +
       (S.cells ? '<div class="hpBar">' + CTC.map(function (c) { return '<i style="background:' + c + '"></i>'; }).join('') + '</div>' +
         '<div class="hpTick"><span>낮음</span>' + (S.qs || []).map(function (q) { return '<span>' + f1(q) + '</span>'; }).join('') + '<span>높음</span></div>' +
@@ -4699,7 +4701,7 @@ window.MGR = (function () {
 
   /* ---------- 시작 ---------- */
   ccInit(); bind(); initMap();
-  if (window.MGR) MGR.start({ items: function () { return ITEMS; }, load: load, mergeGs: mergeGs, applyFilters: applyFilters, drawMap: function () { if (M) drawMap(); else renderList(); },
+  if (window.MGR) MGR.start({ heat: function (on) { if (on === undefined) return !!HEAT.on; heatSet(on); }, items: function () { return ITEMS; }, load: load, mergeGs: mergeGs, applyFilters: applyFilters, drawMap: function () { if (M) drawMap(); else renderList(); },
     renderList: renderList, byId: byId, photoUrl: photoUrl, focusItem: focusItem, saleItem: saleItem, SM: SM, map: function () { return M; } });
   if (SM && SHEET_URL) saleStart();
   else if (SHEET_URL) {
