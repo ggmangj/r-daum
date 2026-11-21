@@ -1075,7 +1075,7 @@ body.mapFull .mapTools .mapFullBtn{display:none}
 .heatBtn svg{flex:none;width:17px;height:17px}.heatBtn:hover{background:#BA9862}.heatBtn.on,.heatBtn.on:hover{background:#9C6F2E}.heatBtn.on:before{opacity:0}.heatBtn.on .hbDot{fill:#E5452B;opacity:1}
 .heatBtn[hidden]{display:none!important}
 .hvChip{display:inline-flex;align-items:baseline;gap:3px;padding:4px 8px;border-radius:999px;border:1.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.25);font:700 12px/1 'Noto Sans KR',sans-serif;color:#3E2812;text-decoration:none;white-space:nowrap}.hvChip.d{color:#fff}.hvChip small{font-size:9.5px;font-weight:600;opacity:.8}
-.hsDot{display:block;width:10px;height:10px;border-radius:50%;border:1.5px solid #294652;box-sizing:border-box;box-shadow:0 0 0 1.5px #fff}.hpMgr{margin:-2px 0 8px;padding:5px 8px;border-radius:7px;background:#294652;color:#fff;font-size:11.5px;font-weight:600}.hsPt{width:18px;height:18px;border-radius:50%;background:#C4553A;border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.35);box-sizing:border-box}
+.hsDot{display:block;width:10px;height:10px;border-radius:50%;border:1.5px solid #294652;box-sizing:border-box;box-shadow:0 0 0 1.5px #fff}.hpTitle{position:relative}.hpTitle:has(.hpTog){padding-right:62px;white-space:nowrap}.hpTog{position:absolute;right:0;top:-2px;display:inline-flex;align-items:center;gap:5px;padding:3px 9px 3px 6px;border-radius:999px;border:1.5px solid #294652;background:#fff;color:#294652;font:700 11.5px 'Noto Sans KR',sans-serif;cursor:pointer;white-space:nowrap}.hpTog i{width:13px;height:13px;border-radius:3px;border:1.5px solid #294652;box-sizing:border-box;display:inline-block}.hpTog.on{background:#294652;color:#fff}.hpTog.on i{border-color:#fff;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 6.2l2.3 2.3 4.7-5' fill='none' stroke='%23294652' stroke-width='2'/%3E%3C/svg%3E") center/10px no-repeat}.hpMgr{margin:-2px 0 8px;padding:5px 8px;border-radius:7px;background:#294652;color:#fff;font-size:11.5px;font-weight:600}.hsPt{width:18px;height:18px;border-radius:50%;background:#C4553A;border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.35);box-sizing:border-box}
 .hsBox{position:absolute;right:58px;top:12px;z-index:31;width:300px;max-height:calc(100% - 24px);overflow:auto;background:#fff;border-radius:14px;box-shadow:0 6px 22px rgba(20,25,31,.25);font:12.5px/1.5 'Noto Sans KR',sans-serif;color:#2A333C}.hsBox[hidden]{display:none}
 .hsHd{background:#294652;color:#fff;padding:12px 14px;position:relative}.hsHd small{display:block;font-size:11.5px;color:#B8C6CC;padding-right:22px}.hsX{position:absolute;right:8px;top:6px;border:0;background:none;color:#fff;font-size:20px;cursor:pointer;line-height:1}
 .hsN{font-size:27px;font-weight:800;color:#E9C98F;margin:3px 0 1px;letter-spacing:-.5px}.hsN span{font-size:12px;font-weight:500;color:#fff;margin-left:5px;letter-spacing:0}
@@ -2080,13 +2080,12 @@ window.MGR = (function () {
     if (!map || !window.naver || !naver.maps || !map.getElement) { if ((n || 0) < 60) setTimeout(function () { mapTools((n || 0) + 1); }, 500); return; }
     var el = map.getElement(); if (!el || el.querySelector('.mgTools')) return;
     var box = document.createElement('div'); box.className = 'mgTools';
-    box.innerHTML = '<button type="button" data-t="sv" title="켜면 거리뷰가 있는 길이 파랗게 표시되고, 그 길을 누르면 거리뷰가 열립니다"><i></i>거리뷰</button><button type="button" data-t="cad" title="지번 경계(지적편집도)를 지도에 겹쳐 봅니다"><i></i>지적편집도</button><button type="button" data-t="heat" title="켜면 매물 대신 임대 평단가 등고선이 보이고, 지역을 누르면 그 주변 시세가 나옵니다"><i></i>임대평단가</button>';
+    box.innerHTML = '<button type="button" data-t="sv" title="켜면 거리뷰가 있는 길이 파랗게 표시되고, 그 길을 누르면 거리뷰가 열립니다"><i></i>거리뷰</button><button type="button" data-t="cad" title="지번 경계(지적편집도)를 지도에 겹쳐 봅니다"><i></i>지적편집도</button>';
     el.appendChild(box);
     ['mousedown', 'dblclick', 'wheel', 'touchstart'].forEach(function (ev) { box.addEventListener(ev, function (e) { e.stopPropagation(); }); });
     box.addEventListener('click', function (e) {
       e.stopPropagation(); var b = e.target.closest('[data-t]'); if (!b) return; var t = b.getAttribute('data-t'), on = !b.classList.contains('on');
       b.classList.toggle('on', on);
-      if (t === 'heat') { hp.heat(on); if (on) toast('지도에서 지역을 누르면 그 주변 임대 평단가 시세가 나옵니다'); }
       if (t === 'cad') { if (!MT.cad) MT.cad = new naver.maps.CadastralLayer(); MT.cad.setMap(on ? map : null); }
       if (t === 'sv') { if (!MT.sv) MT.sv = new naver.maps.StreetLayer(); MT.sv.setMap(on ? map : null); el.classList.toggle('mgSvOn', on); if (!on) panoClose(); else toast('지도에서 파란 선 위를 누르면 거리뷰가 열립니다'); }
     });
@@ -2714,14 +2713,13 @@ window.MGR = (function () {
       var dp = $('dongPick');   // 법정동 버튼 바로 옆에 붙여 하나의 버튼처럼 보이게
       if (dp && $('dpPanel')) dp.insertBefore(btn, $('dpPanel')); else wrap.appendChild(btn);
       pn = document.createElement('div'); pn.id = 'heatPanel'; pn.className = 'heatPanel'; wrap.appendChild(pn);
-      pn.addEventListener('click', function (e) { var b = e.target.closest('[data-hf]'); if (!b) return; HEAT.fl = b.dataset.hf; drawMap(); });
+      pn.addEventListener('click', function (e) { if (e.target.closest('[data-hon]')) { heatSet(!HEAT.on); return; } var b = e.target.closest('[data-hf]'); if (!b) return; HEAT.fl = b.dataset.hf; drawMap(); });
     }
-    var mtb = document.querySelector('.mgTools [data-t="heat"]'); if (mtb) mtb.classList.toggle('on', !!HEAT.on);   // 매니저 지도 도구의 「임대평단가」 버튼과 같이 켜고 끄기
     var act = !!heatActive(); btn.classList.toggle('on', act); btn.setAttribute('aria-pressed', act ? 'true' : 'false'); btn.hidden = !(M && M.kind === 'naver'); pn.hidden = !(M && M.kind === 'naver');   // 안내판은 처음부터 항상
     if ($('dongPick')) $('dongPick').classList.toggle('dpGrp', !btn.hidden);
     if (pn.hidden) return;
     var S = act ? (HEAT.stat || { n: 0, cells: 0 }) : (function () { var q = heatScale().qs || []; return { n: 0, cells: q.some(function (v) { return v > 0; }) ? 1 : 0, qs: CT.qs || q, pins: 1 }; })(), f1 = function (v) { return (Math.round(v * 10) / 10).toLocaleString('ko-KR'); }, chip = function (v, t) { return '<button type="button" data-hf="' + v + '"' + (HEAT.fl === v ? ' class="on"' : '') + '>' + t + '</button>'; };
-    pn.innerHTML = '<div class="hpTitle">매물 임대 평단가 <span>' + ({ all: '전체 층', '1': '1층', up: '2층 이상', b: '지하' })[HEAT.fl] + '</span></div><div class="hpSub">지금 나와 있는 매물의 호가 기준 · 실거래가 아님</div>' + (heatMgr() && HEAT.on ? '<div class="hpMgr">지도에서 지역을 누르면 그 주변 시세가 나와요</div>' : '') +
+    pn.innerHTML = '<div class="hpTitle">매물 임대 평단가 <span>' + ({ all: '전체 층', '1': '1층', up: '2층 이상', b: '지하' })[HEAT.fl] + '</span>' + (heatMgr() ? '<button type="button" class="hpTog' + (HEAT.on ? ' on' : '') + '" data-hon aria-pressed="' + (HEAT.on ? 'true' : 'false') + '" title="켜면 확대해도 매물 대신 등고선이 보이고, 지역을 누르면 그 주변 시세가 나옵니다"><i></i>보기</button>' : '') + '</div><div class="hpSub">지금 나와 있는 매물의 호가 기준 · 실거래가 아님</div>' + (heatMgr() && HEAT.on ? '<div class="hpMgr">지도에서 지역을 누르면 그 주변 시세가 나와요</div>' : '') +
       '<div class="hpRow">' + chip('all', '전체') + chip('1', '1층') + chip('up', '2층 이상') + chip('b', '지하') + '</div>' +
       (S.cells ? '<div class="hpBar">' + CTC.map(function (c) { return '<i style="background:' + c + '"></i>'; }).join('') + '</div>' +
         '<div class="hpTick"><span>낮음</span>' + (S.qs || []).map(function (q) { return '<span>' + f1(q) + '</span>'; }).join('') + '<span>높음</span></div>' +
