@@ -1789,7 +1789,7 @@ window.MGR = (function () {
   var LBL = { o: '우리 매물', h: '우리 비공개', g: '공클' };
   try { S = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { }
   try { var sv = JSON.parse(localStorage.getItem(KEY + '.show') || 'null'); if (sv) SHOW = sv; } catch (e) { }
-  var OPENFAV = /[#&]fav=1/.test(location.hash);   // 매니저(다움 매물 리스트)의 「브리핑 만들기」 → 즐겨찾기 창을 바로 엶
+  var OPENFAV = /[#&]fav=1/.test(location.hash), OPENBRIEF = /[#&]brief=1/.test(location.hash);   // 매니저의 「브리핑 만들기」 → 즐겨찾기 창 또는 브리핑 화면을 바로 엶   // 매니저(다움 매물 리스트)의 「브리핑 만들기」 → 즐겨찾기 창을 바로 엶
   var m = /[#&]mgr=([0-9a-f]{40,})/.exec(location.hash);
   if (m) { S = { tok: m[1], me: null }; save(); try { history.replaceState(null, '', location.pathname + location.search + '#map'); } catch (e) { } }
   if (S && S.exp && S.exp < Date.now()) S = null;
@@ -2141,7 +2141,8 @@ window.MGR = (function () {
     hp = h; if (!on()) return;
     document.body.classList.add('mgrMode'); bar(); barCounts(); mapTools(0);
     call('who', {}).then(function (j) { if (j && j.me) { S.me = j.me; save(); barCounts(); } }).catch(function () { });
-    call('fav', {}).then(function (j) { if (j && j.fav) { FAV = {}; j.fav.forEach(function (k, i) { FAV[k] = i + 1; }); barCounts(); hp.drawMap(); if (OPENFAV) { OPENFAV = false; var tryOpen = function (n) { if (READY || n > 40) drawer(true); else setTimeout(function () { tryOpen(n + 1); }, 250); }; tryOpen(0); } } }).catch(function () { });
+    call('fav', {}).then(function (j) { if (j && j.fav) { FAV = {}; j.fav.forEach(function (k, i) { FAV[k] = i + 1; }); barCounts(); hp.drawMap(); if (OPENBRIEF) { OPENBRIEF = false; OPENFAV = false; toast('브리핑을 준비하는 중… (매물·지도를 불러오면 바로 열립니다)'); var tryBrief = function (n) { var ok = READY && window.naver && naver.maps && favItems().l.some(function (x) { return x.lat; }); if (ok) brief(); else if (n > 80) drawer(true); else setTimeout(function () { tryBrief(n + 1); }, 250); }; tryBrief(0); }
+      if (OPENFAV) { OPENFAV = false; var tryOpen = function (n) { if (READY || n > 40) drawer(true); else setTimeout(function () { tryOpen(n + 1); }, 250); }; tryOpen(0); } } }).catch(function () { });
     // 이 브라우저에 저장해 둔 매니저 데이터(24시간)가 있으면 바로 씀 → 화면이 곧바로 매니저 모드로 뜨고, 최신 데이터는 뒤에서 받아 바꿈
     var CK = KEY + '.data.' + (h.SM ? 'sale' : 'rent'), cached = null;
     try { cached = JSON.parse(localStorage.getItem(CK) || 'null'); if (cached && Date.now() - cached.t > 864e5) cached = null; } catch (e) { cached = null; }
