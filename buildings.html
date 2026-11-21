@@ -1074,6 +1074,17 @@ body.mapFull .mapTools .mapFullBtn{display:none}
 .heatBtn:before{content:"";position:absolute;left:0;top:11px;bottom:11px;width:1px;background:rgba(255,255,255,.6)}
 .heatBtn svg{flex:none;width:17px;height:17px}.heatBtn:hover{background:#BA9862}.heatBtn.on,.heatBtn.on:hover{background:#9C6F2E}.heatBtn.on:before{opacity:0}.heatBtn.on .hbDot{fill:#E5452B;opacity:1}
 .heatBtn[hidden]{display:none!important}
+.hvChip{display:inline-flex;align-items:baseline;gap:3px;padding:4px 8px;border-radius:999px;border:1.5px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.25);font:700 12px/1 'Noto Sans KR',sans-serif;color:#3E2812;text-decoration:none;white-space:nowrap}.hvChip.d{color:#fff}.hvChip small{font-size:9.5px;font-weight:600;opacity:.8}
+.hsPt{width:18px;height:18px;border-radius:50%;background:#C4553A;border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.35);box-sizing:border-box}
+.hsBox{position:absolute;right:58px;top:12px;z-index:31;width:300px;max-height:calc(100% - 24px);overflow:auto;background:#fff;border-radius:14px;box-shadow:0 6px 22px rgba(20,25,31,.25);font:12.5px/1.5 'Noto Sans KR',sans-serif;color:#2A333C}.hsBox[hidden]{display:none}
+.hsHd{background:#294652;color:#fff;padding:12px 14px;position:relative}.hsHd small{display:block;font-size:11.5px;color:#B8C6CC;padding-right:22px}.hsX{position:absolute;right:8px;top:6px;border:0;background:none;color:#fff;font-size:20px;cursor:pointer;line-height:1}
+.hsN{font-size:27px;font-weight:800;color:#E9C98F;margin:3px 0 1px;letter-spacing:-.5px}.hsN span{font-size:12px;font-weight:500;color:#fff;margin-left:5px;letter-spacing:0}
+.hsBd{padding:12px 14px}.hsTb{display:flex;gap:4px;margin:0 0 10px}.hsHd+.hsTb{margin:10px 14px}.hsTb button{flex:1;padding:5px 0;border-radius:7px;border:1px solid #D9D2C4;background:#fff;font:600 12px 'Noto Sans KR',sans-serif;color:#5B6670;cursor:pointer}.hsTb button.on{background:#294652;border-color:#294652;color:#fff}
+.hsBar{position:relative;height:30px;margin:4px 0 2px}.hsBar i{position:absolute;display:block}.hsBar .ln{top:13px;left:4%;right:4%;height:4px;border-radius:2px;background:#E7DED0}.hsBar .iq{top:9px;height:12px;border-radius:6px;background:#CFA77A}.hsBar .md{top:4px;width:3px;height:22px;margin-left:-1px;background:#7E5236;border-radius:2px}.hsBar .dt{top:12px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#294652;opacity:.85}
+.hsLb{display:flex;justify-content:space-between;font-size:10.5px;color:#8A8272}.hsLt{font-size:12px;font-weight:700;color:#294652;margin:12px 0 4px}
+.hsRw{display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:6px 0;border-top:1px solid #EFEAE0;color:#2A333C;text-decoration:none;font-size:12px}.hsRw b{color:#C4553A}.hsRw small{color:#8A8272;min-width:38px;text-align:right}.hsRw:hover{background:#FBF8F2}.hsRw.more{display:none}.hsBox.all .hsRw.more{display:grid}.hsBox.all .hsMore{display:none}
+.hsMore{width:100%;border:0;border-top:1px solid #EFEAE0;background:none;padding:7px 0;font:600 12px 'Noto Sans KR',sans-serif;color:#A27D48;cursor:pointer;text-align:left}.hsNt{font-size:10.5px;color:#8A8272;margin-top:8px}
+@media (max-width:760px){.hsBox{left:10px;right:10px;top:auto;bottom:10px;width:auto;max-height:55%}}
 .hpSub{margin:-4px 0 8px;font-size:11px;color:#8A8F95;letter-spacing:-.2px}
 .dongPick.dpGrp .dpBtn{vertical-align:top;border-right:0;border-radius:999px 0 0 999px;padding-right:13px}
 .dongPick.dpGrp .dpBtn:after{border-radius:999px 0 0 999px}
@@ -2538,8 +2549,12 @@ window.MGR = (function () {
       var a = +it.area, r = manOf(it.rent, it.rentText); if (!(a >= 3) || !(r > 0)) return false;
       if (HEAT.fl === '1' && (it.cats || []).length && (it.cats || []).every(function (c) { return c === 'office'; })) return false;   // 1층은 상가 시세로: 사무실 전용 매물(1층 소형 사무실 등)은 빼서 대로변 상권이 묻히지 않게
       return HEAT.fl === 'all' || heatFloor(it.floor) === HEAT.fl;
-    }).map(function (it) { return { lat: +it.lat, lng: +it.lng, v: manOf(it.rent, it.rentText) / +it.area, d: it.dong || '' }; })
+    }).map(function (it) { return { lat: +it.lat, lng: +it.lng, v: heatVal(it), d: it.dong || '', it: it }; })
       .filter(function (p) { return p.v >= 2 && p.v <= 100; });   // 평당 2만 미만·100만 초과는 면적·금액 입력 오류로 보고 제외
+  }
+  function heatMgr() { return !!(window.MGR && MGR.on()); }
+  function heatVal(it) {   // 평당 임대료(만원/전용평): 매니저 모드는 (월세 + 관리비) ÷ 전용평, 일반 화면은 월세 ÷ 전용평
+    var r = manOf(it.rent, it.rentText) || 0, m = heatMgr() ? (manOf(null, it.mgmt) || 0) : 0; return (r + m) / +it.area;
   }
   function heatQ(a, p) { if (!a.length) return 0; var i = (a.length - 1) * p, lo = Math.floor(i), hi = Math.ceil(i); return a[lo] + (a[hi] - a[lo]) * (i - lo); }
   function heatMed(a) {   // 칸 평균: 칸 안 매물 전부의 단순 평균
@@ -2560,7 +2575,7 @@ window.MGR = (function () {
     var nm = naver.maps, map = M.raw; if (!map) return;
     heatRender();
   }
-  function heatHide() { heatClear(); heatUi(); }
+  function heatHide() { heatClear(); hsClear(); heatUi(); }
   /* 등고선 방식: 매물 평당가를 주변(약 200~300m)과 부드럽게 평균 낸 지형을 만들고, 5단계 띠로 칠함 (강남·서초 전체를 한 번 계산해 두고 이동·확대 때는 다시 그리기만) */
   var CT = { lib: 0, key: '', bands: null, qs: null, n: 0 };
   function ctLib(cb) {
@@ -2593,8 +2608,58 @@ window.MGR = (function () {
     CT.key = key; CT.qs = qs; CT.n = pts.length;
     CT.bands = cs.map(function (c) { return c.coordinates.map(function (poly) { return poly.map(function (ring) { return ring.map(function (q) { return [LA1 - q[1] * cell / mLat, LO0 + q[0] * cell / mLng]; }); }); }); });
   }
+  var HEAT_PIN_Z = 17;   // 매니저 모드: 이만큼 가까이 보면 등고선 대신 매물마다 실제 평단가 숫자
+  function heatPins() {
+    var nm = naver.maps, map = M.raw, G = heatScale(), b = map.getBounds(), mn = b.getMin ? b.getMin() : b.getSW(), mx = b.getMax ? b.getMax() : b.getNE();
+    var la0 = typeof mn.lat === 'function' ? mn.lat() : mn.y, la1 = typeof mx.lat === 'function' ? mx.lat() : mx.y, lo0 = typeof mn.lng === 'function' ? mn.lng() : mn.x, lo1 = typeof mx.lng === 'function' ? mx.lng() : mx.x;
+    var pts = heatPoints().filter(function (p) { return p.lat >= la0 && p.lat <= la1 && p.lng >= lo0 && p.lng <= lo1; }).slice(0, 400), vals = pts.map(function (p) { return p.v; }).sort(function (x, y) { return x - y; });
+    pts.forEach(function (p) {
+      var st = heatStep(p.v, G), bg = CTC[Math.min(CTC.length - 1, Math.round(st / 4 * (CTC.length - 1)))], dark = st >= 3;
+      HEAT.objs.push(new nm.Marker({ map: map, position: new nm.LatLng(p.lat, p.lng), zIndex: 900 + st,
+        icon: { content: '<a class="hvChip' + (dark ? ' d' : '') + '" style="background:' + bg + '" href="#item/' + encodeURIComponent(p.it.id) + '" title="' + esc((p.it.floor || '') + ' · 전용 ' + Math.round(+p.it.area) + '평') + '">' + hf1(p.v) + '만<small>' + esc(String(p.it.floor || '').replace(/\s+/g, '').replace(/층$/, 'F')) + '</small></a>', anchor: new nm.Point(28, 13) } }));
+    });
+    HEAT.stat = { n: vals.length, cells: vals.length ? 1 : 0, min: vals[0] || 0, max: vals[vals.length - 1] || 0, avg: G.avg, qs: CT.qs || G.qs, chips: 1 };
+    heatUi();
+  }
+  function hf1(v) { return (Math.round(v * 10) / 10).toLocaleString('ko-KR'); }
+  // ── 매니저 모드: 지도를 누르면 그 주변 시세 (같은 층 구분 · 8건이 될 때까지 200→300→500m) ──
+  var HS = { pt: null, objs: [] };
+  function hsClear(keep) { HS.objs.forEach(function (o) { o.setMap(null); }); HS.objs = []; if (!keep) HS.pt = null; var bx = $('hsBox'); if (bx && !keep) bx.hidden = true; }
+  function hsBind() {
+    var map = M && M.raw; if (!map || map._hsOn || !window.naver) return; map._hsOn = 1;
+    naver.maps.Event.addListener(map, 'click', function (e) { if (!(heatActive() && heatMgr()) || !e || !e.coord) return; hsRun(e.coord.lat ? e.coord.lat() : e.coord.y, e.coord.lng ? e.coord.lng() : e.coord.x); });
+  }
+  function hsRun(la, lo) {
+    var nm = naver.maps, map = M.raw; hsClear(); HS.pt = [la, lo];
+    var all = heatPoints().map(function (p) { return { p: p, d: distM(la, lo, p.lat, p.lng) }; }).filter(function (x) { return x.d <= 500; }).sort(function (a, b) { return a.d - b.d; });
+    var R = 500; [200, 300, 500].some(function (r) { if (all.filter(function (x) { return x.d <= r; }).length >= 8) { R = r; return true; } return false; });
+    var use = all.filter(function (x) { return x.d <= R; }), vs = use.map(function (x) { return x.p.v; }).sort(function (a, b) { return a - b; });
+    HS.objs.push(new nm.Circle({ map: map, center: new nm.LatLng(la, lo), radius: R, fillColor: '#294652', fillOpacity: 0.07, strokeColor: '#294652', strokeOpacity: 0.7, strokeWeight: 1.5, clickable: false }));
+    HS.objs.push(new nm.Marker({ map: map, position: new nm.LatLng(la, lo), zIndex: 1300, clickable: false, icon: { content: '<div class="hsPt"></div>', anchor: new nm.Point(9, 9) } }));
+    var G = heatScale();
+    use.forEach(function (x) {
+      var st = heatStep(x.p.v, G), bg = CTC[Math.min(CTC.length - 1, Math.round(st / 4 * (CTC.length - 1)))];
+      HS.objs.push(new nm.Marker({ map: map, position: new nm.LatLng(x.p.lat, x.p.lng), zIndex: 1250 + st, icon: { content: '<a class="hvChip' + (st >= 3 ? ' d' : '') + '" style="background:' + bg + '" href="#item/' + encodeURIComponent(x.p.it.id) + '">' + hf1(x.p.v) + '만</a>', anchor: new nm.Point(24, 12) } }));
+    });
+    var box = $('hsBox'); if (!box) { box = document.createElement('div'); box.id = 'hsBox'; box.className = 'hsBox'; $('leafletMap').parentNode.appendChild(box);
+      box.addEventListener('click', function (e) { var c = e.target.closest('[data-hsf]'); if (c) { HEAT.fl = c.dataset.hsf; drawMap(); if (HS.pt) setTimeout(function () { hsRun(HS.pt[0], HS.pt[1]); }, 80); return; } if (e.target.closest('.hsX')) hsClear(); if (e.target.closest('.hsMore')) box.classList.add('all'); }); }
+    box.hidden = false; box.classList.remove('all');
+    var flN = { all: '전체 층', '1': '1층', up: '2층 이상', b: '지하' }[HEAT.fl], dong = (function () { var c = {}; use.forEach(function (x) { c[x.p.d] = (c[x.p.d] || 0) + 1; }); return Object.keys(c).sort(function (a, b) { return c[b] - c[a]; })[0] || ''; })();
+    var head = '<div class="hsHd"><button type="button" class="hsX" aria-label="닫기">×</button><small>' + esc(dong) + ' · 반경 ' + R + 'm · ' + flN + ' · 매물 ' + use.length + '건</small>';
+    if (vs.length < 3) { box.innerHTML = head + '<div class="hsN">-</div><small>반경 500m 안에 이 층 매물이 ' + vs.length + '건뿐이라 시세를 내기 어렵습니다. 층을 「전체」로 바꾸거나 다른 곳을 눌러 보세요.</small></div>' + hsTabs(); return; }
+    var md = heatQ(vs, 0.5), q1 = heatQ(vs, 0.25), q3 = heatQ(vs, 0.75), lo = vs[0], hi = vs[vs.length - 1], sp = hi - lo || 1, pos = function (v) { return 4 + (v - lo) / sp * 92; };
+    box.innerHTML = head + '<div class="hsN">' + hf1(md) + '만<span>/평 (월세+관리비 ÷ 전용)</span></div><small>중간값 · 대부분 ' + hf1(q1) + '만 ~ ' + hf1(q3) + '만' + (R > 200 ? ' · 8건이 안 돼 ' + R + 'm로 넓힘' : '') + '</small></div>' +
+      '<div class="hsBd">' + hsTabs() + '<div class="hsBar"><i class="ln"></i><i class="iq" style="left:' + pos(q1) + '%;width:' + Math.max(1, pos(q3) - pos(q1)) + '%"></i><i class="md" style="left:' + pos(md) + '%"></i>' + vs.map(function (v) { return '<i class="dt" style="left:' + pos(v) + '%"></i>'; }).join('') + '</div>' +
+      '<div class="hsLb"><span>최저 ' + hf1(lo) + '만</span><span>최고 ' + hf1(hi) + '만</span></div><div class="hsLt">계산에 쓴 매물 (가까운 순)</div>' +
+      use.map(function (x, i) { var it = x.p.it; return '<a class="hsRw' + (i >= 5 ? ' more' : '') + '" href="#item/' + encodeURIComponent(it.id) + '"><span>' + esc((it.dong || '') + ' ' + (it.floor || '') + ' · ' + Math.round(+it.area) + '평') + '</span><b>' + hf1(x.p.v) + '만</b><small>' + Math.round(x.d / 10) * 10 + 'm</small></a>'; }).join('') +
+      (use.length > 5 ? '<button type="button" class="hsMore">나머지 ' + (use.length - 5) + '건 더 보기 ▾</button>' : '') +
+      '<div class="hsNt">지금 나와 있는 매물의 호가 기준 · 실거래가 아님 · 우리 매물 + 공클</div></div>';
+  }
+  function hsTabs() { return '<div class="hsTb">' + [['all', '전체'], ['1', '1층'], ['up', '2층 이상'], ['b', '지하']].map(function (f) { return '<button type="button" data-hsf="' + f[0] + '"' + (HEAT.fl === f[0] ? ' class="on"' : '') + '>' + f[1] + '</button>'; }).join('') + '</div>'; }
   function heatRender() {
     var nm = naver.maps, map = M.raw; heatClear();
+    hsBind(); if (!heatMgr()) hsClear();
+    if (heatMgr() && map.getZoom() >= HEAT_PIN_Z) { heatPins(); return; }
     if (!(window.d3 && d3.contours)) { ctLib(function () { if (heatActive()) heatRender(); }); heatUi(); return; }
     ctBuild();
     var G = heatScale(), b = map.getBounds(), mn = b.getMin ? b.getMin() : b.getSW(), mx = b.getMax ? b.getMax() : b.getNE();
@@ -2660,7 +2725,7 @@ window.MGR = (function () {
       (S.cells ? '<div class="hpBar">' + CTC.map(function (c) { return '<i style="background:' + c + '"></i>'; }).join('') + '</div>' +
         '<div class="hpTick"><span>낮음</span>' + (S.qs || []).map(function (q) { return '<span>' + f1(q) + '</span>'; }).join('') + '<span>높음</span></div>' +
         (S.pins ? '' : '<div class="hpRange">이 화면 매물 <b>최저 ' + f1(S.min) + '만</b> ~ <b class="hi">최고 ' + f1(S.max) + '만</b></div>') +
-        '<div class="hpNote">평당 월세(만원/전용평) · 주변 매물(지하 300m, 나머지 200m)을 부드럽게 평균 낸 등고선' + (HEAT.fl === '1' ? ' · 1층은 상가 매물 기준' : '') + ' · 숫자는 단계 경계(만원) · 중간값 아래 3단계, 위 4단계' + (S.pins ? '' : ' · 이 화면 매물 ' + S.n + '건') + ' · 호가 기준 · 입력 오류로 보이는 값 제외</div>'
+        '<div class="hpNote">' + (heatMgr() ? '<b style="color:#294652">매니저: 지도를 누르면 그 주변 시세 · 더 확대하면 매물별 평단가</b><br>평당 (월세+관리비)(만원/전용평) · ' : '평당 월세(만원/전용평) · ') + '주변 매물(지하 300m, 나머지 200m)을 부드럽게 평균 낸 등고선' + (HEAT.fl === '1' ? ' · 1층은 상가 매물 기준' : '') + ' · 숫자는 단계 경계(만원) · 중간값 아래 3단계, 위 4단계' + (S.pins ? '' : ' · 이 화면 매물 ' + S.n + '건') + ' · 호가 기준 · 입력 오류로 보이는 값 제외</div>'
         : '<div class="hpNote">이 화면에 조건에 맞는 매물이 부족합니다. 지도를 넓혀 보거나 층을 바꿔 주세요.</div>');
   }
   function drawMap() {   // 지도 이동·확대가 연달아 일어나면 마지막 한 번만 다시 그림
