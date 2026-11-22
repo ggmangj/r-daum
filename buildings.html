@@ -2969,7 +2969,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
         el.addEventListener('input', function () { $('rg' + k).classList.toggle('on', !!($('map' + k + 'Min').value || $('map' + k + 'Max').value)); clearTimeout(rgT); rgT = setTimeout(function () { applyFilters(false); }, 350); });
         el.addEventListener('change', function () {
           if (k === 'Dep' || k === 'Rent') { var n = rngNum(el.value); if (n != null && !/억/.test(el.value)) el.value = Math.round(n).toLocaleString('ko-KR'); }
-          clearTimeout(rgT); applyFilters(true);
+          clearTimeout(rgT); applyFilters(false);   // 면적·층·보증금·월세 숫자 입력: 보던 지도 화면 그대로 (전체로 축소하지 않음)
         });
         el.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } });
       });
