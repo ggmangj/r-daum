@@ -366,6 +366,8 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
 @media (min-width:761px) and (max-width:1499px){.flt{flex-wrap:wrap!important;row-gap:8px!important}}
 .yseg button{font-weight:800;font-size:14px}
 .yseg button.on{background:#BC975E!important;color:#14191F!important}
+.yseg button small{font-size:10.5px!important;font-weight:500!important;margin-left:3px;color:#9AA2A8}
+.yseg button.on small{color:#5E4A2A}
 </style>
 </head>
 <body>
@@ -409,7 +411,7 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
 <div class="fullHead"><span class="fe">SHOP & OFFICE DEALS</span><h2>강남·서초 <span>상가·사무실 실거래가</span></h2><button type="button" class="fullClose" id="fullClose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button></div>
 <div class="flt" role="group" aria-label="검색 조건">
  <div class="kindSw" role="group" aria-label="실거래 종류"><a href="/deals.html">빌딩 <small>건물 전체</small></a><a href="/shopdeals.html" class="on shopOn" aria-current="true">상가·사무실 <small>호실</small></a></div>
- <div class="seg yseg" id="fPer"><button type="button" data-v="12">1년</button><button type="button" data-v="24">2년</button><button type="button" data-v="36">3년</button><button type="button" data-v="60" class="on">5년</button></div>
+ <div class="seg yseg" id="fPer" role="group" aria-label="기간 (여러 개 고를 수 있음)"><button type="button" data-y="1" class="on" aria-pressed="true">1년<small>최근1년</small></button><button type="button" data-y="2" class="on" aria-pressed="true">2년<small>1~2년</small></button><button type="button" data-y="3" class="on" aria-pressed="true">3년<small>2~3년</small></button><button type="button" data-y="4" class="on" aria-pressed="true">4년<small>3~4년</small></button><button type="button" data-y="5" class="on" aria-pressed="true">5년<small>4~5년</small></button></div>
  <label class="sr" for="fDong">지역</label><select id="fDong" class="dsel"><option value="">강남·서초</option></select>
  <div class="seg" id="fUse"><button type="button" data-v="" class="on">전체</button><button type="button" data-v="shop">상가</button><button type="button" data-v="office">사무실</button></div>
  <div class="seg" id="fFl"><button type="button" data-v="" class="on">층 전체</button><button type="button" data-v="b">지하</button><button type="button" data-v="1">1층</button><button type="button" data-v="2">2층 이상</button></div>
@@ -457,7 +459,11 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   var ALL = [], VIEW = [], CENT = {}, M = null, NM = null, MK = [], sel = '', shown = 80, lvl = '';
-  var F = { per: 60, dong: '', use: '', fl: '', age: '' }, CY = new Date().getFullYear();
+  var F = { yrs: [1, 2, 3, 4, 5], dong: '', use: '', fl: '', age: '' }, CY = new Date().getFullYear();
+  /* 기간: 1년 = 최근 1년, 2년 = 1~2년 전 … 5년 = 4~5년 전. 여러 개 고르면 합쳐서 봄 (빌딩 실거래가와 같은 방식) */
+  function yCut(k) { var d = new Date(); d.setMonth(d.getMonth() - 12 * k); return d.toISOString().slice(0, 10); }
+  function yOf(date) { for (var k = 1; k <= 5; k++) if (date >= yCut(k)) return k; return 0; }
+  function yLabel() { var g = []; F.yrs.slice().sort().forEach(function (k) { var l = g[g.length - 1]; if (l && l[1] === k - 1) l[1] = k; else g.push([k, k]); }); return g.map(function (r) { return r[0] === 1 ? '최근 ' + r[1] + '년' : (r[0] - 1) + '~' + r[1] + '년 전'; }).join(' · '); }
   function man(v) { if (!v) return '-'; return v >= 10000 ? (Math.round(v / 1000) / 10).toLocaleString('ko-KR') + '억' : Math.round(v).toLocaleString('ko-KR') + '만'; }
   function med(a) { if (!a.length) return 0; var s = a.slice().sort(function (x, y) { return x - y; }), h = s.length >> 1; return s.length % 2 ? s[h] : (s[h - 1] + s[h]) / 2; }
   function bun(jb) {   /* 본번 첫 자리 + 자릿수로 묶음: 426·579-3·5** → 4**·5**번지, 61·6* → 6*번지, 한 자리 → 1~9번지 */
@@ -493,12 +499,13 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
     if (d.updated) $('upd').textContent = '· 업데이트 ' + new Date(d.updated).toLocaleDateString('ko-KR');
     apply();
   }
-  function cutDate() { var t = new Date(); t.setMonth(t.getMonth() - F.per); return t.toISOString().slice(0, 10); }
   function apply() {
-    var cut = cutDate();
+    var c = [0, 0, 0, 0, 0, 0];
     VIEW = ALL.filter(function (o) {
-      return o.date >= cut && (!F.dong || o.dk === F.dong) && (!F.use || o.uk === F.use) && (!F.fl || o.fk === F.fl) && (!F.age || o.ak === F.age);
+      var y = yOf(o.date), ok = (!F.dong || o.dk === F.dong) && (!F.use || o.uk === F.use) && (!F.fl || o.fk === F.fl) && (!F.age || o.ak === F.age); if (ok) c[y]++;
+      return ok && F.yrs.indexOf(y) >= 0 && (!F.dong || o.dk === F.dong) && (!F.use || o.uk === F.use) && (!F.fl || o.fk === F.fl) && (!F.age || o.ak === F.age);
     });
+    document.querySelectorAll('#fPer button').forEach(function (b) { var k = +b.getAttribute('data-y'), on = F.yrs.indexOf(k) >= 0; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); b.title = (k === 1 ? '최근 1년' : (k - 1) + '~' + k + '년 전') + ' · ' + c[k].toLocaleString('ko-KR') + '건'; });
     kpi(); markers(); list();
     $('mapMsg').hidden = !!(M && ALL.length); if (ALL.length && !VIEW.length) { $('mapMsg').hidden = false; $('mapMsg').textContent = '조건에 맞는 거래가 없습니다'; }
     if (!ALL.length && LOADED) { $('mapMsg').hidden = false; $('mapMsg').textContent = '상가·사무실 실거래 자료를 준비 중입니다. 잠시 후 다시 확인해 주세요.'; }
@@ -512,7 +519,7 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
     var part = function (lab, LL, cls) { var q = stat(LL); return '<div class="' + (cls || '') + '"><small>' + lab + '</small><b>' + (q.m ? man(q.m) : '-') + '</b><em>' + q.n + '건' + (q.n && q.few ? ' · <span class="few">표본 적음</span>' : '') + '</em></div>'; };
     $('grp').innerHTML = '<div class="sdAge"><h3>준공 연식별 전용 평당 중간값</h3><div class="gS">' + part('5년 이내', L.filter(function (o) { return o.ak === 'new'; })) +
       part('5년 초과', L.filter(function (o) { return o.ak === 'old'; })) + part('연식 미상', L.filter(function (o) { return o.ak === 'unk'; }), 'unk') + '</div></div>';
-    $('kpi').innerHTML = '<div class="k"><small>거래 건수</small><b>' + s.n.toLocaleString('ko-KR') + '건</b><em>최근 ' + (F.per / 12) + '년</em></div>' +
+    $('kpi').innerHTML = '<div class="k"><small>거래 건수</small><b>' + s.n.toLocaleString('ko-KR') + '건</b><em>' + yLabel() + '</em></div>' +
       '<div class="k"><small>전용 평당 중간값</small><b>' + man(s.m) + '</b><em>' + (s.few ? '표본 적음' : '지분 거래 제외') + '</em></div>' +
       '<div class="k"><small>거래금액 중간값</small><b>' + man(am) + '</b><em>호실 1건 기준</em></div>' +
       '<div class="k"><small>전용면적 중간값</small><b>' + (ar ? (Math.round(ar / PY * 10) / 10) + '평' : '-') + '</b><em>' + (ar ? Math.round(ar) + '㎡' : '') + '</em></div>';
@@ -554,7 +561,8 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
   function seg(id, key, num) {
     $(id).addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); }); F[key] = num ? +b.getAttribute('data-v') : b.getAttribute('data-v'); sel = ''; shown = 80; apply(); });
   }
-  seg('fPer', 'per', 1); seg('fUse', 'use'); seg('fFl', 'fl'); seg('fAge', 'age');
+  $('fPer').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; var k = +b.getAttribute('data-y'), i = F.yrs.indexOf(k); if (i >= 0) { if (F.yrs.length === 1) return; F.yrs.splice(i, 1); } else F.yrs.push(k); F.yrs.sort(); sel = ''; shown = 80; apply(); });   // 여러 개 고르기 · 마지막 하나는 끌 수 없음
+  seg('fUse', 'use'); seg('fFl', 'fl'); seg('fAge', 'age');
   $('fDong').addEventListener('change', function () { F.dong = this.value; sel = ''; shown = 80; apply(); var c = CENT[F.dong]; if (M && c) { M.setCenter(new NM.LatLng(c[0], c[1])); M.setZoom(F.dong ? 15 : 14, true); } });
   $('rst').addEventListener('click', function () { sel = ''; shown = 80; markers(); kpi(); list(); });
   $('scope').addEventListener('click', function (e) { if (e.target.id === 'scOff') { sel = ''; shown = 80; markers(); kpi(); list(); } });
@@ -572,12 +580,21 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
   function setFull(on) {
     document.body.classList.toggle('dlFull', on); $('fullBtn').setAttribute('aria-pressed', on ? 'true' : 'false');
     $('fullBtn').querySelector('span').textContent = on ? '크게 보기 닫기' : '지도 크게 보기';
-    setTimeout(mapFit, 30); setTimeout(mapFit, 300); if (!on) $('fullBtn').blur();
+    fitMain(); setTimeout(mapFit, 30); setTimeout(mapFit, 300); if (!on) $('fullBtn').blur();
   }
   $('fullBtn').addEventListener('click', function () { setFull(!document.body.classList.contains('dlFull')); });
   $('fullClose').addEventListener('click', function () { setFull(false); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && document.body.classList.contains('dlFull')) setFull(false); });
-  window.addEventListener('resize', function () { setTimeout(mapFit, 60); });
+  /* 지도·목록 아래 끝을 빌딩 실거래가(deals.html)와 같은 높이(페이지 맨 위에서 868px)에 맞춤 */
+  var FIT_BOTTOM = 868;
+  function fitMain() {
+    var m = document.querySelector('.main'); if (!m) return;
+    if (document.body.classList.contains('dlFull') || innerWidth <= 1100) { m.style.height = ''; m.classList.remove('fit'); return; }
+    m.style.height = ''; var h = Math.round(FIT_BOTTOM - (m.getBoundingClientRect().top + scrollY));
+    m.style.height = Math.max(440, h) + 'px'; m.classList.add('fit');
+  }
+  fitMain(); setTimeout(function () { fitMain(); mapFit(); }, 300);
+  window.addEventListener('resize', function () { fitMain(); setTimeout(mapFit, 60); });
   function initMap() {
     NM = naver.maps; $('mapMsg').hidden = !!ALL.length || false;
     M = new NM.Map('map', { center: new NM.LatLng(HOME.lat, HOME.lng), zoom: innerWidth < 760 ? 13 : 14, zoomControl: true, zoomControlOptions: { position: NM.Position.TOP_RIGHT } });
