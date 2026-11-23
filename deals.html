@@ -332,6 +332,18 @@ body.dlFull .kindSw{display:none}
 .mainNav{gap:4px!important;align-items:flex-end}
 .mainNav a{padding:0 14px!important;margin:0 0 -1px!important;border-radius:12px 12px 0 0;border:1px solid transparent;border-bottom:0!important;min-height:44px!important;font-weight:700;color:#46515B!important}
 }
+/* 한 줄: 빌딩/상가 전환 + 기간 + 지역 + 금액·대지·연면적 (1500px 미만은 두 줄) */
+@media (min-width:761px){
+.flt{flex-wrap:nowrap!important;overflow:visible!important;gap:6px!important}
+.flt>.rng{max-width:none}
+.flt>.kindSw{display:inline-flex;margin:0;flex:none;padding:3px;border-radius:999px;height:40px;box-sizing:border-box;align-items:center}
+.flt>.kindSw a{padding:6px 12px;border-radius:999px;font-size:13.5px}.flt>.kindSw a small{font-size:11px}
+.flt>.yseg{flex:none}.flt>.yseg button{padding:7px 10px}
+.flt>.dsel{flex:none;width:118px}
+.flt>.rng{flex:1 1 0!important;min-width:150px!important;padding:0 10px 0 12px}
+.flt>.rng input{min-width:0;width:100%}
+}
+@media (min-width:761px) and (max-width:1499px){.flt{flex-wrap:wrap!important;row-gap:8px!important}}
 </style>
 </head>
 <body>
@@ -370,13 +382,14 @@ body.dlFull .kindSw{display:none}
 <section class="miniRank qBox" aria-label="분기별 거래량 · 동네 성격"><div class="seg2 qTabs" id="qTabs" role="tablist"><button type="button" class="on" data-t="q" role="tab">분기별 거래량</button><button type="button" data-t="n" role="tab">동네 성격</button></div><div class="qPanes"><div class="qPane on" data-p="q"><h3>분기별 거래량 <small class="qLg"><i class="b"></i>건수<i class="l"></i>금액</small></h3><div id="qChart"></div><p class="qN"><span id="qSub"></span> · 위 숫자는 연도별 건수·금액 합계 · 연한 막대·점선은 신고가 덜 들어온 최근 분기</p></div><div class="qPane" data-p="n"><h3>동네 성격 지도 <small>건수 × 건당 평균금액 · <span id="nPer">최근 5년</span></small></h3><div id="nChart"></div></div></div><a href="#rankBox" class="more2">동별 대지 평당가 및 거래 규모 보기 ↓</a></section>
 </aside>
 <div class="col">
-<div class="kindSw" role="group" aria-label="실거래 종류"><a href="/deals.html" class="on" aria-current="true">빌딩 <small>건물 전체</small></a><a href="/shopdeals.html">상가·사무실 <small>호실</small></a></div>
 <div class="fullHead"><span class="fe">BUILDING DEALS</span><h2>강남·서초 <span>빌딩 매매 실거래가</span></h2><button type="button" class="fullClose" id="fullClose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button></div>
 <div class="flt" role="group" aria-label="검색 조건">
+ <div class="kindSw" role="group" aria-label="실거래 종류"><a href="/deals.html" class="on" aria-current="true">빌딩 <small>건물 전체</small></a><a href="/shopdeals.html">상가·사무실 <small>호실</small></a></div>
  <div class="seg yseg" id="fPer" role="group" aria-label="기간 (여러 개 고를 수 있음)"><button type="button" data-y="1" class="on" aria-pressed="true" title="최근 1년">1년<small></small></button><button type="button" data-y="2" class="on" aria-pressed="true" title="1년 전 ~ 2년 전">2년<small></small></button><button type="button" data-y="3" class="on" aria-pressed="true" title="2년 전 ~ 3년 전">3년<small></small></button><button type="button" data-y="4" class="on" aria-pressed="true" title="3년 전 ~ 4년 전">4년<small></small></button><button type="button" data-y="5" class="on" aria-pressed="true" title="4년 전 ~ 5년 전">5년<small></small></button></div>
- <label class="sr" for="fDong">지역</label><select id="fDong" class="dsel"><option value="">강남·서초 전체</option></select>
+ <label class="sr" for="fDong">지역</label><select id="fDong" class="dsel"><option value="">강남·서초</option></select>
  <div class="rng" id="rgP"><b>금액</b><input id="pMin" inputmode="decimal" placeholder="최소" aria-label="금액 최소(억)"><i>~</i><input id="pMax" inputmode="decimal" placeholder="최대" aria-label="금액 최대(억)"><span>억</span></div>
  <div class="rng" id="rgL"><b>대지</b><input id="lMin" inputmode="decimal" placeholder="최소" aria-label="대지 최소(평)"><i>~</i><input id="lMax" inputmode="decimal" placeholder="최대" aria-label="대지 최대(평)"><span>평</span></div>
+ <div class="rng" id="rgB"><b>연면적</b><input id="bMin" inputmode="decimal" placeholder="최소" aria-label="연면적 최소(평)"><i>~</i><input id="bMax" inputmode="decimal" placeholder="최대" aria-label="연면적 최대(평)"><span>평</span></div>
 </div>
 <section class="main" aria-label="실거래 지도와 목록">
  <div class="mapBox"><div id="map" role="application" aria-label="실거래 지도"></div>
@@ -554,7 +567,7 @@ body.dlFull .kindSw{display:none}
       if (d.updated) { var ud = new Date(d.updated); $('upd').textContent = '(' + ud.getFullYear() + '.' + (ud.getMonth() + 1) + '.' + ud.getDate() + ')'; }
       var dongs = {}; ALL.forEach(function (o) { dongs[o.gu + '|' + o.dong] = 1; });
       var byGu = {}; Object.keys(dongs).forEach(function (k) { (byGu[k.split('|')[0]] = byGu[k.split('|')[0]] || []).push(k.split('|')[1]); });
-      $('fDong').innerHTML = '<option value="">강남·서초 전체</option><option value="gu:강남구">강남구 전체</option><option value="gu:서초구">서초구 전체</option>' +
+      $('fDong').innerHTML = '<option value="">강남·서초</option><option value="gu:강남구">강남구 전체</option><option value="gu:서초구">서초구 전체</option>' +
         ['강남구', '서초구'].map(function (g) { return byGu[g] ? '<optgroup label="' + g + '">' + byGu[g].sort().map(function (d) { return '<option value="' + esc(d) + '">' + esc(d) + '</option>'; }).join('') + '</optgroup>' : ''; }).join('');
       if (0) $('fDong').innerHTML = Object.keys(dongs).sort(function (a, b) { return a.split('|')[0] === b.split('|')[0] ? (a < b ? -1 : 1) : (a.split('|')[0] === '강남구' ? -1 : 1); })
         .map(function (k) { return '<option value="' + esc(k.split('|')[1]) + '">' + esc(k.split('|')[1]) + ' (' + esc(k.split('|')[0]) + ')</option>'; }).join('');
@@ -567,7 +580,7 @@ body.dlFull .kindSw{display:none}
   /* ---------- 거르기 ---------- */
   function filtered(opt) { opt = opt || {};
     var lim = new Date(); lim.setMonth(lim.getMonth() - (opt.per || 60)); var ls = lim.toISOString().slice(0, 10);
-    var p0 = num($('pMin').value), p1 = num($('pMax').value), l0 = num($('lMin').value), l1 = num($('lMax').value);
+    var p0 = num($('pMin').value), p1 = num($('pMax').value), l0 = num($('lMin').value), l1 = num($('lMax').value), b0 = num($('bMin').value), b1 = num($('bMax').value);
     return ALL.filter(function (o) {
       if (!opt.allTime) { if (opt.per) { if (o.date < ls) return false; } else if (!ySel(o.date)) return false; }
       if (F.gu && o.gu !== F.gu) return false;
@@ -575,14 +588,15 @@ body.dlFull .kindSw{display:none}
       var e = o.amt / 10000, p = py(o.land);
       if (p0 != null && e < p0) return false; if (p1 != null && e > p1) return false;
       if (l0 != null && p < l0) return false; if (l1 != null && p > l1) return false;
+      if (b0 != null || b1 != null) { var bp = py(o.bld); if (!(o.bld > 0)) return false; if (b0 != null && bp < b0) return false; if (b1 != null && bp > b1) return false; }
       return true;
     });
   }
   function apply(fit) {
     VIEW = filtered(); shown = 60;
-    var on = F.yrs.length !== 5 || F.gu || F.dong || $('pMin').value || $('pMax').value || $('lMin').value || $('lMax').value;
+    var on = F.yrs.length !== 5 || F.gu || F.dong || $('pMin').value || $('pMax').value || $('lMin').value || $('lMax').value || $('bMin').value || $('bMax').value;
     $('rst').classList.toggle('on', !!on);
-    $('rgP').classList.toggle('on', !!($('pMin').value || $('pMax').value)); $('rgL').classList.toggle('on', !!($('lMin').value || $('lMax').value));
+    $('rgP').classList.toggle('on', !!($('pMin').value || $('pMax').value)); $('rgL').classList.toggle('on', !!($('lMin').value || $('lMax').value)); $('rgB').classList.toggle('on', !!($('bMin').value || $('bMax').value));
     $('fDong').classList.toggle('on', !!(F.dong || F.gu));
     yCounts(); kpi(); list(); rank(); fitMain(); mapFit(); draw(fit);
   }
@@ -912,12 +926,12 @@ body.dlFull .kindSw{display:none}
     if (i >= 0) { if (F.yrs.length === 1) return; F.yrs.splice(i, 1); } else F.yrs.push(k); F.yrs.sort(); mkPer = 0; apply(false); });   // 여러 개 고르기 · 마지막 하나는 끌 수 없음 · 아래 지표 상자도 같이 따라감
   $('fDong').addEventListener('change', function () { var v = this.value; if (/^gu:/.test(v)) { F.gu = v.slice(3); F.dong = ''; } else { F.gu = ''; F.dong = v; } apply(true); });
   var tm = 0;
-  ['pMin', 'pMax', 'lMin', 'lMax'].forEach(function (id) {
+  ['pMin', 'pMax', 'lMin', 'lMax', 'bMin', 'bMax'].forEach(function (id) {
     $(id).addEventListener('input', function () { this.value = this.value.replace(/[^\d.]/g, ''); clearTimeout(tm); tm = setTimeout(function () { apply(false); }, 350); });
     $(id).addEventListener('change', function () { clearTimeout(tm); apply(true); });
   });
   $('rst').addEventListener('click', function () {
-    F = { yrs: [1, 2, 3, 4, 5], gu: '', dong: '' }; ['pMin', 'pMax', 'lMin', 'lMax'].forEach(function (id) { $(id).value = ''; }); $('fDong').value = '';
+    F = { yrs: [1, 2, 3, 4, 5], gu: '', dong: '' }; ['pMin', 'pMax', 'lMin', 'lMax', 'bMin', 'bMax'].forEach(function (id) { $(id).value = ''; }); $('fDong').value = '';
     selKey = ''; if (iw) iw.close(); apply(true);
   });
   $('sort').addEventListener('change', list);
