@@ -165,14 +165,17 @@ input,select,textarea,button{font-family:inherit}
 .frc .fth button.on{border-color:#E8D7B6}
 .frc .fth .more{background:#4B6672;color:#fff;font:700 12px 'Noto Sans KR',sans-serif}
 .frc .fgo{display:block;margin-top:auto;position:relative;top:0}.frc .fth+.fgo{margin-top:12px}
-.frc .fgo{background:#BC975E;color:#14191F;text-align:center;border-radius:11px;padding:11px;font-weight:800;font-size:14px;text-decoration:none;flex:none}
+.frc .fgo{margin-top:12px;background:#BC975E;color:#14191F;text-align:center;border-radius:11px;padding:11px;font-weight:800;font-size:14px;text-decoration:none;flex:none}
 .frc .fgo:hover{background:#C9A56C}
-.frc .fbt{display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex:none}
-.frc .fbt button{border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;border-radius:9px;padding:7px 12px;font:600 13px 'Noto Sans KR',sans-serif;cursor:pointer}
-.frc .fbt button:hover{border-color:#E8D7B6}
-.frc .fbt .ps{border:0;color:#C9D6DE;padding:7px 6px}
 .frc .fempty{flex:1;display:flex;align-items:center;justify-content:center;color:#C9D6DE;font-size:14px;min-height:240px}
-@media (max-width:760px){@media (prefers-reduced-motion:reduce){.frc .fmain img{transition:none}.frc .fprog i.c::after{animation:none;transform:scaleX(1)}}
+.frNav{margin-top:-6px;display:grid;grid-template-columns:1fr 44px 1fr;gap:8px;flex:none}
+.frNav:empty{display:none}
+.frNav button{padding:11px 12px;border:1px solid #DCD3C2;border-radius:12px;background:#FBF9F4;color:#294652;font:inherit;cursor:pointer;transition:border-color .15s,background .15s}
+.frNav button b{font-size:13.5px;font-weight:800;letter-spacing:-.4px;white-space:nowrap}
+.frNav button:hover{border-color:#BC975E;background:#fff}
+.frNav button:focus-visible{outline:2px solid #BC975E;outline-offset:2px}
+.frNav .ps{padding:0;font-size:13px;color:#8A7550}
+@media (prefers-reduced-motion:reduce){.frc .fmain img{transition:none}.frc .fprog i.c::after{animation:none;transform:scaleX(1)}}
 @media (max-width:760px){.frc .fcm{flex:none;max-height:300px}#allList .alFcol{margin-bottom:28px}#allList .alFT h2{font-size:24px}.frc .fmain{height:220px}}
 </style>
 
@@ -1654,6 +1657,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 <div class="alFcol">
 <div class="alFT"><h2>놓치기 아까운<br><b>부동산다움</b> <span>추천 매물</span></h2><p>압구정·신사·논현·청담 등 강남·서초 현장을 발로 뛰며 조건까지 꼼꼼히 따져 본, 자신 있게 권하는 매물만 골라 소개합니다.</p></div>
 <div class="frc" id="alFeat" aria-roledescription="추천 매물 슬라이드" aria-live="off"></div>
+<div class="frNav" id="alFeatNav" aria-label="추천 매물 넘기기"></div>
 </div>
 <div class="alDiv" aria-hidden="true"></div>
 <div class="alMH"><div class="alTitle"><h2>매물 <span>리스트</span> <em id="alCnt"></em></h2><button type="button" class="alReset" id="alReset" hidden>검색 초기화</button></div>
@@ -2560,7 +2564,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   function frSched() {
     clearTimeout(FR.t); var c = $('alFeat'); if (!c) return;
     var paused = FR.hold || FR.user || !FR.vis || document.hidden; c.classList.toggle('paused', paused);
-    var bt = c.querySelector('.ps'); if (bt) bt.textContent = FR.user ? '▶ 다시 넘기기' : '⏸ 멈춤';
+    var bt = document.querySelector('#alFeatNav .ps'); if (bt) { bt.textContent = FR.user ? '▶' : '⏸'; bt.title = FR.user ? '자동 넘김 다시 시작' : '자동 넘김 멈춤'; bt.setAttribute('aria-label', bt.title); }
     if (paused || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
     FR.t = setTimeout(frNext, FR_MS);
   }
@@ -2587,7 +2591,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   }
   function renderFeatAL() {
     var c = $('alFeat'); if (!c) return; var F = featPool();
-    if (!F.length) { c.innerHTML = '<div class="fempty">추천 매물을 준비 중입니다</div>'; clearTimeout(FR.t); return; }
+    if (!F.length) { c.innerHTML = '<div class="fempty">추천 매물을 준비 중입니다</div>'; $('alFeatNav').innerHTML = ''; clearTimeout(FR.t); return; }
     if (FR.i >= F.length) FR.i = 0;
     var it = F[FR.i], P = frPhotos(it), ini = String(it.fcBy || '다').trim().charAt(0) || '다';
     var tg = [it.catLabel].concat(it.premium === '무권리' ? ['무권리'] : []);
@@ -2599,13 +2603,13 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       + '<div class="finfo"><h3>' + esc(it.title) + '</h3>' + rows.map(function (r) { return '<div class="r"><span>' + r[0] + '</span><b>' + r[1] + '</b></div>'; }).join('') + '</div>'
       + (it.fc ? '<div class="fcm"><p>' + esc(it.fc) + '<small>' + esc((it.fcBy || '부동산다움') + ' 중개사') + '</small></p></div>' : '<div class="fcm none"><p>부동산다움이 현장에서 직접 확인한 매물입니다. 자세한 조건은 02-555-1165 로 문의 주세요.</p></div>')
       + (P.length > 1 ? '<div class="fth">' + P.slice(0, 10).map(function (u, k) { return '<button type="button" data-k="' + k + '" aria-label="사진 ' + (k + 1) + ' 보기" style="background-image:url(\'' + photoUrl(u, 200) + '\')"></button>'; }).join('') + ((it.photos || []).length > 10 ? '<button type="button" class="more" data-fr="go">+' + ((it.photos || []).length - 10) + '</button>' : '') + '</div>' : '')
-      + '<a class="fgo" href="#item/' + encodeURIComponent(it.id) + '">이 매물 자세히 보기</a>'
-      + '<div class="fbt"><button type="button" data-fr="pi">‹ 이전 매물</button><button type="button" class="ps" data-fr="ps">⏸ 멈춤</button><button type="button" data-fr="ni">다음 매물 ›</button></div>';
+      + '<a class="fgo" href="#item/' + encodeURIComponent(it.id) + '">이 매물 자세히 보기</a>';
+    $('alFeatNav').innerHTML = F.length > 1 ? '<button type="button" data-fr="pi"><b>‹ 이전 매물</b></button><button type="button" class="ps" data-fr="ps" aria-label="자동 넘김 멈춤">⏸</button><button type="button" data-fr="ni"><b>다음 매물 ›</b></button>' : '';
     frShow();
   }
   (function () {
     var c = $('alFeat'); if (!c) return;
-    c.addEventListener('click', function (e) {
+    var onFr = function (e) {
       var b = e.target.closest('[data-fr],[data-k]'); var F = featPool(); if (!F.length) return;
       if (!b) { if (e.target.closest('.fmain')) location.hash = 'item/' + encodeURIComponent(F[FR.i].id); return; }
       e.preventDefault(); e.stopPropagation();
@@ -2617,7 +2621,8 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       else if (a === 'pi') frGo(FR.i - 1, -1);
       else if (a === 'ps') { FR.user = !FR.user; frSched(); }
       else if (a === 'go') location.hash = 'item/' + encodeURIComponent(F[FR.i].id);
-    });
+    };
+    c.addEventListener('click', onFr); $('alFeatNav').addEventListener('click', onFr);
     c.addEventListener('keydown', function (e) { if (e.target.classList.contains('fmain') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); location.hash = 'item/' + encodeURIComponent(featPool()[FR.i].id); } });
     c.addEventListener('mouseenter', function () { FR.hold = true; frSched(); });
     c.addEventListener('mouseleave', function () { FR.hold = false; frSched(); });
