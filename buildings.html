@@ -132,11 +132,11 @@ input,select,textarea,button{font-family:inherit}
 #allList .alFT h2 b{color:#A9814A;font-weight:900}
 #allList .alFT h2 span{background:linear-gradient(transparent 60%,#E8D7B6 60%)}
 #allList .alFT p{margin:12px 0 0;padding-top:12px;border-top:1px solid #E2DACB;font-size:13.5px;line-height:1.7;color:#46515B;word-break:keep-all}
-.frc{flex:1 1 auto;display:flex;flex-direction:column;background:#294652;border-radius:18px;padding:14px;color:#fff;box-shadow:0 12px 30px rgba(20,40,50,.18);min-height:0}
+.frc{backface-visibility:hidden;will-change:transform;flex:1 1 auto;display:flex;flex-direction:column;background:#294652;border-radius:18px;padding:14px;color:#fff;box-shadow:0 12px 30px rgba(20,40,50,.18);min-height:0}
 .frc .ftop{display:flex;justify-content:space-between;align-items:center;margin:0 2px 10px}
 .frc .ftop b{font-size:13px;color:#E8D7B6;font-weight:700}
 .frc .ftop span{font-size:12px;color:#C9D6DE;border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:2px 10px}
-.frc .fmain{position:relative;height:auto;flex:1 1 230px;min-height:210px;max-height:470px;border-radius:12px;overflow:hidden;background:#3B5866;cursor:pointer}
+.frc .fmain{position:relative;height:auto;flex:3 1 230px;min-height:210px;max-height:420px;border-radius:12px;overflow:hidden;background:#3B5866;cursor:pointer}
 .frc .fmain img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s}
 .frc .fmain img.on{opacity:1}
 .frc .fmain .ftag{position:absolute;left:10px;top:10px;display:flex;gap:4px;z-index:2}
@@ -145,7 +145,7 @@ input,select,textarea,button{font-family:inherit}
 .frc .fprog{position:absolute;left:10px;right:10px;bottom:9px;display:flex;gap:3px;z-index:2}
 .frc .fprog i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.35);overflow:hidden}
 .frc .fprog i.d{background:#fff}
-.frc .fprog i.c::after{content:'';display:block;height:100%;width:100%;background:#fff;transform-origin:0 50%;animation:frcP var(--dur,5s) linear forwards}
+.frc .fprog i.c::after{content:'';display:block;height:100%;width:100%;background:#fff;transform-origin:0 50%;animation:frcP var(--dur,3s) linear forwards}
 .frc.paused .fprog i.c::after{animation-play-state:paused}
 @keyframes frcP{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 .frc .fnav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:30px;height:30px;border-radius:50%;border:0;background:rgba(0,0,0,.38);color:#fff;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center}
@@ -155,32 +155,24 @@ input,select,textarea,button{font-family:inherit}
 .frc .finfo .r{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;color:#C9D6DE;padding:3px 0}
 .frc .finfo .r b{color:#fff;font-weight:700;text-align:right}
 .frc .finfo .r b em{font-style:normal;color:#F3B48A}
-.frc .fcm{margin-top:10px;background:rgba(232,215,182,.14);border-radius:12px;padding:12px 14px;display:flex;gap:10px;flex:none;max-height:240px;overflow:auto}
-.frc .fcm .av{flex:none;width:30px;height:30px;border-radius:50%;background:#BC975E;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center}
-.frc .fcm p{margin:0;font-size:13px;line-height:1.7;color:#F4EADA;white-space:pre-line;word-break:keep-all}
-.frc .fcm small{display:block;color:#E8D7B6;font-size:11.5px;margin-top:6px;font-weight:700}
-.frc .fcm.none p{color:#9FB2BC}
+.frc .fcm{margin-top:10px;background:#FBF6EA;border-radius:12px;padding:13px 15px;display:flex;gap:10px;flex:1 1 auto;min-height:90px;overflow:auto;box-shadow:inset 0 0 0 1px #EADFC8}
+.frc .fcm .av{flex:none;width:30px;height:30px;border-radius:50%;background:#294652;color:#fff;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.frc .fcm p{margin:0;font-size:13.5px;line-height:1.7;color:#1F2A33;font-weight:600;white-space:pre-line;word-break:keep-all}
+.frc .fcm small{display:block;color:#9A7A45;font-size:11.5px;margin-top:6px;font-weight:700}
+.frc .fcm.none p{color:#5B6670;font-weight:500}
 .frc .fth{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:10px;flex:none}
 .frc .fth button{aspect-ratio:1;border-radius:7px;border:2px solid transparent;padding:0;background:#3B5866 center/cover no-repeat;cursor:pointer}
 .frc .fth button.on{border-color:#E8D7B6}
 .frc .fth .more{background:#4B6672;color:#fff;font:700 12px 'Noto Sans KR',sans-serif}
-.frc .fgo{display:block;margin-top:auto;position:relative;top:0}.frc .fth+.fgo,.frc .fnext+.fgo{margin-top:12px}.frc .fgo{background:#BC975E;color:#14191F;text-align:center;border-radius:11px;padding:11px;font-weight:800;font-size:14px;text-decoration:none;flex:none}
+.frc .fgo{display:block;margin-top:auto;position:relative;top:0}.frc .fth+.fgo{margin-top:12px}
+.frc .fgo{background:#BC975E;color:#14191F;text-align:center;border-radius:11px;padding:11px;font-weight:800;font-size:14px;text-decoration:none;flex:none}
 .frc .fgo:hover{background:#C9A56C}
 .frc .fbt{display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex:none}
 .frc .fbt button{border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;border-radius:9px;padding:7px 12px;font:600 13px 'Noto Sans KR',sans-serif;cursor:pointer}
 .frc .fbt button:hover{border-color:#E8D7B6}
 .frc .fbt .ps{border:0;color:#C9D6DE;padding:7px 6px}
 .frc .fempty{flex:1;display:flex;align-items:center;justify-content:center;color:#C9D6DE;font-size:14px;min-height:240px}
-.frc .fnext{flex:0 1 auto;min-height:0;overflow:hidden;margin-top:12px;border-top:1px solid rgba(255,255,255,.14);padding-top:10px;display:flex;flex-direction:column}
-.frc .fnext>b{font-size:12.5px;color:#E8D7B6;margin-bottom:6px;flex:none}
-.frc .fnext button{display:flex;gap:10px;align-items:center;width:100%;border:0;background:transparent;color:#fff;text-align:left;padding:6px 4px;border-radius:9px;cursor:pointer;flex:none;font-family:inherit}
-.frc .fnext button:hover{background:rgba(255,255,255,.07)}
-.frc .fnext button i{flex:none;width:52px;height:40px;border-radius:6px;background:#3B5866 center/cover no-repeat}
-.frc .fnext button span{min-width:0;font-size:12.5px;line-height:1.4}
-.frc .fnext button span strong{display:block;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.frc .fnext button span small{color:#C9D6DE;font-size:11.5px}
-@media (max-width:760px){.frc .fnext{display:none}}
-@media (prefers-reduced-motion:reduce){.frc .fmain img{transition:none}.frc .fprog i.c::after{animation:none;transform:scaleX(1)}}
+@media (max-width:760px){@media (prefers-reduced-motion:reduce){.frc .fmain img{transition:none}.frc .fprog i.c::after{animation:none;transform:scaleX(1)}}
 @media (max-width:760px){#allList .alFcol{margin-bottom:28px}#allList .alFT h2{font-size:24px}.frc .fmain{height:220px}}
 </style>
 
@@ -1660,7 +1652,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 <section id="allList" aria-label="추천 매물과 매물 리스트">
 <div class="alWrap alSplit">
 <div class="alFcol">
-<div class="alFT"><h2>이번 달, 놓치기 아까운<br><b>부동산다움</b> <span>추천 매물</span></h2><p>압구정·신사·논현·청담 등 강남·서초 현장을 발로 뛰며 조건까지 꼼꼼히 따져 본, 자신 있게 권하는 매물만 골라 소개합니다.</p></div>
+<div class="alFT"><h2>놓치기 아까운<br><b>부동산다움</b> <span>추천 매물</span></h2><p>압구정·신사·논현·청담 등 강남·서초 현장을 발로 뛰며 조건까지 꼼꼼히 따져 본, 자신 있게 권하는 매물만 골라 소개합니다.</p></div>
 <div class="frc" id="alFeat" aria-roledescription="추천 매물 슬라이드" aria-live="off"></div>
 </div>
 <div class="alDiv" aria-hidden="true"></div>
@@ -2563,7 +2555,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     var R = $('alReset'); if (R) R.addEventListener('click', function () { window.ALRESET(); });
   })();
   /* 추천 카드 1장: 대표사진 5초마다 → 사진 다 넘기면 다음 매물 · 마우스 올리면 멈춤 · 화면 밖이면 멈춤 */
-  var FR = { i: 0, p: 0, t: 0, hold: false, user: false, vis: true, sig: '' }, FR_MS = 5000, FR_MAXP = 10;
+  var FR = { i: 0, p: 0, t: 0, hold: false, user: false, vis: true, sig: '' }, FR_MS = 3000, FR_MAXP = 10;
   function frPhotos(it) { return (it.photos || []).slice(0, FR_MAXP); }
   function frSched() {
     clearTimeout(FR.t); var c = $('alFeat'); if (!c) return;
@@ -2572,7 +2564,19 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     if (paused || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
     FR.t = setTimeout(frNext, FR_MS);
   }
-  function frNext() { var F = featPool(); if (!F.length) return; var P = frPhotos(F[FR.i % F.length]); if (FR.p + 1 < P.length) { FR.p++; frShow(); } else { FR.i = (FR.i + 1) % F.length; FR.p = 0; renderFeatAL(); } }
+  function frGo(i, dir) {
+    var F = featPool(), c = $('alFeat'); if (!F.length || !c) return; i = (i + F.length) % F.length;
+    var red = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!c.animate || red) { FR.i = i; FR.p = 0; renderFeatAL(); return; }
+    if (FR.busy) return; FR.busy = true; clearTimeout(FR.t); var d = dir < 0 ? -1 : 1;
+    var a = c.animate([{ transform: 'perspective(1600px) rotateY(0deg)' }, { transform: 'perspective(1600px) rotateY(' + (-90 * d) + 'deg)' }], { duration: 320, easing: 'cubic-bezier(.5,0,.75,.4)', fill: 'forwards' });
+    a.onfinish = function () {
+      FR.i = i; FR.p = 0; renderFeatAL();
+      var b = c.animate([{ transform: 'perspective(1600px) rotateY(' + (90 * d) + 'deg)' }, { transform: 'perspective(1600px) rotateY(0deg)' }], { duration: 480, easing: 'cubic-bezier(.2,.75,.25,1)', fill: 'forwards' });
+      a.cancel(); b.onfinish = function () { b.cancel(); FR.busy = false; frSched(); };
+    };
+  }
+  function frNext() { var F = featPool(); if (!F.length) return; var P = frPhotos(F[FR.i % F.length]); if (FR.p + 1 < P.length) { FR.p++; frShow(); } else frGo(FR.i + 1, 1); }
   function frShow() {
     var c = $('alFeat'); if (!c) return;
     c.querySelectorAll('.fmain img').forEach(function (im, k) { im.classList.toggle('on', k === FR.p); if (k === FR.p + 1 && !im.src) im.src = im.getAttribute('data-src'); if (k === FR.p && !im.src) im.src = im.getAttribute('data-src'); });
@@ -2594,8 +2598,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       + (P.length > 1 ? '<span class="fprog">' + P.map(function () { return '<i></i>'; }).join('') + '</span><button type="button" class="fnav p" data-fr="pp" aria-label="이전 사진">‹</button><button type="button" class="fnav n" data-fr="np" aria-label="다음 사진">›</button>' : '') + '</div>'
       + '<div class="finfo"><h3>' + esc(it.title) + '</h3>' + rows.map(function (r) { return '<div class="r"><span>' + r[0] + '</span><b>' + r[1] + '</b></div>'; }).join('') + '</div>'
       + (it.fc ? '<div class="fcm"><span class="av">' + esc(ini) + '</span><p>' + esc(it.fc) + '<small>' + esc((it.fcBy || '부동산다움') + ' 중개사') + '</small></p></div>' : '<div class="fcm none"><span class="av">다</span><p>부동산다움이 현장에서 직접 확인한 매물입니다. 자세한 조건은 02-555-1165 로 문의 주세요.</p></div>')
-      + (P.length > 1 ? '<div class="fth">' + P.slice(0, 4).map(function (u, k) { return '<button type="button" data-k="' + k + '" aria-label="사진 ' + (k + 1) + ' 보기" style="background-image:url(\'' + photoUrl(u, 200) + '\')"></button>'; }).join('') + (P.length > 4 ? '<button type="button" class="more" data-fr="go">+' + ((it.photos || []).length - 4) + '</button>' : '') + '</div>' : '')
-      + (function () { var o = []; for (var k = 1; k < F.length && k < 9; k++) { var j = (FR.i + k) % F.length, x = F[j]; o.push('<button type="button" data-fj="' + j + '"><i style="background-image:url(\'' + ((x.photos || [])[0] ? photoUrl(x.photos[0], 200) : '') + '\')"></i><span><strong>' + esc(x.title) + '</strong><small>' + esc([x.dong, x.depText && x.rentText ? x.depText + ' / ' + x.rentText : (x.depText || x.rentText || '')].filter(Boolean).join(' · ')) + '</small></span></button>'); } return o.length ? '<div class="fnext"><b>다른 추천 매물</b>' + o.join('') + '</div>' : ''; })()
+      + (P.length > 1 ? '<div class="fth">' + P.slice(0, 10).map(function (u, k) { return '<button type="button" data-k="' + k + '" aria-label="사진 ' + (k + 1) + ' 보기" style="background-image:url(\'' + photoUrl(u, 200) + '\')"></button>'; }).join('') + ((it.photos || []).length > 10 ? '<button type="button" class="more" data-fr="go">+' + ((it.photos || []).length - 10) + '</button>' : '') + '</div>' : '')
       + '<a class="fgo" href="#item/' + encodeURIComponent(it.id) + '">이 매물 자세히 보기</a>'
       + '<div class="fbt"><button type="button" data-fr="pi">‹ 이전 매물</button><button type="button" class="ps" data-fr="ps">⏸ 멈춤</button><button type="button" data-fr="ni">다음 매물 ›</button></div>';
     frShow();
@@ -2603,16 +2606,15 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   (function () {
     var c = $('alFeat'); if (!c) return;
     c.addEventListener('click', function (e) {
-      var b = e.target.closest('[data-fr],[data-k],[data-fj]'); var F = featPool(); if (!F.length) return;
+      var b = e.target.closest('[data-fr],[data-k]'); var F = featPool(); if (!F.length) return;
       if (!b) { if (e.target.closest('.fmain')) location.hash = 'item/' + encodeURIComponent(F[FR.i].id); return; }
       e.preventDefault(); e.stopPropagation();
       var a = b.getAttribute('data-fr'), P = frPhotos(F[FR.i]);
-      if (b.hasAttribute('data-fj')) { FR.i = +b.getAttribute('data-fj'); FR.p = 0; renderFeatAL(); return; }
       if (b.hasAttribute('data-k')) { FR.p = +b.getAttribute('data-k'); frShow(); return; }
       if (a === 'np') { FR.p = (FR.p + 1) % P.length; frShow(); }
       else if (a === 'pp') { FR.p = (FR.p - 1 + P.length) % P.length; frShow(); }
-      else if (a === 'ni') { FR.i = (FR.i + 1) % F.length; FR.p = 0; renderFeatAL(); }
-      else if (a === 'pi') { FR.i = (FR.i - 1 + F.length) % F.length; FR.p = 0; renderFeatAL(); }
+      else if (a === 'ni') frGo(FR.i + 1, 1);
+      else if (a === 'pi') frGo(FR.i - 1, -1);
       else if (a === 'ps') { FR.user = !FR.user; frSched(); }
       else if (a === 'go') location.hash = 'item/' + encodeURIComponent(F[FR.i].id);
     });
@@ -2622,7 +2624,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     c.addEventListener('focusin', function () { FR.hold = true; frSched(); });
     c.addEventListener('focusout', function () { FR.hold = false; frSched(); });
     var sx = null; c.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
-    c.addEventListener('touchend', function (e) { if (sx == null) return; var dx = e.changedTouches[0].clientX - sx; sx = null; if (Math.abs(dx) < 40) return; var F = featPool(); if (!F.length) return; FR.i = (FR.i + (dx < 0 ? 1 : -1) + F.length) % F.length; FR.p = 0; renderFeatAL(); });
+    c.addEventListener('touchend', function (e) { if (sx == null) return; var dx = e.changedTouches[0].clientX - sx; sx = null; if (Math.abs(dx) < 40) return; var F = featPool(); if (!F.length) return; frGo(FR.i + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1); });
     if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { FR.vis = en[0].isIntersecting; frSched(); }, { threshold: 0.2 }).observe(c);
     document.addEventListener('visibilitychange', frSched);
   })();
