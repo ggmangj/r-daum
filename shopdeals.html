@@ -412,7 +412,7 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
 <div class="fullHead"><span class="fe">SHOP & OFFICE DEALS</span><h2>강남·서초 <span>상가·사무실 실거래가</span></h2><button type="button" class="fullClose" id="fullClose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button></div>
 <div class="flt" role="group" aria-label="검색 조건">
  <div class="kindSw" role="group" aria-label="실거래 종류"><a href="/deals.html">빌딩 <small>건물 전체</small></a><a href="/shopdeals.html" class="on shopOn" aria-current="true">상가·사무실 <small>호실</small></a></div>
- <div class="seg yseg" id="fPer" role="group" aria-label="기간 (여러 개 고를 수 있음)"><button type="button" data-y="1" class="on" aria-pressed="true">1년<small>최근1년</small></button><button type="button" data-y="2" class="on" aria-pressed="true">2년<small>1~2년</small></button><button type="button" data-y="3" class="on" aria-pressed="true">3년<small>2~3년</small></button><button type="button" data-y="4" class="on" aria-pressed="true">4년<small>3~4년</small></button><button type="button" data-y="5" class="on" aria-pressed="true">5년<small>4~5년</small></button></div>
+ <div class="seg yseg" id="fPer" role="group" aria-label="기간 (여러 개 고를 수 있음)"><button type="button" data-y="1" class="on" aria-pressed="true">1년<small>최근1년</small></button><button type="button" data-y="2" aria-pressed="false">2년<small>1~2년</small></button><button type="button" data-y="3" aria-pressed="false">3년<small>2~3년</small></button><button type="button" data-y="4" aria-pressed="false">4년<small>3~4년</small></button><button type="button" data-y="5" aria-pressed="false">5년<small>4~5년</small></button></div>
  <label class="sr" for="fDong">지역</label><select id="fDong" class="dsel"><option value="">강남·서초</option></select>
  <div class="seg" id="fUse"><button type="button" data-v="" class="on">전체</button><button type="button" data-v="shop">상가</button><button type="button" data-v="office">사무실</button></div>
  <div class="seg" id="fFl"><button type="button" data-v="" class="on">층 전체</button><button type="button" data-v="b">지하</button><button type="button" data-v="1">1층</button><button type="button" data-v="2">2층 이상</button></div>
@@ -460,7 +460,7 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
   var $ = function (id) { return document.getElementById(id); };
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
   var ALL = [], VIEW = [], CENT = {}, M = null, NM = null, MK = [], sel = '', shown = 80, lvl = '';
-  var F = { yrs: [1, 2, 3, 4, 5], dong: '', use: '', fl: '', age: '' }, CY = new Date().getFullYear();
+  var F = { yrs: [1], dong: '', use: '', fl: '', age: '' }, CY = new Date().getFullYear();
   /* 기간: 1년 = 최근 1년, 2년 = 1~2년 전 … 5년 = 4~5년 전. 여러 개 고르면 합쳐서 봄 (빌딩 실거래가와 같은 방식) */
   function yCut(k) { var d = new Date(); d.setMonth(d.getMonth() - 12 * k); return d.toISOString().slice(0, 10); }
   function yOf(date) { for (var k = 1; k <= 5; k++) if (date >= yCut(k)) return k; return 0; }

@@ -391,7 +391,7 @@ body.dlFull .kindSw{display:none}
 <div class="fullHead"><span class="fe">BUILDING DEALS</span><h2>강남·서초 <span>빌딩 매매 실거래가</span></h2><button type="button" class="fullClose" id="fullClose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button></div>
 <div class="flt" role="group" aria-label="검색 조건">
  <div class="kindSw" role="group" aria-label="실거래 종류"><a href="/deals.html" class="on" aria-current="true">빌딩 <small>건물 전체</small></a><a href="/shopdeals.html">상가·사무실 <small>호실</small></a></div>
- <div class="seg yseg" id="fPer" role="group" aria-label="기간 (여러 개 고를 수 있음)"><button type="button" data-y="1" class="on" aria-pressed="true" title="최근 1년">1년<small></small></button><button type="button" data-y="2" class="on" aria-pressed="true" title="1년 전 ~ 2년 전">2년<small></small></button><button type="button" data-y="3" class="on" aria-pressed="true" title="2년 전 ~ 3년 전">3년<small></small></button><button type="button" data-y="4" class="on" aria-pressed="true" title="3년 전 ~ 4년 전">4년<small></small></button><button type="button" data-y="5" class="on" aria-pressed="true" title="4년 전 ~ 5년 전">5년<small></small></button></div>
+ <div class="seg yseg" id="fPer" role="group" aria-label="기간 (여러 개 고를 수 있음)"><button type="button" data-y="1" class="on" aria-pressed="true" title="최근 1년">1년<small></small></button><button type="button" data-y="2" aria-pressed="false" title="1년 전 ~ 2년 전">2년<small></small></button><button type="button" data-y="3" aria-pressed="false" title="2년 전 ~ 3년 전">3년<small></small></button><button type="button" data-y="4" aria-pressed="false" title="3년 전 ~ 4년 전">4년<small></small></button><button type="button" data-y="5" aria-pressed="false" title="4년 전 ~ 5년 전">5년<small></small></button></div>
  <label class="sr" for="fDong">지역</label><select id="fDong" class="dsel"><option value="">강남·서초</option></select>
  <div class="rng" id="rgP"><b>금액</b><input id="pMin" inputmode="decimal" placeholder="최소" aria-label="금액 최소(억)"><i>~</i><input id="pMax" inputmode="decimal" placeholder="최대" aria-label="금액 최대(억)"><span>억</span></div>
  <div class="rng" id="rgL"><b>대지</b><input id="lMin" inputmode="decimal" placeholder="최소" aria-label="대지 최소(평)"><i>~</i><input id="lMax" inputmode="decimal" placeholder="최대" aria-label="대지 최대(평)"><span>평</span></div>
@@ -451,7 +451,7 @@ body.dlFull .kindSw{display:none}
   var OFFICE = { lat: 37.5259470, lng: 127.0276068 }, HOME_VIEW = { lat: 37.52549, lng: 127.02678 };
   var OFFICE_POP = '<div class="pop"><button type="button" class="x" aria-label="닫기">✕</button><h4>부동산다움공인중개사사무소</h4><div class="dt">서울 강남구 논현로175길 11 일상빌딩 1층<br>(지번: 신사동 578-1) · 압구정역 5번출구</div><a class="ask" href="tel:025551165">02-555-1165 전화하기</a></div>';
   var ALL = [], VIEW = [], GEO = null, M = null, NM = null, objs = [], polys = [], iw = null, selKey = '', shown = 60;
-  var F = { yrs: [1, 2, 3, 4, 5], gu: '', dong: '' };
+  var F = { yrs: [1], gu: '', dong: '' };
   /* 기간: 1년 = 최근 1년, 2년 = 1~2년 전 … 5년 = 4~5년 전. 여러 개 고르면 합쳐서 봄 */
   function yCut(k) { var d = new Date(); d.setMonth(d.getMonth() - 12 * k); return d.toISOString().slice(0, 10); }
   function yOf(date) { for (var k = 1; k <= 5; k++) if (date >= yCut(k)) return k; return 0; }
@@ -600,7 +600,7 @@ body.dlFull .kindSw{display:none}
   }
   function apply(fit) {
     VIEW = filtered(); shown = 60;
-    var on = F.yrs.length !== 5 || F.gu || F.dong || $('pMin').value || $('pMax').value || $('lMin').value || $('lMax').value || $('bMin').value || $('bMax').value;
+    var on = F.yrs.join() !== '1' || F.gu || F.dong || $('pMin').value || $('pMax').value || $('lMin').value || $('lMax').value || $('bMin').value || $('bMax').value;
     $('rst').classList.toggle('on', !!on);
     $('rgP').classList.toggle('on', !!($('pMin').value || $('pMax').value)); $('rgL').classList.toggle('on', !!($('lMin').value || $('lMax').value)); $('rgB').classList.toggle('on', !!($('bMin').value || $('bMax').value));
     $('fDong').classList.toggle('on', !!(F.dong || F.gu));
@@ -938,7 +938,7 @@ body.dlFull .kindSw{display:none}
     $(id).addEventListener('change', function () { clearTimeout(tm); apply(true); });
   });
   $('rst').addEventListener('click', function () {
-    F = { yrs: [1, 2, 3, 4, 5], gu: '', dong: '' }; MKY = [1]; ['pMin', 'pMax', 'lMin', 'lMax', 'bMin', 'bMax'].forEach(function (id) { $(id).value = ''; }); $('fDong').value = '';
+    F = { yrs: [1], gu: '', dong: '' }; MKY = [1]; ['pMin', 'pMax', 'lMin', 'lMax', 'bMin', 'bMax'].forEach(function (id) { $(id).value = ''; }); $('fDong').value = '';
     selKey = ''; if (iw) iw.close(); apply(true);
   });
   $('sort').addEventListener('change', list);
