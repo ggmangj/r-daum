@@ -345,6 +345,11 @@ body.dlFull .kindSw{display:none}
 }
 @media (min-width:761px) and (max-width:1499px){.flt{flex-wrap:wrap!important;row-gap:8px!important}}
 .mkSeg button small{font-size:10.5px;font-weight:600;margin-left:3px;opacity:.7}
+.yseg button,.mkSeg button{font-weight:800}
+.yseg button small,.mkSeg button small{font-size:10.5px!important;font-weight:500!important;margin-left:3px;opacity:1!important;color:#9AA2A8}
+.yseg button.on,.mkSeg button.on{background:#BC975E!important;color:#14191F!important}
+.yseg button.on small,.mkSeg button.on small{color:#5E4A2A}
+.yseg button{font-size:14px}
 </style>
 </head>
 <body>
@@ -604,7 +609,7 @@ body.dlFull .kindSw{display:none}
 
   /* 기간 버튼마다 그 1년치 거래 건수 (구·동·금액·대지 조건 반영) */
   function yCounts() { var c = [0, 0, 0, 0, 0, 0]; filtered({ allTime: true }).forEach(function (o) { c[yOf(o.date)]++; });
-    document.querySelectorAll('#fPer button').forEach(function (b) { var k = +b.getAttribute('data-y'), on = F.yrs.indexOf(k) >= 0; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); b.querySelector('small').textContent = c[k].toLocaleString('ko-KR') + '건'; }); }
+    document.querySelectorAll('#fPer button').forEach(function (b) { var k = +b.getAttribute('data-y'), on = F.yrs.indexOf(k) >= 0; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); b.querySelector('small').textContent = k === 1 ? '최근1년' : (k - 1) + '~' + k + '년'; b.title = (k === 1 ? '최근 1년' : (k - 1) + '~' + k + '년 전') + ' · ' + c[k].toLocaleString('ko-KR') + '건'; }); }
   /* ---------- 요약 숫자 ---------- */
   function kpi() {
     var n = VIEW.length, per = yLabel();
@@ -668,7 +673,7 @@ body.dlFull .kindSw{display:none}
   function rank() {
     var st = dongStats().sort(function (a, b) { return b.v - a.v; }), mx = st.length ? st[0].v : 1; miniRank(st, mx);
     var mc = [0, 0, 0, 0, 0, 0]; filtered({ anyDong: true, allTime: true }).forEach(function (o) { mc[yOf(o.date)]++; });
-    document.querySelectorAll('#mkSeg button').forEach(function (b) { var k = +b.getAttribute('data-y'), on = MKY.indexOf(k) >= 0; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); b.querySelector('small').textContent = mc[k].toLocaleString('ko-KR') + '건'; });
+    document.querySelectorAll('#mkSeg button').forEach(function (b) { var k = +b.getAttribute('data-y'), on = MKY.indexOf(k) >= 0; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); b.querySelector('small').textContent = k === 1 ? '최근1년' : (k - 1) + '~' + k + '년'; b.title = (k === 1 ? '최근 1년' : (k - 1) + '~' + k + '년 전') + ' · ' + mc[k].toLocaleString('ko-KR') + '건'; });
     $('rankSub').textContent = (F.gu ? F.gu : '강남구·서초구') + ' · 동을 누르면 지도에서 볼 수 있어요';
     var base = filtered({ anyDong: true, yrs: MKY }), by = {};
     base.forEach(function (o) { var k = o.gu + '|' + o.dong, g = by[k] || (by[k] = { k: k, gu: o.gu, dong: o.dong, pp: [], bp: [], b: [0, 0, 0, 0], n: 0 }); g.n++; if (o.pp > 0 && !o.share && o.lx !== 'small') g.pp.push(o.pp); if (o.bp > 0 && !o.share && o.lx !== 'small') g.bp.push(o.bp); g.b[o.amt >= 3000000 ? 3 : o.amt >= 1000000 ? 2 : o.amt >= 500000 ? 1 : 0]++; });
