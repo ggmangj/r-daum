@@ -58,7 +58,13 @@ input,select,textarea,button{font-family:inherit}
 @media (max-width:760px){#rgFloor{grid-column:1/-1;order:-1;min-width:0;flex-wrap:wrap;height:auto!important;padding:8px 12px!important;border-radius:16px!important;row-gap:6px}#rgFloor .flSep{display:block;flex:0 0 100%;height:0;margin:0;background:none}#rgFloor .flP{flex:1 1 auto}#rgFloor .flG{margin-left:2px}.mapTools>#rgRent{grid-column:1/-1}.mapTools>#mapRegion,.mapTools>.rgnSel{order:-2}.mapTools>.noSearch{order:-3!important}}
 #listings.parked{display:none!important}
 #allList{background:#F6F2EA;padding:72px 0 88px}
-.alWrap{max-width:1280px;margin:0 auto;padding:0 32px}
+.alWrap{max-width:1880px;margin:0 auto;padding:0 28px}
+#allList .alGrid{grid-template-columns:repeat(6,minmax(0,1fr));gap:18px}
+@media (max-width:1699px){#allList .alGrid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media (max-width:1399px){#allList .alGrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:1100px){#allList .alGrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:860px){#allList .alGrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
+@media (max-width:520px){#allList .alGrid{grid-template-columns:minmax(0,1fr)}}
 .alHead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:26px}
 .alHead h2{margin:0;font-size:34px;font-weight:900;letter-spacing:-1.2px;color:#14191F}
 .alHead h2 span{background:linear-gradient(transparent 62%,#E8D7B6 62%)}
@@ -2393,19 +2399,19 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       .sort(function (a, b) { return (a.featOrder || 0) - (b.featOrder || 0); });
   }
   /* ---------- 매물 리스트: 우리 매물 중 사진이 있는 매물 전부 (최근 순) ---------- */
-  var AL = { tab: 'all', shown: 12 };
+  var AL = { tab: 'all', shown: 18 };
   function alPool() { return ITEMS.filter(function (it) { return !it.unv && !it.sale && !it.shop && it.photos && it.photos.length; }).sort(function (a, b) { return String(b.date || '').localeCompare(String(a.date || '')); }); }
   function renderAllList(keep) {
-    var g = $('alGrid'); if (!g) return; if (!keep) AL.shown = 12;
+    var g = $('alGrid'); if (!g) return; if (!keep) AL.shown = 18;
     var all = alPool(), L = all.filter(function (it) { return has(it, AL.tab); });
     $('alCnt').textContent = all.length ? L.length + '건' : '';
     $('allList').style.display = all.length ? '' : 'none';
     g.innerHTML = L.length ? L.slice(0, AL.shown).map(card).join('') : '<div class="alEmpty">이 분류 매물은 준비 중입니다. 원하시는 조건을 02-555-1165 로 말씀해 주세요.</div>';
-    var m = $('alMore'); m.hidden = L.length <= AL.shown; m.textContent = '매물 더 보기 (' + Math.min(12, L.length - AL.shown) + '건 더 · 남은 ' + Math.max(0, L.length - AL.shown) + '건)';
+    var m = $('alMore'); m.hidden = L.length <= AL.shown; m.textContent = '매물 더 보기 (' + Math.min(18, L.length - AL.shown) + '건 더 · 남은 ' + Math.max(0, L.length - AL.shown) + '건)';
     document.querySelectorAll('#allList .alTabs button').forEach(function (b) { var on = b.getAttribute('data-al') === AL.tab; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
   }
   document.querySelectorAll('#allList .alTabs button').forEach(function (b) { b.addEventListener('click', function () { AL.tab = b.getAttribute('data-al'); renderAllList(); }); });
-  (function () { var m = $('alMore'); if (m) m.addEventListener('click', function () { AL.shown += 12; renderAllList(true); }); })();
+  (function () { var m = $('alMore'); if (m) m.addEventListener('click', function () { AL.shown += 18; renderAllList(true); }); })();
   function renderFeatured() {
     var pool = featPool();
     // 매물장 「홈페이지 추천」에서 고른 매물이 없으면 추천 영역을 숨기고 메뉴는 지도검색으로 연결
