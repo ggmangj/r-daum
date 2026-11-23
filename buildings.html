@@ -181,14 +181,18 @@ input,select,textarea,button{font-family:inherit}
 @media (min-width:761px){
 #allList .alMH .alTools>select{height:40px;padding:0 24px 0 12px;background-position:right 10px center;font-size:13.5px}
 #allList .alMH .alTools>#alKind{width:124px}#allList .alMH .alTools>#alRegion{width:112px}
-#allList .alMH .alTools>.rng,#allList .alMH .alTools>.rng:not(#alRgF),#allList .alMH .alTools>#alRgF{flex:0 0 auto;min-width:0;gap:3px;padding:0 9px 0 11px}
-#allList .alMH .alTools>.rng input,#allList .alMH .alTools>.rng:not(#alRgF) input{flex:none;width:31px;min-width:0;font-size:13px;padding:0 1px}
+#allList .alMH .alTools>.rng,#allList .alMH .alTools>.rng:not(#alRgF),#allList .alMH .alTools>#alRgF{flex:1 1 auto;min-width:0;gap:3px;padding:0 9px 0 11px}
+#allList .alMH .alTools>.rng input,#allList .alMH .alTools>.rng:not(#alRgF) input{flex:1 1 31px;width:31px;min-width:31px;font-size:13px;padding:0 1px}
 #allList .alMH .alTools .rgL{font-size:13px;margin-right:4px;white-space:nowrap}#allList .alMH .alTools .rgU{font-size:12px;white-space:nowrap}
 #allList #alRgF .flP button{height:24px;padding:0 8px;font-size:11.5px}
 #allList .alMH .alReset{width:32px;height:32px;padding:0;font-size:15px;line-height:1;flex:none}
 #allList .alMH .alTitle{flex:none}
-#allList .alMH .alTools{flex-wrap:wrap!important;row-gap:8px!important;column-gap:5px!important}
+#allList .alMH .alTools{flex-wrap:wrap!important;row-gap:8px!important;column-gap:6px!important;justify-content:stretch!important;margin-left:18px!important}
 }
+.mapTtl{order:-3;flex:none;margin:0 6px 0 0;font-size:26px;font-weight:900;letter-spacing:-1px;color:#14191F;white-space:nowrap;line-height:1.2}
+.mapTtl span{background:linear-gradient(transparent 62%,#E8D7B6 62%)}
+body.mapFull .mapTtl{display:none}
+@media (max-width:760px){.mapTtl{font-size:24px;width:100%;margin:0 0 4px}}
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -1631,7 +1635,8 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 <button type="button" class="mapFullClose" id="mapFullClose" aria-label="크게 보기 닫기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button>
 </div>
 <div class="mapTools" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
-<label class="sr" for="mapRegion">지역</label><select id="mapRegion" class="rgnSel"><option value="">강남·서초 전체</option></select>
+<h2 class="mapTtl">매물 <span>지도</span></h2>
+<label class="sr" for="mapRegion">지역</label><select id="mapRegion" class="rgnSel"><option value="">강남·서초</option></select>
 <div class="rng" id="rgArea"><span class="rgL">면적</span><input id="mapAreaMin" type="text" inputmode="decimal" autocomplete="off" maxlength="7" placeholder="최소" aria-label="면적 최소"><i>~</i><input id="mapAreaMax" type="text" inputmode="decimal" autocomplete="off" maxlength="7" placeholder="최대" aria-label="면적 최대"><span class="rgU">평</span></div>
 <div class="rng" id="rgFloor" title="지하 · 1층 · 연층 · 통임대는 버튼으로, 2층 이상은 숫자로 (여러 개 고르면 모두 보여 줌)"><span class="rgL">층</span><span class="flP" role="group" aria-label="층 종류"><button type="button" data-fp="b">지하</button><button type="button" data-fp="1">1층</button><button type="button" data-fp="y">연층</button><button type="button" data-fp="t">통임대</button></span><span class="flSep"></span><span class="flG">지상</span><input id="mapFloorMin" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최저" aria-label="층 최소"><i>~</i><input id="mapFloorMax" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최고" aria-label="층 최대"><span class="rgU">층</span></div>
 <div class="rng" id="rgDep"><span class="rgL">보증금</span><input id="mapDepMin" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최소" aria-label="보증금 최소"><i>~</i><input id="mapDepMax" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최대" aria-label="보증금 최대"><span class="rgU">만</span></div>
@@ -1864,7 +1869,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 <span style="line-height: 1.8">부동산다움공인중개사사무소 · 개업공인중개사 안혁준<br>중개사무소 등록번호 제11680-2021-00537호 · 사업자등록번호 415-16-62854<br>서울특별시 강남구 신사동 578-1 일상빌딩 1층 (압구정역 5번출구)<br><a href="tel:025551165" style="color: inherit">전화 02-555-1165</a> · <a href="mailto:airbbb@naver.com" style="color: inherit">이메일 airbbb@naver.com</a> · <a href="https://r-daum.com" style="color: inherit">홈페이지 r-daum.com</a></span>
 </div>
 <div style="display: flex; gap: 48px; flex-wrap: wrap">
-<div style="display: flex; flex-direction: column; gap: 10px"><span style="color: #FFFFFF; font-weight: 700">바로가기</span><a href="/#map" style="color: #A9B1C2">상가·사무실 임대</a><a href="/#listings" style="color: #A9B1C2">추천 매물</a><a href="/buildings.html" style="color: #A9B1C2">상가점포·빌딩건물 매매</a><a href="/deals.html" style="color: #A9B1C2">상업업무용 부동산 실거래가</a><a href="sangkwon.html" style="color: #A9B1C2">상권 분석</a></div>
+<div style="display: flex; flex-direction: column; gap: 10px"><span style="color: #FFFFFF; font-weight: 700">바로가기</span><a href="/#map" style="color: #A9B1C2">상가·사무실 임대</a><a href="/buildings.html" style="color: #A9B1C2">상가점포·빌딩건물 매매</a><a href="/deals.html" style="color: #A9B1C2">상업업무용 부동산 실거래가</a><a href="sangkwon.html" style="color: #A9B1C2">상권 분석</a></div>
 <div style="display: flex; flex-direction: column; gap: 10px"><span style="color: #FFFFFF; font-weight: 700">고객지원</span><a href="#consult" style="color: #A9B1C2">매물 의뢰</a><a href="https://blog.naver.com/airbbb" style="color: #A9B1C2">네이버 블로그</a><a id="mgrLink" href="https://script.google.com/macros/s/AKfycbxcrADcmOUogYCPPnEY9Hh6h_NpdV31gaOiP1zNCLn1fKrRsi12m-wi9d6wU8Sbw6dn9Q/exec" target="_blank" rel="noopener" title="다움 매물 리스트 (직원용)" style="color: #A9B1C2">매니저 관리</a></div>
 </div>
 </div>
@@ -1946,6 +1951,20 @@ body:not(.mgrMode) #mgBar,body:not(.mgrMode) #mgDr{display:none!important}
 @page mgBrief{size:A4 landscape;margin:0;@bottom-left{content:none}@bottom-right{content:none}@top-left{content:none}@top-right{content:none}}
 @media print{body.mgPrint>*:not(#mgBov){display:none!important}body.mgPrint .mgSheets{display:flex;flex-direction:column;align-items:center}.mgSheet{page:mgBrief;break-inside:avoid;width:297mm!important;height:210mm!important}html:has(body.mgPrint){zoom:1!important}html,body.mgPrint{margin:0!important;padding:0!important;min-width:0!important;width:auto!important}body.mgPrint #mgBov{position:static!important;background:#fff;display:block!important;overflow:visible!important;width:297mm!important;height:auto!important;inset:auto!important}body.mgPrint #mgSheets{display:block!important}body.mgPrint .mgSheet{break-after:page}body.mgPrint .mgSheet:last-child{break-after:auto}body.mgPrint #mgBov .tool{display:none!important}body.mgPrint .mgSheets{display:flex;flex-direction:column;align-items:center}.mgSheet{margin:0!important;box-shadow:none;transform:none!important}body.mgPrint.mgSafe .mgSheet{transform:translateY(6mm) scale(.94)!important;transform-origin:50% 0!important}body.mgPrint .mgCard .ph .pk,body.mgPrint .mgCard .ph .pv{display:none}}
 @media (max-width:760px){#mgBar{left:8px;right:8px;bottom:8px;gap:5px;padding:6px 7px;font-size:11.5px}#mgBar .who,#mgBar #mgListB{display:none}#mgBar label{padding:3px 6px}#mgDr{width:100vw}}
+/* 매물 지도 제목줄: 제목 + 조건 + 번호검색을 한 줄에 꽉 채움 */
+@media (min-width:761px){
+body:not(.mapFull) .mapTools:not(.alTools){gap:6px!important}
+@media (min-width:1500px){body:not(.mapFull) .mapTools:not(.alTools){flex-wrap:nowrap!important}}
+@media (max-width:1499px){body:not(.mapFull) .mapTools:not(.alTools){flex-wrap:wrap!important}}
+body:not(.mapFull) .mapTools:not(.alTools)>select{flex:none;width:112px;height:40px;padding:0 24px 0 12px;font-size:13.5px}
+body:not(.mapFull) .mapTools:not(.alTools)>.rng{flex:1 1 auto!important;min-width:max-content!important;gap:3px;padding:0 9px 0 11px}
+body:not(.mapFull) .mapTools:not(.alTools)>.rng input{flex:1 1 28px;width:28px;min-width:28px;font-size:13px;padding:0 1px}
+body:not(.mapFull) .mapTools:not(.alTools) .rgL{font-size:13px;margin-right:4px;white-space:nowrap}body:not(.mapFull) .mapTools:not(.alTools) .rgU{font-size:12px;white-space:nowrap}
+body:not(.mapFull) .mapTools:not(.alTools) #rgFloor .flP button{height:24px;padding:0 7px;font-size:11.5px}
+body:not(.mapFull) .mapTools:not(.alTools) #rgFloor .flG{display:none}
+body:not(.mapFull) .mapTools:not(.alTools)>.noSearch{flex:1 1 130px!important;min-width:120px!important;width:auto!important;height:40px;margin-left:0!important}
+body:not(.mapFull) .mapTools:not(.alTools)>.noSearch input{width:100%!important;min-width:0}
+}
 </style>
 <script>
 /* 홈페이지 매니저 모드 — 다움 매물 리스트 직원 계정으로 로그인하면 같은 화면에
@@ -3342,7 +3361,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     $('dpPanel').innerHTML = html + (lastG ? '</div>' : '');
     var rg = $('mapRegion');
     if (rg) {
-      var oh = '<option value="">강남·서초 전체</option>', g0 = '';
+      var oh = '<option value="">강남·서초</option>', g0 = '';
       keys.forEach(function (k) { var g = k.split('|')[0], d = k.split('|')[1]; if (g !== g0) { oh += (g0 ? '</optgroup>' : '') + '<optgroup label="' + esc(g) + '"><option value="gu:' + esc(g) + '">' + esc(g) + ' 전체</option>'; g0 = g; } oh += '<option value="' + esc(d) + '">' + esc(d) + '</option>'; });
       rg.innerHTML = oh + (g0 ? '</optgroup>' : '');
     }
@@ -3777,7 +3796,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       '<p class="dtSmall">※ 매물 정보는 등록 시점 기준이며 실제와 다를 수 있습니다. 계약 전 현장과 공부서류를 반드시 확인해 주세요.</p></aside>';
     return '<div class="dtWrap' + (it.shop ? ' shopDt' : '') + '"><div class="dtPrintHead" aria-hidden="true"><b>DAUM REAL ESTATE</b><span>부동산다움공인중개사사무소 · 개업공인중개사 안혁준 · 등록번호 제11680-2021-00537호</span><span>서울특별시 강남구 신사동 578-1 일상빌딩 1층 · 02-555-1165 · r-daum.com</span></div>' +
       '<nav class="dtCrumb" aria-label="현재 위치"><button type="button" class="dtBack"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>목록으로</button>' +
-      '<span><a href="#top">홈</a> <i>›</i> ' + (DT.from === 'listings' || DT.from === 'fa' ? '<a href="#listings">추천 매물</a>' : '<a href="#map">' + (it.sale ? '빌딩 매매' : '상가·사무실 임대') + '</a>') + ' <i>›</i> No.' + esc(it.id) + '</span></nav>' +
+      '<span><a href="#top">홈</a> <i>›</i> ' + (DT.from === 'listings' || DT.from === 'fa' ? '<a href="#allList">매물 리스트</a>' : '<a href="#map">' + (it.sale ? '빌딩 매매' : '상가·사무실 임대') + '</a>') + ' <i>›</i> No.' + esc(it.id) + '</span></nav>' +
       '<div class="dtHead"><div><div class="dtBadges">' + badges + (window.MGR && MGR.on() ? MGR.dtRow(it) : '') + '</div><h1 class="dtTitle">' + esc(it.title) + '</h1>' +
       '</div>' +
       '<div class="dtTools"><button type="button" class="dtTool" data-act="share"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"></path></svg><span>링크 복사</span></button>' +
