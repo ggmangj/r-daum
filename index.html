@@ -77,7 +77,7 @@ input,select,textarea,button{font-family:inherit}
 .alGrid .lPhoto img{width:100%;height:100%;object-fit:cover;display:block}
 .alEmpty{grid-column:1/-1;background:#fff;border:1px dashed #CFC7B6;border-radius:14px;padding:44px;text-align:center;color:#5B6670}
 @media (max-width:760px){#allList{padding:44px 0 60px}.alWrap{padding:0 16px}.alHead h2{font-size:26px}.alTabs{width:100%;overflow-x:auto;flex-wrap:nowrap}.alTabs button{flex:none}}
-#allList .alTools>#alRgF{flex:1.5 1 0;min-width:405px}#allList .alMH .alTools>.rng:not(#alRgF){flex:1 1 0;min-width:120px}#allList .alMH .alTools>.rng:not(#alRgF) input{min-width:28px}#allList .alMH .rng{padding-left:12px;padding-right:10px}@media (max-width:1700px){#allList #alRgF .flG{display:none}#allList .alMH .alTools{gap:6px!important}}#allList .alMH .alTools>select{flex:none}
+#allList .alTools>#alRgF{flex:1.4 1 0;min-width:330px}#allList .alTools>.kindSel.on{border-color:#294652;box-shadow:0 0 0 2px rgba(41,70,82,.12)}#allList .alMH .alTools>.rng:not(#alRgF){flex:1 1 0;min-width:120px}#allList .alMH .alTools>.rng:not(#alRgF) input{min-width:28px}#allList .alMH .rng{padding-left:12px;padding-right:10px}@media (max-width:1700px){#allList #alRgF .flG{display:none}#allList .alMH .alTools{gap:6px!important}}#allList .alMH .alTools>select{flex:none}
 #alRgF .flP{display:flex;gap:3px;flex:none}
 #alRgF .flP button{height:26px;padding:0 9px;border:1px solid #D9D2C4;border-radius:13px;background:#fff;font:600 12px 'Noto Sans KR',sans-serif;color:#294652;cursor:pointer;white-space:nowrap}
 #alRgF .flP button:hover{border-color:#BC975E}
@@ -176,6 +176,18 @@ input,select,textarea,button{font-family:inherit}
 .frNav .ps{padding:0;font-size:13px;color:#8A7550}
 @media (prefers-reduced-motion:reduce){.frc .fmain img{transition:none}.frc .fprog i.c::after{animation:none;transform:scaleX(1)}}
 @media (max-width:760px){.frc .fcm{flex:none;max-height:300px}#allList .alFcol{margin-bottom:28px}#allList .alFT h2{font-size:24px}.frc .fmain{height:220px}}
+/* 매물 리스트 제목줄: 종류 드롭다운 추가 → 칸을 촘촘하게 (넓은 화면 한 줄, 좁으면 줄바꿈) */
+@media (min-width:761px){
+#allList .alMH .alTools>select{height:40px;padding:0 24px 0 12px;background-position:right 10px center;font-size:13.5px}
+#allList .alMH .alTools>#alKind{width:124px}#allList .alMH .alTools>#alRegion{width:112px}
+#allList .alMH .alTools>.rng,#allList .alMH .alTools>.rng:not(#alRgF),#allList .alMH .alTools>#alRgF{flex:0 0 auto;min-width:0;gap:3px;padding:0 9px 0 11px}
+#allList .alMH .alTools>.rng input,#allList .alMH .alTools>.rng:not(#alRgF) input{flex:none;width:31px;min-width:0;font-size:13px;padding:0 1px}
+#allList .alMH .alTools .rgL{font-size:13px;margin-right:4px;white-space:nowrap}#allList .alMH .alTools .rgU{font-size:12px;white-space:nowrap}
+#allList #alRgF .flP button{height:24px;padding:0 8px;font-size:11.5px}
+#allList .alMH .alReset{width:32px;height:32px;padding:0;font-size:15px;line-height:1;flex:none}
+#allList .alMH .alTitle{flex:none}
+#allList .alMH .alTools{flex-wrap:wrap!important;row-gap:8px!important;column-gap:5px!important}
+}
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -1659,11 +1671,12 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 <div class="frNav" id="alFeatNav" aria-label="추천 매물 넘기기"></div>
 </div>
 <div class="alDiv" aria-hidden="true"></div>
-<div class="alMH"><div class="alTitle"><h2>매물 <span>리스트</span> <em id="alCnt"></em></h2><button type="button" class="alReset" id="alReset" hidden>검색 초기화</button></div>
+<div class="alMH"><div class="alTitle"><h2>매물 <span>리스트</span> <em id="alCnt"></em></h2><button type="button" class="alReset" id="alReset" hidden title="검색 초기화" aria-label="검색 초기화">↺</button></div>
 <div class="mapTools alTools">
+<label class="sr" for="alKind">종류</label><select id="alKind" class="rgnSel kindSel"><option value="">종류 전체</option><option value="clinic">병의원</option><option value="office">사무실</option><option value="shop">상가</option><option value="building">사옥·통임대</option><option value="new">신축·리모델링</option></select>
 <label class="sr" for="alRegion">지역</label><select id="alRegion" class="rgnSel"><option value="">강남·서초 전체</option></select>
 <div class="rng" id="alRgA"><span class="rgL">면적</span><input id="alAMin" type="text" inputmode="decimal" autocomplete="off" maxlength="7" placeholder="최소" aria-label="면적 최소"><i>~</i><input id="alAMax" type="text" inputmode="decimal" autocomplete="off" maxlength="7" placeholder="최대" aria-label="면적 최대"><span class="rgU">평</span></div>
-<div class="rng flBox" id="alRgF"><span class="rgL">층</span><span class="flP" role="group" aria-label="층 종류"><button type="button" data-fp="b">지하</button><button type="button" data-fp="1">1층</button><button type="button" data-fp="y">연층</button><button type="button" data-fp="t">통임대</button></span><span class="flSep"></span><span class="flG">지상</span><input id="alFMin" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최저" aria-label="층 최소"><i>~</i><input id="alFMax" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최고" aria-label="층 최대"><span class="rgU">층</span></div>
+<div class="rng flBox" id="alRgF"><span class="rgL">층</span><span class="flP" role="group" aria-label="층 종류"><button type="button" data-fp="b">지하</button><button type="button" data-fp="1">1층</button><button type="button" data-fp="y">연층</button></span><span class="flSep"></span><span class="flG">지상</span><input id="alFMin" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최저" aria-label="층 최소"><i>~</i><input id="alFMax" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최고" aria-label="층 최대"><span class="rgU">층</span></div>
 <div class="rng" id="alRgD"><span class="rgL">보증금</span><input id="alDMin" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최소" aria-label="보증금 최소"><i>~</i><input id="alDMax" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최대" aria-label="보증금 최대"><span class="rgU">만</span></div>
 <div class="rng" id="alRgR"><span class="rgL">월세</span><input id="alRMin" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최소" aria-label="월세 최소"><i>~</i><input id="alRMax" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최대" aria-label="월세 최대"><span class="rgU">만</span></div>
 </div>
@@ -2513,11 +2526,12 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   function alCols() { var g = $('alGrid'); if (!g) return 6; var n = getComputedStyle(g).gridTemplateColumns.split(' ').filter(Boolean).length; return n || 1; }
   function alPool() { return ITEMS.filter(function (it) { return !it.unv && !it.sale && !it.shop && it.photos && it.photos.length; }).sort(function (a, b) { return String(b.date || '').localeCompare(String(a.date || '')); }); }
   function alRng(a, b, fl) { var lo = rngNum($(a).value, fl), hi = rngNum($(b).value, fl); if (lo == null && hi == null) return null; if (lo != null && hi != null && lo > hi) { var t = lo; lo = hi; hi = t; } return [lo, hi]; }
-  function alOn() { var on = !!($('alRegion').value || AL.flp.length); ['alAMin', 'alAMax', 'alFMin', 'alFMax', 'alDMin', 'alDMax', 'alRMin', 'alRMax'].forEach(function (k) { if ($(k).value) on = true; }); return on; }
+  function alOn() { var on = !!($('alRegion').value || $('alKind').value || AL.flp.length); ['alAMin', 'alAMax', 'alFMin', 'alFMax', 'alDMin', 'alDMax', 'alRMin', 'alRMax'].forEach(function (k) { if ($(k).value) on = true; }); return on; }
   function alFiltered() {
-    var rg = $('alRegion').value, ar = alRng('alAMin', 'alAMax'), fl = alRng('alFMin', 'alFMax', true), dp = alRng('alDMin', 'alDMax'), rt = alRng('alRMin', 'alRMax');
+    var kd = $('alKind').value, rg = $('alRegion').value, ar = alRng('alAMin', 'alAMax'), fl = alRng('alFMin', 'alFMax', true), dp = alRng('alDMin', 'alDMax'), rt = alRng('alRMin', 'alRMax');
     var inR = function (v, r) { return !r || (v != null && isFinite(v) && (r[0] == null || v >= r[0]) && (r[1] == null || v <= r[1])); };
     return alPool().filter(function (it) {
+      if (kd) { if (kd === 'new') { if (!/신축|리모델링/.test((it.tags || []).join(' ') + ' ' + (it.title || '') + ' ' + (it.point || ''))) return false; } else if ((it.cats || []).indexOf(kd) < 0) return false; }
       if (rg) { if (/^gu:/.test(rg)) { if (it.gu !== rg.slice(3)) return false; } else if (it.dong !== rg) return false; }
       if (!inR(it.area ? +it.area : null, ar)) return false;
       if (AL.flp.length || fl) { var okP = AL.flp.indexOf(flKind(it.floor)) >= 0, okR = !!fl && floorsOf(it.floor).some(function (v) { return v === '*' || inR(v, fl); }); if (!(okP || okR)) return false; }
@@ -2528,7 +2542,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   }
   function renderAllList(keep, scroll) {
     var g = $('alGrid'); if (!g) return; if (!keep) AL.page = 1;
-    var rs = $('alRegion'), mr = $('mapRegion'); if (rs && mr && rs.options.length !== mr.options.length) { var v0 = rs.value; rs.innerHTML = mr.innerHTML; rs.value = v0; }
+    var rs = $('alRegion'), mr = $('mapRegion'); if (rs && mr && rs.options.length !== mr.options.length) { var v0 = rs.value; rs.innerHTML = mr.innerHTML; if (rs.options[0] && !rs.options[0].value) rs.options[0].textContent = '강남·서초'; rs.value = v0; }
     AL.per = window.innerWidth <= 760 ? 10 : alCols() * 3;
     var all = alPool(), L = alFiltered(), pages = Math.max(1, Math.ceil(L.length / AL.per)); if (AL.page > pages) AL.page = pages;
     $('alCnt').textContent = all.length ? L.length + '건' : '';
@@ -2553,6 +2567,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     var t = 0, soon = function () { clearTimeout(t); t = setTimeout(function () { renderAllList(); }, 300); };
     ['alAMin', 'alAMax', 'alFMin', 'alFMax', 'alDMin', 'alDMax', 'alRMin', 'alRMax'].forEach(function (k) { var e = $(k); if (e) e.addEventListener('input', soon); });
     var rs = $('alRegion'); if (rs) rs.addEventListener('change', function () { renderAllList(); });
+    var ks = $('alKind'); if (ks) ks.addEventListener('change', function () { ks.classList.toggle('on', !!ks.value); renderAllList(); });
     document.querySelectorAll('#alRgF .flP button').forEach(function (b) { b.addEventListener('click', function () { var k = b.getAttribute('data-fp'), i = AL.flp.indexOf(k); if (i >= 0) AL.flp.splice(i, 1); else AL.flp.push(k); renderAllList(); }); });
     var P = $('alPager'); if (P) P.addEventListener('click', function (e) { var b = e.target.closest('button[data-pg]'); if (!b || b.disabled) return; AL.page = +b.getAttribute('data-pg'); renderAllList(true, true); });
     var R = $('alReset'); if (R) R.addEventListener('click', function () { window.ALRESET(); });
@@ -2633,7 +2648,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     document.addEventListener('visibilitychange', frSched);
   })();
   (function () { var lc = 0; window.addEventListener('resize', function () { var c = alCols(); if (c !== lc) { lc = c; renderAllList(true); } }); })();
-  window.ALRESET = function () { ['alAMin', 'alAMax', 'alFMin', 'alFMax', 'alDMin', 'alDMax', 'alRMin', 'alRMax'].forEach(function (k) { $(k).value = ''; }); $('alRegion').value = ''; AL.flp.length = 0; renderAllList(); };
+  window.ALRESET = function () { ['alAMin', 'alAMax', 'alFMin', 'alFMax', 'alDMin', 'alDMax', 'alRMin', 'alRMax'].forEach(function (k) { $(k).value = ''; }); $('alRegion').value = ''; $('alKind').value = ''; $('alKind').classList.remove('on'); AL.flp.length = 0; renderAllList(); };
   function renderFeatured() {
     var pool = featPool();
     // 매물장 「홈페이지 추천」에서 고른 매물이 없으면 추천 영역을 숨기고 메뉴는 지도검색으로 연결
