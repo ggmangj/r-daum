@@ -78,7 +78,7 @@ input,select,textarea,button{font-family:inherit}
 .alGrid .lPhoto img{width:100%;height:100%;object-fit:cover;display:block}
 .alEmpty{grid-column:1/-1;background:#fff;border:1px dashed #CFC7B6;border-radius:14px;padding:44px;text-align:center;color:#5B6670}
 @media (max-width:760px){#allList{padding:44px 0 60px}.alWrap{padding:0 16px}.alHead h2{font-size:26px}.alTabs{width:100%;overflow-x:auto;flex-wrap:nowrap}.alTabs button{flex:none}}
-#alRgF{flex:1.7 1 0;min-width:375px}
+#allList .alTools>#alRgF{flex:1.7 1 0;min-width:470px}#allList .alMH .alTools>.rng:not(#alRgF){flex:1 1 0;min-width:150px}#allList .alMH .alTools>select{flex:none}
 #alRgF .flP{display:flex;gap:3px;flex:none}
 #alRgF .flP button{height:26px;padding:0 9px;border:1px solid #D9D2C4;border-radius:13px;background:#fff;font:600 12px 'Noto Sans KR',sans-serif;color:#294652;cursor:pointer;white-space:nowrap}
 #alRgF .flP button:hover{border-color:#BC975E}
@@ -101,6 +101,31 @@ input,select,textarea,button{font-family:inherit}
 .alPager button:disabled{opacity:.35;cursor:default}
 .alPager .gap{color:#8A8272;padding:0 4px}
 @media (max-width:760px){#allList .alTools{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))}#allList .alTools>select,#allList .alSearch,#alRgF,#alRgR{grid-column:1/-1}#allList .alSearch{order:-3}#allList .alTools>select{order:-2;width:100%!important;max-width:none!important}#alRgF{order:-1;min-width:0;flex-wrap:wrap;height:auto!important;padding:8px 12px!important;border-radius:16px!important;row-gap:6px}#alRgF .flSep{display:block;flex:0 0 100%;height:0;margin:0;background:none}#allList .alTools>.rng:not(#alRgF){min-width:0}.alPager button{min-width:36px;height:36px}}
+/* 지도 아래: 왼쪽 이달의 추천 매물(상담카드 폭) | 오른쪽 매물 리스트(지도 폭) */
+#allList .alSplit{display:grid;grid-template-columns:290px 1px minmax(0,1fr);grid-template-rows:auto 1fr auto;column-gap:14px;row-gap:16px;align-items:stretch}
+#allList .alFH{grid-area:1/1}#allList .alFB{grid-area:2/1}#allList .alFP{grid-area:3/1}
+#allList .alDiv{grid-column:2;grid-row:1/4;background:#E2DACB;width:1px}
+#allList .alMH{grid-area:1/3;display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px}#allList .alGrid{grid-area:2/3}#allList .alMP{grid-area:3/3}
+#allList .alFH,#allList .alMH{min-height:44px;display:flex;align-items:center}
+#allList h2{margin:0;font-size:26px;font-weight:900;letter-spacing:-1px;color:#14191F;white-space:nowrap}
+#allList h2 span{background:linear-gradient(transparent 62%,#E8D7B6 62%)}
+#allList h2 em{font-style:normal;font-size:15px;font-weight:700;color:#8A8272;letter-spacing:0;margin-left:4px}
+#allList .alTitle{display:flex;align-items:center;gap:10px}
+#allList .alMH .alTools{margin:0 0 0 auto;flex:1 1 860px;justify-content:flex-end}
+#allList .alGrid{grid-template-columns:repeat(auto-fill,minmax(235px,1fr))!important;gap:18px;align-content:start}
+#allList .alFB{display:grid;grid-template-rows:1fr 1fr;gap:18px;min-height:0}
+#allList .alFB .listing{height:100%;min-height:0}
+#allList .alFB .fcm{flex:1 1 auto;min-height:44px;overflow:hidden;display:flex;gap:8px;align-items:flex-start;margin-top:auto;border-top:1px dashed #E2C48F;background:#FFF8EA;padding:10px 14px}
+#allList .alFB .fcm .av{flex:none;width:26px;height:26px;border-radius:50%;background:#294652;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+#allList .alFB .fcm p{margin:0;font-size:13px;line-height:1.55;color:#5A3E0E;word-break:keep-all;white-space:pre-line}
+#allList .alFB .fcm small{display:block;margin-top:4px;color:#9A7A45;font-size:11.5px;font-weight:600}
+#allList .alFB .fcm.none{background:#FBF8F2}
+#allList .alFeatEmpty{grid-row:1/3;background:#fff;border:1px dashed #CFC7B6;border-radius:14px;padding:24px;text-align:center;color:#5B6670;font-size:14px;display:flex;align-items:center;justify-content:center}
+#allList .alPager{margin-top:0;align-self:center;font-size:14px}
+#allList .alFP{display:flex;justify-content:center;align-items:center;gap:8px}
+#allList .alFP b{font:700 14px 'Noto Sans KR',sans-serif;color:#294652;min-width:44px;text-align:center}
+@media (max-width:1100px){#allList .alSplit{grid-template-columns:240px 1px minmax(0,1fr)}}
+@media (max-width:760px){#allList .alSplit{display:block}#allList .alDiv{display:none}#allList .alFH{margin-bottom:10px}#allList .alFB{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}#allList .alFB .listing{flex:0 0 82%;scroll-snap-align:start;height:auto}#allList .alFP{margin:10px 0 30px}#allList .alMH{margin-bottom:12px}#allList .alMH .alTools{margin:0;flex-basis:100%}#allList .alGrid{margin-bottom:16px}}
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -1576,12 +1601,13 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 
 <!-- ===== 지도로 매물 찾기 ===== -->
 
-<section id="allList" aria-label="매물 리스트">
-<div class="alWrap">
-<div class="alHead">
-<div><h2>매물 <span>리스트</span> <em id="alCnt"></em></h2><p>부동산다움이 직접 확인하고 사진을 올린 매물입니다</p></div>
-<button type="button" class="alReset" id="alReset" hidden>검색 초기화</button>
-</div>
+<section id="allList" aria-label="추천 매물과 매물 리스트">
+<div class="alWrap alSplit">
+<div class="alFH"><h2>이달의 <span>추천 매물</span></h2></div>
+<div class="alFB" id="alFeat"></div>
+<nav class="alFP alPager" id="alFeatPg" aria-label="추천 매물 넘기기"></nav>
+<div class="alDiv" aria-hidden="true"></div>
+<div class="alMH"><div class="alTitle"><h2>매물 <span>리스트</span> <em id="alCnt"></em></h2><button type="button" class="alReset" id="alReset" hidden>검색 초기화</button></div>
 <div class="mapTools alTools">
 <label class="sr" for="alRegion">지역</label><select id="alRegion" class="rgnSel"><option value="">강남·서초 전체</option></select>
 <div class="rng" id="alRgA"><span class="rgL">면적</span><input id="alAMin" type="text" inputmode="decimal" autocomplete="off" maxlength="7" placeholder="최소" aria-label="면적 최소"><i>~</i><input id="alAMax" type="text" inputmode="decimal" autocomplete="off" maxlength="7" placeholder="최대" aria-label="면적 최대"><span class="rgU">평</span></div>
@@ -1590,8 +1616,9 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 <div class="rng" id="alRgR"><span class="rgL">월세</span><input id="alRMin" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최소" aria-label="월세 최소"><i>~</i><input id="alRMax" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최대" aria-label="월세 최대"><span class="rgU">만</span></div>
 <div class="alSearch"><label class="sr" for="alQ">검색</label><input id="alQ" type="search" autocomplete="off" spellcheck="false" maxlength="30" placeholder="매물번호·동·건물명 (예: D5B531F, 신사동)"><span class="alQi" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></span></div>
 </div>
+</div>
 <div class="faGrid alGrid" id="alGrid"></div>
-<nav class="alPager" id="alPager" aria-label="매물 리스트 페이지"></nav>
+<nav class="alPager alMP" id="alPager" aria-label="매물 리스트 페이지"></nav>
 </div>
 </section>
 <!-- 이달의 추천 매물: 위치 정하는 동안 잠시 숨김 (지우지 않음 — 「parked」 클래스만 빼면 다시 보임) -->
@@ -2431,7 +2458,8 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       .sort(function (a, b) { return (a.featOrder || 0) - (b.featOrder || 0); });
   }
   /* ---------- 매물 리스트: 우리 매물 중 사진이 있는 매물 전부 (최근 순) · 지도와 같은 검색 조건 (지도와 따로) · 페이지 번호 ---------- */
-  var AL = { page: 1, per: 18, flp: [] };
+  var AL = { page: 1, per: 18, flp: [], fp: 1 };
+  function alCols() { var g = $('alGrid'); if (!g) return 6; var n = getComputedStyle(g).gridTemplateColumns.split(' ').filter(Boolean).length; return n || 1; }
   function alPool() { return ITEMS.filter(function (it) { return !it.unv && !it.sale && !it.shop && it.photos && it.photos.length; }).sort(function (a, b) { return String(b.date || '').localeCompare(String(a.date || '')); }); }
   function alRng(a, b, fl) { var lo = rngNum($(a).value, fl), hi = rngNum($(b).value, fl); if (lo == null && hi == null) return null; if (lo != null && hi != null && lo > hi) { var t = lo; lo = hi; hi = t; } return [lo, hi]; }
   function alOn() { var on = !!($('alRegion').value || $('alQ').value.trim() || AL.flp.length); ['alAMin', 'alAMax', 'alFMin', 'alFMax', 'alDMin', 'alDMax', 'alRMin', 'alRMax'].forEach(function (k) { if ($(k).value) on = true; }); return on; }
@@ -2451,6 +2479,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   function renderAllList(keep, scroll) {
     var g = $('alGrid'); if (!g) return; if (!keep) AL.page = 1;
     var rs = $('alRegion'), mr = $('mapRegion'); if (rs && mr && rs.options.length !== mr.options.length) { var v0 = rs.value; rs.innerHTML = mr.innerHTML; rs.value = v0; }
+    AL.per = window.innerWidth <= 760 ? 10 : alCols() * 3;
     var all = alPool(), L = alFiltered(), pages = Math.max(1, Math.ceil(L.length / AL.per)); if (AL.page > pages) AL.page = pages;
     $('alCnt').textContent = all.length ? L.length + '건' : '';
     $('allList').style.display = all.length ? '' : 'none';
@@ -2458,7 +2487,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     var P = $('alPager'), cur = AL.page, h = '';
     if (pages > 1) {
       var nums = [], add = function (n) { if (nums.indexOf(n) < 0 && n >= 1 && n <= pages) nums.push(n); };
-      add(1); for (var k = cur - 2; k <= cur + 2; k++) add(k); add(pages); nums.sort(function (a, b) { return a - b; });
+      var st = Math.max(1, Math.min(cur - 2, pages - 5)); add(1); for (var k = st; k < st + 6; k++) add(k); add(pages); nums.sort(function (a, b) { return a - b; });
       h += '<button type="button" data-pg="' + (cur - 1) + '" aria-label="이전 페이지"' + (cur === 1 ? ' disabled' : '') + '>‹</button>';
       nums.forEach(function (n, i) { if (i && n - nums[i - 1] > 1) h += '<span class="gap">…</span>'; h += '<button type="button" data-pg="' + n + '"' + (n === cur ? ' class="on" aria-current="page"' : '') + '>' + n + '</button>'; });
       h += '<button type="button" data-pg="' + (cur + 1) + '" aria-label="다음 페이지"' + (cur === pages ? ' disabled' : '') + '>›</button>';
@@ -2467,6 +2496,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     $('alReset').hidden = !alOn();
     document.querySelectorAll('#alRgF .flP button').forEach(function (b) { b.classList.toggle('on', AL.flp.indexOf(b.getAttribute('data-fp')) >= 0); });
     [['alRgA', 'alA'], ['alRgF', 'alF'], ['alRgD', 'alD'], ['alRgR', 'alR']].forEach(function (x) { $(x[0]).classList.toggle('on', !!($(x[1] + 'Min').value || $(x[1] + 'Max').value || (x[0] === 'alRgF' && AL.flp.length))); });
+    renderFeatAL();
     if (scroll) { var top = $('allList').getBoundingClientRect().top + window.scrollY - 70; window.scrollTo({ top: top, behavior: 'smooth' }); }
   }
   (function () {
@@ -2477,6 +2507,18 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     var P = $('alPager'); if (P) P.addEventListener('click', function (e) { var b = e.target.closest('button[data-pg]'); if (!b || b.disabled) return; AL.page = +b.getAttribute('data-pg'); renderAllList(true, true); });
     var R = $('alReset'); if (R) R.addEventListener('click', function () { window.ALRESET(); });
   })();
+  function renderFeatAL() {
+    var box = $('alFeat'), pg = $('alFeatPg'); if (!box) return;
+    var F = featPool(), n = Math.max(1, Math.ceil(F.length / 2)); if (AL.fp > n) AL.fp = n;
+    var ini = function (s) { s = String(s || '').trim(); return s ? s.charAt(0) : '다'; };
+    box.innerHTML = F.length ? F.slice((AL.fp - 1) * 2, AL.fp * 2).map(function (it) {
+      var c = card(it), cm = it.fc ? '<div class="fcm"><span class="av">' + esc(ini(it.fcBy)) + '</span><p>' + esc(it.fc) + '<small>' + esc((it.fcBy || '부동산다움') + ' 중개사') + '</small></p></div>' : '<div class="fcm none"></div>';
+      return c.replace(/<\/a>\s*$/, cm + '</a>');
+    }).join('') : '<div class="alFeatEmpty">추천 매물을 준비 중입니다</div>';
+    pg.innerHTML = F.length > 2 ? '<button type="button" data-fp="-1" aria-label="이전 추천 매물"' + (AL.fp === 1 ? ' disabled' : '') + '>‹</button><b>' + AL.fp + ' / ' + n + '</b><button type="button" data-fp="1" aria-label="다음 추천 매물"' + (AL.fp === n ? ' disabled' : '') + '>›</button>' : '';
+  }
+  (function () { var pg = $('alFeatPg'); if (pg) pg.addEventListener('click', function (e) { var b = e.target.closest('button[data-fp]'); if (!b || b.disabled) return; AL.fp += +b.getAttribute('data-fp'); renderFeatAL(); }); })();
+  (function () { var lc = 0; window.addEventListener('resize', function () { var c = alCols(); if (c !== lc) { lc = c; renderAllList(true); } }); })();
   window.ALRESET = function () { ['alAMin', 'alAMax', 'alFMin', 'alFMax', 'alDMin', 'alDMax', 'alRMin', 'alRMax', 'alQ'].forEach(function (k) { $(k).value = ''; }); $('alRegion').value = ''; AL.flp.length = 0; renderAllList(); };
   function renderFeatured() {
     var pool = featPool();
