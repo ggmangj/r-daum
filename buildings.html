@@ -194,6 +194,14 @@ input,select,textarea,button{font-family:inherit}
 .mapTtl em{font-style:normal;font-size:15px;font-weight:700;color:#8A8272;letter-spacing:0;margin-left:4px}
 body.mapFull .mapTtl{display:none}
 @media (max-width:760px){.mapTtl{font-size:24px;width:100%;margin:0 0 4px}}
+.listing .lTt{font-size:16px;font-weight:800;letter-spacing:-.4px;line-height:1.45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.listing .lPr{display:flex;background:#FAF7F1;border-radius:8px;padding:11px 2px;text-align:center}
+.listing .lPr>div{flex:1 1 auto;min-width:0;padding:0 7px;white-space:nowrap}
+.listing .lPr>div+div{border-left:1px solid #E6E0D4}
+.listing .lPr small{display:block;font-size:11px;color:#6B757D;margin-bottom:1px}
+.listing .lPr b{font-size:var(--prf,15px);font-weight:700;letter-spacing:-.3px}
+.listing .lFt{font-size:13px;color:#46515B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.listing .lFt i{font-style:normal;color:#CFC7B6;margin:0 7px}
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -2442,6 +2450,9 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   var byId = function (id) { for (var i = 0; i < ITEMS.length; i++) if (ITEMS[i].id === id) return ITEMS[i]; return null; };
 
   /* ---------- 추천 매물 카드 ---------- */
+  function fitPr(root) {   /* 금액 칸: 한 줄에 안 들어가면 그 카드만 글자를 조금씩 줄임 */
+    if (!root) return; requestAnimationFrame(function () { root.querySelectorAll('.lPr').forEach(function (p) { var f = 15; p.style.removeProperty('--prf'); while (p.scrollWidth > p.clientWidth + 1 && f > 12) { f -= 0.5; p.style.setProperty('--prf', f + 'px'); } }); root.querySelectorAll('.lFt').forEach(function (p) { var f = 13; p.style.fontSize = ''; while (p.scrollWidth > p.clientWidth + 1 && f > 11) { f -= 0.5; p.style.fontSize = f + 'px'; } }); });
+  }
   function card(it) {
     var tg = tagsOf(it), badges = it.sale ? (it.shop ? [it.floor || '상가'] : it.zone ? [String(it.zone).replace(/지역$/, '')] : []) : (it.premium === '무권리' ? ['무권리'] : []).concat(tg);
     if (!badges.length && it.point) badges = [it.point.split(/[·|,]/)[0].trim().slice(0, 10)];
@@ -2458,13 +2469,14 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       '</div></div>' +
       '<div style="padding: 18px; display: flex; flex-direction: column; gap: 10px">' +
       '<div style="font-size: 12px; color: #6B757D">' + esc((it.gu || '강남구') + ' ' + it.dong) + ' · No.' + esc(it.id) + '</div>' +
-      '<div style="font-size: 16px; font-weight: 700; line-height: 1.45; min-height: 46px">' + esc(it.title) + '</div>' +
-      (it.sale ? saleCardBody(it) : '<div style="background: #FAF7F1; border-radius: 8px; padding: 12px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; text-align: center">' +
-      '<div><div style="font-size: 11px; color: #6B757D">보증금</div><div style="font-size: 15px; font-weight: 700">' + esc(it.depText) + '</div></div>' +
-      '<div style="border-left: 1px solid #E6E0D4; border-right: 1px solid #E6E0D4"><div style="font-size: 11px; color: #6B757D">월세</div><div style="font-size: 15px; font-weight: 700; color: #294652">' + esc(it.rentText) + '</div></div>' +
-      '<div><div style="font-size: 11px; color: #6B757D">관리비</div><div style="font-size: 15px; font-weight: 700">' + esc(it.mgmt || '문의') + '</div></div>' +
+      (it.sale ? '<div style="font-size: 16px; font-weight: 700; line-height: 1.45; min-height: 46px">' + esc(it.title) + '</div>' + saleCardBody(it)
+        : '<div class="lTt" title="' + esc(it.title) + '">' + esc(it.dong ? [it.dong, it.floor, it.area ? areaText(it.area) : ''].filter(Boolean).join(' ') : it.title) + '</div>' +
+      '<div class="lPr">' +
+      '<div><small>보증금</small><b>' + esc(it.depText || '문의') + '</b></div>' +
+      '<div><small>월세</small><b style="color: #294652">' + esc(it.rentText || '문의') + '</b></div>' +
+      '<div><small>관리비</small><b>' + esc(it.mgmt || '문의') + '</b></div>' +
       '</div>' +
-      '<div style="display: flex; gap: 12px; font-size: 13px; color: #46515B; flex-wrap: wrap"><span>' + esc(areaText(it.area)) + '</span><span style="color: #CFC7B6">|</span><span>' + esc(it.floor || '-') + '</span><span style="color: #CFC7B6">|</span><span>주차 ' + esc(it.parking || '문의') + '</span></div>') +
+      '<div class="lFt">' + [esc(it.catLabel || '-'), it.premium === '무권리' ? '무권리' : '권리금 ' + esc(it.premium && it.premium !== '유선문의' ? it.premium : '유선문의'), '주차 ' + esc(it.parking || '문의')].join('<i>|</i>') + '</div>') +
       '</div></a>';
   }
   /* 빌딩 매매 카드: 매매가 · 대지 평당가 · 연면적 평당가 / 대지 · 규모 · 준공 */
@@ -2571,7 +2583,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     var all = alPool(), L = alFiltered(), pages = Math.max(1, Math.ceil(L.length / AL.per)); if (AL.page > pages) AL.page = pages;
     $('alCnt').textContent = all.length ? L.length + '건' : '';
     $('allList').style.display = all.length ? '' : 'none';
-    g.innerHTML = L.length ? L.slice((AL.page - 1) * AL.per, AL.page * AL.per).map(card).join('') : '<div class="alEmpty">조건에 맞는 매물이 없어요. 조건을 넓히거나 02-555-1165 로 문의 주세요.</div>';
+    g.innerHTML = L.length ? L.slice((AL.page - 1) * AL.per, AL.page * AL.per).map(card).join('') + (setTimeout(function () { fitPr(g); }, 0), '') : '<div class="alEmpty">조건에 맞는 매물이 없어요. 조건을 넓히거나 02-555-1165 로 문의 주세요.</div>';
     var P = $('alPager'), cur = AL.page, h = '';
     if (pages > 1) {
       var nums = [], add = function (n) { if (nums.indexOf(n) < 0 && n >= 1 && n <= pages) nums.push(n); };
@@ -2682,7 +2694,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     // 분류 탭은 항상 모두 표시 (해당 분류 추천 매물이 없으면 '준비 중' 안내)
     document.querySelectorAll('.tabBtn').forEach(function (b) { b.style.display = ''; });
     var list = pool.filter(function (it) { return has(it, featTab); });
-    $('listingGrid').innerHTML = list.map(card).join('');
+    $('listingGrid').innerHTML = list.map(card).join(''); fitPr($('listingGrid'));
     CC.cards = [].slice.call($('listingGrid').querySelectorAll('.listing'));
     CC.n = CC.cards.length; CC.i = 0;
     $('ccDots').innerHTML = CC.cards.map(function (_, k) { return '<button type="button" data-k="' + k + '" aria-label="' + (k + 1) + '번째 매물"></button>'; }).join('');
@@ -3918,7 +3930,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     var list = ITEMS.filter(function (x) { return x.id !== it.id && (x.cats || []).some(function (c) { return (it.cats || []).indexOf(c) >= 0; }); })
       .map(function (x) { return [x, isFinite(x.lat) && isFinite(it.lat) ? distM(it.lat, it.lng, x.lat, x.lng) : 1e9]; })
       .sort(function (a, b) { return a[1] - b[1]; }).slice(0, 4).map(function (p) { return p[0]; });
-    box.innerHTML = list.length ? '<div class="dtSec" style="margin-top:0"><h2>주변 비슷한 매물</h2></div><div class="dtSimGrid">' + list.map(card).join('') + '</div>' : '';
+    box.innerHTML = list.length ? '<div class="dtSec" style="margin-top:0"><h2>주변 비슷한 매물</h2></div><div class="dtSimGrid">' + list.map(card).join('') + '</div>' : ''; fitPr(box);
   }
 
   // ── 지하철역까지 도보 동선: 매물에서 가장 가까운 "출구"까지 실제 걷는 길 (OpenStreetMap 도보 길찾기 · 분당 67m 기준) ──
@@ -4915,7 +4927,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     else if (so === 'a') L.sort(function (a, b) { return (+b.area || 0) - (+a.area || 0); });
     else if (so === 'd') L.sort(function (a, b) { return faDk(b.date) - faDk(a.date); });
     faEl('faCnt').innerHTML = '<b>' + L.length + '</b>건';
-    faEl('faGrid').innerHTML = L.length ? L.slice(0, FA.shown).map(card).join('') : '<div class="faEmpty"><b>조건에 맞는 추천 매물이 없어요</b><br>조건을 넓히거나 02-555-1165 로 문의 주세요.</div>';
+    faEl('faGrid').innerHTML = L.length ? L.slice(0, FA.shown).map(card).join('') + (setTimeout(function () { fitPr(faEl('faGrid')); }, 0), '') : '<div class="faEmpty"><b>조건에 맞는 추천 매물이 없어요</b><br>조건을 넓히거나 02-555-1165 로 문의 주세요.</div>';
     faEl('faMore').hidden = L.length <= FA.shown; faEl('faMore').textContent = '더 보기 (남은 ' + (L.length - FA.shown) + '건)';
   }
   function faDongs() {
