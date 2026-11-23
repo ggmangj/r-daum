@@ -355,6 +355,17 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
 .mainNav{gap:4px!important;align-items:flex-end}
 .mainNav a{padding:0 14px!important;margin:0 0 -1px!important;border-radius:12px 12px 0 0;border:1px solid transparent;border-bottom:0!important;min-height:44px!important;font-weight:700;color:#46515B!important}
 }
+/* 빌딩 실거래가(deals.html)와 같은 모양: 한 줄 · 알약 버튼 · 기간 선택은 금색 */
+@media (min-width:761px){
+.flt{flex-wrap:nowrap!important;overflow:visible!important;gap:6px!important}
+.flt>.kindSw{display:inline-flex;margin:0;flex:none;padding:3px;border-radius:999px;height:40px;box-sizing:border-box;align-items:center}
+.flt>.kindSw a{padding:6px 12px;border-radius:999px;font-size:13.5px}.flt>.kindSw a small{font-size:11px}
+.flt>.seg{flex:none;height:40px;box-sizing:border-box;align-items:center}.flt>.seg button{padding:6px 9px}
+.flt>.dsel{flex:none;width:108px}
+}
+@media (min-width:761px) and (max-width:1499px){.flt{flex-wrap:wrap!important;row-gap:8px!important}}
+.yseg button{font-weight:800;font-size:14px}
+.yseg button.on{background:#BC975E!important;color:#14191F!important}
 </style>
 </head>
 <body>
@@ -395,11 +406,11 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
 <div class="sdInfo"><b>연식 미상</b>은 건축년도 정보가 없는 거래입니다. 준공 직후 신축이거나 정보 누락일 수 있어 따로 모아 보여드리며, 「전체」 중간값에는 포함됩니다.</div>
 </aside>
 <div class="col">
-<div class="kindSw" role="group" aria-label="실거래 종류"><a href="/deals.html">빌딩 <small>건물 전체</small></a><a href="/shopdeals.html" class="on shopOn" aria-current="true">상가·사무실 <small>호실</small></a></div>
 <div class="fullHead"><span class="fe">SHOP & OFFICE DEALS</span><h2>강남·서초 <span>상가·사무실 실거래가</span></h2><button type="button" class="fullClose" id="fullClose"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>닫기</button></div>
 <div class="flt" role="group" aria-label="검색 조건">
- <div class="seg" id="fPer"><button type="button" data-v="12">1년</button><button type="button" data-v="24">2년</button><button type="button" data-v="36">3년</button><button type="button" data-v="60" class="on">5년</button></div>
- <label class="sr" for="fDong">지역</label><select id="fDong" class="dsel"><option value="">강남·서초 전체</option></select>
+ <div class="kindSw" role="group" aria-label="실거래 종류"><a href="/deals.html">빌딩 <small>건물 전체</small></a><a href="/shopdeals.html" class="on shopOn" aria-current="true">상가·사무실 <small>호실</small></a></div>
+ <div class="seg yseg" id="fPer"><button type="button" data-v="12">1년</button><button type="button" data-v="24">2년</button><button type="button" data-v="36">3년</button><button type="button" data-v="60" class="on">5년</button></div>
+ <label class="sr" for="fDong">지역</label><select id="fDong" class="dsel"><option value="">강남·서초</option></select>
  <div class="seg" id="fUse"><button type="button" data-v="" class="on">전체</button><button type="button" data-v="shop">상가</button><button type="button" data-v="office">사무실</button></div>
  <div class="seg" id="fFl"><button type="button" data-v="" class="on">층 전체</button><button type="button" data-v="b">지하</button><button type="button" data-v="1">1층</button><button type="button" data-v="2">2층 이상</button></div>
  <div class="seg" id="fAge"><button type="button" data-v="" class="on">연식 전체</button><button type="button" data-v="new">5년 이내</button><button type="button" data-v="old">5년 초과</button><button type="button" data-v="unk">연식 미상</button></div>
@@ -477,7 +488,7 @@ body.dlFull .kindSw{display:none}.sdLeg{pointer-events:auto!important}.cadBtn{ma
       o.uk = useKind(o.use); o.fk = flKind(o.fl); o.ak = ageKind(o); return o;
     });
     var by = {}; ALL.forEach(function (o) { (by[o.gu] = by[o.gu] || {})[o.dong] = 1; });
-    $('fDong').innerHTML = '<option value="">강남·서초 전체</option>' + ['강남구', '서초구'].map(function (g) { return by[g] ? '<optgroup label="' + g + '">' + Object.keys(by[g]).sort().map(function (dn) { return '<option value="' + esc(g + '|' + dn) + '">' + esc(dn) + '</option>'; }).join('') + '</optgroup>' : ''; }).join('');
+    $('fDong').innerHTML = '<option value="">강남·서초</option>' + ['강남구', '서초구'].map(function (g) { return by[g] ? '<optgroup label="' + g + '">' + Object.keys(by[g]).sort().map(function (dn) { return '<option value="' + esc(g + '|' + dn) + '">' + esc(dn) + '</option>'; }).join('') + '</optgroup>' : ''; }).join('');
     $('fDong').value = F.dong;
     if (d.updated) $('upd').textContent = '· 업데이트 ' + new Date(d.updated).toLocaleDateString('ko-KR');
     apply();
