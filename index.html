@@ -45,6 +45,17 @@ a{color:#294652;text-decoration:none}a:hover{color:#294652}
 input,select,textarea,button{font-family:inherit}
 .slCmp .r.sub{font-size:.92em;color:#6b6157}.slCmp .r.sub>span{padding-left:10px}.slCmp .r.sub .bar{height:8px;opacity:.85}
 .slCmp .slGrp{margin:8px 0 2px;padding-top:8px;border-top:1px dashed #E3DCCD;font-size:11.5px;font-weight:600;color:#A8977A;letter-spacing:.02em}
+#rgFloor{flex:1.7 1 0;min-width:375px}@media (min-width:761px){.mapTools{flex-wrap:wrap!important}.mapTools>.rng:not(#rgFloor){min-width:170px}}
+#rgFloor .flP{display:flex;gap:3px;flex:none}
+#rgFloor .flP button{height:26px;padding:0 9px;border:1px solid #D9D2C4;border-radius:13px;background:#fff;font:600 12px 'Noto Sans KR',sans-serif;color:#294652;cursor:pointer;white-space:nowrap}
+#rgFloor .flP button:hover{border-color:#BC975E}
+#rgFloor .flP button.on{background:#294652;border-color:#294652;color:#fff}
+#rgFloor .flSep{flex:none;width:1px;height:18px;background:#E6E0D4;margin:0 4px}
+#rgFloor .flG{flex:none;font-size:12px;color:#6B757D;white-space:nowrap}
+#rgFloor input{min-width:34px}
+.saleMode #rgFloor .flP,.saleMode #rgFloor .flSep,.saleMode #rgFloor .flG{display:none}
+.saleMode #rgFloor{flex:1 1 0}
+@media (max-width:760px){#rgFloor{grid-column:1/-1;order:-1;min-width:0;flex-wrap:wrap;height:auto!important;padding:8px 12px!important;border-radius:16px!important;row-gap:6px}#rgFloor .flSep{display:block;flex:0 0 100%;height:0;margin:0;background:none}#rgFloor .flP{flex:1 1 auto}#rgFloor .flG{margin-left:2px}.mapTools>#rgRent{grid-column:1/-1}.mapTools>#mapRegion,.mapTools>.rgnSel{order:-2}.mapTools>.noSearch{order:-3!important}}
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -1489,7 +1500,7 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
 <div class="mapTools" style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center">
 <label class="sr" for="mapRegion">지역</label><select id="mapRegion" class="rgnSel"><option value="">강남·서초 전체</option></select>
 <div class="rng" id="rgArea"><span class="rgL">면적</span><input id="mapAreaMin" type="text" inputmode="decimal" autocomplete="off" maxlength="7" placeholder="최소" aria-label="면적 최소"><i>~</i><input id="mapAreaMax" type="text" inputmode="decimal" autocomplete="off" maxlength="7" placeholder="최대" aria-label="면적 최대"><span class="rgU">평</span></div>
-<div class="rng" id="rgFloor" title="지하층은 B1 또는 -1 로 입력"><span class="rgL">층</span><input id="mapFloorMin" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최저" aria-label="층 최소"><i>~</i><input id="mapFloorMax" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최고" aria-label="층 최대"><span class="rgU">층</span></div>
+<div class="rng" id="rgFloor" title="지하 · 1층 · 연층 · 통임대는 버튼으로, 2층 이상은 숫자로 (여러 개 고르면 모두 보여 줌)"><span class="rgL">층</span><span class="flP" role="group" aria-label="층 종류"><button type="button" data-fp="b">지하</button><button type="button" data-fp="1">1층</button><button type="button" data-fp="y">연층</button><button type="button" data-fp="t">통임대</button></span><span class="flSep"></span><span class="flG">지상</span><input id="mapFloorMin" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최저" aria-label="층 최소"><i>~</i><input id="mapFloorMax" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최고" aria-label="층 최대"><span class="rgU">층</span></div>
 <div class="rng" id="rgDep"><span class="rgL">보증금</span><input id="mapDepMin" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최소" aria-label="보증금 최소"><i>~</i><input id="mapDepMax" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최대" aria-label="보증금 최대"><span class="rgU">만</span></div>
 <div class="rng" id="rgRent"><span class="rgL">월세</span><input id="mapRentMin" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최소" aria-label="월세 최소"><i>~</i><input id="mapRentMax" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최대" aria-label="월세 최대"><span class="rgU">만</span></div>
 <form class="noSearch" id="noSearch" role="search"><label class="sr" for="noInput">매물번호 검색</label><input id="noInput" type="search" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="20" placeholder="매물번호 검색 (예: D5B531F)"><button type="submit" aria-label="매물번호로 찾기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></button></form>
@@ -2793,7 +2804,10 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       if (SEARCH.auto && !autoMatch(it, SEARCH.auto)) return false;
       if (dong && it.dong !== dong) return false;
       if (!inRange(it.area ? +it.area : null, ar)) return false;
-      if (fl && !floorsOf(it.floor).some(function (v) { return v === '*' || inRange(v, fl); })) return false;   // 연층·통임대는 한 층이라도 맞으면
+      if ((FLP && FLP.length) || fl) {   // 층: 버튼(지하·1층·연층·통임대)과 지상 범위는 「또는」 · 연층·통임대는 범위에서 한 층이라도 맞으면
+        var fk = flKind(it.floor), okP = FLP.indexOf(fk) >= 0, okR = !!fl && floorsOf(it.floor).some(function (v) { return v === '*' || inRange(v, fl); });
+        if (!(okP || okR)) return false;
+      }
       if (!inRange(manOf(it.dep, it.depText), dp)) return false;
       if (!inRange(manOf(it.rent, it.rentText), rt)) return false;
       return isFinite(it.lat) && isFinite(it.lng) && it.lat && it.lng;
@@ -2875,6 +2889,21 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     if ((m = /^([\d.]+)억([\d.]*)/.exec(v))) return parseFloat(m[1]) * 10000 + (parseFloat(m[2]) || 0);
     var n = parseFloat(v); return isFinite(n) ? n : null;
   }
+  var FLP = [];
+  // 층 종류: b 지하 · 1 1층 · y 연층 · t 통임대 · n 그 밖(2층 이상)
+  function flKind(t) {
+    var s = String(t || '').replace(/\s+/g, ''); if (!s) return '';
+    if (/통임대|전층|건물전체/.test(s)) return 't';
+    var f = floorsOf(s); if (/^(연층|복층)/.test(s) || f.length > 1) return 'y';
+    if (f[0] === '*') return 't'; if (f[0] < 0) return 'b'; if (f[0] === 1) return '1'; return f.length ? 'n' : '';
+  }
+  function flPaint() {
+    document.querySelectorAll('#rgFloor .flP button').forEach(function (b) { var on = FLP.indexOf(b.getAttribute('data-fp')) >= 0; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+    var r = $('rgFloor'); if (r) r.classList.toggle('on', !!(FLP.length || $('mapFloorMin').value || $('mapFloorMax').value));
+  }
+  document.querySelectorAll('#rgFloor .flP button').forEach(function (b) {
+    b.addEventListener('click', function () { var k = b.getAttribute('data-fp'), i = FLP.indexOf(k); if (i >= 0) FLP.splice(i, 1); else FLP.push(k); flPaint(); applyFilters(false); });
+  });
   function rngOf(k) {
     var a = $('map' + k + 'Min'), b = $('map' + k + 'Max'); if (!a || !b) return null;
     var lo = rngNum(a.value, k === 'Floor'), hi = rngNum(b.value, k === 'Floor');
@@ -2901,7 +2930,9 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   function setRange(k, lo, hi) {
     var a = $('map' + k + 'Min'), b = $('map' + k + 'Max'); if (!a) return;
     a.value = lo == null || lo === '' ? '' : String(lo); b.value = hi == null || hi === '' ? '' : String(hi);
-    var r = $('rg' + k); if (r) r.classList.toggle('on', !!(a.value || b.value));
+    if (k === 'Floor' && lo == null && hi == null) FLP.length = 0;
+    var r = $('rg' + k); if (r) r.classList.toggle('on', !!(a.value || b.value || (k === 'Floor' && FLP.length)));
+    if (k === 'Floor') flPaint();
   }
   function floorNum(t) {
     t = String(t || ''); if (/지하|^\s*B\d/i.test(t)) return -1;
@@ -2929,7 +2960,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   }
   function filtersOn() {
     var on = !!$('mapDong').value || !!(SEARCH.cat || SEARCH.gu || SEARCH.kw || SEARCH.auto || SEARCH.sale);
-    ['Area', 'Floor', 'Dep', 'Rent'].forEach(function (k) { var a = $('map' + k + 'Min'), b = $('map' + k + 'Max'); if (a && (a.value || b.value)) on = true; });
+    ['Area', 'Floor', 'Dep', 'Rent'].forEach(function (k) { var a = $('map' + k + 'Min'), b = $('map' + k + 'Max'); if (a && (a.value || b.value)) on = true; }); if (FLP.length) on = true;
     document.querySelectorAll('.mapReset').forEach(function (r) { r.classList.toggle('on', on); });
     return on;
   }
@@ -2965,7 +2996,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     ['Area', 'Floor', 'Dep', 'Rent'].forEach(function (k) {
       ['Min', 'Max'].forEach(function (s) {
         var el = $('map' + k + s); if (!el) return;
-        el.addEventListener('input', function () { $('rg' + k).classList.toggle('on', !!($('map' + k + 'Min').value || $('map' + k + 'Max').value)); clearTimeout(rgT); rgT = setTimeout(function () { applyFilters(false); }, 350); });
+        el.addEventListener('input', function () { $('rg' + k).classList.toggle('on', !!($('map' + k + 'Min').value || $('map' + k + 'Max').value || (k === 'Floor' && FLP.length))); clearTimeout(rgT); rgT = setTimeout(function () { applyFilters(false); }, 350); });
         el.addEventListener('change', function () {
           if (k === 'Dep' || k === 'Rent') { var n = rngNum(el.value); if (n != null && !/억/.test(el.value)) el.value = Math.round(n).toLocaleString('ko-KR'); }
           clearTimeout(rgT); applyFilters(false);   // 면적·층·보증금·월세 숫자 입력: 보던 지도 화면 그대로 (전체로 축소하지 않음)
