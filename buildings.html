@@ -2560,7 +2560,11 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   /* ---------- 매물 리스트: 우리 매물 중 사진이 있는 매물 전부 (최근 순) · 지도와 같은 검색 조건 (지도와 따로) · 페이지 번호 ---------- */
   var AL = { page: 1, per: 18, flp: [], fp: 1 };
   function alCols() { var g = $('alGrid'); if (!g) return 6; var n = getComputedStyle(g).gridTemplateColumns.split(' ').filter(Boolean).length; return n || 1; }
-  function alPool() { return ITEMS.filter(function (it) { return !it.unv && !it.sale && !it.shop && it.photos && it.photos.length; }).sort(function (a, b) { return String(b.date || '').localeCompare(String(a.date || '')); }); }
+  function dateNum(v) {   /* 「2026. 11. 3」·「2026-11-03」·「26.11.3」·「2026/11/3」 → 20261103 (모르면 0) */
+    var m = String(v || '').match(/(\d{2,4})\s*[.\-\/년]\s*(\d{1,2})\s*[.\-\/월]\s*(\d{1,2})/); if (!m) return 0;
+    var y = +m[1]; if (y < 100) y += 2000; return y * 10000 + (+m[2]) * 100 + (+m[3]);
+  }
+  function alPool() { return ITEMS.filter(function (it) { return !it.unv && !it.sale && !it.shop && it.photos && it.photos.length; }).sort(function (a, b) { return dateNum(b.date) - dateNum(a.date); }); }
   function alRng(a, b, fl) { var lo = rngNum($(a).value, fl), hi = rngNum($(b).value, fl); if (lo == null && hi == null) return null; if (lo != null && hi != null && lo > hi) { var t = lo; lo = hi; hi = t; } return [lo, hi]; }
   function alOn() { var on = !!($('alRegion').value || $('alKind').value || AL.flp.length); ['alAMin', 'alAMax', 'alFMin', 'alFMax', 'alDMin', 'alDMax', 'alRMin', 'alRMax'].forEach(function (k) { if ($(k).value) on = true; }); return on; }
   function alFiltered() {
