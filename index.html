@@ -203,6 +203,12 @@ body.mapFull .mapTtl{display:none}
 .listing .lFt i{font-style:normal;color:#CFC7B6;margin:0 7px}
 body:not(.saleMode) #rgBld,.saleMode #mapKind,.saleMode label[for=mapKind]{display:none!important}
 @media (max-width:760px){.saleMode .mapTools>#rgRent{grid-column:auto}}
+.hsMode{display:flex;gap:4px;margin:0 0 6px}.hsMode button,.hsRad button{flex:1;padding:5px 0;border-radius:7px;border:1px solid #D9D2C4;background:#fff;font:700 11.5px 'Noto Sans KR',sans-serif;color:#294652;cursor:pointer;white-space:nowrap}
+.hsMode button.on{background:#294652;border-color:#294652;color:#fff}
+.hsRad{display:flex;gap:3px;margin:0 0 8px}.hsRad button{font-size:11px;padding:4px 0;border-radius:12px}.hsRad button.on{background:#BC975E;border-color:#BC975E;color:#14191F}
+.hsV{display:block;width:12px;height:12px;border-radius:50%;background:#fff;border:2.5px solid #8A6A35;box-sizing:border-box}.hsV.first{width:16px;height:16px;background:#BC975E;border-color:#fff;box-shadow:0 0 0 2px #8A6A35;cursor:pointer}
+.hsDrawT{margin-top:4px;font-size:13px;font-weight:700;color:#fff}
+.hsDrawB{display:flex;gap:6px;padding:10px 14px 12px}.hsDrawB button{flex:1;padding:7px 0;border-radius:8px;border:1px solid #D9D2C4;background:#fff;font:700 12.5px 'Noto Sans KR',sans-serif;color:#294652;cursor:pointer}.hsDrawB button.pri{background:#294652;border-color:#294652;color:#fff}.hsDrawB button:disabled{opacity:.45;cursor:default}
 </style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -2988,34 +2994,73 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   }
   function hf1(v) { return (Math.round(v * 10) / 10).toLocaleString('ko-KR'); }
   // ── 매니저 모드: 지도를 누르면 그 주변 시세 (같은 층 구분 · 8건이 될 때까지 200→300→500m) ──
-  var HS = { pt: null, objs: [] };
-  function hsClear(keep) { HS.objs.forEach(function (o) { o.setMap(null); }); HS.objs = []; if (!keep) HS.pt = null; var bx = $('hsBox'); if (bx && !keep) bx.hidden = true; }
+  // 범위 정하는 방법: 반경(자동 = 8건이 될 때까지 200→300→500m, 또는 100·200·300·500m 고정) / 직접 그리기(점을 찍어 다각형)
+  var HS = { pt: null, objs: [], mode: 'r', r: 0, poly: [], done: false, dobjs: [] };
+  function hsClear(keep) { HS.objs.forEach(function (o) { o.setMap(null); }); HS.objs = []; if (!keep) { HS.pt = null; HS.done = false; hsDrawClear(); } var bx = $('hsBox'); if (bx && !keep) bx.hidden = true; }
+  function hsDrawClear() { HS.dobjs.forEach(function (o) { o.setMap(null); }); HS.dobjs = []; HS.poly = []; }
   function hsBind() {
     var map = M && M.raw; if (!map || map._hsOn || !window.naver) return; map._hsOn = 1;
-    naver.maps.Event.addListener(map, 'click', function (e) { if (!(HEAT.on && heatActive() && heatMgr()) || !e || !e.coord) return; hsRun(e.coord.lat ? e.coord.lat() : e.coord.y, e.coord.lng ? e.coord.lng() : e.coord.x); });
+    naver.maps.Event.addListener(map, 'click', function (e) { if (!(HEAT.on && heatActive() && heatMgr()) || !e || !e.coord) return; var la = e.coord.lat ? e.coord.lat() : e.coord.y, lo = e.coord.lng ? e.coord.lng() : e.coord.x; if (HS.mode === 'p') hsAddPt(la, lo); else hsRun(la, lo); });
+  }
+  function hsBoxEl() {
+    var box = $('hsBox'); if (box) return box;
+    box = document.createElement('div'); box.id = 'hsBox'; box.className = 'hsBox'; $('leafletMap').parentNode.appendChild(box);
+    box.addEventListener('click', function (e) {
+      var c = e.target.closest('[data-hsf]'); if (c) { HEAT.fl = c.dataset.hsf; drawMap(); setTimeout(hsRedo, 80); return; }
+      if (e.target.closest('.hsX')) { hsClear(); return; } if (e.target.closest('.hsMore')) { box.classList.add('all'); return; }
+      if (e.target.closest('[data-hpu]')) { HS.poly.pop(); hsDrawPaint(); return; } if (e.target.closest('[data-hpd]')) { hsFinish(); return; } if (e.target.closest('[data-hpc]')) { hsClear(); return; }
+    });
+    return box;
+  }
+  function hsRedo() { if (HS.mode === 'p' && HS.done && HS.poly.length >= 3) hsPolyRun(); else if (HS.pt) hsRun(HS.pt[0], HS.pt[1]); }
+  /* 직접 그리기: 점 찍기 → 첫 점을 누르거나 「완성」 */
+  function hsAddPt(la, lo) {
+    if (HS.done) { hsClear(); }
+    var map = M.raw;
+    if (HS.poly.length >= 3) { var f = HS.poly[0], z = map.getZoom(), mpp = 156543.03 * Math.cos(f[0] * Math.PI / 180) / Math.pow(2, z); if (distM(la, lo, f[0], f[1]) <= mpp * 14) { hsFinish(); return; } }
+    HS.poly.push([la, lo]); hsDrawPaint();
+  }
+  function hsDrawPaint() {
+    var nm = naver.maps, map = M.raw; HS.dobjs.forEach(function (o) { o.setMap(null); }); HS.dobjs = [];
+    var P = HS.poly.map(function (q) { return new nm.LatLng(q[0], q[1]); });
+    if (P.length > 1) HS.dobjs.push(new nm.Polyline({ map: map, path: P, strokeColor: '#8A6A35', strokeWeight: 2, strokeOpacity: 0.9, strokeStyle: 'shortdash', clickable: false }));
+    P.forEach(function (ll, i) { var mk = new nm.Marker({ map: map, position: ll, zIndex: 1400, clickable: i === 0, icon: { content: '<i class="hsV' + (i ? '' : ' first') + '"></i>', anchor: new nm.Point(i ? 6 : 8, i ? 6 : 8) } }); if (!i) nm.Event.addListener(mk, 'click', function () { if (HS.poly.length >= 3) hsFinish(); }); HS.dobjs.push(mk); });
+    var box = hsBoxEl(); box.hidden = false; box.classList.remove('all');
+    box.innerHTML = '<div class="hsHd"><button type="button" class="hsX" aria-label="닫기">×</button><small>직접 그리기 · 점 ' + HS.poly.length + '개</small><div class="hsDrawT">' + (HS.poly.length < 3 ? '지도에 점을 찍어 범위를 그리세요 (3개 이상)' : '첫 점(큰 점)을 누르거나 「완성」을 누르세요') + '</div></div>' +
+      '<div class="hsDrawB"><button type="button" data-hpu' + (HS.poly.length ? '' : ' disabled') + '>↶ 되돌리기</button><button type="button" data-hpc>취소</button><button type="button" class="pri" data-hpd' + (HS.poly.length >= 3 ? '' : ' disabled') + '>완성</button></div>';
+  }
+  function hsFinish() { if (HS.poly.length < 3) return; HS.done = true; HS.dobjs.forEach(function (o) { o.setMap(null); }); HS.dobjs = []; hsPolyRun(); }
+  function inPoly(la, lo, P) { var c = false; for (var i = 0, j = P.length - 1; i < P.length; j = i++) { var yi = P[i][0], xi = P[i][1], yj = P[j][0], xj = P[j][1]; if (((yi > la) !== (yj > la)) && (lo < (xj - xi) * (la - yi) / (yj - yi) + xi)) c = !c; } return c; }
+  function hsPolyRun() {
+    var nm = naver.maps, map = M.raw, P = HS.poly; HS.objs.forEach(function (o) { o.setMap(null); }); HS.objs = []; HS.pt = null;
+    var cla = 0, clo = 0; P.forEach(function (q) { cla += q[0]; clo += q[1]; }); cla /= P.length; clo /= P.length;
+    var use = heatPoints().filter(function (p) { return inPoly(p.lat, p.lng, P); }).map(function (p) { return { p: p, d: distM(cla, clo, p.lat, p.lng) }; }).sort(function (a, b) { return a.d - b.d; });
+    HS.objs.push(new nm.Polygon({ map: map, paths: [P.map(function (q) { return new nm.LatLng(q[0], q[1]); })], fillColor: '#BC975E', fillOpacity: 0.12, strokeColor: '#8A6A35', strokeOpacity: 0.9, strokeWeight: 2, clickable: false }));
+    hsShow(use, '그린 범위', '', '그린 범위 안에 이 층 매물이 ' + use.length + '건뿐이라 시세를 내기 어렵습니다. 범위를 넓게 다시 그리거나 층을 「전체」로 바꿔 보세요.', '중심에서 가까운 순');
   }
   function hsRun(la, lo) {
     var nm = naver.maps, map = M.raw; hsClear(); HS.pt = [la, lo];
-    var all = heatPoints().map(function (p) { return { p: p, d: distM(la, lo, p.lat, p.lng) }; }).filter(function (x) { return x.d <= 500; }).sort(function (a, b) { return a.d - b.d; });
-    var R = 500; [200, 300, 500].some(function (r) { if (all.filter(function (x) { return x.d <= r; }).length >= 8) { R = r; return true; } return false; });
-    var use = all.filter(function (x) { return x.d <= R; }), vs = use.map(function (x) { return x.p.v; }).sort(function (a, b) { return a - b; });
+    var MAXR = HS.r || 500, all = heatPoints().map(function (p) { return { p: p, d: distM(la, lo, p.lat, p.lng) }; }).filter(function (x) { return x.d <= MAXR; }).sort(function (a, b) { return a.d - b.d; });
+    var R = MAXR; if (!HS.r) [200, 300, 500].some(function (r) { if (all.filter(function (x) { return x.d <= r; }).length >= 8) { R = r; return true; } return false; });
+    var use = all.filter(function (x) { return x.d <= R; });
     HS.objs.push(new nm.Circle({ map: map, center: new nm.LatLng(la, lo), radius: R, fillColor: '#294652', fillOpacity: 0.07, strokeColor: '#294652', strokeOpacity: 0.7, strokeWeight: 1.5, clickable: false }));
     HS.objs.push(new nm.Marker({ map: map, position: new nm.LatLng(la, lo), zIndex: 1300, clickable: false, icon: { content: '<div class="hsPt"></div>', anchor: new nm.Point(9, 9) } }));
-    var G = heatScale();
+    hsShow(use, '반경 ' + R + 'm', !HS.r && R > 200 ? ' · 8건이 안 돼 ' + R + 'm로 넓힘' : '', '반경 ' + R + 'm 안에 이 층 매물이 ' + use.length + '건뿐이라 시세를 내기 어렵습니다. ' + (HS.r ? '반경을 넓히거나 ' : '') + '층을 「전체」로 바꾸거나 다른 곳을 눌러 보세요.', '가까운 순');
+  }
+  function hsShow(use, scope, note, fewMsg, order) {
+    var nm = naver.maps, map = M.raw, G = heatScale(), vs = use.map(function (x) { return x.p.v; }).sort(function (a, b) { return a - b; });
     use.forEach(function (x) {
       var st = heatStep(x.p.v, G), bg = CTC[Math.min(CTC.length - 1, Math.round(st / 4 * (CTC.length - 1)))];
       HS.objs.push(new nm.Marker({ map: map, position: new nm.LatLng(x.p.lat, x.p.lng), zIndex: 1250 + st, clickable: false, icon: { content: '<i class="hsDot" style="background:' + bg + '"></i>', anchor: new nm.Point(5, 5) } }));   // 계산에 쓴 매물: 작은 점만 (숫자는 오른쪽 상자 목록에)
     });
-    var box = $('hsBox'); if (!box) { box = document.createElement('div'); box.id = 'hsBox'; box.className = 'hsBox'; $('leafletMap').parentNode.appendChild(box);
-      box.addEventListener('click', function (e) { var c = e.target.closest('[data-hsf]'); if (c) { HEAT.fl = c.dataset.hsf; drawMap(); if (HS.pt) setTimeout(function () { hsRun(HS.pt[0], HS.pt[1]); }, 80); return; } if (e.target.closest('.hsX')) hsClear(); if (e.target.closest('.hsMore')) box.classList.add('all'); }); }
-    box.hidden = false; box.classList.remove('all');
+    var box = hsBoxEl(); box.hidden = false; box.classList.remove('all');
     var flN = { all: '전체 층', '1': '1층', up: '2층 이상', b: '지하' }[HEAT.fl], dong = (function () { var c = {}; use.forEach(function (x) { c[x.p.d] = (c[x.p.d] || 0) + 1; }); return Object.keys(c).sort(function (a, b) { return c[b] - c[a]; })[0] || ''; })();
-    var head = '<div class="hsHd"><button type="button" class="hsX" aria-label="닫기">×</button><small>' + esc(dong) + ' · 반경 ' + R + 'm · ' + flN + ' · 매물 ' + use.length + '건</small>';
-    if (vs.length < 3) { box.innerHTML = head + '<div class="hsN">-</div><small>반경 500m 안에 이 층 매물이 ' + vs.length + '건뿐이라 시세를 내기 어렵습니다. 층을 「전체」로 바꾸거나 다른 곳을 눌러 보세요.</small></div>' + hsTabs(); return; }
+    var head = '<div class="hsHd"><button type="button" class="hsX" aria-label="닫기">×</button><small>' + (dong ? esc(dong) + ' · ' : '') + scope + ' · ' + flN + ' · 매물 ' + use.length + '건</small>';
+    if (vs.length < 3) { box.innerHTML = head + '<div class="hsN">-</div><small>' + fewMsg + '</small></div>' + hsTabs(); return; }
     var md = heatQ(vs, 0.5), q1 = heatQ(vs, 0.25), q3 = heatQ(vs, 0.75), lo = vs[0], hi = vs[vs.length - 1], sp = hi - lo || 1, pos = function (v) { return 4 + (v - lo) / sp * 92; };
-    box.innerHTML = head + '<div class="hsN">' + hf1(md) + '만<span>/평 (월세+관리비 ÷ 전용)</span></div><small>중간값 · 대부분 ' + hf1(q1) + '만 ~ ' + hf1(q3) + '만' + (R > 200 ? ' · 8건이 안 돼 ' + R + 'm로 넓힘' : '') + '</small></div>' +
+    box.innerHTML = head + '<div class="hsN">' + hf1(md) + '만<span>/평 (월세+관리비 ÷ 전용)</span></div><small>중간값 · 대부분 ' + hf1(q1) + '만 ~ ' + hf1(q3) + '만' + note + '</small></div>' +
       '<div class="hsBd">' + hsTabs() + '<div class="hsBar"><i class="ln"></i><i class="iq" style="left:' + pos(q1) + '%;width:' + Math.max(1, pos(q3) - pos(q1)) + '%"></i><i class="md" style="left:' + pos(md) + '%"></i>' + vs.map(function (v) { return '<i class="dt" style="left:' + pos(v) + '%"></i>'; }).join('') + '</div>' +
-      '<div class="hsLb"><span>최저 ' + hf1(lo) + '만</span><span>최고 ' + hf1(hi) + '만</span></div><div class="hsLt">계산에 쓴 매물 (가까운 순)</div>' +
+      '<div class="hsLb"><span>최저 ' + hf1(lo) + '만</span><span>최고 ' + hf1(hi) + '만</span></div><div class="hsLt">계산에 쓴 매물 (' + order + ')</div>' +
       use.map(function (x, i) { var it = x.p.it; return '<a class="hsRw' + (i >= 5 ? ' more' : '') + '" href="#item/' + encodeURIComponent(it.id) + '"><span>' + esc((it.dong || '') + ' ' + (it.floor || '') + ' · ' + Math.round(+it.area) + '평') + '</span><b>' + hf1(x.p.v) + '만</b><small>' + Math.round(x.d / 10) * 10 + 'm</small></a>'; }).join('') +
       (use.length > 5 ? '<button type="button" class="hsMore">나머지 ' + (use.length - 5) + '건 더 보기 ▾</button>' : '') +
       '<div class="hsNt">지금 나와 있는 매물의 호가 기준 · 실거래가 아님 · 우리 매물 + 공클</div></div>';
@@ -3078,13 +3123,17 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       var dp = $('dongPick');   // 법정동 버튼 바로 옆에 붙여 하나의 버튼처럼 보이게
       if (dp && $('dpPanel')) dp.insertBefore(btn, $('dpPanel')); else wrap.appendChild(btn);
       pn = document.createElement('div'); pn.id = 'heatPanel'; pn.className = 'heatPanel'; wrap.appendChild(pn);
-      pn.addEventListener('click', function (e) { if (e.target.closest('[data-hon]')) { heatSet(!HEAT.on); return; } var b = e.target.closest('[data-hf]'); if (!b) return; HEAT.fl = b.dataset.hf; drawMap(); });
+      pn.addEventListener('click', function (e) { if (e.target.closest('[data-hon]')) { heatSet(!HEAT.on); return; }
+        var hm = e.target.closest('[data-hsm]'); if (hm) { if (HS.mode !== hm.dataset.hsm) { HS.mode = hm.dataset.hsm; hsClear(); if (HS.mode === 'p') hsDrawPaint(); } heatUi(); return; }
+        var hr = e.target.closest('[data-hsr]'); if (hr) { HS.r = +hr.dataset.hsr; heatUi(); if (HS.pt) hsRun(HS.pt[0], HS.pt[1]); return; } var b = e.target.closest('[data-hf]'); if (!b) return; HEAT.fl = b.dataset.hf; drawMap(); });
     }
     var act = !!heatActive(); btn.classList.toggle('on', act); btn.setAttribute('aria-pressed', act ? 'true' : 'false'); btn.hidden = !(M && M.kind === 'naver'); pn.hidden = !(M && M.kind === 'naver');   // 안내판은 처음부터 항상
     if ($('dongPick')) $('dongPick').classList.toggle('dpGrp', !btn.hidden);
     if (pn.hidden) return;
     var S = act ? (HEAT.stat || { n: 0, cells: 0 }) : (function () { var q = heatScale().qs || []; return { n: 0, cells: q.some(function (v) { return v > 0; }) ? 1 : 0, qs: CT.qs || q, pins: 1 }; })(), f1 = function (v) { return (Math.round(v * 10) / 10).toLocaleString('ko-KR'); }, chip = function (v, t) { return '<button type="button" data-hf="' + v + '"' + (HEAT.fl === v ? ' class="on"' : '') + '>' + t + '</button>'; };
-    pn.innerHTML = '<div class="hpTitle">매물 임대 평단가 <span>' + ({ all: '전체 층', '1': '1층', up: '2층 이상', b: '지하' })[HEAT.fl] + '</span>' + (heatMgr() ? '<button type="button" class="hpTog' + (HEAT.on ? ' on' : '') + '" data-hon aria-pressed="' + (HEAT.on ? 'true' : 'false') + '" title="켜면 확대해도 매물 대신 등고선이 보이고, 지역을 누르면 그 주변 시세가 나옵니다"><i></i>보기</button>' : '') + '</div><div class="hpSub">지금 나와 있는 매물의 호가 기준 · 실거래가 아님</div>' + (heatMgr() && HEAT.on ? '<div class="hpMgr"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 9l11 4-5 2-2 5z"></path><path d="M4 4l2.5 2.5M4 10h3M10 4v3"></path></svg>지도 클릭 → 주변 시세 보기</div>' : '') +
+    pn.innerHTML = '<div class="hpTitle">매물 임대 평단가 <span>' + ({ all: '전체 층', '1': '1층', up: '2층 이상', b: '지하' })[HEAT.fl] + '</span>' + (heatMgr() ? '<button type="button" class="hpTog' + (HEAT.on ? ' on' : '') + '" data-hon aria-pressed="' + (HEAT.on ? 'true' : 'false') + '" title="켜면 확대해도 매물 대신 등고선이 보이고, 지역을 누르면 그 주변 시세가 나옵니다"><i></i>보기</button>' : '') + '</div><div class="hpSub">지금 나와 있는 매물의 호가 기준 · 실거래가 아님</div>' + (heatMgr() && HEAT.on ? '<div class="hpMgr"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 9l11 4-5 2-2 5z"></path><path d="M4 4l2.5 2.5M4 10h3M10 4v3"></path></svg>' + (HS.mode === 'p' ? '지도에 점 찍기 → 첫 점 누르면 완성' : '지도 클릭 → 주변 시세 보기') + '</div>' +
+        '<div class="hsMode"><button type="button" data-hsm="r"' + (HS.mode === 'r' ? ' class="on"' : '') + '>◯ 반경</button><button type="button" data-hsm="p"' + (HS.mode === 'p' ? ' class="on"' : '') + '>✎ 직접 그리기</button></div>' +
+        (HS.mode === 'r' ? '<div class="hsRad">' + [[0, '자동'], [100, '100m'], [200, '200m'], [300, '300m'], [500, '500m']].map(function (r) { return '<button type="button" data-hsr="' + r[0] + '"' + (HS.r === r[0] ? ' class="on"' : '') + ' title="' + (r[0] ? '반경 ' + r[1] + ' 고정' : '매물 8건이 될 때까지 200→300→500m') + '">' + r[1] + '</button>'; }).join('') + '</div>' : '') : '') +
       '<div class="hpRow">' + chip('all', '전체') + chip('1', '1층') + chip('up', '2층 이상') + chip('b', '지하') + '</div>' +
       (S.cells ? '<div class="hpBar">' + CTC.map(function (c) { return '<i style="background:' + c + '"></i>'; }).join('') + '</div>' +
         '<div class="hpTick"><span>낮음</span>' + (S.qs || []).map(function (q) { return '<span>' + f1(q) + '</span>'; }).join('') + '<span>높음</span></div>' +
