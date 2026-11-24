@@ -3998,7 +3998,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   // 오른쪽 칸: 비슷한 매물 리스트 카드 (있는 매물을 모두 보여 줌 · 건수에 따라 카드 길이가 달라짐)
   function simSide(it) {
     var h = simHtml(it); if (!h) return '';
-    h = h.replace(/<p class="simCond">([^<]*)<\/p>/, function (m, t) { var sh = t.replace('월(월세+관리비)·면적', '월·면적').replace('매매가·면적', '금액·면적').replace(/ \(8건이 안 돼 넓혀 찾음\)/, ''); return '<p class="simCond" title="' + t + '">' + sh + '</p>'; });
+    h = h.replace(/<p class="simCond">([^<]*)<\/p>/, function (m, t) { var sh = t.replace(/ \(8건이 안 돼 넓혀 찾음\)/, '').split(' · ').filter(function (x) { return !/±/.test(x); }).join(' · '); return '<p class="simCond" title="' + t + '">' + sh + '</p>'; });
     return h.replace(/^<section class="dtSec dtSim2"><h2>/, '<div class="dtCard dtSimC"><h3>').replace('</h2>', '</h3>').replace(/<\/section>$/, '</div>');
   }
   function simHtml(it) {
