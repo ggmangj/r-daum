@@ -631,7 +631,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #allList,body.detailMo
 .dtSimC{display:flex;flex-direction:column;padding:18px 18px 8px!important;min-height:0}
 .dtSimC h3{margin:0;font-size:17px;font-weight:800;letter-spacing:-.4px;color:#14191F}.dtSimC h3 .dtH2s{font-size:13px;color:#A07D45;font-weight:700;margin-left:2px}
 .dtSimC .simCond{margin:4px 0 8px!important;font-size:11.5px;letter-spacing:-.2px;color:#8A8272;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.dtMapPrint{display:none}
+.dtMapPrint,.dtMapSnap{display:none}
 .dtSimC .simNone{font-size:13px;color:#6B757D;line-height:1.6}
 .dtSimC .simG{display:block;border-top:1px solid #E6E0D4}
 .dtSimC .simR{grid-template-columns:64px minmax(0,1fr)!important;gap:10px!important;padding:9px 2px!important}
@@ -1493,7 +1493,8 @@ body.mapFull:not(.detailMode) .ccNav{visibility:hidden}   /* 추천 매물 화�
  .flvR{height:var(--rh)!important;min-height:0!important;padding-top:0!important;padding-bottom:0!important}
  .flvR span{display:-webkit-box!important}
  .dtFlv,.dtAdd,.adSum,.dtOffice{break-inside:avoid}
- .dtSec:has(.dtMapPrint[src]){display:block!important;break-inside:avoid}.dtMapPrint[src]{display:block!important;width:100%;height:auto;border:1px solid #E6E0D4;border-radius:12px}
+ .dtSec:has(.dtMapPrint[src]),.dtSec:has(.dtMapSnap){display:block!important;break-inside:avoid}.dtMapPrint[src]{display:block!important;width:100%;height:auto;border:1px solid #E6E0D4;border-radius:12px}
+ .dtSec:has(.dtMapSnap) .dtMapPrint{display:none!important}.dtMapSnap{display:block!important;border:1px solid #E6E0D4;border-radius:12px;overflow:hidden}
  /* 인쇄 폭이 좁아도(여백 기본값) 화면 시안처럼: 금액 4칸 한 줄 · 매물 정보 표 두 열 */
  .dtPrice{grid-template-columns:repeat(4,minmax(0,1fr))!important}
  .dtI2{grid-template-columns:max-content minmax(0,1fr) max-content minmax(0,1fr)!important}
@@ -4075,7 +4076,6 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       try { var sx = 0; list.forEach(function (x) { var pts = x.r.pts, q = pts[Math.min(pts.length - 1, Math.max(1, Math.floor(pts.length / 4)))]; sx += q[0] - it.lng; }); east = sx > 0; } catch (e) { }   // 매물이 동선의 오른쪽이면 글자 상자를 왼쪽에
       try { mp.fitBounds(bounds, east ? { top: 40, right: 60, bottom: 30, left: 200 } : { top: 40, right: 220, bottom: 30, left: 40 }); } catch (e) { mp.fitBounds(bounds); }
       new naver.maps.Marker({ position: new naver.maps.LatLng(it.lat, it.lng), map: mp, zIndex: 300, icon: { content: '<div class="walkBox' + (east ? ' w' : '') + '">' + tags.join('') + '</div>', anchor: new naver.maps.Point(0, 0) } });   // 역·출구·도보 시간은 매물 바로 옆에 모아서
-      DT.walk = { id: it.id, east: east, list: list.map(function (x, k) { return { pts: x.r.pts, col: WALK_COL[k], txt: x.st + ' ' + x.no + '번 출구', min: Math.max(1, Math.round(x.r.d / 67)) }; }) };   // PDF 지도 그림에 같은 동선을 그리기 위해 기억
       var lg = document.createElement('div'); lg.className = 'walkLegend'; lg.innerHTML = legend.join('');
       var host = $('dtMap'); if (host && host.parentNode) host.parentNode.insertBefore(lg, host.nextSibling);
     });
@@ -4086,55 +4086,36 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     return 'https:\/\/maps.apigw.ntruss.com/map-static/v2/raster-cors?w=900&h=420&scale=2&level=16&format=png&center=' + ll +
       '&markers=' + encodeURIComponent('type:d|size:mid|color:0xC4553A|pos:' + it.lng + ' ' + it.lat) + '&X-NCP-APIGW-API-KEY-ID=i0aavzp1qg';
   }
-  // 홈페이지 지도와 같게: 도보 동선(점선) · 출구 점 · 매물 핀 · 「○○역 ○번 출구 도보 ○분」 글자 상자를 지도 그림 위에 그림
-  function walkMapImg(it, cb) {
-    var W = DT.walk && DT.walk.id === it.id ? DT.walk : null; if (!W || !W.list.length) { cb(null); return; }
-    var w = 900, h = 420, S = 2, pts = [[it.lng, it.lat]];
-    W.list.forEach(function (x) { pts = pts.concat(x.pts); });
-    var X = function (lng, ws) { return (lng + 180) / 360 * ws; }, Y = function (lat, ws) { var r = lat * Math.PI / 180; return (1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * ws; };
-    var mnX = Math.min.apply(null, pts.map(function (p) { return p[0]; })), mxX = Math.max.apply(null, pts.map(function (p) { return p[0]; }));
-    var mnY = Math.min.apply(null, pts.map(function (p) { return p[1]; })), mxY = Math.max.apply(null, pts.map(function (p) { return p[1]; }));
-    var L = 17;
-    for (; L > 12; L--) { var ws0 = 256 * Math.pow(2, L); if ((X(mxX, ws0) - X(mnX, ws0)) <= w - 300 && (Y(mnY, ws0) - Y(mxY, ws0)) <= h - 90) break; }
-    var ws = 256 * Math.pow(2, L), cx = (X(mnX, ws) + X(mxX, ws)) / 2 + (W.east ? -90 : 90), cy = (Y(mnY, ws) + Y(mxY, ws)) / 2;   // 글자 상자 쪽으로 여유
-    var cLng = cx / ws * 360 - 180, cLat = Math.atan(Math.sinh(Math.PI * (1 - 2 * cy / ws))) * 180 / Math.PI;
-    var url = 'https:\/\/maps.apigw.ntruss.com/map-static/v2/raster-cors?w=' + w + '&h=' + h + '&scale=' + S + '&level=' + L + '&format=png&center=' + cLng + ',' + cLat + '&X-NCP-APIGW-API-KEY-ID=i0aavzp1qg';
-    var im = new Image(); im.crossOrigin = 'anonymous';
-    im.onerror = function () { cb(null); };
-    im.onload = function () {
-      try {
-        var c = document.createElement('canvas'); c.width = w * S; c.height = h * S; var g = c.getContext('2d'); g.drawImage(im, 0, 0, c.width, c.height);
-        var P = function (lng, lat) { return [(X(lng, ws) - cx + w / 2) * S, (Y(lat, ws) - cy + h / 2) * S]; };
-        g.lineCap = 'round'; g.lineJoin = 'round';
-        W.list.forEach(function (x) {
-          var q = x.pts.map(function (p) { return P(p[0], p[1]); });
-          var line = function () { g.beginPath(); q.forEach(function (v, i) { if (i) g.lineTo(v[0], v[1]); else g.moveTo(v[0], v[1]); }); g.stroke(); };
-          g.setLineDash([]); g.strokeStyle = 'rgba(255,255,255,.9)'; g.lineWidth = 16; line();
-          g.setLineDash([2, 15]); g.strokeStyle = x.col; g.lineWidth = 9; line(); g.setLineDash([]);
-          var e = q[q.length - 1]; g.beginPath(); g.arc(e[0], e[1], 9, 0, 7); g.fillStyle = x.col; g.fill(); g.lineWidth = 4; g.strokeStyle = '#fff'; g.stroke();
-        });
-        var m = P(it.lng, it.lat);
-        g.beginPath(); g.arc(m[0], m[1], 26, 0, 7); g.fillStyle = '#C4553A'; g.fill(); g.lineWidth = 8; g.strokeStyle = '#fff'; g.stroke(); g.beginPath(); g.arc(m[0], m[1], 30, 0, 7); g.lineWidth = 4; g.strokeStyle = '#C4553A'; g.stroke();
-        g.font = "800 25px 'Noto Sans KR',sans-serif"; g.textBaseline = 'middle';
-        var rows = W.list.map(function (x) { return { t: x.txt + ' 도보 ' + x.min + '분', col: x.col }; }), bh = 50, gap = 10, tot = rows.length * bh + (rows.length - 1) * gap, y0 = m[1] - tot / 2;
-        rows.forEach(function (r, i) {
-          var tw = g.measureText(r.t).width + 32, bx = W.east ? m[0] - 44 - tw : m[0] + 44, by = y0 + i * (bh + gap);
-          g.shadowColor = 'rgba(0,0,0,.25)'; g.shadowBlur = 12; g.shadowOffsetY = 4; g.fillStyle = r.col;
-          if (g.roundRect) { g.beginPath(); g.roundRect(bx, by, tw, bh, 12); g.fill(); } else g.fillRect(bx, by, tw, bh);
-          g.shadowColor = 'transparent'; g.fillStyle = '#fff'; g.fillText(r.t, bx + 16, by + bh / 2 + 1);
-        });
-        cb(c.toDataURL('image/jpeg', .92));
-      } catch (err) { cb(null); }
-    };
-    im.src = url;
+  // PDF 저장 순간의 홈페이지 지도를 그대로 복사해 넣음 (도보 동선·출구·글자 상자·핀 포함 · 확대 버튼 등은 뺌)
+  function snapMap() {
+    var host = $('dtMap'); if (!host || !DT.el) return false;
+    var old = DT.el.querySelector('.dtMapSnap'); if (old) old.remove();
+    var W = host.clientWidth, H = host.clientHeight; if (!W || !H || !host.querySelector('img')) return false;
+    var cl = host.cloneNode(true), so = host.querySelectorAll('*'), sc = cl.querySelectorAll('*'), hr = host.getBoundingClientRect(), del = [];
+    for (var i = 0; i < so.length; i++) {
+      var o = so[i], r = o.getBoundingClientRect(), x = r.left - hr.left, y = r.top - hr.top;
+      if (o.classList && o.classList.contains('dtSvTools')) { del.push(sc[i]); continue; }
+      if (r.width && r.width <= 60 && r.height <= 260 && x > W - 75 && y < H - 45 && o.tagName !== 'IMG') del.push(sc[i]);   // 오른쪽 위 확대·축소 버튼
+      else if (o.tagName === 'IMG' && r.width <= 60 && x > W - 75 && y < H - 45) del.push(sc[i]);
+    }
+    del.forEach(function (e) { if (e && e.parentNode) e.parentNode.removeChild(e); });
+    cl.removeAttribute('id'); cl.className = '';
+    cl.setAttribute('style', 'position:relative;overflow:hidden;width:' + W + 'px;height:' + H + 'px;background:#F3F1EC');
+    var NS = 'http:\/\/www.w3.org/2000/svg', sv = document.createElementNS(NS, 'svg'), fo = document.createElementNS(NS, 'foreignObject');
+    sv.setAttribute('class', 'dtMapSnap'); sv.setAttribute('viewBox', '0 0 ' + W + ' ' + H); sv.setAttribute('width', '100%');
+    fo.setAttribute('x', 0); fo.setAttribute('y', 0); fo.setAttribute('width', W); fo.setAttribute('height', H);
+    fo.appendChild(cl); sv.appendChild(fo);
+    host.parentNode.insertBefore(sv, host.nextSibling);
+    return true;
   }
   function loadMapPrint(done) {
+    if (snapMap()) { done && done(); return; }
     var im = DT.el && DT.el.querySelector('.dtMapPrint'); if (!im) { done && done(); return; }
+    var host = $('dtMap'); if (host && host.nextSibling !== im) host.parentNode.insertBefore(im, host.nextSibling);   // 안내 줄보다 위로
     if (im.getAttribute('src')) { done && done(); return; }
     var fin = false, end = function () { if (!fin) { fin = true; done && done(); } };
-    var put = function (src) { im.onload = end; im.onerror = function () { im.remove(); end(); }; im.setAttribute('src', src); };
-    setTimeout(end, 3500);
-    walkMapImg(DT.it, function (d) { put(d || im.getAttribute('data-src')); });
+    im.onload = end; im.onerror = function () { im.remove(); end(); }; setTimeout(end, 3000);
+    im.setAttribute('src', im.getAttribute('data-src'));   // 홈페이지 지도가 아직 안 떴을 때만: 핀만 있는 지도 그림
   }
   window.addEventListener('beforeprint', function () { if (document.body.classList.contains('detailMode')) loadMapPrint(); });
   function detailMap(it) {
