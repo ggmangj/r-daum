@@ -4572,6 +4572,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     [/^중개사무소/, 'M5 3h14v18H5zM9 3v3h6V3M12 13a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM8 18c.8-2 2.2-3 4-3s3.2 1 4 3', '「공인중개사법」에 따른 중개사무소 표시사항'],
     [/^가격 판단|^이달의/, 'M4 20V10M10 20V4M16 20v-8M3 20h18', '주변 실거래·시세와 비교'],
     [/^토지/, 'M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2zM9 4v14M15 6v14', '토지특성 · 용도지역 · 공시지가'],
+    [/^건축 규제 완화/, 'M12 20V5M6 11l6-6 6 6M5 20h14', '용적률 · 일조사선 · 다가구 층수 · 2026.11 기준'],
     [/^업종/, 'M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01', '이 건물에 입점한 업종'],
     [/^같은 단지/, 'M12 3l9 5-9 5-9-5zM3 13l9 5 9-5', '이 상가에서 함께 임대 중인 호실'],
     [/^같은 건물|^층별/, 'M12 3l9 5-9 5-9-5zM3 13l9 5 9-5', '이 건물의 다른 층 현황']
@@ -5235,7 +5236,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       '.slFar{margin-top:14px;padding:14px 16px;border:1px solid #EFEAE0;border-radius:12px;background:#FBFAF7}.slFar .hd{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;margin-bottom:24px}.slFar .hd b{font-size:15px}.slFar .hd span{font-size:12.5px;color:#6B757D}' +
       '.slFar .bar{position:relative;height:14px;border-radius:7px;background:#ECE6DA}.slFar .bar .now{position:absolute;left:0;top:0;bottom:0;border-radius:7px;background:#294652}.slFar .bar s{position:absolute;top:-6px;bottom:-6px;width:2px;background:#8A6A35;text-decoration:none}.slFar .bar s.tmp{background:#C0392B}' +
       '.slFar .bar s em{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);white-space:nowrap;font-style:normal;font-size:11.5px;font-weight:700;color:#8A6A35;margin-bottom:2px}.slFar .bar s.tmp em{color:#C0392B}.slFar .ft{margin-top:10px;font-size:13.5px;color:#3B4A52}.slFar .ft b{color:#294652}' +
-      '.slTmp{margin-top:12px;padding:16px 18px;border:1px solid #EAD3CB;border-radius:12px;background:#FFFAF8}.slTmp>b{display:block;font-size:16px;font-weight:800;color:#A0503C;margin-bottom:6px}.slTmp p{font-size:13.5px;line-height:1.65;color:#3B4A52}.slTmp strong{color:#294652}.slTmp hr{border:0;border-top:1px dashed #EAD3CB;margin:14px 0}.slTmp b i{font-style:normal;font-size:11.5px;font-weight:700;background:#F8E6E0;color:#A0503C;padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:2px;white-space:nowrap}.slGuide{display:inline-block;margin-top:10px;padding:8px 15px;border-radius:999px;background:#fff;border:1.5px solid #A0503C;color:#A0503C;font-size:13px;font-weight:700;text-decoration:none}.slGuide:hover{background:#A0503C;color:#fff}.slTmp .slSrc{margin-top:14px;padding-top:10px;border-top:1px solid #F1E2DC;display:flex;flex-direction:column;gap:4px}.slTmp .slSrc a{font-size:12.5px;font-weight:700;color:#8C6A5E;text-decoration:underline}' +
+      '.slTmp{padding:16px 20px;border:1px solid #E3D6BE;border-left:5px solid #294652;border-radius:12px;background:#FBF8F2}.slTmp .slIt+.slIt{margin-top:14px;padding-top:14px;border-top:1px dashed #DCCFB6}.slTmp .slHr{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}.slTmp .slHr b{font-size:16px;font-weight:800;color:#294652;letter-spacing:-.3px}.slTmp .slHr i{font-style:normal;font-size:11.5px;font-weight:700;background:#F8E6E0;color:#A0503C;padding:2px 8px;border-radius:999px;white-space:nowrap}.slTmp p{margin:0;font-size:13.5px;line-height:1.65;color:#3B4A52}.slTmp strong{color:#294652}.slGuide{margin-left:auto;display:inline-block;padding:4px 11px;border-radius:999px;background:#fff;border:1.5px solid #A0503C;color:#A0503C;font-size:12px;font-weight:700;text-decoration:none;white-space:nowrap}.slGuide:hover{background:#A0503C;color:#fff}.slTmp .slSrc{margin-top:14px;padding-top:10px;border-top:1px solid #E8DDC9;display:flex;flex-direction:column;gap:4px}.slTmp .slSrc a{font-size:12.5px;font-weight:700;color:#8C6A5E;text-decoration:underline}@media(max-width:640px){.slTmp{padding:14px 14px 14px 15px}.slTmp .slHr b{font-size:15px}}' +
       '.slCmpH{margin:22px 0 10px;font-size:16px;font-weight:800;color:#294652}.slCmpH small{font-size:13px;font-weight:500;color:#6B757D;margin-left:6px}' +
       '@media (max-width:760px){.slSpec{grid-template-columns:repeat(3,minmax(0,1fr))}.slSpec>div{padding:10px 11px}.slSpec>div:nth-child(3n){border-right:0}.slSpec>div:nth-child(n+4){border-top:1px solid #EFEAE0}.slSpec b{font-size:15px}.slSt{grid-template-columns:1fr}.slLand{grid-template-columns:1fr 1fr}.slLand.sl3{grid-template-columns:1fr 1fr}.slSumT{gap:3px 10px;padding:10px 12px}.slSumT span:before{display:none}.slSumT .no{margin-left:0}.slSumP{grid-template-columns:repeat(3,minmax(0,1fr))}.slSumP .main{grid-column:1/4;border-right:0}.slSumP>div{padding:12px 12px}.slSumP b{font-size:16px}.slSumP small{font-size:11.5px}.slChips{padding:10px 12px}.slCmp .r{grid-template-columns:1fr 70px}.slCmp .r .bar{grid-column:1/3;grid-row:2}}';
     document.head.appendChild(st);
@@ -5330,7 +5331,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     if (!L) return it.bldDone ? '<section class="dtSec"><h2>토지</h2><p class="dtNote">※ 이 필지의 토지특성 자료를 준비 중입니다. 상담 시 토지이용계획확인서와 함께 안내해 드립니다.</p></section>' : '';
     var area = +L[1], j = +L[8], jp = j * PYC / 10000, z1 = L[2] || it.zone || '';
     var road = { '광대한면': '폭 25m 이상 도로에 한 면', '광대소각': '폭 25m 이상 도로 + 다른 도로', '광대세각': '폭 25m 이상 도로 + 좁은 도로', '중로한면': '폭 12~25m 도로에 한 면', '중로각지': '폭 12~25m 도로 모퉁이', '소로한면': '폭 8~12m 도로에 한 면', '소로각지': '폭 8~12m 도로 모퉁이', '세로한면(가)': '자동차 통행 가능한 폭 8m 미만 도로', '세로각지(가)': '폭 8m 미만 도로 모퉁이(차량 통행 가능)', '세로한면(불)': '자동차 통행이 어려운 좁은 도로', '맹지': '도로에 접하지 않음' }[L[7]] || '';
-    var h = '<section class="dtSec"><h2>토지 <small class="dtH2s">토지대장 · 공시지가</small></h2><div class="slLand">' +
+    var rx = '', h = '<section class="dtSec"><h2>토지 <small class="dtH2s">토지대장 · 공시지가</small></h2><div class="slLand">' +
       '<div><small>대지면적</small><b>' + area.toLocaleString('ko-KR') + '㎡</b><em>' + (Math.round(area / PYC * 10) / 10).toLocaleString('ko-KR') + '평</em></div>' +
       '<div><small>지목 · 이용상황</small><b>' + esc(L[0] || '-') + '</b><em>' + esc(L[4] || '-') + '</em></div>' +
       '<div><small>도로 · 지형</small><b>' + esc(L[7] || '-') + '</b><em>' + esc(road ? road + ' (공시지가 조사 기준)' : [L[5], L[6]].filter(Boolean).join(' · ')) + '</em></div>' +
@@ -5346,20 +5347,16 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
         (vl ? (room > 0 ? ' · ' + (tmp ? '한시 완화 적용 시' : '조례 상한까지') + ' 산술상 약 <b>' + roomPy.toLocaleString('ko-KR') + '평</b> 여유' : ' · 상한에 거의 도달') : '') + '</p></div>';
       var sun = /(전용|일반)주거지역$/.test(z1), sunEx = inPlan && /^광대/.test(L[7] || '');
       if (tmp || sun) {
-        h += '<div class="slTmp">';
-        if (tmp) h += '<b>소규모 건축물 용적률 한시적 완화</b>' +
+        rx += '<div class="slTmp">';
+        if (tmp) rx += '<div class="slIt"><div class="slHr"><b>소규모 건축물 용적률 한시적 완화</b><i>2025.5.19 ~ 2028.5.18</i><a class="slGuide" href="far-guide.html">그림으로 보기 →</a></div>' +
           '<p>서울시 도시계획조례 개정으로 <strong>2025.5.19 ~ 2028.5.18</strong> 3년간 제2종 일반주거 <strong>200% → 250%</strong>, 제3종 일반주거 <strong>250% → 300%</strong>(법적 상한)까지 용적률이 완화됩니다. 건축허가·신고에 바로 적용되며, 실제 적용 여부와 규모는 일조·높이·주차·구조 등 조건과 관할 구청 확인이 필요합니다.' +
-          (inPlan ? ' <strong>이 필지는 지구단위계획구역에 있어 계획상 용적률을 별도로 확인해야 합니다.</strong>' : '') + '</p>' +
-          '<a class="slGuide" href="far-guide.html">용적률 한시 완화 그림으로 보기 →</a>';
-        if (sun) h += (tmp ? '<hr>' : '') + '<b>일조사선 규제 완화 <i>2026.11.12 시행 · 기한 없음</i></b>' +
+          (inPlan ? ' <strong>이 필지는 지구단위계획구역에 있어 계획상 용적률을 별도로 확인해야 합니다.</strong>' : '') + '</p></div>';
+        if (sun) rx += '<div class="slIt"><div class="slHr"><b>일조사선 규제 완화</b><i>2026.11.12 시행 · 기한 없음</i><a class="slGuide" href="sunlight-guide.html">그림으로 보기 →</a></div>' +
           '<p>건물 높이 <strong>10~17m 부분(약 4~5층)</strong>은 북쪽 이웃 땅 경계선에서 띄우는 거리가 <strong>「높이의 절반」 → 5m</strong>로 줄었습니다. 신축 시 4~5층을 북쪽으로 최대 약 3.5m 더 넓게 지을 수 있어' + (tmp ? ', 늘어난 용적률을 실제로 채우기 쉬워졌습니다' : '') + '. 북쪽 인접 대지가 주거지역이 아니면 해당되지 않습니다.' +
-          (sunEx ? ' <strong>이 필지는 지구단위계획구역 안 넓은 도로변이라 정북 일조 제한 자체가 적용되지 않을 수 있습니다.</strong>' : '') + '</p>' +
-          '<a class="slGuide" href="sunlight-guide.html">일조사선 완화 그림으로 보기 →</a>' +
-          '<hr><b>다가구·다세대주택 면적·층수 완화 <i>2026.11.12 시행 · 기한 없음</i></b>' +
-          '<p>다가구주택은 주택으로 쓰는 층수(지하층 제외)가 <strong>3개 층 → 4개 층 이하</strong>로, 1개 동 주택 바닥면적 합계가 <strong>660㎡ 이하 → 1,000㎡ 미만</strong>으로 늘었습니다(19세대 이하는 그대로). 1층 전부나 일부를 필로티 주차장으로 쓰고 나머지를 주택 외 용도로 쓰면 그 층은 주택 층수에서 빠집니다. 다세대주택도 면적 기준이 1,000㎡로 완화됐고 층수(4개 층 이하)는 그대로입니다.</p>' +
-          '<a class="slGuide" href="dagagu-guide.html">다가구 층수 완화 그림으로 보기 →</a>' +
-          '';
-        h += '<div class="slSrc">' +
+          (sunEx ? ' <strong>이 필지는 지구단위계획구역 안 넓은 도로변이라 정북 일조 제한 자체가 적용되지 않을 수 있습니다.</strong>' : '') + '</p></div>' +
+          '<div class="slIt"><div class="slHr"><b>다가구·다세대주택 면적·층수 완화</b><i>2026.11.12 시행 · 기한 없음</i><a class="slGuide" href="dagagu-guide.html">그림으로 보기 →</a></div>' +
+          '<p>다가구주택은 주택으로 쓰는 층수(지하층 제외)가 <strong>3개 층 → 4개 층 이하</strong>로, 1개 동 주택 바닥면적 합계가 <strong>660㎡ 이하 → 1,000㎡ 미만</strong>으로 늘었습니다(19세대 이하는 그대로). 1층 전부나 일부를 필로티 주차장으로 쓰고 나머지를 주택 외 용도로 쓰면 그 층은 주택 층수에서 빠집니다. 다세대주택도 면적 기준이 1,000㎡로 완화됐고 층수(4개 층 이하)는 그대로입니다.</p></div>';
+        rx += '<div class="slSrc">' +
           (tmp ? '<a href="https://mediahub.seoul.go.kr/archives/2016308" target="_blank" rel="noopener">[출처] 규제 풀자 건설 활력↑ 소규모 건축물 용적률 한시적 완화 · 내 손안에 서울 →</a>' : '') +
           (sun ? '<a href="https://eiec.kdi.re.kr/policy/materialView.do?num=289026" target="_blank" rel="noopener">[출처] 다세대·다가구 면적 제한 1,000㎡로 완화(일조 기준 포함) · 국토교통부 →</a>' +
             '<a href="https://www.law.go.kr/법령/건축법시행령" target="_blank" rel="noopener">[근거] 「건축법 시행령」 [별표 1] 제1호 다목(다가구주택) · 국가법령정보센터 →</a>' : '') +
@@ -5367,6 +5364,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       }
     }
     h += '<p class="dtNote">※ 국토교통부 토지특성정보 · 개별공시지가 ' + esc(L[9] || '') + ' 기준. 도로접면(광대로 25m 이상 · 중로 12~25m · 소로 8~12m · 세로 8m 미만)은 국토교통부 개별공시지가 토지특성 조사 기준의 구분으로, 실제 도로 폭과 다를 수 있습니다. 증축 여유는 대지면적 × 남은 용적률로 계산한 산술값이며 실제 건축 가능 규모는 도로·일조·높이 제한 등에 따라 다릅니다.</p></section>';
+    if (rx) h += '<section class="dtSec dtRelax"><h2>건축 규제 완화</h2>' + rx + '</section>';
     return h;
   }
 
