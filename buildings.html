@@ -1511,6 +1511,11 @@ body.mapFull:not(.detailMode) .ccNav{visibility:hidden}   /* 추천 매물 화�
  .dtThumbs>.pp{position:relative!important}.dtThumbs>.pp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
  .dtThumbs{height:100%;grid-template-rows:minmax(0,1fr) minmax(0,1fr)!important}
  .dtKeep{break-inside:avoid}
+ .pg1{display:flex;flex-direction:column;min-height:348mm}.pg1>*{flex:none}
+ .pg1.hasGal>.dtGal{flex:1 1 0;min-height:46mm;grid-template-rows:minmax(0,1fr)}
+ .pg1 .dtGal .dtMainWrap{height:100%}.pg1 .dtGal .dtMainImg{aspect-ratio:auto!important;height:100%!important;position:relative}.pg1 .dtGal .dtMainImg img{position:absolute;inset:0}
+ .pg1 .dtGal .dtThumbs{height:100%}
+ .pg1>.dtSec:has(.dtMapSnap),.pg1>.dtSec:has(.dtMapPrint[src]){margin-top:auto!important;padding-top:12px}
  .dtMain>.dtBldG{order:2}.dtMain>.dtSec:has(.dtOffice){order:3}
  .dtSec{margin-top:12px!important}
  .dtMapSnap{width:100%!important;height:auto!important}
@@ -4127,7 +4132,12 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     cl.removeAttribute('id'); cl.className = '';
     cl.setAttribute('style', 'position:relative;overflow:hidden;width:' + W + 'px;height:' + H + 'px;background:#F3F1EC');
     var NS = 'http:\/\/www.w3.org/2000/svg', sv = document.createElementNS(NS, 'svg'), fo = document.createElementNS(NS, 'foreignObject');
-    var h2 = Math.min(H, Math.round(W / 3.4)), y0 = Math.round((H - h2) / 2);   // PDF는 지도를 가로로 길게(위아래를 조금 잘라 냄 · 동선은 가운데)
+    var h2 = Math.min(H, Math.round(W / 3.4)), y0 = Math.round((H - h2) / 2);
+    try {   // 잘라 낼 때 동선·핀·출구 점·글자 상자가 모두 들어가도록 위아래 위치를 맞춤
+      var ys = [];
+      host.querySelectorAll('.walkEnd,.walkBox,div[style*="C4553A"],path[stroke]').forEach(function (e) { var r = e.getBoundingClientRect(); if (r.height < H * 1.5 && r.width < W * 1.5 && r.bottom > hr.top && r.top < hr.bottom) { ys.push(r.top - hr.top, r.bottom - hr.top); } });
+      if (ys.length) { var mn = Math.max(0, Math.min.apply(null, ys) - 16), mx = Math.min(H, Math.max.apply(null, ys) + 16); if (mx - mn > h2) h2 = Math.min(H, Math.round(mx - mn)); y0 = Math.round(Math.min(Math.max((mn + mx) / 2 - h2 / 2, 0), H - h2)); }
+    } catch (e) { }   // PDF는 지도를 가로로 길게(위아래를 조금 잘라 냄 · 동선은 가운데)
     sv.setAttribute('class', 'dtMapSnap'); sv.setAttribute('viewBox', '0 ' + y0 + ' ' + W + ' ' + h2); sv.setAttribute('preserveAspectRatio', 'xMidYMid slice'); sv.style.aspectRatio = W + ' / ' + h2;
     fo.setAttribute('x', 0); fo.setAttribute('y', 0); fo.setAttribute('width', W); fo.setAttribute('height', H);
     fo.appendChild(cl); sv.appendChild(fo);
@@ -4147,9 +4157,24 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     });
   }
   function unkeepHeads() { if (!DT.el) return; DT.el.querySelectorAll('.dtKeep').forEach(function (w) { while (w.firstChild) w.parentNode.insertBefore(w.firstChild, w); w.remove(); }); }
-  window.addEventListener('afterprint', unkeepHeads);
+  // PDF 1쪽: 머리글·제목·사진·금액·매물 정보·위치 지도를 한 묶음(.pg1)으로 → 쪽 높이를 채우도록 사진이 늘어남 · 지도는 1쪽 맨 아래
+  var PG1 = [];
+  function pg1Wrap() {
+    if (!DT.el || DT.el.querySelector('.pg1')) return;
+    var main = DT.el.querySelector('.dtMain'), grid = DT.el.querySelector('.dtGrid'); if (!main || !grid) return;
+    var list = [DT.el.querySelector('.dtPrintHead'), DT.el.querySelector('.dtHead')].concat([].slice.call(main.children).filter(function (e) { return !e.classList.contains('dtBldG') && !e.querySelector('.dtOffice'); }));
+    var box = document.createElement('div'); box.className = 'pg1' + (main.querySelector('.dtGal') ? ' hasGal' : '');
+    grid.parentNode.insertBefore(box, grid);
+    PG1 = [];
+    list.forEach(function (e) { if (!e) return; PG1.push([e, e.parentNode, e.nextSibling]); box.appendChild(e); });
+  }
+  function pg1Unwrap() {
+    for (var i = PG1.length - 1; i >= 0; i--) { var x = PG1[i]; try { x[1].insertBefore(x[0], x[2] && x[2].parentNode === x[1] ? x[2] : null); } catch (e) { } }
+    PG1 = []; var b = DT.el && DT.el.querySelector('.pg1'); if (b) b.remove();
+  }
+  window.addEventListener('afterprint', function () { pg1Unwrap(); unkeepHeads(); });
   function loadMapPrint(done) {
-    prepPrintGal(); keepHeads();
+    prepPrintGal(); keepHeads(); pg1Wrap();
     if (snapMap()) { done && done(); return; }
     var im = DT.el && DT.el.querySelector('.dtMapPrint'); if (!im) { done && done(); return; }
     var host = $('dtMap'); if (host && host.nextSibling !== im) host.parentNode.insertBefore(im, host.nextSibling);   // 안내 줄보다 위로
