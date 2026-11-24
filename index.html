@@ -1461,6 +1461,9 @@ body.mapFull:not(.detailMode) .ccNav{visibility:hidden}   /* 추천 매물 화�
 @keyframes evMove{from{transform:translateY(var(--d))}to{transform:none}}
 @keyframes evPop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){.flvD .evCar,.flvD .evPop{animation:none}}
+.flvBar{grid-column:1/-1;order:9;display:flex;justify-content:space-between;align-items:center;height:28px;padding:0 12px;background:linear-gradient(90deg,#2B3A43,#3C4A52);color:#fff;font:700 11.5px 'Noto Sans KR',sans-serif}
+.flvBar span{display:flex;align-items:center;gap:6px}.flvBar span:last-child{font-weight:600}
+.flvBar i{display:inline-block;width:8px;height:10px;border-left:3.4px solid #C9A46A;border-radius:0 6px 6px 0;background:#fff;box-sizing:border-box}
 .flvLg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:#4A545C;margin:8px 0 0}.flvLg i{display:inline-block;width:14px;height:9px;margin-right:5px;border:2px dashed;vertical-align:-1px}
 @media (max-width:900px){.flv{grid-template-columns:1fr}.flvD{order:-1;border-bottom:1px solid #EFEAE0}.flvT{border-right:0}.flvT>div[style*="height:4px"]{display:none}.flvR{height:auto!important;min-height:46px;padding-top:6px;padding-bottom:6px}.flvR span{display:block}}
 /* 본문 칸이 좁으면(700px 미만, 예: 1024px 화면) 표가 눌리지 않도록 입체도 위 · 표 아래로 */
@@ -4643,17 +4646,15 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     for (var wy = 40, wr = 0; wy < H - 34; wy += 70, wr++) for (var wx = wr % 2 ? -40 : 20; wx < W; wx += 150)
       wm += '<text x="' + wx + '" y="' + wy + '" transform="rotate(-20 ' + wx + ' ' + wy + ')">부동산다움 02-555-1165</text>';
     s += '<g class="flvWm" opacity=".09" font-size="13" font-weight="800" fill="#294652" pointer-events="none">' + wm + '</g>' +
-      '<defs><linearGradient id="flvBand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0F1920" stop-opacity="0"/><stop offset="1" stop-color="#0F1920" stop-opacity=".62"/></linearGradient></defs>' +
-      '<rect x="0" y="' + (H - 26) + '" width="' + W + '" height="26" fill="url(#flvBand)" pointer-events="none"/>' +
-      '<rect x="10" y="' + (H - 16) + '" width="3.4" height="9" fill="#C9A46A"/><path d="M14.6 ' + (H - 16) + 'h1.6a4.5 4.5 0 0 1 0 9h-1.6z" fill="#fff"/>' +
-      '<text x="22" y="' + (H - 8) + '" font-size="11" font-weight="700" fill="#fff">부동산다움 · r-daum.com</text><text x="' + (W - 10) + '" y="' + (H - 8) + '" text-anchor="end" font-size="11" font-weight="600" fill="#fff">02-555-1165</text>';
-    var svg = '<svg class="flvSvg" viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="층별 현황 입체도">' + s + '</svg>';
+      '';
+    var SH = H - 22;   // 아래 부동산다움 줄은 표와 입체도 아래로 길게 (flvBar)
+    var svg = '<svg class="flvSvg" viewBox="0 0 ' + W + ' ' + SH + '" width="' + W + '" height="' + SH + '" role="img" aria-label="층별 현황 입체도">' + s + '</svg>';
     var m2t = function (v) { return Number(v).toLocaleString('ko-KR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
     var tbl = rows.map(function (r, i) {
       var use = r.segs.slice().sort(function (p, q) { return q.area - p.area; }).map(function (x) { return regUse(x.full); }).filter(function (v, k, l) { return v && l.indexOf(v) === k; }).join(' · ') || '-', full = r.segs.map(function (x) { return x.full + ' ' + m2t(x.area) + '㎡'; }).join(' / ');
       return '<div class="flvR' + (r.here ? ' me' : '') + (r.add ? ' ad' : '') + (i === gi ? ' gl' : '') + '" style="height:' + RH + 'px;--rh:' + RH + 'px" title="' + esc(full) + '"><b>' + esc(r.label) + '</b><span>' + esc(use) + '</span><em>' + (r.tot / PY).toFixed(2) + '평<small>' + m2t(r.tot) + '㎡</small></em></div>';
     }).join('');
-    return '<section class="dtSec dtFlv"><h2>층별 현황</h2><div class="flv"><div class="flvT"><div class="flvHd"><b>층</b><span>건축물대장상 용도</span><em>층 합계 면적</em></div><div style="height:' + (TOP - 26) + 'px"></div>' + tbl + '</div><div class="flvD">' + svg + '</div></div>' +
+    return '<section class="dtSec dtFlv"><h2>층별 현황</h2><div class="flv"><div class="flvT"><div class="flvHd"><b>층</b><span>건축물대장상 용도</span><em>층 합계 면적</em></div><div style="height:' + (TOP - 26) + 'px"></div>' + tbl + '</div><div class="flvD">' + svg + '</div><div class="flvBar" aria-hidden="true"><span><i></i>부동산다움 · r-daum.com</span><span>02-555-1165</span></div></div>' +
       '<p class="dtNote">※ 건축물대장상 용도로, 실제 업종과 다를 수 있습니다. 입체도는 층별 면적 비율로 그린 개념도입니다.' +
       (shrink ? '<br>※ 지하층은 지상층보다 훨씬 넓은 경우 지상층의 최대 1.3배까지로 표시됩니다. 실제 면적은 왼쪽 표를 확인하세요.' : '') + '</p></section>';
   }
