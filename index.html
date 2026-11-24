@@ -1501,12 +1501,19 @@ body.mapFull:not(.detailMode) .ccNav{visibility:hidden}   /* 추천 매물 화�
  html{zoom:.78!important}
  /* 위치 지도는 매물 정보 바로 아래로 (1쪽 남는 자리를 채움) → 건축물 정보 → 중개사무소 */
  .dtMain{display:flex!important;flex-direction:column}.dtMain>*{flex:none}
- .dtThumb5,.dtThumbs{display:none!important}
+ /* 사진: 왼쪽 큰 사진 1장 + 오른쪽 작은 사진 4장(2×2) */
+ .dtGal{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:6px!important}
+ .dtGal:not(:has(.dtThumbs)){grid-template-columns:1fr}
+ .dtMainWrap{min-width:0}.dtMainImg{aspect-ratio:16/9!important;height:auto!important;width:100%!important;border-radius:10px!important}.dtMainImg img{width:100%!important;height:100%!important;max-height:none!important;object-fit:cover}
+ .dtThumbs,.dtThumb5{display:grid!important;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6px!important;overflow:hidden!important;padding:0!important;min-width:0}
+ .dtThumbs>*{display:none!important}.dtThumbs>.pp{display:block!important;width:auto!important;height:auto!important;min-height:0;aspect-ratio:auto!important;border-radius:8px!important;overflow:hidden;border:0!important;padding:0!important;outline:0!important}
+ .dtThumbs>.pp{position:relative!important}.dtThumbs>.pp img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+ .dtThumbs{height:100%;grid-template-rows:minmax(0,1fr) minmax(0,1fr)!important}
+ .dtKeep{break-inside:avoid}
  .dtMain>.dtBldG{order:2}.dtMain>.dtSec:has(.dtOffice){order:3}
  .dtSec{margin-top:12px!important}
- .dtMainImg img{max-height:76mm!important}
  .dtMapSnap{width:100%!important;height:auto!important}
- .dtMapPrint[src]{width:100%!important;aspect-ratio:3.2/1;object-fit:cover}
+ .dtMapPrint[src]{width:100%!important;aspect-ratio:3.4/1;object-fit:cover}
  .dtI2:not(:has(>div:nth-child(9))),.walkLegend{break-inside:avoid}
  .dtSec:has(.dtMapSnap)>.dtNote,.walkLegend{break-before:avoid}
  .dtSec:has(.dtMapPrint[src]),.dtSec:has(.dtMapSnap){display:block!important;break-inside:avoid}.dtMapPrint[src]{display:block!important;width:100%;height:auto;border:1px solid #E6E0D4;border-radius:12px}
@@ -4119,14 +4126,29 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     cl.removeAttribute('id'); cl.className = '';
     cl.setAttribute('style', 'position:relative;overflow:hidden;width:' + W + 'px;height:' + H + 'px;background:#F3F1EC');
     var NS = 'http:\/\/www.w3.org/2000/svg', sv = document.createElementNS(NS, 'svg'), fo = document.createElementNS(NS, 'foreignObject');
-    var h2 = Math.min(H, Math.round(W / 3.2)), y0 = Math.round((H - h2) / 2);   // PDF는 지도를 가로로 길게(위아래를 조금 잘라 냄 · 동선은 가운데)
+    var h2 = Math.min(H, Math.round(W / 3.4)), y0 = Math.round((H - h2) / 2);   // PDF는 지도를 가로로 길게(위아래를 조금 잘라 냄 · 동선은 가운데)
     sv.setAttribute('class', 'dtMapSnap'); sv.setAttribute('viewBox', '0 ' + y0 + ' ' + W + ' ' + h2); sv.setAttribute('preserveAspectRatio', 'xMidYMid slice'); sv.style.aspectRatio = W + ' / ' + h2;
     fo.setAttribute('x', 0); fo.setAttribute('y', 0); fo.setAttribute('width', W); fo.setAttribute('height', H);
     fo.appendChild(cl); sv.appendChild(fo);
     host.parentNode.insertBefore(sv, host.nextSibling);
     return true;
   }
+  function prepPrintGal() {   // PDF 오른쪽 작은 사진 4장: 지금 큰 사진과 다른 사진 앞에서부터
+    var th = DT.el && DT.el.querySelector('.dtThumbs'); if (!th) return;
+    var n = 0; th.querySelectorAll('button[data-i]').forEach(function (b) { var on = b.classList.contains('on'); b.classList.toggle('pp', !on && n < 4); if (!on && n < 4) { n++; var im = b.querySelector('img'); if (im) im.loading = 'eager'; } });
+  }
+  function keepHeads() {   // PDF: 단락 제목이 쪽 맨 아래에 혼자 남지 않게 제목과 첫 내용을 한 덩어리로 (인쇄가 끝나면 원래대로)
+    if (!DT.el) return;
+    DT.el.querySelectorAll('.dtSec>h2').forEach(function (h) {
+      var nx = h.nextElementSibling; if (!nx || h.parentNode.classList.contains('dtKeep')) return;
+      if (nx.classList.contains('dtNote')) return;
+      var w = document.createElement('div'); w.className = 'dtKeep'; h.parentNode.insertBefore(w, h); w.appendChild(h); w.appendChild(nx);
+    });
+  }
+  function unkeepHeads() { if (!DT.el) return; DT.el.querySelectorAll('.dtKeep').forEach(function (w) { while (w.firstChild) w.parentNode.insertBefore(w.firstChild, w); w.remove(); }); }
+  window.addEventListener('afterprint', unkeepHeads);
   function loadMapPrint(done) {
+    prepPrintGal(); keepHeads();
     if (snapMap()) { done && done(); return; }
     var im = DT.el && DT.el.querySelector('.dtMapPrint'); if (!im) { done && done(); return; }
     var host = $('dtMap'); if (host && host.nextSibling !== im) host.parentNode.insertBefore(im, host.nextSibling);   // 안내 줄보다 위로
