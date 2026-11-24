@@ -1492,7 +1492,12 @@ body.mapFull:not(.detailMode) .ccNav{visibility:hidden}   /* 추천 매물 화�
  .flvT>div[style*="height:4px"]{display:block!important}
  .flvR{height:var(--rh)!important;min-height:0!important;padding-top:0!important;padding-bottom:0!important}
  .flvR span{display:-webkit-box!important}
- .dtFlv,.dtAdd,.adSum,.dtOffice{break-inside:avoid}
+ .dtFlv,.adSum,.dtOffice,.adList{break-inside:avoid}
+ /* 쪽수 줄이기: 전체를 조금 작게 · 단락 사이 간격 줄임 · 지도는 높이 제한(한 덩어리로 넘어가도 빈 곳이 작게) */
+ html{zoom:.8!important}
+ .dtSec{margin-top:12px!important}
+ .dtMainImg img{max-height:70mm!important}
+ .dtMapSnap,.dtMapPrint[src]{max-height:62mm;width:auto!important;max-width:100%;margin:0 auto}
  .dtSec:has(.dtMapPrint[src]),.dtSec:has(.dtMapSnap){display:block!important;break-inside:avoid}.dtMapPrint[src]{display:block!important;width:100%;height:auto;border:1px solid #E6E0D4;border-radius:12px}
  .dtSec:has(.dtMapSnap) .dtMapPrint{display:none!important}.dtMapSnap{display:block!important;border:1px solid #E6E0D4;border-radius:12px;overflow:hidden}
  /* 인쇄 폭이 좁아도(여백 기본값) 화면 시안처럼: 금액 4칸 한 줄 · 매물 정보 표 두 열 */
