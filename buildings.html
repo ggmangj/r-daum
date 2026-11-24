@@ -1496,6 +1496,10 @@ body.mapFull:not(.detailMode) .ccNav{visibility:hidden}   /* 추천 매물 화�
  .dtPrice{grid-template-columns:repeat(4,minmax(0,1fr))!important}
  .dtI2{grid-template-columns:max-content minmax(0,1fr) max-content minmax(0,1fr)!important}
  .dtI2 .pad{display:contents!important}
+ .dtPrice>div{border-left:1px solid #E6E0D4!important;border-top:0!important}.dtPrice>div:first-child{border-left:0!important}
+ .dtOffice{grid-template-columns:repeat(2,minmax(0,1fr))!important}.dtOffice>div{border-bottom:1px solid #EFEAE0!important}.dtOffice>div:nth-last-child(-n+2){border-bottom:0!important}
+ .adList li{grid-template-columns:64px minmax(0,1fr)!important}.adList .adChk{display:inline-flex!important;visibility:hidden}.adList .adDot{visibility:hidden}
+ .adMain{display:grid!important;grid-template-columns:160px 120px minmax(0,1fr);align-items:baseline}
  .dtSec>h2,.dtSec>.dtH2r,.dtSec>p:first-of-type{break-after:avoid}
 }
 </style>
@@ -4652,7 +4656,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       wm += '<text x="' + wx + '" y="' + wy + '" transform="rotate(-20 ' + wx + ' ' + wy + ')">부동산다움 02-555-1165</text>';
     s += '<g class="flvWm" opacity=".09" font-size="13" font-weight="800" fill="#294652" pointer-events="none">' + wm + '</g>' +
       '';
-    var SH = H - 22;   // 아래 부동산다움 줄은 표와 입체도 아래로 길게 (flvBar)
+    var SH = H - 30;   // 아래 부동산다움 줄은 표와 입체도 아래로 길게 (flvBar)
     var svg = '<svg class="flvSvg" viewBox="0 0 ' + W + ' ' + SH + '" width="' + W + '" height="' + SH + '" role="img" aria-label="층별 현황 입체도">' + s + '</svg>';
     var m2t = function (v) { return Number(v).toLocaleString('ko-KR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
     var tbl = rows.map(function (r, i) {
