@@ -3235,7 +3235,12 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   }
 
   /* ---------- 목록 (지도에 보이는 매물만) ---------- */
-  function kindOk(it, kd) { if (!kd) return true; if (kd === 'new') return /신축|리모델링/.test((it.tags || []).join(' ') + ' ' + (it.title || '') + ' ' + (it.point || '')); return (it.cats || []).indexOf(kd) >= 0; }
+  // 병의원: 키워드(종류)뿐 아니라 건축물대장에서 이 매물 층의 용도가 의원·병원·치과 등이면 포함
+  function regClinic(it) {
+    var fl = it && it.reg && it.reg.fl; if (!fl || !fl.length || !it.floor) return false;
+    try { return fl.some(function (f) { return /의원|병원|치과|의료|요양|조산원|산후조리/.test(String(f[2] || '')) && isHereFloor(f[0], it.floor); }); } catch (e) { return false; }
+  }
+  function kindOk(it, kd) { if (!kd) return true; if (kd === 'clinic' && regClinic(it)) return true; if (kd === 'new') return /신축|리모델링/.test((it.tags || []).join(' ') + ' ' + (it.title || '') + ' ' + (it.point || '')); return (it.cats || []).indexOf(kd) >= 0; }
   function mapFiltered() {
     var kd = SM ? '' : ($('mapKind') ? $('mapKind').value : ''), bl = SM ? rngOf('Bld') : null, dong = $('mapDong').value, ar = rngOf('Area'), fl = rngOf('Floor'), dp = rngOf('Dep'), rt = rngOf('Rent');
     var inRange = function (v, r) { return !r || (v != null && isFinite(v) && (r[0] == null || v >= r[0]) && (r[1] == null || v <= r[1])); };
