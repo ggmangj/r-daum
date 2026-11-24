@@ -631,13 +631,13 @@ body.detailMode #top,body.detailMode #map,body.detailMode #allList,body.detailMo
 .dtSimC h3{margin:0;font-size:17px;font-weight:800;letter-spacing:-.4px;color:#14191F}.dtSimC h3 .dtH2s{font-size:13px;color:#A07D45;font-weight:700;margin-left:2px}
 .dtSimC .simCond{margin:4px 0 8px!important;font-size:12px;color:#8A8272;line-height:1.5}
 .dtSimC .simNone{font-size:13px;color:#6B757D;line-height:1.6}
-.dtSimC .simG{flex:1;min-height:0;overflow:auto;display:block;border-top:1px solid #E6E0D4}
+.dtSimC .simG{display:block;border-top:1px solid #E6E0D4}
 .dtSimC .simR{grid-template-columns:64px minmax(0,1fr)!important;gap:10px!important;padding:9px 2px!important}
 .dtSimC .simT{width:64px!important;height:50px!important}
 .dtSimC .simM .m1{font-size:11.5px}.dtSimC .simM .m2{font-size:13.5px;margin-top:1px}.dtSimC .simP{font-size:12px;margin-top:1px}
 .dtTools .mgFavBtn{margin:0;min-height:40px;padding:0 14px;border:1px solid #D9D2C4;border-radius:10px;background:#FFFFFF;color:#46515B;font:600 13px 'Noto Sans KR',sans-serif}
 .dtTools .mgFavBtn.on{border-color:#E6B000;background:#FFF7D6;color:#8a6500}
-@media (max-width:900px){.dtSimC .simG{max-height:420px}}
+
 .dtCard{border:1px solid #E6E0D4;border-radius:16px;padding:22px;background:#FFFFFF;box-shadow:0 1px 2px rgba(41,70,82,.12),0 3px 6px rgba(41,70,82,.12)}
 .dtCardTop{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:14px}
 .dtCardTop small{font-size:12px;color:#6B757D}
@@ -1478,6 +1478,18 @@ body.mapFull:not(.detailMode) .ccNav{visibility:hidden}   /* 추천 매물 화�
 #map.listOff .mlTog svg{transform:rotate(180deg)}
 @media (max-width:760px){.mlTog{display:none}}
 @media print{.mlTog{display:none}}
+/* PDF 저장(손님용): 매니저 막대·지번·즐겨찾기 숨김 · 층별 현황은 표와 입체도를 나란히 · 단락이 쪽 사이에서 잘리지 않게 */
+@media print{
+ #mgBar,#mgDr,.mgFavBtn,.mgFavS,.dtNoCp,.dtBadge.mgB,.dtBadge.line,.mgJb,.miTag{display:none!important}
+ .flv{grid-template-columns:minmax(0,1fr) auto!important}
+ .flvD{order:0!important;border-bottom:0!important;align-items:flex-start}
+ .flvT{border-right:1px solid #EFEAE0!important}
+ .flvT>div[style*="height:4px"]{display:block!important}
+ .flvR{height:var(--rh)!important;min-height:0!important;padding-top:0!important;padding-bottom:0!important}
+ .flvR span{display:-webkit-box!important}
+ .dtFlv,.dtAdd,.adSum,.dtOffice,.dtI2{break-inside:avoid}
+ .dtSec>h2,.dtSec>.dtH2r,.dtSec>p:first-of-type{break-after:avoid}
+}
 </style>
 <style id="fullWide">/* 넓은 화면(1400px 이상)에서는 가운데 1280px 제한 없이 화면 가득 (좌우 여백 48px) */
 @media (min-width:1400px){[style*="max-width: 1280px"],.headRow,.heroSplit,.guideTabsWrap,.sectorBody,.procBand{max-width:none!important;padding-left:48px!important;padding-right:48px!important}}</style>
@@ -3938,19 +3950,11 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     out.sort(function (a, b) { return a[1] - b[1]; });   // 최종 목록은 거리순
     out.r = used[0]; out.t = used[1]; out.wide = used !== ST[0]; out.mx = ST[3][1]; return out;
   }
-  // 오른쪽 칸: 비슷한 매물 리스트 카드 (사진과 윗선·아랫선을 맞춤 — fitSimSide)
+  // 오른쪽 칸: 비슷한 매물 리스트 카드 (있는 매물을 모두 보여 줌 · 건수에 따라 카드 길이가 달라짐)
   function simSide(it) {
     var h = simHtml(it); if (!h) return '';
     return h.replace(/^<section class="dtSec dtSim2"><h2>/, '<div class="dtCard dtSimC"><h3>').replace('</h2>', '</h3>').replace(/<\/section>$/, '</div>');
   }
-  function fitSimSide() {
-    var c = DT.el && DT.el.querySelector('.dtSimC'); if (!c) return;
-    if (window.innerWidth <= 900) { c.style.maxHeight = ''; return; }
-    var m = DT.el.querySelector('.dtMain'), f = m && m.firstElementChild; if (!f) return;
-    var r = f.getBoundingClientRect(), mi = f.querySelector('.dtMainImg'), h = mi ? mi.getBoundingClientRect().bottom - r.top : r.height;
-    if (h > 200) c.style.maxHeight = Math.round(h) + 'px';   // 매물이 많으면 사진 아랫선까지 (넘치면 스크롤) · 적으면 짧게
-  }
-  window.addEventListener('resize', function () { if (document.body.classList.contains('detailMode')) fitSimSide(); });
   function simHtml(it) {
     if (!it || !isFinite(it.lat) || !it.lat) return '';
     var l = simList(it), fc = simFc(it.floor), ev = simEv(it.elev), mgr = window.MGR && MGR.on();
@@ -4452,7 +4456,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     });
   }
   function paintDetail(it) {
-    DT.el.innerHTML = detailHtml(it); dtHeads(DT.el, it); fitSimSide(); setTimeout(fitSimSide, 300); setTimeout(fitSimSide, 1200);
+    DT.el.innerHTML = detailHtml(it); dtHeads(DT.el, it); 
     bindDetail(it); detailMap(it); renderFloors(); simPanos(); renderAddSum(it); DT.el.querySelectorAll('input[data-add]').forEach(function (c) { c.addEventListener('change', function () { renderAddSum(it); }); }); if (!(it.photos && it.photos.length)) detailPano(it);
   }
   // 공실매물관 매물: 상세를 열 때 건축물대장(층별 현황·건축물정보)을 불러와 다시 그림
@@ -4647,7 +4651,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     var m2t = function (v) { return Number(v).toLocaleString('ko-KR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
     var tbl = rows.map(function (r, i) {
       var use = r.segs.slice().sort(function (p, q) { return q.area - p.area; }).map(function (x) { return regUse(x.full); }).filter(function (v, k, l) { return v && l.indexOf(v) === k; }).join(' · ') || '-', full = r.segs.map(function (x) { return x.full + ' ' + m2t(x.area) + '㎡'; }).join(' / ');
-      return '<div class="flvR' + (r.here ? ' me' : '') + (r.add ? ' ad' : '') + (i === gi ? ' gl' : '') + '" style="height:' + RH + 'px" title="' + esc(full) + '"><b>' + esc(r.label) + '</b><span>' + esc(use) + '</span><em>' + (r.tot / PY).toFixed(2) + '평<small>' + m2t(r.tot) + '㎡</small></em></div>';
+      return '<div class="flvR' + (r.here ? ' me' : '') + (r.add ? ' ad' : '') + (i === gi ? ' gl' : '') + '" style="height:' + RH + 'px;--rh:' + RH + 'px" title="' + esc(full) + '"><b>' + esc(r.label) + '</b><span>' + esc(use) + '</span><em>' + (r.tot / PY).toFixed(2) + '평<small>' + m2t(r.tot) + '㎡</small></em></div>';
     }).join('');
     return '<section class="dtSec dtFlv"><h2>층별 현황</h2><div class="flv"><div class="flvT"><div class="flvHd"><b>층</b><span>건축물대장상 용도</span><em>층 합계 면적</em></div><div style="height:' + (TOP - 26) + 'px"></div>' + tbl + '</div><div class="flvD">' + svg + '</div></div>' +
       '<p class="dtNote">※ 건축물대장상 용도로, 실제 업종과 다를 수 있습니다. 입체도는 층별 면적 비율로 그린 개념도입니다.' +
