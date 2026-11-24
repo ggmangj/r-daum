@@ -1494,10 +1494,17 @@ body.mapFull:not(.detailMode) .ccNav{visibility:hidden}   /* 추천 매물 화�
  .flvR span{display:-webkit-box!important}
  .dtFlv,.adSum,.dtOffice,.adList{break-inside:avoid}
  /* 쪽수 줄이기: 전체를 조금 작게 · 단락 사이 간격 줄임 · 지도는 높이 제한(한 덩어리로 넘어가도 빈 곳이 작게) */
- html{zoom:.8!important}
+ html{zoom:.78!important}
+ /* 위치 지도는 매물 정보 바로 아래로 (1쪽 남는 자리를 채움) → 건축물 정보 → 중개사무소 */
+ .dtMain{display:flex!important;flex-direction:column}.dtMain>*{flex:none}
+ .dtThumb5,.dtThumbs{display:none!important}
+ .dtMain>.dtBldG{order:2}.dtMain>.dtSec:has(.dtOffice){order:3}
  .dtSec{margin-top:12px!important}
- .dtMainImg img{max-height:70mm!important}
- .dtMapSnap,.dtMapPrint[src]{max-height:62mm;width:auto!important;max-width:100%;margin:0 auto}
+ .dtMainImg img{max-height:50mm!important}
+ .dtMapSnap{width:100%!important;height:auto!important}
+ .dtMapPrint[src]{width:100%!important;aspect-ratio:3.2/1;object-fit:cover}
+ .dtI2:not(:has(>div:nth-child(9))),.walkLegend{break-inside:avoid}
+ .dtSec:has(.dtMapSnap)>.dtNote,.walkLegend{break-before:avoid}
  .dtSec:has(.dtMapPrint[src]),.dtSec:has(.dtMapSnap){display:block!important;break-inside:avoid}.dtMapPrint[src]{display:block!important;width:100%;height:auto;border:1px solid #E6E0D4;border-radius:12px}
  .dtSec:has(.dtMapSnap) .dtMapPrint{display:none!important}.dtMapSnap{display:block!important;border:1px solid #E6E0D4;border-radius:12px;overflow:hidden}
  /* 인쇄 폭이 좁아도(여백 기본값) 화면 시안처럼: 금액 4칸 한 줄 · 매물 정보 표 두 열 */
@@ -1510,7 +1517,7 @@ body.mapFull:not(.detailMode) .ccNav{visibility:hidden}   /* 추천 매물 화�
  .dtOffice{grid-template-columns:repeat(2,minmax(0,1fr))!important}.dtOffice>div{border-bottom:1px solid #EFEAE0!important}.dtOffice>div:nth-last-child(-n+2){border-bottom:0!important}
  .adList li{grid-template-columns:64px minmax(0,1fr)!important}.adList .adChk{display:inline-flex!important;visibility:hidden}.adList .adDot{visibility:hidden}
  .adMain{display:grid!important;grid-template-columns:160px 120px minmax(0,1fr);align-items:baseline}
- .dtSec>h2,.dtSec>.dtH2r,.dtSec>p:first-of-type{break-after:avoid}
+ .dtSec>h2,.dtSec>.dtH2r,.dtSec>h2+p,.dtPart>h3,.dtPart>h3+p{break-after:avoid}
 }
 </style>
 <style id="fullWide">/* 넓은 화면(1400px 이상)에서는 가운데 1280px 제한 없이 화면 가득 (좌우 여백 48px) */
@@ -4094,8 +4101,9 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   // PDF 저장 순간의 홈페이지 지도를 그대로 복사해 넣음 (도보 동선·출구·글자 상자·핀 포함 · 확대 버튼 등은 뺌)
   function snapMap() {
     var host = $('dtMap'); if (!host || !DT.el) return false;
-    var old = DT.el.querySelector('.dtMapSnap'); if (old) old.remove();
-    var W = host.clientWidth, H = host.clientHeight; if (!W || !H || !host.querySelector('img')) return false;
+    var old = DT.el.querySelector('.dtMapSnap'), W = host.clientWidth, H = host.clientHeight;
+    if (!W || !H || !host.querySelector('img')) return !!old;   // 지금 찍을 수 없으면 앞서 찍어 둔 것 사용
+    if (old) old.remove();
     var cl = host.cloneNode(true), so = host.querySelectorAll('*'), sc = cl.querySelectorAll('*'), hr = host.getBoundingClientRect(), del = [];
     for (var i = 0; i < so.length; i++) {
       var o = so[i], r = o.getBoundingClientRect(), x = r.left - hr.left, y = r.top - hr.top;
@@ -4107,7 +4115,8 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     cl.removeAttribute('id'); cl.className = '';
     cl.setAttribute('style', 'position:relative;overflow:hidden;width:' + W + 'px;height:' + H + 'px;background:#F3F1EC');
     var NS = 'http:\/\/www.w3.org/2000/svg', sv = document.createElementNS(NS, 'svg'), fo = document.createElementNS(NS, 'foreignObject');
-    sv.setAttribute('class', 'dtMapSnap'); sv.setAttribute('viewBox', '0 0 ' + W + ' ' + H); sv.setAttribute('width', '100%');
+    var h2 = Math.min(H, Math.round(W / 3.2)), y0 = Math.round((H - h2) / 2);   // PDF는 지도를 가로로 길게(위아래를 조금 잘라 냄 · 동선은 가운데)
+    sv.setAttribute('class', 'dtMapSnap'); sv.setAttribute('viewBox', '0 ' + y0 + ' ' + W + ' ' + h2); sv.setAttribute('preserveAspectRatio', 'xMidYMid slice'); sv.style.aspectRatio = W + ' / ' + h2;
     fo.setAttribute('x', 0); fo.setAttribute('y', 0); fo.setAttribute('width', W); fo.setAttribute('height', H);
     fo.appendChild(cl); sv.appendChild(fo);
     host.parentNode.insertBefore(sv, host.nextSibling);
