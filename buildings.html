@@ -1491,7 +1491,11 @@ body.mapFull:not(.detailMode) .ccNav{visibility:hidden}   /* 추천 매물 화�
  .flvT>div[style*="height:4px"]{display:block!important}
  .flvR{height:var(--rh)!important;min-height:0!important;padding-top:0!important;padding-bottom:0!important}
  .flvR span{display:-webkit-box!important}
- .dtFlv,.dtAdd,.adSum,.dtOffice,.dtI2{break-inside:avoid}
+ .dtFlv,.dtAdd,.adSum,.dtOffice{break-inside:avoid}
+ /* 인쇄 폭이 좁아도(여백 기본값) 화면 시안처럼: 금액 4칸 한 줄 · 매물 정보 표 두 열 */
+ .dtPrice{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+ .dtI2{grid-template-columns:max-content minmax(0,1fr) max-content minmax(0,1fr)!important}
+ .dtI2 .pad{display:contents!important}
  .dtSec>h2,.dtSec>.dtH2r,.dtSec>p:first-of-type{break-after:avoid}
 }
 </style>
