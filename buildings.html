@@ -627,7 +627,18 @@ body.detailMode #top,body.detailMode #map,body.detailMode #allList,body.detailMo
 .dtOffice>div:nth-last-child(-n+2){border-bottom:0}
 .dtOffice b{flex:none;width:96px;color:#6B757D;font-weight:600}
 /* 사이드 */
-.dtSide{position:sticky;top:20px;display:flex;flex-direction:column;gap:14px}
+.dtSide{position:static;display:flex;flex-direction:column;gap:14px}
+.dtSimC{display:flex;flex-direction:column;padding:18px 18px 8px!important;min-height:0}
+.dtSimC h3{margin:0;font-size:17px;font-weight:800;letter-spacing:-.4px;color:#14191F}.dtSimC h3 .dtH2s{font-size:13px;color:#A07D45;font-weight:700;margin-left:2px}
+.dtSimC .simCond{margin:4px 0 8px!important;font-size:12px;color:#8A8272;line-height:1.5}
+.dtSimC .simNone{font-size:13px;color:#6B757D;line-height:1.6}
+.dtSimC .simG{flex:1;min-height:0;overflow:auto;display:block;border-top:1px solid #E6E0D4}
+.dtSimC .simR{grid-template-columns:64px minmax(0,1fr)!important;gap:10px!important;padding:9px 2px!important}
+.dtSimC .simT{width:64px!important;height:50px!important}
+.dtSimC .simM .m1{font-size:11.5px}.dtSimC .simM .m2{font-size:13.5px;margin-top:1px}.dtSimC .simP{font-size:12px;margin-top:1px}
+.dtTools .mgFavBtn{margin:0;min-height:40px;padding:0 14px;border:1px solid #D9D2C4;border-radius:10px;background:#FFFFFF;color:#46515B;font:600 13px 'Noto Sans KR',sans-serif}
+.dtTools .mgFavBtn.on{border-color:#E6B000;background:#FFF7D6;color:#8a6500}
+@media (max-width:900px){.dtSimC .simG{max-height:420px}}
 .dtCard{border:1px solid #E6E0D4;border-radius:16px;padding:22px;background:#FFFFFF;box-shadow:0 1px 2px rgba(41,70,82,.12),0 3px 6px rgba(41,70,82,.12)}
 .dtCardTop{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:14px}
 .dtCardTop small{font-size:12px;color:#6B757D}
@@ -1048,7 +1059,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
  .siteHead{position:sticky;top:var(--tbH,30px);z-index:50;transition:box-shadow .2s}
  body.scrolled .siteHead{box-shadow:0 2px 10px rgba(41,70,82,.08)}
  section[id],#consult,.heroMap,.heroCard,.procBand,#clinic{scroll-margin-top:calc(var(--hdH,118px) + 16px)!important}
- .dtSide{top:calc(var(--hdH,118px) + 16px)!important}
+ .dtSide{position:static!important}
 }
 @media (max-width:760px){body.scrolled .siteHead{box-shadow:0 2px 10px rgba(41,70,82,.08)}}
 </style>
@@ -2028,7 +2039,7 @@ window.MGR = (function () {
   function jbTxt(it) { return it.jb ? esc(it.dong + ' ' + it.jb) : ''; }
   function popRow(it) { var s = src(it); return '<div class="mgPop"><span class="mgSrc mg-' + s + '">' + LBL[s] + '</span>' + (it.jb ? '<b>' + jbTxt(it) + '</b>' : '') + (it.hid ? '<em>공클 미노출</em>' : '') + (it.priv && src(it) === 'o' ? '<em>광고 안 함</em>' : '') + favBtn(it.id) + '</div>'; }
   function miTag(it) { var s = src(it); return favBtn(it.id, 1) + '<em class="miTag mgT mg-' + s + '">' + LBL[s] + '</em>' + (it.jb ? '<em class="mgJb">' + esc(it.jb) + '</em> ' : ''); }
-  function dtRow(it) { var s = src(it); return '<span class="dtBadge mgB mg-' + s + '">' + LBL[s] + '</span>' + (it.jb ? '<span class="dtBadge line">지번 ' + jbTxt(it) + '</span>' : '') + favBtn(it.id); }
+  function dtRow(it) { var s = src(it); return '<span class="dtBadge mgB mg-' + s + '">' + LBL[s] + '</span>' + (it.jb ? '<span class="dtBadge line">지번 ' + jbTxt(it) + '</span>' : ''); }
   /* ---------- 즐겨찾기 ---------- */
   function setFavUi(id) {
     var f = isFav(id);
@@ -2408,7 +2419,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       if (!(g && g.rows)) status('공클 전체 목록을 받지 못함 (공개 공클만 표시)' + (g && g.error ? ': ' + g.error : ''));
     }).catch(fail);
   }
-  return { on: on, start: start, extend: extend, decorate: decorate, gs: gs, pass: pass, pinCls: pinCls, pinStar: pinStar, popRow: popRow, miTag: miTag, dtRow: dtRow };
+  return { on: on, start: start, extend: extend, decorate: decorate, gs: gs, pass: pass, pinCls: pinCls, pinStar: pinStar, popRow: popRow, miTag: miTag, dtRow: dtRow, favBtn: favBtn };
 })();
 </script>
 <script>
@@ -3855,14 +3866,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     }
     var office = '<div class="dtOffice">' + OFFICE_INFO.map(function (o) { return '<div><b>' + o[0] + '</b><span>' + o[1] + '</span></div>'; }).join('') + '</div>';
     var callSvg = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"></path></svg>';
-    var side = '<aside class="dtSide"><div class="dtCard">' +
-      (it.sale ? '<div class="dtCardTop"><small>No.' + esc(it.id) + '</small><small>' + (it.shop ? '전용 ' : '대지 ') + Math.round(it.area) + '평 · ' + esc(it.floor || '') + '</small></div>' +
-        '<div class="dtCardPrice">매매가 <em>' + esc(it.depText) + '</em><span class="dtCardSep" aria-hidden="true"></span><span class="dtCardMgmt">' + (it.shop ? '전용' : '대지') + ' 평당 ' + esc(it.rentText) + '</span></div>'
-      : '<div class="dtCardTop"><small>No.' + esc(it.id) + '</small><small>' + esc(areaText(it.area)) + ' · ' + esc(it.floor || '') + '</small></div>' +
-      '<div class="dtCardPrice">보증금 ' + esc(it.depText || '문의') + '<br>월세 <em>' + esc(it.rentText || '문의') + '</em><span class="dtCardSep" aria-hidden="true"></span><span class="dtCardMgmt">관리비 ' + esc(it.mgmt || (it.unv ? '확인요청' : '문의')) + '</span></div>') +
-      '<a href="tel:025551165" class="dtCall">' + callSvg + '전화 상담 02-555-1165</a>' +
-      (/^https:\/\/([a-z0-9-]+\.)*(naver\.me|land\.naver\.com)\//i.test(nz(it.naverUrl)) ? '<a href="' + esc(it.naverUrl) + '" target="_blank" rel="noopener" class="dtNaver"><span class="dtN">N</span>네이버 부동산에서 보기</a>' : '') +
-      '</div>' +
+    var side = '<aside class="dtSide">' + simSide(it) +
       '<div class="dtCard"><form class="dtForm" id="dtForm" novalidate aria-label="이 매물 문의">' +
       '<h3>이 매물 문의하기</h3><p class="lead">남겨주시면 당일 연락드립니다. 현장 안내 일정도 함께 잡아드려요.</p>' +
       '<div class="dtRow2"><label>이름 *<input type="text" name="name" maxlength="30" autocomplete="name" placeholder="홍길동"></label>' +
@@ -3871,25 +3875,25 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       '<span class="dtTrap" aria-hidden="true"><input type="text" name="website" tabindex="-1" autocomplete="off"></span>' +
       '<label class="dtAgree"><input type="checkbox" name="agree"> 개인정보 수집·이용 동의 (필수)<a href="#privacy" class="privacyLink">약관 보기</a></label>' +
       '<p class="dtMsg" role="alert"></p><button type="submit" class="dtSubmit">문의 남기기</button></form></div>' +
-      '<p class="dtSmall">※ 매물 정보는 등록 시점 기준이며 실제와 다를 수 있습니다. 계약 전 현장과 공부서류를 반드시 확인해 주세요.</p></aside>';
+      '' + (/^https:\/\/([a-z0-9-]+\.)*(naver\.me|land\.naver\.com)\//i.test(nz(it.naverUrl)) ? '<a href="' + esc(it.naverUrl) + '" target="_blank" rel="noopener" class="dtNaver"><span class="dtN">N</span>네이버 부동산에서 보기</a>' : '') + '<p class="dtSmall">※ 매물 정보는 등록 시점 기준이며 실제와 다를 수 있습니다. 계약 전 현장과 공부서류를 반드시 확인해 주세요.</p></aside>';
     return '<div class="dtWrap' + (it.shop ? ' shopDt' : '') + '"><div class="dtPrintHead" aria-hidden="true"><b>DAUM REAL ESTATE</b><span>부동산다움공인중개사사무소 · 개업공인중개사 안혁준 · 등록번호 제11680-2021-00537호</span><span>서울특별시 강남구 신사동 578-1 일상빌딩 1층 · 02-555-1165 · r-daum.com</span></div>' +
       '<nav class="dtCrumb" aria-label="현재 위치"><button type="button" class="dtBack"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>목록으로</button>' +
       '<span><a href="#top">홈</a> <i>›</i> ' + (DT.from === 'listings' || DT.from === 'fa' ? '<a href="#allList">매물 리스트</a>' : '<a href="#map">' + (it.sale ? '빌딩 매매' : '상가·사무실 임대') + '</a>') + ' <i>›</i> No.' + esc(it.id) + '</span></nav>' +
       '<div class="dtHead"><div><div class="dtBadges">' + badges + (window.MGR && MGR.on() ? MGR.dtRow(it) : '') + '</div><h1 class="dtTitle">' + esc(it.title) + '</h1>' +
       '</div>' +
-      '<div class="dtTools"><button type="button" class="dtTool" data-act="share"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"></path></svg><span>링크 복사</span></button>' +
+      '<div class="dtTools">' + (window.MGR && MGR.on() && MGR.favBtn ? MGR.favBtn(it.id) : '') + '<button type="button" class="dtTool" data-act="share"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"></path></svg><span>링크 복사</span></button>' +
       '<button type="button" class="dtTool dtPdf" data-act="pdf"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5M12 11v6M9 14l3 3 3-3"></path></svg><span>PDF 저장</span></button></div></div>' +
       '<div class="dtGrid"><div class="dtMain">' + gal +
       (it.sale ? (it.shop ? shopSumHtml(it) + bldMsg : saleSumHtml(it) + bldMsg + saleCmpHtml(it)) +
       bldGroup(it.reg ? flvHtml(it.sale ? { reg: it.reg, floor: it.shop ? it.floor : '', elev: it.elev, area: it.shop ? it.area : 0 } : it) : '', regHtml) +
         saleLandHtml(it, it.shop) +
-      '<section class="dtSec"><h2>위치 정보</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' + simHtml(it) +
+      '<section class="dtSec"><h2>위치 정보</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
         ''
       : price +
       '<section class="dtSec"><div class="dtH2r"><h2>매물 정보</h2><span class="dtNo"><small>매물번호</small><b>' + esc(it.id) + '</b><button type="button" class="dtNoCp" onclick="var b=this;try{navigator.clipboard.writeText(\'' + esc(it.id) + '\').then(function(){b.textContent=\'복사됨\';setTimeout(function(){b.textContent=\'복사\'},1500)})}catch(e){}">복사</button></span></div>' + (it.sale ? '' : bldMsg) + '<div class="dtInfoGrid solo">' + info + '</div>' +
       '<p class="dtNote">※ 「중개대상물의 표시·광고 명시사항 세부기준」에 따른 표시입니다. 소재지는 동까지만 표시하며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' +
       bldGroup(it.reg ? (isDanji(it) ? '<section class="dtSec dtFlv"><h2>층별 현황</h2><p class="dtNote">※ 단지 상가는 호실별로 나뉜 집합건물이라 층별 현황 대신 상담 시 해당 호실의 건축물대장으로 안내해 드립니다.</p></section>' : flvHtml(it)) : '', regHtml, addHtml(it)) +
-      '<section class="dtSec"><h2>위치 정보</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>' + simHtml(it)) +
+      '<section class="dtSec"><h2>위치 정보</h2><div class="dtMap" id="dtMap"></div><p class="dtNote">※ ' + esc((it.gu || '강남구') + ' ' + (it.dong || '')) + ' 일대 · 지도 위치는 실제와 다를 수 있으며, 정확한 위치는 상담 시 안내해 드립니다.</p></section>') +
       '<section class="dtSec"><h2>중개사무소 정보</h2>' + office + '</section>' +
       '</div>' + side + '</div>' +
       '</div>';
@@ -3935,6 +3939,19 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     out.sort(function (a, b) { return a[1] - b[1]; });   // 최종 목록은 거리순
     out.r = used[0]; out.t = used[1]; out.wide = used !== ST[0]; out.mx = ST[3][1]; return out;
   }
+  // 오른쪽 칸: 비슷한 매물 리스트 카드 (사진과 윗선·아랫선을 맞춤 — fitSimSide)
+  function simSide(it) {
+    var h = simHtml(it); if (!h) return '';
+    return h.replace(/^<section class="dtSec dtSim2"><h2>/, '<div class="dtCard dtSimC"><h3>').replace('</h2>', '</h3>').replace(/<\/section>$/, '</div>');
+  }
+  function fitSimSide() {
+    var c = DT.el && DT.el.querySelector('.dtSimC'); if (!c) return;
+    if (window.innerWidth <= 900) { c.style.maxHeight = ''; return; }
+    var m = DT.el.querySelector('.dtMain'), f = m && m.firstElementChild; if (!f) return;
+    var r = f.getBoundingClientRect(), mi = f.querySelector('.dtMainImg'), h = mi ? mi.getBoundingClientRect().bottom - r.top : r.height;
+    if (h > 200) c.style.maxHeight = Math.round(h) + 'px';   // 매물이 많으면 사진 아랫선까지 (넘치면 스크롤) · 적으면 짧게
+  }
+  window.addEventListener('resize', function () { if (document.body.classList.contains('detailMode')) fitSimSide(); });
   function simHtml(it) {
     if (!it || !isFinite(it.lat) || !it.lat) return '';
     var l = simList(it), fc = simFc(it.floor), ev = simEv(it.elev), mgr = window.MGR && MGR.on();
@@ -4436,7 +4453,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     });
   }
   function paintDetail(it) {
-    DT.el.innerHTML = detailHtml(it); dtHeads(DT.el, it);
+    DT.el.innerHTML = detailHtml(it); dtHeads(DT.el, it); fitSimSide(); setTimeout(fitSimSide, 300); setTimeout(fitSimSide, 1200);
     bindDetail(it); detailMap(it); renderFloors(); simPanos(); renderAddSum(it); DT.el.querySelectorAll('input[data-add]').forEach(function (c) { c.addEventListener('change', function () { renderAddSum(it); }); }); if (!(it.photos && it.photos.length)) detailPano(it);
   }
   // 공실매물관 매물: 상세를 열 때 건축물대장(층별 현황·건축물정보)을 불러와 다시 그림
