@@ -1599,6 +1599,12 @@ body.mapFull #map .mmCol .mapFullBtn{display:none!important}
  body.mapFull #map .mapTools{grid-column:2;grid-row:1;margin:0!important;flex-wrap:nowrap!important;min-width:0}
  body.mapFull #map .mapTools .rng{flex:1 1 0!important;min-width:0}
  body.mapFull #map .mapTools .noSearch{flex:0 1 240px;min-width:160px}
+body.mapFull #map .mapTools{flex-wrap:wrap!important;row-gap:8px}
+body.mapFull #map .mapTools .rng{flex:1 1 auto!important;min-width:max-content!important;max-width:340px}
+body.mapFull #map .mapTools .rng input{flex:1 1 30px;width:30px;min-width:30px}
+body.mapFull #map .mapTools #rgFloor .flP button{height:24px;padding:0 7px;font-size:11.5px}
+body.mapFull #map .mapTools #rgFloor .flG{display:none}
+body.mapFull #map .mapTools .noSearch{flex:1 1 180px;min-width:160px}
  body.mapFull #map .mapFullClose{grid-column:3;grid-row:1}
  body.mapFull #map .elev{grid-column:1/-1;grid-row:2;align-self:stretch;margin-top:12px;min-height:0;height:auto!important}
 }
