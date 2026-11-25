@@ -733,7 +733,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #allList,body.detailMo
   .dtSimGrid .listing>div:last-child>div:last-child{display:none!important}
 }
 @media print{.topBar,.siteHead,.siteFoot,.mBar,.dtSide .dtForm,.dtTools,.dtCrumb,.dtSim,.dtMap{display:none!important}.dtGrid{grid-template-columns:1fr}}
-</style>
+.dtTitle .tFl{color:#B4621F}.dtTitle .tPy{color:#2F6F8F}.pyUnit{margin-left:8px;font-size:12px;font-weight:600;color:#8a94a6;white-space:nowrap}@media print{.pyUnit{display:none}}</style>
 
 <style>
 .msBar{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin:-8px 0 14px;padding:10px 14px;border-radius:12px;background:#F6F2EA;font-size:14px}
@@ -2066,7 +2066,7 @@ body:not(.mapFull) .mapTools:not(.alTools)>.noSearch input{width:100%!important;
    일반 방문자에게는 아무 것도 바뀌지 않습니다. 연락처·중개사메모는 내려오지 않습니다. */
 window.MGR = (function () {
   var API = 'https://script.google.com/macros/s/AKfycbxcrADcmOUogYCPPnEY9Hh6h_NpdV31gaOiP1zNCLn1fKrRsi12m-wi9d6wU8Sbw6dn9Q/exec', KEY = 'daumMgr';
-  var S = null, hp = null, READY = false, HIDROWS = [], ERR = '', EXTRA = [], JB = {}, PM = {}, HID = {}, FAV = {}, SHOW = { o: 1, h: 1, g: 1 }, CUST = null, HIST = [], SENT = {}, CUSTS = null;
+  var S = null, hp = null, READY = false, HIDROWS = [], ERR = '', EXTRA = [], JB = {}, BN = {}, PM = {}, HID = {}, FAV = {}, SHOW = { o: 1, h: 1, g: 1 }, CUST = null, HIST = [], SENT = {}, CUSTS = null;
   var LBL = { o: '우리 매물', h: '우리 비공개', g: '공클' };
   try { S = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { }
   try { var sv = JSON.parse(localStorage.getItem(KEY + '.show') || 'null'); if (sv) SHOW = sv; } catch (e) { }
@@ -2091,7 +2091,7 @@ window.MGR = (function () {
   function src(it) { if (it.unv) return 'g'; if (it.sale) return it.src === 'gc' ? 'g' : (it.priv && /비공개/.test(it.orig || '') ? 'h' : 'o'); return it.priv && /비공개/.test(it.orig || '') ? 'h' : 'o'; }   // 임대: 매물장 「출처」가 비공개인 매물만 보라
   function pass(it) { return !on() || SHOW[src(it)] !== 0; }
   function isFav(id) { return !!FAV[id]; }
-  function applyJB(it) { if (JB[it.id] && !it.jb) it.jb = JB[it.id]; if (PM[it.id] && !it.pm) it.pm = PM[it.id]; if (HID[it.id]) it.hid = 1; }
+  function applyJB(it) { if (BN[it.id] && !it.bn) it.bn = BN[it.id]; if (JB[it.id] && !it.jb) it.jb = JB[it.id]; if (PM[it.id] && !it.pm) it.pm = PM[it.id]; if (HID[it.id]) it.hid = 1; }
   function extend(items) { setTimeout(barCounts, 0); if (!READY) { items.forEach(applyJB); return items; } var ids = {}; items.forEach(function (x) { ids[x.id] = 1; applyJB(x); }); return items.concat(EXTRA.filter(function (x) { return !ids[x.id]; })); }
   function decorate(add) { add.forEach(applyJB); setTimeout(barCounts, 0); }
   function gs(d) { if (!HIDROWS.length || !d || !d.rows) return d; var ids = {}; d.rows.forEach(function (r) { ids[r[0]] = 1; }); return { rows: d.rows.concat(HIDROWS.filter(function (r) { return !ids[r[0]]; })) }; }   // 공개 공클 + 노출 안 한 공클
@@ -2099,9 +2099,9 @@ window.MGR = (function () {
   function pinStar(it) { return isFav(it.id) ? '<i class="mgPS">★</i>' : ''; }
   function favBtn(id, small) { var f = isFav(id); return small ? '<span class="mgFavS' + (f ? ' on' : '') + '" data-fav="' + esc(id) + '" role="button" title="즐겨찾기">' + (f ? '★' : '☆') + '</span>' : '<button type="button" class="mgFavBtn' + (f ? ' on' : '') + '" data-fav="' + esc(id) + '">' + (f ? '★ 즐겨찾기됨' : '☆ 즐겨찾기') + '</button>'; }
   function jbTxt(it) { return it.jb ? esc(it.dong + ' ' + it.jb) : ''; }
-  function popRow(it) { var s = src(it); return '<div class="mgPop"><span class="mgSrc mg-' + s + '">' + LBL[s] + '</span>' + (it.jb ? '<b>' + jbTxt(it) + '</b>' : '') + (it.hid ? '<em>공클 미노출</em>' : '') + (it.priv && src(it) === 'o' ? '<em>광고 안 함</em>' : '') + favBtn(it.id) + '</div>'; }
+  function popRow(it) { var s = src(it); return '<div class="mgPop"><span class="mgSrc mg-' + s + '">' + LBL[s] + '</span>' + (it.jb ? '<b>' + jbTxt(it) + (it.bn ? ' · ' + esc(it.bn) : '') + '</b>' : '') + (it.hid ? '<em>공클 미노출</em>' : '') + (it.priv && src(it) === 'o' ? '<em>광고 안 함</em>' : '') + favBtn(it.id) + '</div>'; }
   function miTag(it) { var s = src(it); return favBtn(it.id, 1) + '<em class="miTag mgT mg-' + s + '">' + LBL[s] + '</em>' + (it.jb ? '<em class="mgJb">' + esc(it.jb) + '</em> ' : ''); }
-  function dtRow(it) { var s = src(it); return '<span class="dtBadge mgB mg-' + s + '">' + LBL[s] + '</span>' + (it.jb ? '<span class="dtBadge line">지번 ' + jbTxt(it) + '</span>' : ''); }
+  function dtRow(it) { var s = src(it); return '<span class="dtBadge mgB mg-' + s + '">' + LBL[s] + '</span>' + (it.jb ? '<span class="dtBadge line">지번 ' + jbTxt(it) + '</span>' : '') + (it.bn ? '<span class="dtBadge line">' + esc(it.bn) + '</span>' : ''); }
   /* ---------- 즐겨찾기 ---------- */
   function setFavUi(id) {
     var f = isFav(id);
@@ -2449,8 +2449,8 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     var CK = KEY + '.data.' + (h.SM ? 'sale' : 'rent'), cached = null;
     try { cached = JSON.parse(localStorage.getItem(CK) || 'null'); if (cached && Date.now() - cached.t > 864e5) cached = null; } catch (e) { cached = null; }
     var apply = function (o, fresh) {
-      EXTRA = (o.extra || []).map(function (x) { return h.SM ? (function () { var it = h.saleItem(x); it.priv = 1; it.jb = x.jb; it.orig = x.orig || ''; return it; })() : x; });
-      JB = o.jb || {}; PM = o.pm || {}; HIDROWS = o.hid || []; HID = {}; HIDROWS.forEach(function (r) { HID[r[0]] = 1; });
+      EXTRA = (o.extra || []).map(function (x) { return h.SM ? (function () { var it = h.saleItem(x); it.priv = 1; it.jb = x.jb; it.bn = x.bn || ''; it.orig = x.orig || ''; return it; })() : x; });
+      JB = o.jb || {}; BN = o.bn || {}; PM = o.pm || {}; HIDROWS = o.hid || []; HID = {}; HIDROWS.forEach(function (r) { HID[r[0]] = 1; });
       READY = true;
       if (hp.items().length) { hp.items().forEach(applyJB); hp.load(hp.items(), true, new Date().toISOString(), true); if (HIDROWS.length) hp.mergeGs({ rows: HIDROWS }, true); }
       barCounts(); status('');
@@ -2462,8 +2462,8 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       call('feed', { w: 'sale' }).then(function (d) {
         if (!d || !d.rows) throw new Error((d && d.error) || '매매 데이터 없음');
         if (!d.rows.some(function (r) { return 'priv' in r; }) && d.rows.length) throw new Error('홈페이지 연동 스크립트가 아직 새 버전으로 배포되지 않았습니다 (배포 관리 → 새 버전)');
-        var jb = {}; d.rows.forEach(function (r) { if (r.jb) jb[r.id] = r.jb; });
-        var o = { extra: d.rows.filter(function (r) { return r.priv; }), jb: jb, hid: [] };   // r.orig: 노출 칸이 「비공개」면 보라 save(o); apply(o, true);
+        var jb = {}, bn = {}; d.rows.forEach(function (r) { if (r.jb) jb[r.id] = r.jb; if (r.bn) bn[r.id] = r.bn; });
+        var o = { extra: d.rows.filter(function (r) { return r.priv; }), jb: jb, bn: bn, hid: [] };   // r.orig: 노출 칸이 「비공개」면 보라 save(o); apply(o, true);
         if (!cached) toast('매니저 모드 — 비공개 매매 ' + o.extra.length + '건을 더했습니다');
       }).catch(fail);
       return;
@@ -2472,11 +2472,11 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       var a = r[0], g = r[1];
       if (!a || !a.items) throw new Error((a && a.error) || '임대 데이터 없음');
       if (!a.jb) throw new Error('홈페이지 연동 스크립트가 아직 새 버전으로 배포되지 않았습니다 (배포 관리 → 새 버전)');
-      var jb = {}; Object.keys(a.jb).forEach(function (k) { jb[k] = a.jb[k]; }); a.items.forEach(function (x) { if (x.jb) jb[x.id] = x.jb; });
+      var jb = {}; Object.keys(a.jb).forEach(function (k) { jb[k] = a.jb[k]; }); var bn = {}; a.items.forEach(function (x) { if (x.jb) jb[x.id] = x.jb; if (x.bn) bn[x.id] = x.bn; });
       var hid = [], pm = {}; Object.keys(a.pm || {}).forEach(function (k) { pm[k] = a.pm[k]; }); a.items.forEach(function (x) { if (x.pm) pm[x.id] = x.pm; });   // 실제 권리금 (매니저 모드만)
       if (g && g.rows) g.rows.forEach(function (x) { if (x[21]) jb[x[0]] = x[21]; if (x[22]) hid.push(x); if (x[24]) pm[x[0]] = x[24]; });
       else if (cached) { hid = cached.hid || []; Object.keys(cached.pm || {}).forEach(function (k) { if (!pm[k]) pm[k] = cached.pm[k]; }); }
-      var o = { extra: a.items, jb: jb, hid: hid, pm: pm }; save(o); apply(o, true);
+      var o = { extra: a.items, jb: jb, bn: bn, hid: hid, pm: pm }; save(o); apply(o, true);
       if (!cached) toast('매니저 모드 — 비공개 ' + a.items.filter(function (x) { return /비공개/.test(x.orig || ''); }).length + '건 · 광고 안 함 ' + a.items.filter(function (x) { return !/비공개/.test(x.orig || ''); }).length + '건');
       if (!(g && g.rows)) status('공클 전체 목록을 받지 못함 (공개 공클만 표시)' + (g && g.error ? ': ' + g.error : ''));
     }).catch(fail);
@@ -2974,7 +2974,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     if (!el) return;
     el.querySelectorAll('[data-ask]').forEach(function (a) { a.onclick = function () { ask(a.getAttribute('data-ask')); }; });
     el.querySelectorAll('[data-focus]').forEach(function (b) { b.onclick = function (e) { e.preventDefault(); focusItem(b.getAttribute('data-focus')); }; });
-    el.querySelectorAll('.mpopClose').forEach(function (b) { b.onclick = function () { M.closePopup(); }; });
+    el.querySelectorAll('.mpopClose').forEach(function (b) { b.onclick = function () { M.closePopup(); if (focusId) { focusId = null; drawMap(); } }; });   // 닫으면 골라 둔 매물을 다시 묶음(개수)으로
   }
 
   function openItem(it, noPan) { var redraw = focusId !== it.id; focusId = it.id; if (redraw) drawMap(); bindPopup(M.popup(it, itemPopup(it), noPan)); highlight(it.id); }
@@ -3835,6 +3835,17 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   var nz = function (v) { return v != null && String(v).trim() !== '' ? String(v).trim() : ''; };
   function pyeongM2(p) { var n = parseFloat(String(p).replace(/[^\d.]/g, '')); return isFinite(n) && n > 0 ? (Math.round(n * 10) / 10) + '평 (' + (n * 3.3058).toFixed(1) + '㎡)' : ''; }
   var DT_UNV = false;   // 공실매물관(현장 미확인) 매물: 빈 칸은 「확인요청」
+  // 상세 제목: 층·평 글자색 구분 (예: 신사동 지하1층 전용 150평 …)
+  function titleHi(t) {
+    return esc(t || '').replace(/((?:지하|지상|B)?\s?\d+(?:\s?[~\-]\s?(?:지상)?\d+)?층(?:\s?중층)?|통임대|전층)/g, '<span class="tFl">$1</span>').replace(/(\d+(?:\.\d+)?\s?평)/g, '<span class="tPy">$1</span>');
+  }
+  // 매니저 모드: (월세 + 관리비) ÷ 전용평 → 관리비 옆에 작게
+  function pyUnit(it) {
+    if (!(window.MGR && MGR.on()) || !(+it.area > 0)) return '';
+    var r = manOf(it.rent, it.rentText) || 0, m = manOf(null, it.mgmt) || 0; if (!r) return '';
+    var v = Math.round((r + m) / +it.area * 10) / 10;
+    return ' <small class="pyUnit" title="(월세 + 관리비) ÷ 전용 ' + (Math.round(+it.area * 10) / 10) + '평">평당 ' + v.toLocaleString('ko-KR') + '만</small>';
+  }
   function infoRow(k, v, wide, fallback) {
     var t = nz(v);
     return '<div' + (wide ? ' class="wide"' : '') + '><dt>' + esc(k) + '</dt><dd' + (t ? '' : ' class="muted"') + '>' + esc(t || (DT_UNV ? '확인요청' : (fallback || '문의'))) + '</dd></div>';
@@ -3843,8 +3854,9 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   function floorKey(name) {
     var t = String(name || '').replace(/\s+/g, ''), n = parseInt((/(\d+)/.exec(t) || [0, 1])[1], 10);
     if (/옥탑|PH|R/i.test(t)) return 10000 + n;
-    if (/^(지하|지|B)/i.test(t)) return -n;
-    return n;
+    var mz = /중층|메자닌/.test(t) ? 0.5 : 0;   // 1층중층 → 1층과 2층 사이
+    if (/^(지하|지|B)/i.test(t)) return -n + mz;
+    return n + mz;
   }
   function detailHtml(it) {
     DT_UNV = !!it.unv;
@@ -3878,7 +3890,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       infoRow('소재지', (it.gu || '강남구') + ' ' + (it.dong || '') + (it.floor ? ' · ' + it.floor : '')) +
       infoRow('가격', '보증금 ' + (it.depText || '문의') + ' / 월세 ' + (it.rentText || '문의')) +
       infoRow('거래 형태', '임대차 (월세)') +
-      infoRow('관리비', it.mgmt) +
+      infoRow('관리비', it.mgmt).replace('</dd>', pyUnit(it) + '</dd>') +
       infoRow('해당층 / 총 층수', floorTxt) +
       infoRow('권리금', premMgr(it) ? premMgr(it) : it.premium === '무권리' ? '없음' : (it.unv && !it.premium ? '' : '유선문의')) +
       infoRow('전용면적', m2(it.area)) +
@@ -3912,14 +3924,14 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
         ['지역 · 지구', zoneTxt(reg.zone)], ['토지면적', reg.plat ? a(reg.plat) + ' (' + (Math.round(reg.plat / 3.3058 * 10) / 10) + '평)' : NR],
         ['구조', reg.strct], ['건축면적 / 건폐율', withPyPct(reg.arch, reg.bc)],
         ['승강기', cnt([['승용', reg.elR], ['비상용', reg.elE]]) || '없음'], ['연면적 / 용적률', withPyPct(reg.tot, reg.vl)],
-        ['주차장', cnt([['옥내 자주식', reg.pkIA], ['옥내 기계식', reg.pkIM], ['옥외 자주식', reg.pkOA], ['옥외 기계식', reg.pkOM]]) || '없음'],
+        ['주차장', cnt([['옥내 자주식', reg.pkIA], ['옥내 기계식', reg.pkIM], ['옥외 자주식', reg.pkOA], ['옥외 기계식', reg.pkOM]]) || '기재사항 없음'],
         ['사용승인일 (허가일)', (reg.apr || '-') + (reg.pms ? ' (허가 ' + reg.pms + ')' : '')]
       ] : [
         ['대장 종류', reg.kind], ['주용도', (reg.purp || '') + (reg.etc && reg.etc !== reg.purp ? ' (' + reg.etc + ')' : '')],
         ['층수', (reg.grnd ? '지상 ' + reg.grnd + '층' : '') + (reg.ugrnd ? ' / 지하 ' + reg.ugrnd + '층' : '')], ['용도지역', zoneTxt(reg.zone)],
         ['건축면적 (건폐율)', withPct(reg.arch, reg.bc)], ['연면적 (용적률)', withPct(reg.tot, reg.vl)],
         ['승강기', cnt([['승용', reg.elR], ['비상용', reg.elE]]) || '없음'],   // 건축물대장 기재 그대로 (실제와 달라도 대장 기준)
-        ['주차장', cnt([['옥내 자주식', reg.pkIA], ['옥내 기계식', reg.pkIM], ['옥외 자주식', reg.pkOA], ['옥외 기계식', reg.pkOM]])],
+        ['주차장', cnt([['옥내 자주식', reg.pkIA], ['옥내 기계식', reg.pkIM], ['옥외 자주식', reg.pkOA], ['옥외 기계식', reg.pkOM]]) || '기재사항 없음'],
         ['부속건축물', reg.atch ? reg.atch + '동' + (reg.atchA ? ' (' + a(reg.atchA) + ')' : '') : '']
       ].map(function (r) { return it.sale && !nz(r[1]) ? [r[0], '-'] : r; }).filter(function (r) { return nz(r[1]); });
       regHtml = '<section class="dtSec"><h2>' + (it.sale ? '건물 <small class="dtH2s">건축물대장</small>' : '건축물정보') + '</h2>' +
@@ -3952,7 +3964,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     return '<div class="dtWrap' + (it.shop ? ' shopDt' : '') + '"><div class="dtPrintHead" aria-hidden="true">' + (function () { var m = document.querySelector('.siteHead .dmLock'); return m ? '<span class="dtPhLogo">' + m.outerHTML + '</span>' : '<b>DAUM REAL ESTATE</b>'; })() + '<div class="dtPhTx"><span>부동산다움공인중개사사무소 · 개업공인중개사 안혁준 · 등록번호 제11680-2021-00537호</span><span>서울특별시 강남구 신사동 578-1 일상빌딩 1층 · 02-555-1165 · r-daum.com</span></div></div>' +
       '<nav class="dtCrumb" aria-label="현재 위치"><button type="button" class="dtBack"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>목록으로</button>' +
       '<span><a href="#top">홈</a> <i>›</i> ' + (DT.from === 'listings' || DT.from === 'fa' ? '<a href="#allList">매물 리스트</a>' : '<a href="#map">' + (it.sale ? '빌딩 매매' : '상가·사무실 임대') + '</a>') + ' <i>›</i> No.' + esc(it.id) + '</span></nav>' +
-      '<div class="dtHead"><div><div class="dtBadges">' + badges + (window.MGR && MGR.on() ? MGR.dtRow(it) : '') + '</div><h1 class="dtTitle">' + esc(it.title) + '</h1>' +
+      '<div class="dtHead"><div><div class="dtBadges">' + badges + (window.MGR && MGR.on() ? MGR.dtRow(it) : '') + '</div><h1 class="dtTitle">' + titleHi(it.title) + '</h1>' +
       '</div>' +
       '<div class="dtTools">' + (window.MGR && MGR.on() && MGR.favBtn ? MGR.favBtn(it.id) : '') + '<button type="button" class="dtTool" data-act="share"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"></path></svg><span>링크 복사</span></button>' +
       '<button type="button" class="dtTool dtPdf" data-act="pdf"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5M12 11v6M9 14l3 3 3-3"></path></svg><span>PDF 저장</span></button></div></div>' +
