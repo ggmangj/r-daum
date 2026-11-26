@@ -2472,7 +2472,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       var a = r[0], g = r[1];
       if (!a || !a.items) throw new Error((a && a.error) || '임대 데이터 없음');
       if (!a.jb) throw new Error('홈페이지 연동 스크립트가 아직 새 버전으로 배포되지 않았습니다 (배포 관리 → 새 버전)');
-      var jb = {}; Object.keys(a.jb).forEach(function (k) { jb[k] = a.jb[k]; }); var bn = {}; a.items.forEach(function (x) { if (x.jb) jb[x.id] = x.jb; if (x.bn) bn[x.id] = x.bn; });
+      var jb = {}; Object.keys(a.jb).forEach(function (k) { jb[k] = a.jb[k]; }); var bn = {}; Object.keys(a.bn || {}).forEach(function (k) { bn[k] = a.bn[k]; }); a.items.forEach(function (x) { if (x.jb) jb[x.id] = x.jb; if (x.bn) bn[x.id] = x.bn; });
       var hid = [], pm = {}; Object.keys(a.pm || {}).forEach(function (k) { pm[k] = a.pm[k]; }); a.items.forEach(function (x) { if (x.pm) pm[x.id] = x.pm; });   // 실제 권리금 (매니저 모드만)
       if (g && g.rows) g.rows.forEach(function (x) { if (x[21]) jb[x[0]] = x[21]; if (x[22]) hid.push(x); if (x[24]) pm[x[0]] = x[24]; });
       else if (cached) { hid = cached.hid || []; Object.keys(cached.pm || {}).forEach(function (k) { if (!pm[k]) pm[k] = cached.pm[k]; }); }
