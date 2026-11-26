@@ -1497,7 +1497,7 @@ body.mapFull:not(.detailMode) .ccNav{visibility:hidden}   /* 추천 매물 화�
  .flvT>div[style*="height:4px"]{display:block!important}
  .flvR{height:var(--rh)!important;min-height:0!important;padding-top:0!important;padding-bottom:0!important}
  .flvR span{display:-webkit-box!important}
- .dtFlv,.adSum,.dtOffice,.adList{break-inside:avoid}
+ .dtFlv,.adSum,.dtOffice,.adList{break-inside:avoid}  .adSum:has(.adEmpty){display:none!important}
  /* 쪽수 줄이기: 전체를 조금 작게 · 단락 사이 간격 줄임 · 지도는 높이 제한(한 덩어리로 넘어가도 빈 곳이 작게) */
  html{zoom:.78!important}
  /* 위치 지도는 매물 정보 바로 아래로 (1쪽 남는 자리를 채움) → 건축물 정보 → 중개사무소 */
@@ -4430,7 +4430,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
         xs.map(function (o) { return '<li><span class="adDot" aria-hidden="true"></span>' + line(o) + '<a href="#item/' + encodeURIComponent(o.id) + '" class="adGo">매물 보기 →</a></li>'; }).join('') + '</ul></section>';
     }
     var row = function (o) {
-      return '<li><label class="adChk"><input type="checkbox" data-add="' + esc(o.id) + '" checked><span></span></label>' +
+      return '<li><label class="adChk"><input type="checkbox" data-add="' + esc(o.id) + '"><span></span></label>' +
         '<div class="adMain"><b>' + esc(o.floor || '-') + '</b><span>' + esc(areaText(o.area)) + '</span><span class="adPrice">보 ' + esc(o.depText || '문의') + ' / 월 <em>' + esc(o.rentText || '문의') + '</em> / 관 ' + esc(o.mgmt || '문의') + '</span></div>' +
         '<a href="#item/' + encodeURIComponent(o.id) + '" class="adGo">매물 보기 →</a></li>';
     };
@@ -6154,10 +6154,10 @@ var MANAGER_URL='https://script.google.com/macros/s/AKfycbxcrADcmOUogYCPPnEY9Hh6
         });
       }
       var addP = null;
-      if (sAdd) {   // 같은 건물 추가 임대: 체크된 호실 + 합산 정보 (체크칸·「매물 보기」는 빼고)
+      if (sAdd) {   // 같은 건물 추가 임대: 호실 목록 + (체크한 호실이 있으면) 합산 정보 — 체크칸·「매물 보기」는 뺌
         var L = sAdd.querySelector('.adList'), Sm = sAdd.querySelector('.adSum'), aw = (L || sAdd).getBoundingClientRect().width, parts = [];
-        if (L) parts.push({ el: L, fix: function (c, src) { var a = src.querySelectorAll('li'), b = c.querySelectorAll('li'); for (var i = a.length - 1; i >= 0; i--) { var ck = a[i].querySelector('input[type=checkbox]'); if (ck && !ck.checked) b[i].remove(); } [].slice.call(c.querySelectorAll('label, a')).forEach(function (x) { if (x.querySelector('input') || /매물 보기/.test(x.textContent)) x.remove(); }); } });
-        if (Sm && Sm.textContent.trim()) parts.push({ el: Sm, fix: function (c) { c.style.marginTop = '10px'; } });
+        if (L) parts.push({ el: L, fix: function (c, src) { var a = src.querySelectorAll('li'), b = c.querySelectorAll('li'); [].slice.call(c.querySelectorAll('label, a')).forEach(function (x) { if (x.querySelector('input') || /매물 보기/.test(x.textContent)) x.remove(); }); } });
+        if (Sm && Sm.textContent.trim() && !Sm.querySelector('.adEmpty')) parts.push({ el: Sm, fix: function (c) { c.style.marginTop = '10px'; } });
         if (parts.length) addP = snapNodes(parts, 'width:' + aw + 'px', 2).then(function (a) { if (!a) return null; var h = sAdd.querySelector('h2'); a.title = h ? h.textContent.replace(/\s+/g, ' ').trim() : '같은 건물 추가 임대'; a.lead = ((sAdd.querySelector('.adLead') || {}).textContent || '').trim(); a.note = noteOf(sAdd); return a; });
       }
       var ids = (it.photos || []).slice(0, 9);
