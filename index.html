@@ -1637,6 +1637,12 @@ body.mapFull #map .mapTools .noSearch{flex:1 1 180px;min-width:160px}
 .mainNav{gap:4px!important;align-items:flex-end}
 .mainNav a{padding:0 14px!important;margin:0 0 -1px!important;border-radius:12px 12px 0 0;border:1px solid transparent;border-bottom:0!important;min-height:44px!important;font-weight:700;color:#46515B!important}
 }
+
+/* 검색 초기화: 조건 줄 맨 오른쪽 동그란 ↺ 버튼 (건수 숫자는 숨김) */
+#mapTtlCnt,#alCnt{display:none!important}
+.rstB,.mapReset.rstB{flex:none!important;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0!important;margin-left:auto;border-radius:50%;border:1px solid #E3DDD0;background:#FFFFFF;color:#294652;cursor:pointer;transition:background-color .18s,color .18s,border-color .18s}
+.rstB:hover,.mapReset.rstB:hover{border-color:#BC975E;color:#8A6A35}.rstB.on,.mapReset.rstB.on{border-color:#BC975E;background:#FBF6EC;color:#8A6A35}.rstB.on:hover,.mapReset.rstB.on:hover{background:#BC975E;color:#FFFFFF}
+@media (max-width:760px){.alTools,.mapTools{position:relative}.alTools .rstB,.mapTools .mapReset.rstB{position:absolute;right:0;bottom:0;margin:0}.alTools>:has(#alRMax),.mapTools>:has(#mapRentMax){margin-right:48px}}
 </style>
 </head>
 <body>
@@ -1740,6 +1746,7 @@ body.mapFull #map .mapTools .noSearch{flex:1 1 180px;min-width:160px}
 <div class="rng" id="rgDep"><span class="rgL">보증금</span><input id="mapDepMin" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최소" aria-label="보증금 최소"><i>~</i><input id="mapDepMax" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최대" aria-label="보증금 최대"><span class="rgU">만</span></div>
 <div class="rng" id="rgRent"><span class="rgL">월세</span><input id="mapRentMin" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최소" aria-label="월세 최소"><i>~</i><input id="mapRentMax" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최대" aria-label="월세 최대"><span class="rgU">만</span></div>
 <form class="noSearch" id="noSearch" role="search"><label class="sr" for="noInput">매물번호 검색</label><input id="noInput" type="search" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="20" placeholder="매물번호 검색 (예: D5B531F)"><button type="submit" aria-label="매물번호로 찾기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></button></form>
+<button type="button" class="mapReset rstB" id="mapReset2" title="검색 조건 모두 지우기" aria-label="검색 조건 모두 지우기"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg></button>
 </div>
 <div class="elev" style="display: flex; flex-wrap: wrap; gap: 0; border: 1px solid #E6E0D4; border-radius: 18px; overflow: hidden; background: #FFFFFF">
 <div class="mlCol" style="flex: 1 1 250px; min-width: 0; display: flex; flex-direction: column; border-right: 1px solid #E6E0D4">
@@ -1775,7 +1782,7 @@ body.mapFull #map .mapTools .noSearch{flex:1 1 180px;min-width:160px}
 <div class="frNav" id="alFeatNav" aria-label="추천 매물 넘기기"></div>
 </div>
 <div class="alDiv" aria-hidden="true"></div>
-<div class="alMH"><div class="alTitle"><h2>매물 <span>리스트</span> <em id="alCnt"></em></h2><button type="button" class="alReset" id="alReset" hidden title="검색 초기화" aria-label="검색 초기화">↺</button></div>
+<div class="alMH"><div class="alTitle"><h2>매물 <span>리스트</span> <em id="alCnt"></em></h2></div>
 <div class="mapTools alTools">
 <label class="sr" for="alKind">종류</label><select id="alKind" class="rgnSel kindSel"><option value="">종류 전체</option><option value="clinic">병의원</option><option value="office">사무실</option><option value="shop">상가</option><option value="building">사옥·통임대</option><option value="new">신축·리모델링</option></select>
 <label class="sr" for="alRegion">지역</label><select id="alRegion" class="rgnSel"><option value="">강남·서초 전체</option></select>
@@ -1783,6 +1790,7 @@ body.mapFull #map .mapTools .noSearch{flex:1 1 180px;min-width:160px}
 <div class="rng flBox" id="alRgF"><span class="rgL">층</span><span class="flP" role="group" aria-label="층 종류"><button type="button" data-fp="b">지하</button><button type="button" data-fp="1">1층</button><button type="button" data-fp="y">연층</button></span><span class="flSep"></span><span class="flG">지상</span><input id="alFMin" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최저" aria-label="층 최소"><i>~</i><input id="alFMax" type="text" inputmode="text" autocomplete="off" maxlength="7" placeholder="최고" aria-label="층 최대"><span class="rgU">층</span></div>
 <div class="rng" id="alRgD"><span class="rgL">보증금</span><input id="alDMin" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최소" aria-label="보증금 최소"><i>~</i><input id="alDMax" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최대" aria-label="보증금 최대"><span class="rgU">만</span></div>
 <div class="rng" id="alRgR"><span class="rgL">월세</span><input id="alRMin" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최소" aria-label="월세 최소"><i>~</i><input id="alRMax" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최대" aria-label="월세 최대"><span class="rgU">만</span></div>
+<button type="button" class="rstB" id="alReset" title="검색 조건 모두 지우기" aria-label="검색 조건 모두 지우기"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg></button>
 </div>
 </div>
 <div class="faGrid alGrid" id="alGrid"></div>
@@ -2692,7 +2700,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     AL.L = L;
     g.innerHTML = L.length ? L.slice(0, AL.page * AL.per).map(card).join('') + (setTimeout(function () { fitPr(g); }, 0), '') : '<div class="alEmpty">조건에 맞는 매물이 없어요. 조건을 넓히거나 02-555-1165 로 문의 주세요.</div>';
     alMoreUi();
-    $('alReset').hidden = !alOn();
+    $('alReset').classList.toggle('on', alOn());
     document.querySelectorAll('#alRgF .flP button').forEach(function (b) { b.classList.toggle('on', AL.flp.indexOf(b.getAttribute('data-fp')) >= 0); });
     [['alRgA', 'alA'], ['alRgF', 'alF'], ['alRgD', 'alD'], ['alRgR', 'alR']].forEach(function (x) { $(x[0]).classList.toggle('on', !!($(x[1] + 'Min').value || $(x[1] + 'Max').value || (x[0] === 'alRgF' && AL.flp.length))); });
     renderFeatAL();
@@ -4070,7 +4078,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       if (!document.body.contains(el)) return;
       if (!(window.naver && naver.maps && naver.maps.Map)) { if (tries++ < 120) setTimeout(go, 250); return; }
       var nm = naver.maps, l = simList(it), c = new nm.LatLng(it.lat, it.lng), B = new nm.LatLngBounds(c, c);
-      var map = new nm.Map(el, { center: c, zoom: 16, scaleControl: false, mapDataControl: false, zoomControl: false, logoControlOptions: { position: nm.Position.BOTTOM_LEFT }, scrollWheel: false });
+      var map = new nm.Map(el, { center: c, zoom: 16, scaleControl: false, mapDataControl: false, zoomControl: false, logoControlOptions: { position: nm.Position.BOTTOM_LEFT }, scrollWheel: true });
       new nm.Circle({ map: map, center: c, radius: l.r || 400, strokeColor: '#BC975E', strokeOpacity: 0.9, strokeWeight: 1.5, strokeStyle: 'dash', fillColor: '#BC975E', fillOpacity: 0.06, clickable: false });
       l.forEach(function (p, i) {
         var x = p[0]; if (!isFinite(x.lat) || !x.lat) return; var ll = new nm.LatLng(x.lat, x.lng); B.extend(ll);
