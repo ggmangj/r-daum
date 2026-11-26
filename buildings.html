@@ -3923,7 +3923,8 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       var a = function (v) { return v ? Number(v).toLocaleString('ko-KR', { maximumFractionDigits: 2 }) + '㎡' : ''; };
       var pct = function (v) { return v ? (Math.round(v * 100) / 100) + '%' : ''; };
       var cnt = function (pairs) { return pairs.filter(function (p) { return p[1]; }).map(function (p) { return p[0] + ' ' + p[1] + '대'; }).join(' · '); };
-      var withPct = function (area, p) { return area ? a(area) + ' (' + (p ? pct(p) : '대장 미기재') + ')' : ''; };
+      var py = function (v) { return (Math.round(v / 3.3058 * 10) / 10).toLocaleString('ko-KR') + '평'; };
+      var withPct = function (area, p) { return area ? a(area) + ' · ' + py(area) + ' (' + (p ? pct(p) : '대장 미기재') + ')' : ''; };   // ㎡ · 평 (%)
       var NR = '대장 미기재';
       var withPyPct = function (area, p) { return area ? a(area) + ' (' + (Math.round(area / 3.3058 * 10) / 10) + '평) / ' + (p ? pct(p) : NR) : ''; };   // 빌딩 매매: ㎡(평) / %
       var rows = it.sale ? [
@@ -3940,7 +3941,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
         ['건축면적 (건폐율)', withPct(reg.arch, reg.bc)], ['연면적 (용적률)', withPct(reg.tot, reg.vl)],
         ['승강기', cnt([['승용', reg.elR], ['비상용', reg.elE]]) || '없음'],   // 건축물대장 기재 그대로 (실제와 달라도 대장 기준)
         ['주차장', cnt([['옥내 자주식', reg.pkIA], ['옥내 기계식', reg.pkIM], ['옥외 자주식', reg.pkOA], ['옥외 기계식', reg.pkOM]]) || '기재사항 없음'],
-        ['부속건축물', reg.atch ? reg.atch + '동' + (reg.atchA ? ' (' + a(reg.atchA) + ')' : '') : '']
+        ['부속건축물', reg.atch ? reg.atch + '동' + (reg.atchA ? ' (' + a(reg.atchA) + ' · ' + py(reg.atchA) + ')' : '') : '']
       ].map(function (r) { return it.sale && !nz(r[1]) ? [r[0], '-'] : r; }).filter(function (r) { return nz(r[1]); });
       regHtml = '<section class="dtSec"><h2>' + (it.sale ? '건물 <small class="dtH2s">건축물대장</small>' : '건축물정보') + '</h2>' +
         '<dl class="dtI2">' + rows.map(function (r) { return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>'; }).join('') + (rows.length % 2 ? '<div class="pad"><dt></dt><dd></dd></div>' : '') + '</dl>' +
