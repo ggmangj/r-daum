@@ -1990,7 +1990,7 @@ body:not(.mgrMode) #mgBar,body:not(.mgrMode) #mgDr{display:none!important}
 .mgPop{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:2px 0 6px;font-size:12.5px;color:#14191F}.mgPop b{font-weight:800}.mgPop em{font-style:normal;font-size:11px;color:#C4553A;border:1px solid #C4553A;border-radius:4px;padding:1px 4px}
 .mgFavBtn{margin-left:auto;border:1.5px solid #294652;background:#fff;color:#294652;border-radius:8px;padding:4px 9px;font:700 12px 'Noto Sans KR',sans-serif;cursor:pointer}
 .mgFavBtn.on{border-color:#E6B000;background:#FFF7D6;color:#8a6500}
-.mgFavS{display:inline-block;font-size:17px;line-height:1;color:#C9C2B3;margin-right:5px;cursor:pointer;vertical-align:-2px}.mgFavS.on{color:#F5B400}
+.mgFavS{display:inline-block;font-size:17px;line-height:1;color:#C9C2B3;margin-right:5px;cursor:pointer;vertical-align:-2px}.mgFavS.on{color:#F5B400}.mpopCat:has(.mgFavS){display:flex;align-items:center;flex-wrap:wrap;gap:2px 4px}.mpopCat .mgFavS{margin:0 0 0 auto;font-size:19px;vertical-align:0;padding:0 2px}.mpopImg~.mpopCat:has(.mgFavS){padding-right:0}
 .miTag.mgT{background:#3A6271!important;color:#fff!important;border-color:transparent!important}.miTag.mgT.mg-h{background:#7C4DBA!important}.miTag.mgT.mg-g{background:#1E8E5A!important}
 .mgJb{font-style:normal;font-weight:700;color:#294652;margin-left:4px}
 .dtBadge.mgB{background:#3A6271;color:#fff}.dtBadge.mgB.mg-h{background:#7C4DBA}.dtBadge.mgB.mg-g{background:#1E8E5A}
@@ -2100,7 +2100,7 @@ window.MGR = (function () {
   function pinStar(it) { return isFav(it.id) ? '<i class="mgPS">★</i>' : ''; }
   function favBtn(id, small) { var f = isFav(id); return small ? '<span class="mgFavS' + (f ? ' on' : '') + '" data-fav="' + esc(id) + '" role="button" title="즐겨찾기">' + (f ? '★' : '☆') + '</span>' : '<button type="button" class="mgFavBtn' + (f ? ' on' : '') + '" data-fav="' + esc(id) + '">' + (f ? '★ 즐겨찾기됨' : '☆ 즐겨찾기') + '</button>'; }
   function jbTxt(it) { return it.jb ? esc(it.dong + ' ' + it.jb) : ''; }
-  function popRow(it) { var s = src(it); return '<div class="mgPop"><span class="mgSrc mg-' + s + '">' + LBL[s] + '</span>' + (it.jb ? '<b>' + jbTxt(it) + (it.bn ? ' · ' + esc(it.bn) : '') + '</b>' : '') + (it.hid ? '<em>공클 미노출</em>' : '') + (it.priv && src(it) === 'o' ? '<em>광고 안 함</em>' : '') + favBtn(it.id) + '</div>'; }
+  function popRow(it) { var s = src(it); return '<div class="mgPop"><span class="mgSrc mg-' + s + '">' + LBL[s] + '</span>' + (it.jb ? '<b>' + jbTxt(it) + (it.bn ? ' · ' + esc(it.bn) : '') + '</b>' : '') + (it.hid ? '<em>공클 미노출</em>' : '') + (it.priv && src(it) === 'o' ? '<em>광고 안 함</em>' : '') + '</div>'; }
   function miTag(it) { var s = src(it); return favBtn(it.id, 1) + '<em class="miTag mgT mg-' + s + '">' + LBL[s] + '</em>' + (it.jb ? '<em class="mgJb">' + esc(it.jb) + '</em> ' : ''); }
   function dtRow(it) { var s = src(it); return '<span class="dtBadge mgB mg-' + s + '">' + LBL[s] + '</span>' + (it.jb ? '<span class="dtBadge line">지번 ' + jbTxt(it) + '</span>' : '') + (it.bn ? '<span class="dtBadge line">' + esc(it.bn) + '</span>' : ''); }
   /* ---------- 즐겨찾기 ---------- */
@@ -2795,7 +2795,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   }
 
   /* ---------- 지도 말풍선 내용 ---------- */
-  function itemPopup(it) { var h = itemPopup0(it); return window.MGR && MGR.on() ? h.replace('<div class="mpopTitle">', MGR.popRow(it) + '<div class="mpopTitle">') : h; }
+  function itemPopup(it) { var h = itemPopup0(it); if (!(window.MGR && MGR.on())) return h; h = h.replace(/(<div class="mpopCat"[^>]*>[\s\S]*?)(<\/div>)/, '$1' + MGR.favBtn(it.id, 1) + '$2'); return h.replace('<div class="mpopTitle">', MGR.popRow(it) + '<div class="mpopTitle">'); }
   function itemPopup0(it) {
     if (it.shop) return '<div class="mpop"><div class="mpopCat" style="color:#A0582E">상가점포 매매 · No.' + esc(it.id) + '</div>' +
       '<div class="mpopTitle">' + esc(it.title) + '</div>' +
