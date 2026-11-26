@@ -99,7 +99,7 @@ input,select,textarea,button{font-family:inherit}
 .alPager button:hover:not(:disabled){border-color:#294652}
 .alPager button.on{background:#294652;border-color:#294652;color:#fff}
 .alPager button:disabled{opacity:.35;cursor:default}
-.alPager .gap{color:#8A8272;padding:0 4px}
+.alPager .gap{color:#8A8272;padding:0 4px} .alPager .alMore{padding:0 22px;border-radius:999px} .alPager .alMore small{margin-left:6px;font-weight:500;color:#8A8272} .alPager .alEnd{font-size:13px;color:#8A8272}
 @media (max-width:760px){#allList .alTools{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))}#allList .alTools>select,#allList .alSearch,#alRgF,#alRgR{grid-column:1/-1}#allList .alSearch{order:-3}#allList .alTools>select{order:-2;width:100%!important;max-width:none!important}#alRgF{order:-1;min-width:0;flex-wrap:wrap;height:auto!important;padding:8px 12px!important;border-radius:16px!important;row-gap:6px}#alRgF .flSep{display:block;flex:0 0 100%;height:0;margin:0;background:none}#allList .alTools>.rng:not(#alRgF){min-width:0}.alPager button{min-width:36px;height:36px}}
 /* 지도 아래: 왼쪽 이달의 추천 매물(상담카드 폭) | 오른쪽 매물 리스트(지도 폭) */
 #allList .alSplit{display:grid;grid-template-columns:290px 1px minmax(0,1fr);grid-template-rows:auto 1fr auto;column-gap:14px;row-gap:16px;align-items:stretch}
@@ -127,7 +127,7 @@ input,select,textarea,button{font-family:inherit}
 @media (max-width:1100px){#allList .alSplit{grid-template-columns:240px 1px minmax(0,1fr)}}
 @media (max-width:760px){#allList .alSplit{display:block}#allList .alDiv{display:none}#allList .alFH{margin-bottom:10px}#allList .alFB{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}#allList .alFB .listing{flex:0 0 82%;scroll-snap-align:start;height:auto}#allList .alFP{margin:10px 0 30px}#allList .alMH{margin-bottom:12px}#allList .alMH .alTools{margin:0;flex-basis:100%}#allList .alGrid{margin-bottom:16px}}
 /* 이달의 추천 매물: 상담카드 스타일 한 장 · 대표사진 5초마다 넘김 → 다 넘기면 다음 매물 */
-#allList .alFcol{grid-column:1;grid-row:1/3;display:flex;flex-direction:column;gap:18px;min-width:0}
+#allList .alFcol{grid-column:1;grid-row:1/3;display:flex;flex-direction:column;gap:18px;min-width:0}@media (min-width:761px){#allList .alFcol{align-self:start;position:sticky;top:126px}}
 #allList .alFT h2{font-size:26px;line-height:1.35;letter-spacing:-1px;white-space:normal}
 #allList .alFT h2 b{color:#A9814A;font-weight:900}
 #allList .alFT h2 span{background:linear-gradient(transparent 60%,#E8D7B6 60%)}
@@ -1781,7 +1781,7 @@ body.mapFull #map .mapTools .noSearch{flex:1 1 180px;min-width:160px}
 </div>
 </div>
 <div class="faGrid alGrid" id="alGrid"></div>
-<nav class="alPager alMP" id="alPager" aria-label="매물 리스트 페이지"></nav>
+<nav class="alPager alMP" id="alPager" aria-label="매물 더 보기"></nav>
 </div>
 </section>
 <!-- 이달의 추천 매물: 위치 정하는 동안 잠시 숨김 (지우지 않음 — 「parked」 클래스만 빼면 다시 보임) -->
@@ -2663,23 +2663,30 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       return true;
     });
   }
+  /* 아래로 내리면 다음 묶음을 이어 붙임 (페이지 번호 대신) */
+  // 왼쪽 추천 매물 칸: 리스트를 내려도 따라오게 (칸이 화면보다 길면 아래쪽 끝이 화면 바닥에 맞도록)
+  function alStick() { var c = document.querySelector('#allList .alFcol'); if (!c) return; c.style.top = Math.min(126, window.innerHeight - c.offsetHeight - 16) + 'px'; }
+  (function () { window.addEventListener('resize', alStick); var c = document.querySelector('#allList .alFcol'); if (c && window.ResizeObserver) new ResizeObserver(alStick).observe(c); })();
+  function alMoreUi() {
+    var P = $('alPager'), L = AL.L || [], n = Math.min(L.length, AL.page * AL.per); if (!P) return;
+    P.innerHTML = L.length > n ? '<button type="button" class="alMore" data-more="1">매물 더 보기 <small>' + n + ' / ' + L.length + '</small></button>' : (L.length > AL.per ? '<span class="alEnd">매물 ' + L.length + '건을 모두 봤어요</span>' : '');
+    if (!AL.io && window.IntersectionObserver) { AL.io = new IntersectionObserver(function (es) { if (es.some(function (e) { return e.isIntersecting; })) alMore(); }, { rootMargin: '600px 0px' }); AL.io.observe(P); }
+  }
+  function alMore() {
+    var g = $('alGrid'), L = AL.L || [], from = AL.page * AL.per; if (!g || from >= L.length || $('allList').style.display === 'none' || !g.offsetParent) return;
+    AL.page++; g.insertAdjacentHTML('beforeend', L.slice(from, AL.page * AL.per).map(card).join('')); setTimeout(function () { fitPr(g); }, 0); alMoreUi();
+    setTimeout(function () { var P = $('alPager'); if (P && P.getBoundingClientRect().top < window.innerHeight + 600) alMore(); }, 120);   // 화면이 커서 아직 바닥이 보이면 한 묶음 더
+  }
   function renderAllList(keep, scroll) {
     var g = $('alGrid'); if (!g) return; if (!keep) AL.page = 1;
     var rs = $('alRegion'), mr = $('mapRegion'); if (rs && mr && rs.options.length !== mr.options.length) { var v0 = rs.value; rs.innerHTML = mr.innerHTML; if (rs.options[0] && !rs.options[0].value) rs.options[0].textContent = '강남·서초'; rs.value = v0; }
     AL.per = window.innerWidth <= 760 ? 10 : alCols() * 3;
-    var all = alPool(), L = alFiltered(), pages = Math.max(1, Math.ceil(L.length / AL.per)); if (AL.page > pages) AL.page = pages;
+    var all = alPool(), L = alFiltered(), pages = Math.max(1, Math.ceil(L.length / AL.per)); if (AL.page > pages) AL.page = pages;   // page = 지금까지 불러온 묶음 수 (아래로 내리면 이어서 보임)
     $('alCnt').textContent = all.length ? L.length + '건' : '';
     $('allList').style.display = all.length ? '' : 'none';
-    g.innerHTML = L.length ? L.slice((AL.page - 1) * AL.per, AL.page * AL.per).map(card).join('') + (setTimeout(function () { fitPr(g); }, 0), '') : '<div class="alEmpty">조건에 맞는 매물이 없어요. 조건을 넓히거나 02-555-1165 로 문의 주세요.</div>';
-    var P = $('alPager'), cur = AL.page, h = '';
-    if (pages > 1) {
-      var nums = [], add = function (n) { if (nums.indexOf(n) < 0 && n >= 1 && n <= pages) nums.push(n); };
-      var st = Math.max(1, Math.min(cur - 2, pages - 5)); add(1); for (var k = st; k < st + 6; k++) add(k); add(pages); nums.sort(function (a, b) { return a - b; });
-      h += '<button type="button" data-pg="' + (cur - 1) + '" aria-label="이전 페이지"' + (cur === 1 ? ' disabled' : '') + '>‹</button>';
-      nums.forEach(function (n, i) { if (i && n - nums[i - 1] > 1) h += '<span class="gap">…</span>'; h += '<button type="button" data-pg="' + n + '"' + (n === cur ? ' class="on" aria-current="page"' : '') + '>' + n + '</button>'; });
-      h += '<button type="button" data-pg="' + (cur + 1) + '" aria-label="다음 페이지"' + (cur === pages ? ' disabled' : '') + '>›</button>';
-    }
-    P.innerHTML = h;
+    AL.L = L;
+    g.innerHTML = L.length ? L.slice(0, AL.page * AL.per).map(card).join('') + (setTimeout(function () { fitPr(g); }, 0), '') : '<div class="alEmpty">조건에 맞는 매물이 없어요. 조건을 넓히거나 02-555-1165 로 문의 주세요.</div>';
+    alMoreUi();
     $('alReset').hidden = !alOn();
     document.querySelectorAll('#alRgF .flP button').forEach(function (b) { b.classList.toggle('on', AL.flp.indexOf(b.getAttribute('data-fp')) >= 0); });
     [['alRgA', 'alA'], ['alRgF', 'alF'], ['alRgD', 'alD'], ['alRgR', 'alR']].forEach(function (x) { $(x[0]).classList.toggle('on', !!($(x[1] + 'Min').value || $(x[1] + 'Max').value || (x[0] === 'alRgF' && AL.flp.length))); });
@@ -2692,7 +2699,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     var rs = $('alRegion'); if (rs) rs.addEventListener('change', function () { renderAllList(); });
     var ks = $('alKind'); if (ks) ks.addEventListener('change', function () { ks.classList.toggle('on', !!ks.value); renderAllList(); });
     document.querySelectorAll('#alRgF .flP button').forEach(function (b) { b.addEventListener('click', function () { var k = b.getAttribute('data-fp'), i = AL.flp.indexOf(k); if (i >= 0) AL.flp.splice(i, 1); else AL.flp.push(k); renderAllList(); }); });
-    var P = $('alPager'); if (P) P.addEventListener('click', function (e) { var b = e.target.closest('button[data-pg]'); if (!b || b.disabled) return; AL.page = +b.getAttribute('data-pg'); renderAllList(true, true); });
+    var P = $('alPager'); if (P) P.addEventListener('click', function (e) { if (e.target.closest('[data-more]')) alMore(); });
     var R = $('alReset'); if (R) R.addEventListener('click', function () { window.ALRESET(); });
   })();
   /* 추천 카드 1장: 대표사진 5초마다 → 사진 다 넘기면 다음 매물 · 마우스 올리면 멈춤 · 화면 밖이면 멈춤 */
