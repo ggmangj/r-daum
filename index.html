@@ -221,7 +221,7 @@ body:not(.saleMode) #rgBld,.saleMode #mapKind,.saleMode label[for=mapKind]{displ
 .pinLabel{position:absolute;left:0;top:0;transform:translate(-50%,-130%);white-space:nowrap;background:#3A6271;color:#FFFFFF;font:700 12px/1 'Noto Sans KR',sans-serif;padding:6px 9px;border-radius:999px;box-shadow:0 2px 6px rgba(0,0,0,.25);cursor:pointer}
 .pinLabel:after{content:"";position:absolute;left:50%;bottom:-5px;margin-left:-5px;border:5px solid transparent;border-top-color:#3A6271;border-bottom:0}
 .ctDong{display:flex;align-items:center;justify-content:center;text-align:center;border-radius:50%;background:rgba(41,70,82,.82);color:#fff;font:800 12px/1.2 'Noto Sans KR',sans-serif;border:2px solid rgba(255,255,255,.9);box-shadow:0 2px 8px rgba(0,0,0,.3);padding:4px;box-sizing:border-box;pointer-events:none}
-.pinLabel.unv{background:#6F8E96}.pinLabel.unv:after{border-top-color:#6F8E96}.pinLabel.on{background:#BC975E;color:#14191F;z-index:2}.pinLabel.on:after{border-top-color:#BC975E}
+body.mgrMode .pinLabel.unv{background:#6F8E96}body.mgrMode .pinLabel.unv:after{border-top-color:#6F8E96}.pinLabel.on{background:#BC975E;color:#14191F;z-index:2}.pinLabel.on:after{border-top-color:#BC975E}
 .cluster{position:absolute;left:0;top:0;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(58,98,113,.94);color:#FFFFFF;font:900 15px/1 Inter,'Noto Sans KR',sans-serif;border:3px solid #FFFFFF;box-shadow:0 2px 8px rgba(0,0,0,.3);cursor:pointer}
 .officePin{position:absolute;left:0;top:0;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28));cursor:pointer}
 .officeLbl{background:#C4553A;color:#FFFFFF;font:900 13px/1 'Noto Sans KR',sans-serif;letter-spacing:-.3px;padding:7px 11px;border-radius:999px;white-space:nowrap;margin-bottom:4px}
@@ -241,7 +241,7 @@ body:not(.saleMode) #rgBld,.saleMode #mapKind,.saleMode label[for=mapKind]{displ
 .mpopClose{position:absolute;top:8px;right:8px;width:28px;height:28px;border:0;background:none;font-size:20px;color:#6B757D;cursor:pointer}
 .mpopList{max-height:240px;overflow-y:auto;display:flex;flex-direction:column}
 .mpopList button{display:flex;flex-direction:column;gap:2px;text-align:left;border:0;border-top:1px solid #EFEAE0;background:none;padding:9px 2px;font-family:inherit;font-size:13px;color:#14191F;cursor:pointer}
-.mpopList button:hover{background:#FAF7F1}.mpopList button.unv b{color:#6F8E96;font-weight:600}.mpopList button.unv span{color:#8FA3AA}.mpopList b{font-size:13px}.mpopList span{color:#294652}
+.mpopList button:hover{background:#FAF7F1}body.mgrMode .mpopList button.unv b{color:#6F8E96;font-weight:600}body.mgrMode .mpopList button.unv span{color:#8FA3AA}.mpopList b{font-size:13px}.mpopList span{color:#294652}
 .leaflet-popup-content-wrapper{background:transparent;box-shadow:none;padding:0}.leaflet-popup-content{margin:0}.leaflet-popup-tip-container{display:none}
 @media (max-width:760px){#mapList{height:300px!important}#leafletMap{height:420px!important}}
 </style>
