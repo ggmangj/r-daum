@@ -1027,7 +1027,7 @@ body.detailMode .dtFloatBack.show{opacity:1;transform:translate(0,-50%)}
  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
  .topBar,.siteHead,.siteFoot,.mBar,.dtFloatBack,.dtTools,.dtCrumb,.dtSide .dtForm,.soonToast,#privacyDlg{display:none!important}
  .dtWrap{padding:0!important;max-width:none}
- .dtPrintHead{display:flex!important;flex-direction:column;gap:2px;padding:0 0 10px;margin:0 0 14px;border-bottom:2px solid #294652;font-size:10.5px;color:#46515B}
+ .dtSec:has(.dtOffice){display:none!important}  .dtPrintHead{display:flex!important;flex-direction:column;gap:2px;padding:0 0 10px;margin:0 0 14px;border-bottom:2px solid #294652;font-size:10.5px;color:#46515B}
  .dtPrintHead b{font-family:'Cormorant Garamond',Georgia,serif;font-size:18px;letter-spacing:.18em;color:#294652}
  .dtPrintHead{flex-direction:row!important;align-items:center;gap:18px}.dtPhLogo{flex:none}.dtPhLogo .dmLock{display:inline-flex!important}.dtPhTx{display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:#46515B;line-height:1.5}
  html{zoom:.86}
@@ -5954,83 +5954,72 @@ var MANAGER_URL='https://script.google.com/macros/s/AKfycbxcrADcmOUogYCPPnEY9Hh6
     return pptx;
   }
 
-  /* 세로(A4) 버전: 지금 PDF와 같은 배치 */
+  /* 세로(A4) 버전: 지금 PDF와 같은 배치 (글자·표는 고칠 수 있고, 층별 입체도·추가 임대 목록·지도는 화면 그대로 그림) */
   function buildV(pptx, D) {
     pptx.defineLayout({ name: 'A4V', width: 8.27, height: 11.69 }); pptx.layout = 'A4V'; pptx.title = D.title; pptx.company = '부동산다움';
-    var P = D.photos || [], tot = 2, n = 0, s, X = 0.45, W = 8.27 - 0.9;
+    var P = (D.photos || []).slice(), X = 0.45, W = 8.27 - 0.9, BOT = 11.12, slides = [], s, y;
+    var NV = '294652', TX = '14191F', MU = '8A8272', LB = 'F6F3EE', BD = 'E6E0D4';
     function hd(s) {
-      if (D.logo) s.addImage({ data: D.logo, x: X, y: 0.3, w: D.logoW || 1.3, h: D.logoH || 0.4 });
-      else s.addText([{ text: 'DAUM', options: { fontSize: 19, bold: true, color: NAVY, fontFace: 'Georgia', breakLine: true } }, { text: 'REAL ESTATE', options: { fontSize: 6, color: GOLD, charSpacing: 3, fontFace: 'Georgia' } }], { x: X, y: 0.26, w: 1.4, h: 0.5, margin: 0 });
+      var lw = D.logo ? (D.logoW || 1.3) : 1.3;
+      if (D.logo) s.addImage({ data: D.logo, x: X, y: 0.3, w: lw, h: D.logoH || 0.4 });
       s.addText([{ text: '부동산다움공인중개사사무소 · 개업공인중개사 안혁준 · 등록번호 제11680-2021-00537호', options: { breakLine: true } }, { text: '서울특별시 강남구 신사동 578-1 일상빌딩 1층 · 02-555-1165 · r-daum.com' }],
-        { x: X + (D.logo ? (D.logoW || 1.3) + 0.25 : 1.55), y: 0.28, w: W - (D.logo ? (D.logoW || 1.3) + 0.25 : 1.55), h: 0.46, fontSize: 7.5, color: '46515B', fontFace: F, margin: 0, paraSpaceAfter: 2 });
+        { x: X + lw + 0.22, y: 0.3, w: W - lw - 0.22, h: D.logoH || 0.4, fontSize: 7.5, color: '46515B', fontFace: F, margin: 0, valign: 'middle', paraSpaceAfter: 2 });
+      s.addShape('line', { x: X, y: 0.86, w: W, h: 0, line: { color: NV, width: 1.5 } });
     }
-    function ft(s) {
-      s.addText('부동산다움공인중개사사무소 · 02-555-1165 · r-daum.com', { x: X, y: 11.3, w: 5, h: 0.22, fontSize: 7, color: '9AA3AB', fontFace: F, margin: 0 });
-      s.addText(n + ' / ' + tot, { x: 8.27 - X - 1, y: 11.3, w: 1, h: 0.22, fontSize: 7, color: '9AA3AB', align: 'right', fontFace: F, margin: 0 });
+    function page() { s = pptx.addSlide(); slides.push(s); hd(s); y = 1.05; return s; }
+    function need(h) { if (y + h > BOT) page(); }
+    function sec(t, sub, right, icon) {   // 단락 제목: 남색 원 아이콘 + 제목 + 설명
+      need(0.6);
+      if (icon) s.addImage({ data: icon, x: X, y: y, w: 0.36, h: 0.36 }); else s.addShape('ellipse', { x: X, y: y, w: 0.36, h: 0.36, fill: { color: NV } });
+      s.addText(t, { x: X + 0.46, y: y - 0.02, w: 4.5, h: 0.24, fontSize: 13.5, bold: true, color: NV, fontFace: F, margin: 0 });
+      if (sub) s.addText(sub, { x: X + 0.46, y: y + 0.21, w: 5.2, h: 0.16, fontSize: 7, color: MU, fontFace: F, margin: 0 });
+      if (right) s.addText(right, { x: 8.27 - X - 1.55, y: y + 0.04, w: 1.55, h: 0.26, fontSize: 7.5, bold: true, color: 'FFFFFF', align: 'center', valign: 'middle', fontFace: F, margin: 0, shape: 'roundRect', rectRadius: 0.13, fill: { color: NV } });
+      y += 0.5;
     }
-    function sec(s, y, t, sub, right) {
-      s.addShape('ellipse', { x: X, y: y, w: 0.32, h: 0.32, fill: { color: NAVY } });
-      s.addText(t, { x: X + 0.42, y: y - 0.05, w: 4, h: 0.26, fontSize: 13, bold: true, color: INK, fontFace: F, margin: 0 });
-      if (sub) s.addText(sub, { x: X + 0.42, y: y + 0.2, w: 5, h: 0.17, fontSize: 7, color: SUB, fontFace: F, margin: 0 });
-      if (right) s.addText(right, { x: 8.27 - X - 1.6, y: y + 0.02, w: 1.6, h: 0.26, fontSize: 8, bold: true, color: 'FFFFFF', align: 'center', valign: 'middle', fontFace: F, margin: 0, shape: 'roundRect', rectRadius: 0.13, fill: { color: NAVY } });
+    function sub3(t) { need(0.3); s.addShape('ellipse', { x: X, y: y + 0.07, w: 0.07, h: 0.07, fill: { color: 'C9A46A' } }); s.addText(t, { x: X + 0.13, y: y, w: W, h: 0.22, fontSize: 9.5, bold: true, color: TX, fontFace: F, margin: 0 }); y += 0.28; }
+    function note(t) { if (!t) return; need(0.26); s.addText(t, { x: X, y: y, w: W, h: 0.22, fontSize: 6.8, color: '6B757D', fontFace: F, margin: 0, valign: 'top' }); y += 0.3; }
+    function kv(rows, rh, fs) {   // [[k,v]...] → 라벨|값|라벨|값 (PDF와 같은 모양: 위 남색 줄 · 가로줄)
+      if (!rows || !rows.length) return;
+      var n = Math.ceil(rows.length / 2), h = n * rh; need(h + 0.05);
+      var lw = W * 0.15, vw = W * 0.35, body = [], cell = function (t, lab) { return { text: String(t == null ? '' : t), options: lab ? { fill: { color: LB }, color: '4A5560', bold: true } : { color: TX } }; };
+      for (var i = 0; i < rows.length; i += 2) { var a = rows[i], b = rows[i + 1] || ['', '']; body.push([cell(a[0], 1), cell(a[1]), cell(b[0], 1), cell(b[1])]); }
+      s.addTable(body, { x: X, y: y, w: W, colW: [lw, vw, lw, vw], rowH: rh, fontSize: fs || 8.5, fontFace: F, valign: 'middle', margin: [0.02, 0.07, 0.02, 0.1], border: { type: 'solid', pt: 0.75, color: BD } });
+      s.addShape('line', { x: X, y: y, w: W, h: 0, line: { color: NV, width: 1.25 } });
+      y += h + 0.1;
     }
+    function pic(im, maxH) { if (!im || !im.data) return; var h = Math.min(maxH || 99, W / im.r); need(h); s.addImage({ data: im.data, x: X, y: y, w: h * im.r, h: h }); y += h + 0.08; }
+
     /* 1장: 머리 · 제목 · 사진(큰 1 + 작은 4) · 금액 · 매물 정보 · 위치 */
-    s = pptx.addSlide(); n++; hd(s);
-    var cx = X; (D.chips || []).forEach(function (c, i) {
-      var w = 0.2 + c.length * 0.13; s.addText(c, { x: cx, y: 0.92, w: w, h: 0.25, fontSize: 8, bold: true, color: 'FFFFFF', align: 'center', valign: 'middle', fontFace: F, margin: 0, fill: { color: i === 0 ? NAVY : (/권리/.test(c) ? 'B8945A' : '3A6271') } }); cx += w + 0.06;
-    });
-    s.addText(titleRuns(D.title, 19), { x: X, y: 1.2, w: W, h: 0.45, margin: 0, valign: 'middle' });
-    var gy = 1.72, gh = 3.05, bw = W * 0.6, sw = (W - bw - 0.16) / 2, sh = (gh - 0.08) / 2;
-    img(s, P[0], X, gy, bw, gh);
-    for (var k = 0; k < 4; k++) img(s, P[k + 1], X + bw + 0.08 + (k % 2) * (sw + 0.08), gy + Math.floor(k / 2) * (sh + 0.08), sw, sh);
-    var py = gy + gh + 0.12, ph = 0.78, cw = W / D.price.length;
-    s.addShape('rect', { x: X, y: py, w: W, h: ph, fill: { color: '1F3644' } });
+    page();
+    var cx = X; (D.chips || []).forEach(function (c, i) { var w = 0.2 + c.length * 0.13; s.addText(c, { x: cx, y: y, w: w, h: 0.25, fontSize: 8, bold: true, color: 'FFFFFF', align: 'center', valign: 'middle', fontFace: F, margin: 0, fill: { color: i === 0 ? NV : (/권리/.test(c) ? 'B8945A' : '3A6271') } }); cx += w + 0.06; });
+    y += 0.3; s.addText(titleRuns(D.title, 18), { x: X, y: y, w: W, h: 0.42, margin: 0, valign: 'middle' }); y += 0.5;
+    var gh = 2.85, bw = W * 0.6, sw = (W - bw - 0.16) / 2, sh = (gh - 0.08) / 2;
+    img(s, P[0], X, y, bw, gh); for (var k = 0; k < 4; k++) img(s, P[k + 1], X + bw + 0.08 + (k % 2) * (sw + 0.08), y + Math.floor(k / 2) * (sh + 0.08), sw, sh);
+    y += gh + 0.1;
+    var ph = 0.74, cw = W / D.price.length; s.addShape('rect', { x: X, y: y, w: W, h: ph, fill: { color: '1F3644' } });
     D.price.forEach(function (p, i) {
-      if (i) s.addShape('line', { x: X + cw * i, y: py + 0.16, w: 0, h: ph - 0.32, line: { color: '3E5868', width: 0.75 } });
-      s.addText([{ text: p[0], options: { fontSize: 7.5, color: 'AFC0CA', breakLine: true } }, { text: p[1], options: { fontSize: 15, bold: true, color: p[2] ? 'E8C27A' : 'FFFFFF' } }], { x: X + cw * i + 0.18, y: py, w: cw - 0.24, h: ph, fontFace: F, valign: 'middle', margin: 0, paraSpaceAfter: 2 });
+      if (i) s.addShape('line', { x: X + cw * i, y: y + 0.15, w: 0, h: ph - 0.3, line: { color: '3E5868', width: 0.75 } });
+      s.addText([{ text: p[0], options: { fontSize: 7.5, color: 'AFC0CA', breakLine: true } }, { text: p[1], options: { fontSize: 14.5, bold: true, color: p[2] ? 'E8C27A' : 'FFFFFF' } }], { x: X + cw * i + 0.18, y: y, w: cw - 0.24, h: ph, fontFace: F, valign: 'middle', margin: 0, paraSpaceAfter: 2 });
     });
-    var iy = py + ph + 0.28; sec(s, iy, '매물 정보', '면적·층·금액·조건 등 매물의 주요 정보', '매물번호 ' + D.id);
-    var rh = 0.3; kvTable(s, D.info, X, iy + 0.48, W, rh, 8.5);
-    var ly = iy + 0.48 + Math.ceil(D.info.length / 2) * rh + 0.28; sec(s, ly, '위치 정보', D.dong || '');
-    var mh = 11.1 - (ly + 0.48) - 0.3; img(s, D.map, X, ly + 0.48, W, mh);
-    if (D.walk) s.addText(D.walk, { x: X, y: ly + 0.48 + mh + 0.04, w: W, h: 0.24, fontSize: 8.5, color: INK, fontFace: F, margin: 0 });
-    ft(s);
-    /* 2장: 건축물 정보 · 건축물 대장 · 중개사무소 정보 */
-    s = pptx.addSlide(); n++; hd(s);
-    sec(s, 1.0, '건축물 정보', '건축물대장 기준 층별 용도와 현황');
-    var fl = D.floors || [], frH = Math.max(0.2, Math.min(0.3, 4.6 / ((D.floors || []).length + 1))), body = [[{ text: '층', options: { bold: true, color: '4A5560', fill: { color: 'F7F5F0' } } }, { text: '건축물대장상 용도', options: { bold: true, color: '4A5560', fill: { color: 'F7F5F0' } } }, { text: '층 합계 면적', options: { bold: true, color: '4A5560', fill: { color: 'F7F5F0' }, align: 'right' } }]];
-    fl.forEach(function (f) { var o = f[4] ? { fill: { color: 'FBEDEA' } } : {};
-      body.push([{ text: f[0], options: Object.assign({ bold: true, color: f[4] ? 'C0533A' : INK }, o) }, { text: f[1], options: Object.assign({ color: INK }, o) },
-        { text: [{ text: f[2] + '평 ', options: { bold: true, color: INK } }, { text: '(' + f[3] + '㎡)', options: { fontSize: 6.5, color: SUB } }], options: Object.assign({ align: 'right' }, o) }]); });
-    var tw = W * 0.56; s.addTable(body, { x: X, y: 1.48, w: tw, colW: [0.62, tw - 0.62 - 1.35, 1.35], rowH: frH, fontSize: 8, fontFace: F, valign: 'middle', margin: [0.02, 0.06, 0.02, 0.08], border: { type: 'solid', pt: 0.75, color: LINE } });
-    var th = frH * (fl.length + 1);
-    // 오른쪽: 층별 막대 (표의 줄과 같은 높이 · 같은 순서) — PPT 도형이라 고칠 수 있음
-    var ax = X + tw + 0.12, aw = W - tw - 0.12, mx = Math.max.apply(null, fl.map(function (f) { return parseFloat(String(f[2]).replace(/,/g, '')) || 0; }).concat([1]));
-    s.addShape('rect', { x: ax, y: 1.48, w: aw, h: frH, fill: { color: 'F7F5F0' }, line: { color: LINE, width: 0.75 } });
-    s.addText('층별 단면 (대장 면적 비율)', { x: ax + 0.08, y: 1.48, w: aw - 0.16, h: frH, fontSize: 7.5, bold: true, color: '4A5560', fontFace: F, margin: 0, valign: 'middle' });
-    var gl = -1; fl.forEach(function (f, i) {
-      var y = 1.48 + frH * (i + 1), v = parseFloat(String(f[2]).replace(/,/g, '')) || 0, bwd = 0.45 + (aw - 0.75) * v / mx, ug = /^(지하|B)/.test(f[0]);
-      if (ug && gl < 0) gl = y;
-      s.addShape('rect', { x: ax + 0.1, y: y + 0.04, w: bwd, h: frH - 0.08, fill: { color: f[4] ? 'F6D9D2' : ug ? 'EADFD1' : 'DCE4EE' }, line: f[4] ? { color: 'C0533A', width: 1, dashType: 'dash' } : { color: ug ? 'CDBBA6' : 'B9C6D6', width: 0.5 } });
-      s.addText(f[2] + '평', { x: ax + 0.16, y: y + 0.04, w: Math.max(bwd - 0.1, 0.8), h: frH - 0.08, fontSize: 7, bold: true, color: f[4] ? 'C0533A' : '46515B', fontFace: F, margin: 0, valign: 'middle' });
-      if (f[4]) s.addText('이 매물', { x: ax + aw - 0.62, y: y + 0.05, w: 0.56, h: frH - 0.1, fontSize: 7, bold: true, color: 'FFFFFF', align: 'center', valign: 'middle', fontFace: F, margin: 0, shape: 'roundRect', rectRadius: 0.08, fill: { color: 'C0533A' } });
+    y += ph + 0.25;
+    sec('매물 정보', D.subInfo || '', '매물번호 ' + D.id, D.icInfo); kv(D.info, 0.27, 8.3); note(D.noteInfo);
+    sec('위치 정보', D.subLoc || D.dong || '', '', D.icLoc);
+    if (D.map) { var mh = Math.max(1.4, BOT - y - 0.62); s.addImage({ data: D.map, x: X, y: y, w: W, h: mh, sizing: { type: 'cover', w: W, h: mh } }); y += mh + 0.06; }
+    if (D.walk) { s.addShape('line', { x: X, y: y + 0.11, w: 0.22, h: 0, line: { color: NV, width: 2.5 } }); s.addText(D.walk, { x: X + 0.3, y: y, w: W - 0.3, h: 0.22, fontSize: 8, color: TX, fontFace: F, margin: 0, valign: 'middle' }); y += 0.28; }
+    note(D.noteLoc);
+
+    /* 2장~: 건축물 정보 (층별 현황 그림 · 같은 건물 추가 임대 · 건축물 대장) — 넘치면 다음 장 */
+    page();
+    sec('건축물 정보', D.subBld || '', '', D.icBld);
+    if (D.flv) { sub3('층별 현황'); pic(D.flv, BOT - y - 0.4); note(D.flvNote); }
+    if (D.add) { sub3(D.add.title); if (D.add.lead) { need(0.22); s.addText(D.add.lead, { x: X, y: y, w: W, h: 0.2, fontSize: 7.3, color: '46515B', fontFace: F, margin: 0 }); y += 0.26; } pic(D.add, 4.6); note(D.add.note); }
+    if (D.reg && D.reg.length) { sub3('건축물 대장'); kv(D.reg, 0.27, 8.3); note(D.regNote); }
+    var rest = P.slice(5, 9);   // 남는 자리에 사진 더 (빈 공간 줄이기)
+    if (rest.length && BOT - y > 2.2) { sub3('매물 사진'); var gw = (W - 0.08) / 2, g2 = Math.min(2.4, (BOT - y - 0.08) / 2); rest.forEach(function (d, i) { img(s, d, X + (i % 2) * (gw + 0.08), y + Math.floor(i / 2) * (g2 + 0.08), gw, g2); }); }
+    slides.forEach(function (sl, i) {
+      sl.addText('부동산다움공인중개사사무소 · 02-555-1165 · r-daum.com', { x: X, y: 11.32, w: 5, h: 0.2, fontSize: 6.8, color: '9AA3AB', fontFace: F, margin: 0 });
+      sl.addText((i + 1) + ' / ' + slides.length, { x: 8.27 - X - 1, y: 11.32, w: 1, h: 0.2, fontSize: 6.8, color: '9AA3AB', align: 'right', fontFace: F, margin: 0 });
     });
-    if (gl > 0) { s.addShape('line', { x: ax, y: gl, w: aw, h: 0, line: { color: '8A6A3B', width: 1.25 } }); s.addText('지반선', { x: ax + aw - 0.62, y: gl - 0.16, w: 0.56, h: 0.14, fontSize: 6, color: '8A6A3B', align: 'right', fontFace: F, margin: 0 }); }
-    s.addShape('rect', { x: ax, y: 1.48, w: aw, h: th, fill: { color: 'FFFFFF', transparency: 100 }, line: { color: LINE, width: 0.75 } });
-    s.addShape('rect', { x: X, y: 1.48 + th, w: W, h: 0.26, fill: { color: NAVY } });
-    s.addText('부동산다움 · r-daum.com', { x: X + 0.12, y: 1.48 + th, w: 4, h: 0.26, fontSize: 7.5, bold: true, color: 'FFFFFF', fontFace: F, margin: 0, valign: 'middle' });
-    s.addText('02-555-1165', { x: 8.27 - X - 2.12, y: 1.48 + th, w: 2, h: 0.26, fontSize: 7.5, bold: true, color: 'FFFFFF', align: 'right', fontFace: F, margin: 0, valign: 'middle' });
-    var ry = 1.48 + th + 0.5; sec(s, ry, '건축물 대장', '국토교통부 건축HUB 건축물대장 기준');
-    kvTable(s, D.reg || [], X, ry + 0.48, W, 0.3, 8.5);
-    var oy = ry + 0.48 + Math.ceil((D.reg || []).length / 2) * 0.3 + 0.4; sec(s, oy, '중개사무소 정보', '「공인중개사법」에 따른 중개사무소 표시사항');
-    kvTable(s, D.office || [], X, oy + 0.48, W, 0.3, 8.5);
-    var py2 = oy + 0.48 + Math.ceil((D.office || []).length / 2) * 0.3 + 0.4, rest = P.slice(5, 9);
-    if (rest.length && 11.1 - py2 > 2.2) {   // 남는 자리에 사진 더 (빈 공간 없이)
-      sec(s, py2, '매물 사진', ''); var gw = (W - 0.08) / 2, gh2 = Math.min(2.6, (11.1 - py2 - 0.48 - 0.08) / 2);
-      rest.forEach(function (d, i) { img(s, d, X + (i % 2) * (gw + 0.08), py2 + 0.48 + Math.floor(i / 2) * (gh2 + 0.08), gw, gh2); });
-      P = P.slice(0, 5).concat(P.slice(9));
-    }
-    ft(s);
     return pptx;
   }
   root.DaumPpt = { build: build, buildV: buildV };
@@ -6069,8 +6058,8 @@ var MANAGER_URL='https://script.google.com/macros/s/AKfycbxcrADcmOUogYCPPnEY9Hh6
       L.forEach(function (p) { if (p[1]) { var a = rel(p[0]); x.drawImage(p[1], a.x, a.y, a.w, a.h); } });
       var svgs = [].slice.call(host.querySelectorAll('svg')).filter(function (s) { return s.querySelector('path'); });
       return Promise.all(svgs.map(function (s) {
-        var a = rel(s), src = '<svg xmlns="http:\/\/www.w3.org/2000/svg" width="' + a.w + '" height="' + a.h + '"' + (s.getAttribute('viewBox') ? ' viewBox="' + s.getAttribute('viewBox') + '"' : '') + ' overflow="visible">' + s.innerHTML + '</svg>';
-        return loadImg('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(src)).then(function (im) { if (im) x.drawImage(im, a.x, a.y, a.w, a.h); });
+        var a = rel(s), cl = s.cloneNode(true); cl.setAttribute('xmlns', 'http:\/\/www.w3.org/2000/svg'); cl.setAttribute('width', a.w); cl.setAttribute('height', a.h);
+        return loadImg('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(cl))).then(function (im) { if (im) x.drawImage(im, a.x, a.y, a.w, a.h); });
       }));
     }).then(function () {
       [].slice.call(host.querySelectorAll('div,span')).forEach(function (e) {   // 핀·출구 점·글자 상자 (배경색이 있는 작은 요소)
@@ -6078,7 +6067,7 @@ var MANAGER_URL='https://script.google.com/macros/s/AKfycbxcrADcmOUogYCPPnEY9Hh6
         var bg = cs.backgroundColor; if (!bg || /rgba\(0, 0, 0, 0\)|transparent/.test(bg)) return;
         var rad = Math.min(parseFloat(cs.borderTopLeftRadius) || 0, a.h / 2, a.w / 2); x.beginPath(); if (x.roundRect) x.roundRect(a.x, a.y, a.w, a.h, rad); else x.rect(a.x, a.y, a.w, a.h); x.fillStyle = bg; x.fill();
         var bw = parseFloat(cs.borderTopWidth) || 0; if (bw) { x.lineWidth = bw; x.strokeStyle = cs.borderTopColor; x.stroke(); }
-        var t = e.querySelector('div') ? [].slice.call(e.childNodes).filter(function (n) { return n.nodeType === 3; }).map(function (n) { return n.textContent; }).join('').trim() : e.textContent.replace(/\s+/g, ' ').trim();
+        var t = [].slice.call(e.childNodes).filter(function (n) { return n.nodeType === 3; }).map(function (n) { return n.textContent; }).join('').trim() || (e.children.length ? '' : e.textContent.trim());
         if (t) { x.font = cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily; x.fillStyle = cs.color; x.textBaseline = 'middle'; x.textAlign = 'center'; x.fillText(t, a.x + a.w / 2, a.y + a.h / 2); x.textAlign = 'left'; }
       });
       // 가로로 길게 잘라 냄 (동선·핀·글자 상자가 들어가도록)
@@ -6089,9 +6078,37 @@ var MANAGER_URL='https://script.google.com/macros/s/AKfycbxcrADcmOUogYCPPnEY9Hh6
       try { return { data: o.toDataURL('image/jpeg', 0.9), r: W / h2 }; } catch (er) { return null; }
     });
   }
+  /* 화면의 한 덩어리(HTML)를 그대로 그림으로: 계산된 스타일을 붙여 SVG foreignObject로 그림 */
+  function inl(src, dst) {
+    if (src.nodeType !== 1) return; var cs = getComputedStyle(src), t = '';
+    for (var i = 0; i < cs.length; i++) { var p = cs[i]; if (p.indexOf('-webkit-') === 0 && p !== '-webkit-text-fill-color') continue; t += p + ':' + cs.getPropertyValue(p) + ';'; }
+    dst.setAttribute('style', t); dst.removeAttribute('class');
+    for (var j = 0, a = src.children, b = dst.children; j < a.length && j < b.length; j++) inl(a[j], b[j]);
+  }
+  function snapNodes(parts, layout, S) {   // parts: [원본 요소 …] → 한 장의 그림 {data, r}
+    var box = document.createElement('div'); box.setAttribute('style', layout || ''); box.style.position = 'fixed'; box.style.left = '-99999px'; box.style.top = '0'; box.style.background = '#FFFFFF';
+    parts.forEach(function (p) { var src = p.el || p, cl = src.cloneNode(true); inl(src, cl); if (p.fix) p.fix(cl, src); box.appendChild(cl); });
+    document.body.appendChild(box); var W = Math.ceil(box.scrollWidth), H = Math.ceil(box.scrollHeight); box.style.position = 'static'; box.style.left = '0';
+    var html = new XMLSerializer().serializeToString(box); document.body.removeChild(box);
+    var svg = '<svg xmlns="http:\/\/www.w3.org/2000/svg" width="' + W + '" height="' + H + '"><foreignObject x="0" y="0" width="100%" height="100%">' + html + '</foreignObject></svg>';
+    return loadImg('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg)).then(function (im) {
+      if (!im) return null; S = S || 2; var c = document.createElement('canvas'); c.width = W * S; c.height = H * S; var x = c.getContext('2d'); x.scale(S, S); x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, W, H); x.drawImage(im, 0, 0);
+      try { return { data: c.toDataURL('image/png'), r: W / H }; } catch (e) { return null; }
+    });
+  }
+  function stackV(a, b) {   // 두 그림을 위아래로 이어 붙임
+    return Promise.all([loadImg(a.data), loadImg(b.data)]).then(function (I) {
+      if (!I[0] || !I[1]) return a; var w = I[0].naturalWidth, h1 = I[0].naturalHeight, h2 = Math.round(I[1].naturalHeight * w / I[1].naturalWidth), c = document.createElement('canvas'); c.width = w; c.height = h1 + h2;
+      var x = c.getContext('2d'); x.drawImage(I[0], 0, 0); x.drawImage(I[1], 0, h1, w, h2); return { data: c.toDataURL('image/png'), r: w / (h1 + h2) };
+    });
+  }
+  function secOf(el, head) { return [].slice.call(el.querySelectorAll('.dtSec')).filter(function (s) { var h = s.querySelector('h2'); return h && h.textContent.indexOf(head) === 0; })[0]; }
+  function icon(sec) { var ic = sec && sec.querySelector('.dtIc'); return ic ? snapNodes([ic], 'display:inline-block;padding:0;background:transparent', 4).then(function (r) { return r && r.data; }) : Promise.resolve(null); }
+  function subOf(sec) { var d = sec && sec.querySelector('.dtHd'); return d ? d.textContent.trim() : ''; }
+  function noteOf(sec, re) { var n = sec && [].slice.call(sec.querySelectorAll('.dtNote')).filter(function (p) { return !re || re.test(p.textContent); })[0]; return n ? n.textContent.replace(/\s+/g, ' ').trim() : ''; }
   function rows(el, head) {   // 단락 제목으로 찾은 표 → [[항목, 내용]]
-    var sec = [].slice.call(el.querySelectorAll('.dtSec')).filter(function (s) { var h = s.querySelector('h2'); return h && h.textContent.indexOf(head) === 0; })[0];
-    if (!sec) return []; var dl = sec.querySelector('dl'); if (!dl) return [];
+    var part = [].slice.call(el.querySelectorAll('.dtPart')).filter(function (p) { var h = p.querySelector('h3'); return h && h.textContent.trim().indexOf(head) === 0; })[0];
+    var sec = part || secOf(el, head); if (!sec) return []; var dl = sec.querySelector('dl'); if (!dl) return [];
     return [].slice.call(dl.children).map(function (d) { var t = d.querySelector('dt'), v = d.querySelector('dd'); return t && v ? [t.textContent.trim(), v.textContent.replace(/\s+/g, ' ').trim()] : null; }).filter(Boolean);
   }
   window.daumPpt = function (it, el, btn) {
@@ -6107,24 +6124,43 @@ var MANAGER_URL='https://script.google.com/macros/s/AKfycbxcrADcmOUogYCPPnEY9Hh6
       var D = { id: it.id, date: d.getFullYear() + '.' + z(d.getMonth() + 1) + '.' + z(d.getDate()), title: (el.querySelector('.dtTitle') || {}).textContent || it.title, dong: [it.gu, it.dong].filter(Boolean).join(' ') };
       D.chips = [].slice.call(el.querySelectorAll('.dtBadges .dtBadge')).filter(function (b) { return !/mgB|line/.test(b.className); }).map(function (b) { return b.textContent.trim(); });
       D.price = [].slice.call(el.querySelectorAll('.dtPrice > div')).map(function (p) { return [(p.querySelector('small') || {}).textContent || '', (p.querySelector('b') || {}).textContent || '', /rent/.test(p.className)]; });
-      D.info = rows(el, '매물 정보'); D.reg = rows(el, '건축물 정보');
+      D.info = rows(el, '매물 정보'); D.reg = rows(el, '건축물 대장');
       D.floors = [].slice.call(el.querySelectorAll('.flvR')).filter(function (r) { return r.querySelector('b'); }).map(function (r) {
         var em = r.querySelector('em'), sm = em && em.querySelector('small'), py = em ? (em.firstChild && em.firstChild.nodeType === 3 ? em.firstChild.textContent : em.textContent).replace(/평.*/, '').trim() : '';
         return [r.querySelector('b').textContent.trim(), (r.querySelector('span') || {}).textContent || '', py, sm ? sm.textContent.replace('㎡', '').trim() : '', /\bme\b/.test(r.className)];
       });
       D.walk = ((el.querySelector('.walkLegend') || {}).textContent || '').replace(/\s+/g, ' ').trim();
-      D.office = [['상호', '부동산다움공인중개사사무소'], ['대표', '개업공인중개사 안혁준'], ['등록번호', '제11680-2021-00537호'], ['사업자번호', '415-16-62854'], ['소재지', '서울특별시 강남구 신사동 578-1 일상빌딩 1층'], ['전화', '02-555-1165']];
+      var sInfo = secOf(el, '매물 정보'), sBld = el.querySelector('.dtBldG'), sLoc = secOf(el, '위치 정보'), sAdd = el.querySelector('.dtAdd');
+      D.subInfo = subOf(sInfo); D.subBld = subOf(sBld); D.subLoc = subOf(sLoc); D.noteInfo = noteOf(sInfo); D.noteLoc = noteOf(sLoc); D.flvNote = noteOf(sBld, /용도/); D.regNote = noteOf(sBld, /HUB|대장 원본/);
+      D.office0 = [['상호', '부동산다움공인중개사사무소'], ['대표', '개업공인중개사 안혁준'], ['등록번호', '제11680-2021-00537호'], ['사업자번호', '415-16-62854'], ['소재지', '서울특별시 강남구 신사동 578-1 일상빌딩 1층'], ['전화', '02-555-1165']];
       st('사진 받는 중…');
+      var fT = el.querySelector('.flvT'), fD = el.querySelector('.flvD'), fB = el.querySelector('.flvBar'), flvP = null;
+      if (fT && fD) {   // 층별 현황: 표 | 입체도를 나란히 (PDF와 같게), 아래 부동산다움 띠
+        var w1 = fT.getBoundingClientRect().width, w2 = fD.getBoundingClientRect().width;
+        flvP = snapNodes([{ el: fT, fix: function (c) { c.style.flex = '0 0 ' + w1 + 'px'; } }, { el: fD, fix: function (c) { c.style.flex = '0 0 ' + w2 + 'px'; c.style.marginTop = '0'; } }], 'display:flex;align-items:flex-end;width:' + (w1 + w2) + 'px', 2).then(function (a) {
+          if (!a || !fB) return a; return snapNodes([{ el: fB, fix: function (c) { c.style.width = (w1 + w2) + 'px'; } }], 'width:' + (w1 + w2) + 'px', 2).then(function (b) { return b ? stackV(a, b) : a; });
+        });
+      }
+      var addP = null;
+      if (sAdd) {   // 같은 건물 추가 임대: 체크된 호실 + 합산 정보 (체크칸·「매물 보기」는 빼고)
+        var L = sAdd.querySelector('.adList'), Sm = sAdd.querySelector('.adSum'), aw = (L || sAdd).getBoundingClientRect().width, parts = [];
+        if (L) parts.push({ el: L, fix: function (c, src) { var a = src.querySelectorAll('li'), b = c.querySelectorAll('li'); for (var i = a.length - 1; i >= 0; i--) { var ck = a[i].querySelector('input[type=checkbox]'); if (ck && !ck.checked) b[i].remove(); } [].slice.call(c.querySelectorAll('label, a')).forEach(function (x) { if (x.querySelector('input') || /매물 보기/.test(x.textContent)) x.remove(); }); } });
+        if (Sm && Sm.textContent.trim()) parts.push({ el: Sm, fix: function (c) { c.style.marginTop = '10px'; } });
+        if (parts.length) addP = snapNodes(parts, 'width:' + aw + 'px', 2).then(function (a) { if (!a) return null; var h = sAdd.querySelector('h2'); a.title = h ? h.textContent.replace(/\s+/g, ' ').trim() : '같은 건물 추가 임대'; a.lead = ((sAdd.querySelector('.adLead') || {}).textContent || '').trim(); a.note = noteOf(sAdd); return a; });
+      }
       var ids = (it.photos || []).slice(0, 9);
-      return Promise.all([logoData(), mapData(document.getElementById('dtMap'))].concat(ids.map(function (id) { return imgData('https:\/\/lh3.googleusercontent.com/d/' + encodeURIComponent(id) + '=w1600', 1600); }))).then(function (R) {
+      return Promise.all([logoData(), mapData(document.getElementById('dtMap')), flvP, addP, icon(sInfo), icon(sBld), icon(sLoc)].concat(ids.map(function (id) { return imgData('https:\/\/lh3.googleusercontent.com/d/' + encodeURIComponent(id) + '=w1600', 1600); }))).then(function (R) {
         if (R[0]) { D.logo = R[0].data; D.logoH = 0.42; D.logoW = 0.42 * R[0].r; }
-        if (R[1]) D.map = R[1].data; D.photos = R.slice(2).filter(Boolean);
+        if (R[1]) D.map = R[1].data;
+        D.flv = R[2]; D.add = R[3]; D.icInfo = R[4]; D.icBld = R[5]; D.icLoc = R[6];
+        D.photos = R.slice(7).filter(Boolean);
         var p = new window.PptxGenJS(); window.DaumPpt.buildV(p, D);
         return p.writeFile({ fileName: '부동산다움_No.' + it.id + '_' + ((it.dong || '') + ' ' + (it.floor || '')).trim().replace(/\s+/g, '_') + '.pptx' });
       });
     }).then(function () { st('저장 완료'); setTimeout(function () { st(t0); }, 1800); }, function (e) { st(t0); alert('PPT를 만들지 못했습니다: ' + (e && e.message || e)); }).then(function () { if (btn) btn.disabled = false; });
   };
 })();
+
 
 </script>
 </body>
