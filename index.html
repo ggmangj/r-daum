@@ -2852,7 +2852,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   }
   function pinHtml(it) {
     var mc = window.MGR && MGR.on() ? MGR.pinCls(it) : '', ms = mc ? MGR.pinStar(it) : '';
-    if (it.sale) { var sc = it.shop ? shopFlShort(it) : scShort(it); return '<div class="pinWrap"><span class="pinLabel' + (it.shop ? ' shopPin' : '') + mc + (it.id === focusId ? ' on' : '') + '">' + ms + (sc ? '<span class="pinArea">' + esc(sc) + '</span>' : '') + esc(it.depText) + '</span></div>'; }
+    if (it.sale) { var sc = it.shop ? (it.exM2 ? '전용 ' + Math.round(it.exM2) + '㎡' : shopFlShort(it)) : (it.landM2 ? '대지 ' + Math.round(it.landM2) + '㎡' : scShort(it)); return '<div class="pinWrap"><span class="pinLabel' + (it.shop ? ' shopPin' : '') + mc + (it.id === focusId ? ' on' : '') + '">' + ms + (sc ? '<span class="pinArea">' + esc(sc) + '</span>' : '') + esc(it.depText) + '</span></div>'; }
     var fl = String(it.floor || '').replace(/\s+/g, '').replace(/^연층\((.*)\)$/, '$1').replace(/^통임대\(.*\)$/, '통임대');   // 층 | 평 (통임대(지하1층~5층) → 통임대)
     var area = it.area ? Math.round(it.area) + '평' : '';
     var main = area || it.catLabel || '';
