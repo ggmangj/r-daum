@@ -6005,7 +6005,8 @@ var MANAGER_URL='https://script.google.com/macros/s/AKfycbxcrADcmOUogYCPPnEY9Hh6
     y += ph + 0.25;
     sec('매물 정보', D.subInfo || '', '매물번호 ' + D.id, D.icInfo); kv(D.info, 0.27, 8.3); note(D.noteInfo);
     sec('위치 정보', D.subLoc || D.dong || '', '', D.icLoc);
-    if (D.map) { var mh = Math.max(1.4, BOT - y - 0.62); s.addImage({ data: D.map, x: X, y: y, w: W, h: mh, sizing: { type: 'cover', w: W, h: mh } }); y += mh + 0.06; }
+    var mh = Math.max(1.4, BOT - y - 0.62), md = D.mapCrop ? D.mapCrop(W / mh) : D.map;
+    if (md) { s.addImage({ data: md, x: X, y: y, w: W, h: mh }); y += mh + 0.06; }
     if (D.walk) { s.addShape('line', { x: X, y: y + 0.11, w: 0.22, h: 0, line: { color: NV, width: 2.5 } }); s.addText(D.walk, { x: X + 0.3, y: y, w: W - 0.3, h: 0.22, fontSize: 8, color: TX, fontFace: F, margin: 0, valign: 'middle' }); y += 0.28; }
     note(D.noteLoc);
 
@@ -6075,13 +6076,22 @@ var MANAGER_URL='https://script.google.com/macros/s/AKfycbxcrADcmOUogYCPPnEY9Hh6
       var h2 = Math.min(H, Math.round(W / 2.6)), y0 = Math.round((H - h2) / 2), ys = [];
       host.querySelectorAll('.walkEnd,.walkBox,svg').forEach(function (e) { var a = rel(e); if (a.h < H * 1.5) ys.push(a.y, a.y + a.h); });
       if (ys.length) { var mn = Math.max(0, Math.min.apply(null, ys) - 16), mx = Math.min(H, Math.max.apply(null, ys) + 16); if (mx - mn > h2) h2 = Math.round(mx - mn); y0 = Math.round(Math.min(Math.max((mn + mx) / 2 - h2 / 2, 0), H - h2)); }
-      var o = document.createElement('canvas'); o.width = W * S; o.height = h2 * S; o.getContext('2d').drawImage(c, 0, y0 * S, W * S, h2 * S, 0, 0, W * S, h2 * S);
-      try { return { data: o.toDataURL('image/jpeg', 0.9), r: W / h2 }; } catch (er) { return null; }
+      var cy = y0 + h2 / 2;   // 동선 가운데
+      return { crop: function (ratio) {   // PPT 칸 비율(가로/세로)에 맞게 위아래만 잘라 냄 → 지도가 눌리지 않음
+        var hh = Math.min(H, W / ratio), ww = hh < H ? W : H * ratio, yy = Math.round(Math.min(Math.max(cy - hh / 2, 0), H - hh)), xx = Math.round((W - ww) / 2);
+        var o = document.createElement('canvas'); o.width = Math.round(ww * S); o.height = Math.round(hh * S); o.getContext('2d').drawImage(c, xx * S, yy * S, ww * S, hh * S, 0, 0, o.width, o.height);
+        try { return o.toDataURL('image/jpeg', 0.9); } catch (er) { return null; }
+      } };
     });
   }
   /* 화면의 한 덩어리(HTML)를 그대로 그림으로: 계산된 스타일을 붙여 SVG foreignObject로 그림 */
   function inl(src, dst) {
     if (src.nodeType !== 1) return; var cs = getComputedStyle(src), t = '';
+    if (src instanceof SVGElement) {   // 그림(SVG)은 속성 그대로 두고 자리·크기만 (안쪽 도형에 CSS를 덮으면 엘리베이터 등이 사라짐)
+      if (src.tagName.toLowerCase() !== 'svg') return;
+      ['display', 'position', 'left', 'top', 'right', 'bottom', 'margin-top', 'margin-right', 'margin-bottom', 'margin-left', 'width', 'height', 'z-index', 'transform', 'vertical-align', 'overflow'].forEach(function (p) { t += p + ':' + cs.getPropertyValue(p) + ';'; });
+      dst.setAttribute('style', t); var r = src.getBoundingClientRect(); dst.setAttribute('width', r.width); dst.setAttribute('height', r.height); return;
+    }
     for (var i = 0; i < cs.length; i++) { var p = cs[i]; if (p.indexOf('-webkit-') === 0 && p !== '-webkit-text-fill-color') continue; t += p + ':' + cs.getPropertyValue(p) + ';'; }
     dst.setAttribute('style', t); dst.removeAttribute('class');
     for (var j = 0, a = src.children, b = dst.children; j < a.length && j < b.length; j++) inl(a[j], b[j]);
@@ -6152,7 +6162,7 @@ var MANAGER_URL='https://script.google.com/macros/s/AKfycbxcrADcmOUogYCPPnEY9Hh6
       var ids = (it.photos || []).slice(0, 9);
       return Promise.all([logoData(), mapData(document.getElementById('dtMap')), flvP, addP, icon(sInfo), icon(sBld), icon(sLoc)].concat(ids.map(function (id) { return imgData('https:\/\/lh3.googleusercontent.com/d/' + encodeURIComponent(id) + '=w1600', 1600); }))).then(function (R) {
         if (R[0]) { D.logo = R[0].data; D.logoH = 0.42; D.logoW = 0.42 * R[0].r; }
-        if (R[1]) D.map = R[1].data;
+        if (R[1]) D.mapCrop = R[1].crop;
         D.flv = R[2]; D.add = R[3]; D.icInfo = R[4]; D.icBld = R[5]; D.icLoc = R[6];
         D.photos = R.slice(7).filter(Boolean);
         var p = new window.PptxGenJS(); window.DaumPpt.buildV(p, D);
