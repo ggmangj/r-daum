@@ -1645,6 +1645,50 @@ body.mapFull #map .mapTools .noSearch{flex:1 1 180px;min-width:160px}
 #mapTtlCnt,#alCnt{display:none!important}
 .rstB,.mapReset.rstB{flex:none!important;display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;padding:0!important;margin-left:auto;border-radius:50%;border:1px solid #E3DDD0;background:#FFFFFF;color:#294652;cursor:pointer;transition:background-color .18s,color .18s,border-color .18s}
 .rstB:hover,.mapReset.rstB:hover{border-color:#BC975E;color:#8A6A35}.rstB.on,.mapReset.rstB.on{border-color:#BC975E;background:#FBF6EC;color:#8A6A35}.rstB.on:hover,.mapReset.rstB.on:hover{background:#BC975E;color:#FFFFFF}
+
+/* 매물 지도 검색: 제목 버튼(칩) + 누르면 뜨는 선택 창 */
+.mapTools>.rng.fbHide{display:none!important}
+.mapReset.rstB.rstT{width:auto;padding:0 16px!important;border-radius:999px;gap:6px;font:700 14px 'Noto Sans KR',sans-serif;white-space:nowrap}
+.fbWrap{position:relative;display:inline-flex;flex:none}
+.fbC{display:inline-flex;align-items:center;gap:6px;height:42px;padding:0 16px;border:1px solid #E6E0D4;border-radius:999px;background:#fff;font:700 14.5px 'Noto Sans KR',sans-serif;color:#1F2A30;cursor:pointer;white-space:nowrap}
+.fbC:hover{border-color:#C9BFAE}
+.fbC svg{width:12px;height:12px;color:#8A949B;transition:transform .15s}.fbC.open svg{transform:rotate(180deg)}
+.fbC b{display:inline-block;max-width:118px;overflow:hidden;text-overflow:ellipsis;vertical-align:bottom}
+@media (min-width:761px){.fbC{padding:0 14px}}
+@media (min-width:761px){body:not(.mapFull) #map .mapTools.fbOn.fbBrk>.noSearch{flex:1 1 60%!important}}
+.fbC.on{border-color:#294652;background:#EEF3F5;color:#294652}.fbC.on svg{color:#294652}.fbC b{font-weight:800}
+.fbC.open{border-color:#294652;box-shadow:0 0 0 3px rgba(41,70,82,.12)}
+.fbC:focus-visible{outline:2px solid #294652;outline-offset:2px}
+.fbPop{position:absolute;top:calc(100% + 8px);left:0;z-index:60;width:470px;max-width:calc(100vw - 24px);box-sizing:border-box;background:#fff;border:1px solid #E6E0D4;border-radius:18px;box-shadow:0 18px 40px rgba(24,38,46,.18);padding:20px 22px 16px;font-family:'Noto Sans KR',sans-serif;cursor:default}
+.fbPop[hidden]{display:none}.fbPop.r{left:auto;right:0}
+.fbPop h4{margin:0 0 14px;font-size:17px;font-weight:800;color:#1F2A30;display:flex;align-items:center}
+.fbX{margin-left:auto;width:32px;height:32px;border-radius:9px;border:0;background:#F3F1EC;color:#6B757D;font-size:19px;line-height:1;cursor:pointer}
+.fbG{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.fbG button,.fbFl button{height:40px;border:1px solid #E6E0D4;border-radius:10px;background:#fff;font:700 14px 'Noto Sans KR',sans-serif;color:#33414A;cursor:pointer;padding:0 4px;white-space:nowrap}
+.fbG button:hover,.fbFl button:hover{border-color:#294652}
+.fbG button.in,.fbFl button.in{background:#294652;border-color:#294652;color:#fff}.fbG button.mid{background:#DDE7EB;border-color:#DDE7EB;color:#294652}
+.fbL{display:flex;justify-content:space-between;margin:18px 0 8px;font-size:13.5px;font-weight:700;color:#33414A;padding-bottom:8px;border-bottom:1px solid #EFEAE0}.fbL small{color:#8A949B;font-weight:500}
+.fbI{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;color:#8A949B}.fbI label{position:relative;display:block}
+.fbI input{width:100%;box-sizing:border-box;height:46px;border:1px solid #E0DBD0;border-radius:10px;padding:0 42px 0 14px;font:600 15px 'Noto Sans KR',sans-serif;text-align:right;color:#1F2A30;background:#fff}
+.fbI input:focus{outline:none;border-color:#294652;box-shadow:0 0 0 3px rgba(41,70,82,.12)}
+.fbI label i{position:absolute;right:13px;top:50%;transform:translateY(-50%);font-style:normal;color:#8A949B;font-size:13px;pointer-events:none}
+.fbF{display:flex;align-items:center;margin-top:14px;gap:8px}.fbF .rs{border:0;background:none;color:#6B757D;font:600 13px 'Noto Sans KR',sans-serif;cursor:pointer;padding:6px 0}.fbF .rs:hover{color:#294652}
+.fbF .ok{margin-left:auto;height:40px;padding:0 22px;border:0;border-radius:10px;background:#294652;color:#fff;font:800 14px 'Noto Sans KR',sans-serif;cursor:pointer}
+.fbFl{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.fbDim{display:none}
+@media (max-width:760px){
+  body:not(.mapFull) #map .mapTools.fbOn{display:flex!important;flex-wrap:wrap!important;gap:8px!important}
+  body:not(.mapFull) #map .mapTools.fbOn>.mapTtl,body:not(.mapFull) #map .mapTools.fbOn>.noSearch{flex:1 1 100%!important;width:100%}
+  body:not(.mapFull) #map .mapTools.fbOn>select,body:not(.mapFull) #map .mapTools.fbOn>.rgnSel{flex:1 1 calc(50% - 4px)!important;width:auto!important;min-width:0}
+  #map .mapTools.fbOn>:has(#mapRentMax){margin-right:0}
+  #map .mapTools.fbOn .mapReset.rstB{position:static;margin-left:auto}
+  body.mapFull #map .mapTools.fbOn>.rgnSel{flex:0 0 auto!important;width:auto!important}
+  .mapTools .fbWrap{position:static}
+  .fbC{height:40px;padding:0 13px;font-size:13.5px}
+  .fbPop,.fbPop.r{position:fixed;left:0;right:0;top:auto;bottom:0;width:auto;max-width:none;z-index:10050;border-radius:20px 20px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom));max-height:85vh;overflow:auto}
+  .fbDim{display:block;position:fixed;inset:0;background:rgba(15,25,30,.35);z-index:10040}.fbDim[hidden]{display:none}
+  .fbG{grid-template-columns:repeat(4,1fr)}
+}
 @media (max-width:760px){.alTools,.mapTools{position:relative}.alTools .rstB,.mapTools .mapReset.rstB{position:absolute;right:0;bottom:0;margin:0}.alTools>:has(#alRMax),.mapTools>:has(#mapRentMax){margin-right:48px}}
 </style>
 </head>
@@ -1749,7 +1793,7 @@ body.mapFull #map .mapTools .noSearch{flex:1 1 180px;min-width:160px}
 <div class="rng" id="rgDep"><span class="rgL">보증금</span><input id="mapDepMin" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최소" aria-label="보증금 최소"><i>~</i><input id="mapDepMax" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최대" aria-label="보증금 최대"><span class="rgU">만</span></div>
 <div class="rng" id="rgRent"><span class="rgL">월세</span><input id="mapRentMin" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최소" aria-label="월세 최소"><i>~</i><input id="mapRentMax" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="최대" aria-label="월세 최대"><span class="rgU">만</span></div>
 <form class="noSearch" id="noSearch" role="search"><label class="sr" for="noInput">매물번호 검색</label><input id="noInput" type="search" inputmode="text" autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="20" placeholder="매물번호 검색 (예: D5B531F)"><button type="submit" aria-label="매물번호로 찾기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg></button></form>
-<button type="button" class="mapReset rstB" id="mapReset2" title="검색 조건 모두 지우기" aria-label="검색 조건 모두 지우기"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg></button>
+<button type="button" class="mapReset rstB rstT" id="mapReset2" title="검색 조건 모두 지우기"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7"></path><path d="M3 4v5h5"></path></svg>조건 초기화</button>
 </div>
 <div class="elev" style="display: flex; flex-wrap: wrap; gap: 0; border: 1px solid #E6E0D4; border-radius: 18px; overflow: hidden; background: #FFFFFF">
 <div class="mlCol" style="flex: 1 1 250px; min-width: 0; display: flex; flex-direction: column; border-right: 1px solid #E6E0D4">
@@ -3451,6 +3495,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     return on;
   }
   function applyFilters(fit) {
+    if (typeof fbPaint === 'function') setTimeout(fbPaint, 0);
     VIEW = mapFiltered(); filtersOn();
     if (M) { M.closePopup(); if (fit) homeView(); drawMap(); } else renderList();
   }
@@ -3476,6 +3521,119 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     var sel = $('consultType'); if (sel) sel.value = it.cats.indexOf('clinic') >= 0 ? '병의원' : it.cats.indexOf('shop') >= 0 ? '상가 (리테일·F&B)' : it.cats.indexOf('building') >= 0 ? '사옥·통임대' : '사무실';
   }
 
+
+  /* 매물 지도 검색 칩: 면적·층·보증금·월세(매매: 대지·연면적·층수·매매가·평당가)는 제목 버튼만 두고, 누르면 선택 창이 뜸
+     (원래 입력칸은 숨겨 둔 채 값만 넣어 기존 검색 로직을 그대로 씀) */
+  var FB = {}, fbOpen = null;
+  function fbFmt(k, v) {
+    if (v == null || v === '') return '';
+    var n = rngNum(v, k === 'Floor'); if (n == null) return String(v);
+    if (k === 'Floor') return n < 0 ? '지하' + (-n) : n + '';
+    if (SM && (k === 'Dep' || k === 'Rent')) return (Math.round(n * 10) / 10) + '억';
+    if (k === 'Dep' || k === 'Rent') { var e = Math.floor(n / 10000), m = n % 10000; if (e && !m) return e + '억'; if (!e && m >= 1000 && m % 1000 === 0) return (m / 1000) + '천만'; return e ? e + '억 ' + m.toLocaleString('ko-KR') + '만' : m.toLocaleString('ko-KR') + '만'; }
+    return n.toLocaleString('ko-KR') + '평';
+  }
+  function fbPresets(k) {
+    if (SM) return { Area: [30, 50, 70, 100, 150, 200, 300, 500], Bld: [100, 200, 300, 500, 1000, 1500, 2000, 3000], Dep: [30, 50, 100, 150, 200, 300, 500, 1000], Rent: [0.5, 1, 1.5, 2, 2.5, 3, 4, 5] }[k];
+    return { Area: [10, 20, 30, 50, 70, 100, 200, 300], Dep: [1000, 3000, 5000, 10000, 20000, 30000, 50000, 100000], Rent: [100, 200, 300, 500, 700, 1000, 2000, 3000] }[k];
+  }
+  function fbLabel(k) {
+    var a = $('map' + k + 'Min').value, b = $('map' + k + 'Max').value, x = fbFmt(k, a), y = fbFmt(k, b), u = k === 'Floor' ? '층' : '';
+    var sh = function (a, b) { var m = /^([\d,.]+)(만|억|평)$/.exec(a), n = /(만|억|평)$/.exec(b); return m && n && m[2] === n[1] ? m[1] : a; };   // 200만~500만 → 200~500만
+    var t = x && y ? (x === y ? x + u : sh(x, y) + '~' + y + u) : x ? x + u + ' 이상' : y ? '~' + y + u : '';
+    if (k === 'Floor') { var nm = { b: '지하', '1': '1층', y: '연층' }, f = FLP.map(function (q) { return nm[q]; }).filter(Boolean); if (t) f.push('지상 ' + t); return f.join('·'); }
+    return t;
+  }
+  // 조건이 길어져 「조건 초기화」만 아랫줄로 밀리면, 매물번호 검색도 함께 아랫줄로 내려 나란히 둠
+  function fbFit() {
+    var t = document.querySelector('.mapTools.fbOn'), n = $('noSearch'), r = $('mapReset2'); if (!t || !n || !r) return;
+    t.classList.remove('fbBrk'); if (innerWidth <= 760 || document.body.classList.contains('mapFull')) return;
+    if (r.getBoundingClientRect().top > n.getBoundingClientRect().top + 5) t.classList.add('fbBrk');
+  }
+  function fbPaint() {
+    Object.keys(FB).forEach(function (k) {
+      var o = FB[k], t = fbLabel(k);
+      o.btn.innerHTML = esc(o.name) + (t ? ' <b>' + esc(t) + '</b>' : '') + '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>';
+      o.btn.classList.toggle('on', !!t); o.btn.classList.toggle('open', fbOpen === k); o.btn.setAttribute('aria-expanded', fbOpen === k ? 'true' : 'false');
+      if (fbOpen === k) fbPaintPop(k);
+    });
+    fbFit();
+  }
+  function fbPaintPop(k) {
+    var o = FB[k], P = o.pre; if (!o.pop) return;
+    var lo = rngNum($('map' + k + 'Min').value), hi = rngNum($('map' + k + 'Max').value);
+    if (P) o.pop.querySelectorAll('.fbG button').forEach(function (b) {
+      var i = +b.getAttribute('data-i'), v = i < 0 ? null : P[i], last = i === P.length;
+      var on = i < 0 ? (lo == null && hi == null) : last ? (lo === P[P.length - 1] && hi == null) : (v === lo || v === hi);
+      var mid = !on && i >= 0 && !last && lo != null && hi != null && v > lo && v < hi;
+      b.classList.toggle('in', on); b.classList.toggle('mid', mid);
+    });
+    if (k === 'Floor') o.pop.querySelectorAll('.fbFl button').forEach(function (b) { b.classList.toggle('in', FLP.indexOf(b.getAttribute('data-fp')) >= 0); });
+    o.pop.querySelectorAll('.fbI input').forEach(function (x) { if (document.activeElement !== x) x.value = $('map' + k + x.getAttribute('data-s')).value; });
+    var ok = o.pop.querySelector('.ok'), c = $('mapCount'); if (ok) ok.textContent = c && c.textContent !== '' ? '매물 ' + c.textContent + '건 보기' : '적용';
+  }
+  function fbSet(k, lo, hi) {
+    var a = $('map' + k + 'Min'), b = $('map' + k + 'Max');
+    a.value = lo == null ? '' : String(lo); b.value = hi == null ? '' : String(hi);
+    a.dispatchEvent(new Event('change'));
+    var r = $('rg' + k); if (r) r.classList.toggle('on', !!(a.value || b.value || (k === 'Floor' && FLP.length)));
+  }
+  function fbClose() { if (!fbOpen) return; var o = FB[fbOpen]; if (o && o.pop) { o.pop.hidden = true; if (o.pop.parentNode !== o.btn.parentNode) o.btn.parentNode.appendChild(o.pop); } var d = $('fbDim'); if (d) d.hidden = true; var k = fbOpen; fbOpen = null; fbPaint(); if (o) o.btn.focus({ preventScroll: true }); }
+  function fbShow(k) {
+    if (fbOpen === k) return fbClose(); if (fbOpen) fbClose();
+    var o = FB[k]; fbOpen = k; if (innerWidth <= 760) document.body.appendChild(o.pop); o.pop.hidden = false; o.pop.classList.remove('r');   // 모바일: 아래에서 올라오는 창은 화면 맨 위에 (크게 보기 안에서도 가려지지 않게)
+    if (innerWidth > 760 && o.pop.getBoundingClientRect().right > innerWidth - 12) o.pop.classList.add('r');
+    var d = $('fbDim'); if (d) d.hidden = innerWidth > 760;
+    fbPaint();
+  }
+  function fbInit() {
+    var tools = document.querySelector('.mapTools'), anchor = $('noSearch'); if (!tools || !anchor) return; tools.classList.add('fbOn');
+    if (!$('fbDim')) { var dm = document.createElement('div'); dm.id = 'fbDim'; dm.className = 'fbDim'; dm.hidden = true; dm.addEventListener('click', fbClose); document.body.appendChild(dm); }
+    ['Area', 'Bld', 'Floor', 'Dep', 'Rent'].forEach(function (k) {
+      var rg = $('rg' + k); if (!rg || getComputedStyle(rg).display === 'none') return;
+      var name = (rg.querySelector('.rgL') || {}).textContent || k, unit = (rg.querySelector('.rgU') || {}).textContent || '', pre = fbPresets(k);
+      rg.classList.add('fbHide');
+      var w = document.createElement('div'); w.className = 'fbWrap';
+      var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'fbC'; btn.setAttribute('aria-haspopup', 'dialog');
+      var pop = document.createElement('div'); pop.className = 'fbPop'; pop.hidden = true; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', name + ' 선택');
+      var uLbl = unit === '만' ? '만원' : unit === '억' ? '억' : unit, body = '';
+      if (k === 'Floor') body = '<div class="fbFl">' + Array.prototype.map.call(rg.querySelectorAll('.flP button'), function (b) { return '<button type="button" data-fp="' + b.getAttribute('data-fp') + '">' + esc(b.textContent) + '</button>'; }).join('') + '</div><div class="fbL">지상 층 범위 <small>숫자로 입력 · 지하는 B1</small></div>';
+      else body = '<div class="fbG"><button type="button" data-i="-1">전체</button>' + pre.map(function (v, i) { return '<button type="button" data-i="' + i + '">' + esc(fbFmt(k, v)) + '</button>'; }).join('') + '<button type="button" data-i="' + pre.length + '">' + esc(fbFmt(k, pre[pre.length - 1])) + '+</button></div><div class="fbL">직접 입력 <small>단위: ' + esc(uLbl) + '</small></div>';
+      if (k === 'Floor' && !rg.querySelector('.flP')) body = '<div class="fbL" style="margin-top:0">' + esc(name) + ' 범위 <small>지상 층수 기준</small></div>';
+      body += '<div class="fbI"><label><input type="text" inputmode="' + (k === 'Floor' ? 'text' : 'decimal') + '" data-s="Min" placeholder="최소" aria-label="' + esc(name) + ' 최소" autocomplete="off" maxlength="9"><i>' + esc(uLbl) + '</i></label><span>~</span><label><input type="text" inputmode="' + (k === 'Floor' ? 'text' : 'decimal') + '" data-s="Max" placeholder="최대" aria-label="' + esc(name) + ' 최대" autocomplete="off" maxlength="9"><i>' + esc(uLbl) + '</i></label></div>';
+      pop.innerHTML = '<h4>' + esc(name) + '<button type="button" class="fbX" aria-label="닫기">×</button></h4>' + body + '<div class="fbF"><button type="button" class="rs">↺ ' + esc(name) + ' 초기화</button><button type="button" class="ok">적용</button></div>';
+      w.appendChild(btn); w.appendChild(pop); tools.insertBefore(w, anchor);
+      FB[k] = { name: name, btn: btn, pop: pop, pre: pre };
+      btn.addEventListener('click', function () { fbShow(k); });
+      pop.addEventListener('click', function (e) {
+        var t = e.target.closest('button'); if (!t) return;
+        if (t.classList.contains('fbX') || t.classList.contains('ok')) return fbClose();
+        if (t.classList.contains('rs')) { if (k === 'Floor') FLP.length = 0; fbSet(k, null, null); if (k === 'Floor') { flPaint(); applyFilters(false); } return fbPaint(); }
+        if (t.hasAttribute('data-fp')) { var orig = rg.querySelector('.flP [data-fp="' + t.getAttribute('data-fp') + '"]'); if (orig) orig.click(); return fbPaint(); }
+        if (t.hasAttribute('data-i')) {
+          var i = +t.getAttribute('data-i'), P = pre, lo = rngNum($('map' + k + 'Min').value), hi = rngNum($('map' + k + 'Max').value);
+          if (i < 0) fbSet(k, null, null);
+          else if (i === P.length) fbSet(k, P[P.length - 1], null);   // 마지막 「+」: 그 이상
+          else { var v = P[i];
+            if (lo == null && hi != null && hi !== v) fbSet(k, Math.min(v, hi), Math.max(v, hi));   // 두 번째 고르기 → 범위
+            else if (lo != null && hi == null && lo !== v && lo !== P[P.length - 1]) fbSet(k, Math.min(v, lo), Math.max(v, lo));
+            else fbSet(k, null, v);   // 처음 고르기 → 그 금액(면적)까지
+          }
+          setTimeout(fbPaint, 60); return fbPaint();
+        }
+      });
+      pop.querySelectorAll('.fbI input').forEach(function (x) {
+        var orig = $('map' + k + x.getAttribute('data-s'));
+        x.addEventListener('input', function () { orig.value = x.value; orig.dispatchEvent(new Event('input')); });
+        x.addEventListener('change', function () { orig.value = x.value; orig.dispatchEvent(new Event('change')); x.value = orig.value; fbPaint(); });
+        x.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); x.dispatchEvent(new Event('change')); fbClose(); } });
+      });
+    });
+    document.addEventListener('mousedown', function (e) { if (fbOpen && innerWidth > 760 && !e.target.closest('.fbWrap') && !e.target.closest('.fbPop')) fbClose(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && fbOpen) fbClose(); });
+    var fbRz = 0; addEventListener('resize', function () { clearTimeout(fbRz); fbRz = setTimeout(fbFit, 150); });
+    fbPaint();
+  }
   /* ---------- 이벤트 ---------- */
   function bind() {
     var rgT = 0;
@@ -3491,6 +3649,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       });
     });
     bindDongPick();
+    fbInit();
     (function () { var ni = $('noInput'); if (!ni || !window.ResizeObserver) return; var full = ni.placeholder; new ResizeObserver(function () { if (document.body.classList.contains('mgrMode')) return; if (!/매물번호/.test(ni.placeholder)) return; ni.placeholder = ni.clientWidth < 150 ? '매물번호' : full; }).observe(ni); })();
     var mk0 = $('mapKind'); if (mk0) mk0.addEventListener('change', function () { mk0.classList.toggle('on', !!mk0.value); applyFilters(false); });
     document.querySelectorAll('.mapReset').forEach(function (r) { r.addEventListener('click', function (e) { e.stopPropagation(); dongPanel(false); resetSearch(); }); });
