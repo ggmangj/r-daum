@@ -3578,7 +3578,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   function fbSelBody(id) {
     var sel = $(id), h = '', grp = null, v = sel.value;
     var btn = function (op, cls) { return '<button type="button" data-v="' + esc(op.value) + '" class="' + (cls || '') + (op.value === v ? ' in' : '') + '">' + esc(op.value ? op.textContent : (id === 'mapKind' ? '종류 전체' : '전체 지역')) + '</button>'; };
-    var top = [].filter.call(sel.children, function (c) { return c.tagName === 'OPTION'; }), groups = [].filter.call(sel.children, function (c) { return c.tagName === 'OPTGROUP'; });
+    var top = [].filter.call(sel.children, function (c) { return c.tagName === 'OPTION'; }), groups = [].filter.call(sel.children, function (c) { return c.tagName === 'OPTGROUP' && (id !== 'mapRegion' || /^(강남구|서초구)$/.test(c.label)); });   // 지역은 강남구·서초구만
     h += '<div class="fbSG">' + top.map(function (op) { return btn(op, groups.length && !op.value ? 'all' : ''); }).join('') + '</div>';
     groups.forEach(function (g) { h += '<h5>' + esc(g.label) + '</h5><div class="fbSG">' + [].map.call(g.querySelectorAll('option'), function (op) { return btn(op, /^gu:/.test(op.value) ? 'all' : ''); }).join('') + '</div>'; });
     return h;
