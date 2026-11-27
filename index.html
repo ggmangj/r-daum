@@ -1675,13 +1675,28 @@ body.mapFull #map .mapTools .noSearch{flex:1 1 180px;min-width:160px}
 .fbF .ok{margin-left:auto;height:40px;padding:0 22px;border:0;border-radius:10px;background:#294652;color:#fff;font:800 14px 'Noto Sans KR',sans-serif;cursor:pointer}
 .fbFl{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .fbDim{display:none}
+.mapTools>select.fbHide{display:none!important}
+.mapTools>.fbWrap.fbS{order:-2}
+.fbS .fbC{min-width:96px;justify-content:space-between}
+.fbPop.fbSP{width:420px}
+.fbSP h5{margin:16px 0 8px;font-size:13px;font-weight:800;color:#8A6A35}
+.fbSG{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.fbSG button{height:40px;border:1px solid #E6E0D4;border-radius:10px;background:#fff;font:700 14px 'Noto Sans KR',sans-serif;color:#33414A;cursor:pointer;padding:0 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fbSG button:hover{border-color:#294652}.fbSG button.in{background:#294652;border-color:#294652;color:#fff}
+.fbSG button.all{grid-column:1/-1}
 @media (max-width:760px){
   body:not(.mapFull) #map .mapTools.fbOn{display:flex!important;flex-wrap:wrap!important;gap:8px!important}
-  body:not(.mapFull) #map .mapTools.fbOn>.mapTtl,body:not(.mapFull) #map .mapTools.fbOn>.noSearch{flex:1 1 100%!important;width:100%}
+  body:not(.mapFull) #map .mapTools.fbOn>.mapTtl{flex:1 1 100%!important;width:100%}
+  body:not(.mapFull) #map .mapTools.fbOn>.noSearch{flex:1 1 55%!important;width:auto!important;min-width:0!important}
+  body:not(.mapFull) #map .mapTools.fbOn>#mapReset2{order:-3;height:44px}
+  body:not(.mapFull) #map .mapTools.fbOn>.fbWrap:not(.fbS){flex:1 1 auto}body:not(.mapFull) #map .mapTools.fbOn>.fbWrap:not(.fbS) .fbC{width:100%;justify-content:center}
+  .fbPop.fbSP{width:auto}
   body:not(.mapFull) #map .mapTools.fbOn>select,body:not(.mapFull) #map .mapTools.fbOn>.rgnSel{flex:1 1 calc(50% - 4px)!important;width:auto!important;min-width:0}
   #map .mapTools.fbOn>:has(#mapRentMax){margin-right:0}
   #map .mapTools.fbOn .mapReset.rstB{position:static;margin-left:auto}
   body.mapFull #map .mapTools.fbOn>.rgnSel{flex:0 0 auto!important;width:auto!important}
+  body:not(.mapFull) #map .mapTools.fbOn>.fbS{flex:1 1 calc(50% - 4px)}body:not(.mapFull) #map .mapTools.fbOn>.fbS .fbC{width:100%}
+  .fbSG{grid-template-columns:repeat(3,1fr)}
   .mapTools .fbWrap{position:static}
   .fbC{height:40px;padding:0 13px;font-size:13.5px}
   .fbPop,.fbPop.r{position:fixed;left:0;right:0;top:auto;bottom:0;width:auto;max-width:none;z-index:10050;border-radius:20px 20px 0 0;padding:20px 20px calc(20px + env(safe-area-inset-bottom));max-height:85vh;overflow:auto}
@@ -3549,7 +3564,49 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     t.classList.remove('fbBrk'); if (innerWidth <= 760 || document.body.classList.contains('mapFull')) return;
     if (r.getBoundingClientRect().top > n.getBoundingClientRect().top + 5) t.classList.add('fbBrk');
   }
+  // 종류·지역 고르기(select)도 같은 모양: 제목 버튼 + 누르면 선택 창 (원래 select는 숨겨 두고 값만 바꿈)
+  var FS = {};
+  function fbSelPaint() {
+    Object.keys(FS).forEach(function (id) {
+      var o = FS[id], sel = $(id), op = sel.options[sel.selectedIndex], txt = op ? op.textContent.replace(/\s*전체$/, (sel.value ? ' 전체' : ' 전체')) : '';
+      if (!sel.value) txt = id === 'mapKind' ? '종류 전체' : (sel.options[0] ? sel.options[0].textContent : '지역');
+      o.btn.innerHTML = '<span>' + esc(txt) + '</span><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>';
+      o.btn.classList.toggle('on', !!sel.value); o.btn.classList.toggle('open', fbOpen === id); o.btn.setAttribute('aria-expanded', fbOpen === id ? 'true' : 'false');
+    });
+  }
+  function fbSelBody(id) {
+    var sel = $(id), h = '', grp = null, v = sel.value;
+    var btn = function (op, cls) { return '<button type="button" data-v="' + esc(op.value) + '" class="' + (cls || '') + (op.value === v ? ' in' : '') + '">' + esc(op.value ? op.textContent : (id === 'mapKind' ? '종류 전체' : '전체 지역')) + '</button>'; };
+    var top = [].filter.call(sel.children, function (c) { return c.tagName === 'OPTION'; }), groups = [].filter.call(sel.children, function (c) { return c.tagName === 'OPTGROUP'; });
+    h += '<div class="fbSG">' + top.map(function (op) { return btn(op, groups.length && !op.value ? 'all' : ''); }).join('') + '</div>';
+    groups.forEach(function (g) { h += '<h5>' + esc(g.label) + '</h5><div class="fbSG">' + [].map.call(g.querySelectorAll('option'), function (op) { return btn(op, /^gu:/.test(op.value) ? 'all' : ''); }).join('') + '</div>'; });
+    return h;
+  }
+  function fbSelInit(tools) {
+    [['mapKind', '종류'], ['mapRegion', '지역']].forEach(function (a) {
+      var id = a[0], sel = $(id); if (!sel || getComputedStyle(sel).display === 'none') return;
+      var w = document.createElement('div'); w.className = 'fbWrap fbS';
+      var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'fbC'; btn.setAttribute('aria-haspopup', 'dialog');
+      var pop = document.createElement('div'); pop.className = 'fbPop fbSP'; pop.hidden = true; pop.setAttribute('role', 'dialog'); pop.setAttribute('aria-label', a[1] + ' 선택');
+      w.appendChild(btn); w.appendChild(pop); sel.parentNode.insertBefore(w, sel); sel.classList.add('fbHide');
+      FS[id] = { btn: btn, pop: pop, name: a[1] };
+      btn.addEventListener('click', function () {
+        if (fbOpen === id) return fbClose(); if (fbOpen) fbClose();
+        pop.innerHTML = '<h4>' + esc(a[1]) + '<button type="button" class="fbX" aria-label="닫기">×</button></h4>' + fbSelBody(id);
+        fbOpen = id; if (innerWidth <= 760) document.body.appendChild(pop); pop.hidden = false; pop.classList.remove('r');
+        if (innerWidth > 760 && pop.getBoundingClientRect().right > innerWidth - 12) pop.classList.add('r');
+        var d = $('fbDim'); if (d) d.hidden = innerWidth > 760; fbPaint();
+      });
+      pop.addEventListener('click', function (e) {
+        var t = e.target.closest('button'); if (!t) return;
+        if (t.classList.contains('fbX')) return fbClose();
+        if (t.hasAttribute('data-v')) { sel.value = t.getAttribute('data-v'); sel.dispatchEvent(new Event('change')); fbClose(); }
+      });
+      sel.addEventListener('change', fbSelPaint);
+    });
+  }
   function fbPaint() {
+    fbSelPaint();
     Object.keys(FB).forEach(function (k) {
       var o = FB[k], t = fbLabel(k);
       o.btn.innerHTML = esc(o.name) + (t ? ' <b>' + esc(t) + '</b>' : '') + '<svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg>';
@@ -3577,7 +3634,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     a.dispatchEvent(new Event('change'));
     var r = $('rg' + k); if (r) r.classList.toggle('on', !!(a.value || b.value || (k === 'Floor' && FLP.length)));
   }
-  function fbClose() { if (!fbOpen) return; var o = FB[fbOpen]; if (o && o.pop) { o.pop.hidden = true; if (o.pop.parentNode !== o.btn.parentNode) o.btn.parentNode.appendChild(o.pop); } var d = $('fbDim'); if (d) d.hidden = true; var k = fbOpen; fbOpen = null; fbPaint(); if (o) o.btn.focus({ preventScroll: true }); }
+  function fbClose() { if (!fbOpen) return; var o = FB[fbOpen] || FS[fbOpen]; if (o && o.pop) { o.pop.hidden = true; if (o.pop.parentNode !== o.btn.parentNode) o.btn.parentNode.appendChild(o.pop); } var d = $('fbDim'); if (d) d.hidden = true; var k = fbOpen; fbOpen = null; fbPaint(); if (o) o.btn.focus({ preventScroll: true }); }
   function fbShow(k) {
     if (fbOpen === k) return fbClose(); if (fbOpen) fbClose();
     var o = FB[k]; fbOpen = k; if (innerWidth <= 760) document.body.appendChild(o.pop); o.pop.hidden = false; o.pop.classList.remove('r');   // 모바일: 아래에서 올라오는 창은 화면 맨 위에 (크게 보기 안에서도 가려지지 않게)
@@ -3586,7 +3643,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     fbPaint();
   }
   function fbInit() {
-    var tools = document.querySelector('.mapTools'), anchor = $('noSearch'); if (!tools || !anchor) return; tools.classList.add('fbOn');
+    var tools = document.querySelector('.mapTools'), anchor = $('noSearch'); if (!tools || !anchor) return; tools.classList.add('fbOn'); fbSelInit(tools); var ni0 = $('noInput'); if (ni0 && innerWidth <= 760) ni0.placeholder = '매물번호 검색';
     if (!$('fbDim')) { var dm = document.createElement('div'); dm.id = 'fbDim'; dm.className = 'fbDim'; dm.hidden = true; dm.addEventListener('click', fbClose); document.body.appendChild(dm); }
     ['Area', 'Bld', 'Floor', 'Dep', 'Rent'].forEach(function (k) {
       var rg = $('rg' + k); if (!rg || getComputedStyle(rg).display === 'none') return;
