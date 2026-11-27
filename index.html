@@ -635,6 +635,7 @@ body.detailMode #top,body.detailMode #map,body.detailMode #allList,body.detailMo
 .simBack .sbBtn{flex:none;display:inline-flex;align-items:center;gap:4px;height:34px;padding:0 13px;border-radius:999px;background:#294652;color:#fff;font-size:13px;font-weight:800}
 .simBack:hover .sbBtn{background:#1d3640}
 .smH{display:flex;align-items:center;gap:8px}.smBack{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 12px;border-radius:999px;background:#294652;color:#fff!important;font-size:12.5px;font-weight:800;text-decoration:none;letter-spacing:0}.smBack:hover{background:#1d3640}
+.smWrap{position:relative}.smBack.smOv{position:absolute;top:10px;right:10px;z-index:120;box-shadow:0 2px 8px rgba(20,30,36,.3)}
 @media print{.smBack{display:none!important}}
 .simR.simCur{background:#FBF6EC;border-radius:10px;box-shadow:inset 3px 0 0 #BC975E}
 .simR.simCur .simNo{background:#BC975E}
@@ -4328,7 +4329,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     if (!it || !isFinite(it.lat) || !it.lat) return '';
     var l = simList(it), r = SIMR && SIMR.id === it.id ? SIMR.r : (l.length ? l.r : 400);
     var on = SIMCUR && SIMCUR.on && SIMCUR.base === it;
-    return '<div class="dtCard simMapC"><h3 class="smH">' + '비슷한 매물 위치' + (on ? '<a class="smBack" href="#item/' + encodeURIComponent(it.id) + '"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>기준 매물 보기</a>' : '') + '</h3><p class="smSub">번호는 위 목록 순서 · 핀을 누르면 그 매물로 이동</p><div class="simMap" id="simMap"></div>' +
+    return '<div class="dtCard simMapC"><h3 class="smH">' + '비슷한 매물 위치' + (on ? '<a class="smBack" href="#item/' + encodeURIComponent(it.id) + '"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>기준 매물 보기</a>' : '') + '</h3><p class="smSub">번호는 위 목록 순서 · 핀을 누르면 그 매물로 이동</p><div class="smWrap"><div class="simMap" id="simMap"></div>' + (on ? '<a class="smBack smOv" href="#item/' + encodeURIComponent(it.id) + '"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>기준 매물 보기</a>' : '') + '</div>' +
       '<div class="smLg"><span><i class="me"></i>' + (SIMCUR && SIMCUR.on && SIMCUR.base === it ? '기준 매물' : '이 매물') + '</span>' + (SIMCUR && SIMCUR.on && SIMCUR.base === it ? '<span><i class="cu"></i>보는 중</span>' : '') + '<span><i class="sm"></i>비슷한 매물</span><span><i class="rg"></i>반경 ' + (r >= 1000 ? '1km' : r + 'm') + '</span></div>' +
       '<div class="smR"><span class="smRl">반경</span><span class="smRt"><input type="range" id="simR" min="200" max="1000" step="100" value="' + r + '" aria-label="비슷한 매물 찾는 반경"><span class="smRk"><i>200m</i><i>1km</i></span></span><b id="simRv">' + (r >= 1000 ? '1km' : r + 'm') + '</b></div></div>';
   }
