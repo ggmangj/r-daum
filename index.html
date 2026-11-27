@@ -632,6 +632,8 @@ body.detailMode #top,body.detailMode #map,body.detailMode #allList,body.detailMo
 .simMap{height:300px;border-radius:12px;overflow:hidden;border:1px solid #E6E0D4} .smLg{display:flex;flex-wrap:wrap;gap:12px;margin-top:9px;font-size:11.5px;color:#6B757D} .smLg i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:-1px} .smLg i.me{background:#C4553A} .smLg i.sm{background:#294652} .smLg i.rg{border:1.5px dashed #BC975E;box-sizing:border-box}
 .simBack{display:flex;align-items:center;gap:10px;margin:-2px 0 14px;padding:10px 12px 10px 14px;border-radius:12px;background:#FBF6EC;border:1px solid #E8D7B6;text-decoration:none;color:#14191F}
 .simBack .sbL{flex:1;min-width:0;display:flex;flex-direction:column}.simBack small{font-size:11.5px;color:#8A6A35;font-weight:700}.simBack b{font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.simBack .sbP{font-size:12.5px;color:#33414A;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.simBack .sbP b{font-size:12.5px;font-weight:800;color:#C4553A}
+#mapReset{display:none!important}
 .simBack .sbBtn{flex:none;display:inline-flex;align-items:center;gap:4px;height:34px;padding:0 13px;border-radius:999px;background:#294652;color:#fff;font-size:13px;font-weight:800}
 .simBack:hover .sbBtn{background:#1d3640}
 .smH{display:flex;align-items:center;gap:8px}.smBack{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:4px;height:32px;padding:0 12px;border-radius:999px;background:#294652;color:#fff!important;font-size:12.5px;font-weight:800;text-decoration:none;letter-spacing:0}.smBack:hover{background:#1d3640}
@@ -4307,7 +4309,9 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   }
   function simBackHtml(b) {
     var t = (b.dong || '') + ' ' + (b.floor || '') + (b.area ? ' ' + Math.round(+b.area) + '평' : '');
-    return '<a class="simBack" href="#item/' + encodeURIComponent(b.id) + '"><span class="sbL"><small>기준 매물</small><b>' + esc(t.trim()) + '</b></span><span class="sbBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>기준 매물 보기</span></a>';
+    var pr = b.sale ? '매매 <b>' + esc(b.depText || '문의') + '</b>' + (b.area ? ' / ' + (b.shop ? '전용 ' : '대지 ') + Math.round(+b.area) + '평' : '')
+      : '보 ' + esc(b.depText || '문의') + ' / <b>월 ' + esc(b.rentText || '문의') + '</b> / 관리 ' + esc(b.mgmt || '문의');
+    return '<a class="simBack" href="#item/' + encodeURIComponent(b.id) + '"><span class="sbL"><small>기준 매물</small><b>' + esc(t.trim()) + '</b><span class="sbP">' + pr + '</span></span><span class="sbBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>기준 매물 보기</span></a>';
   }
   function simHtml(it) {
     if (!it || !isFinite(it.lat) || !it.lat) return '';
