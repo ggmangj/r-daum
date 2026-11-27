@@ -1476,6 +1476,8 @@ body.mapFull:not(.detailMode) .ccNav{visibility:hidden}   /* 추천 매물 화�
 .flvBar{grid-column:1/-1;order:9;display:flex;justify-content:space-between;align-items:center;height:28px;padding:0 12px;background:linear-gradient(90deg,#2B3A43,#3C4A52);color:#fff;font:700 11.5px 'Noto Sans KR',sans-serif}
 .flvBar span{display:flex;align-items:center;gap:6px}.flvBar span:last-child{font-weight:600}
 .flvBar i{display:inline-block;width:8px;height:10px;border-left:3.4px solid #C9A46A;border-radius:0 6px 6px 0;background:#fff;box-sizing:border-box}
+.rfTag{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:9px;background:#F3ECDF;color:#8A6A35;font-size:12px;font-weight:700;vertical-align:1px}
+.flvR b .flNow{display:block;width:max-content;margin-top:2px;padding:1px 6px;border-radius:9px;background:#8A6A35;color:#fff;font-size:10.5px;font-weight:700;line-height:1.5}
 .flvLg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12px;color:#4A545C;margin:8px 0 0}.flvLg i{display:inline-block;width:14px;height:9px;margin-right:5px;border:2px dashed;vertical-align:-1px}
 @media (max-width:900px){.flv{grid-template-columns:1fr}.flvD{order:-1;border-bottom:1px solid #EFEAE0}.flvT{border-right:0}.flvT>div[style*="height:4px"]{display:none}.flvR{height:auto!important;min-height:46px;padding-top:6px;padding-bottom:6px}.flvR span{display:block}}
 /* 본문 칸이 좁으면(700px 미만, 예: 1024px 화면) 표가 눌리지 않도록 입체도 위 · 표 아래로 */
@@ -3264,7 +3266,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   // 병의원: 키워드(종류)뿐 아니라 건축물대장에서 이 매물 층의 용도가 의원·병원·치과 등이면 포함
   function regClinic(it) {
     var fl = it && it.reg && it.reg.fl; if (!fl || !fl.length || !it.floor) return false;
-    try { return fl.some(function (f) { return /의원|병원|치과|의료|요양|조산원|산후조리/.test(String(f[2] || '')) && isHereFloor(f[0], it.floor); }); } catch (e) { return false; }
+    try { return fl.some(function (f) { return /의원|병원|치과|의료|요양|조산원|산후조리/.test(String(f[2] || '')) && isHereFloor(f[0], it.rf || it.floor); }); } catch (e) { return false; }
   }
   // 신축: 사용승인일이 오늘부터 2년 이내 (매물 사용승인일 → 없으면 건축물대장 사용승인일)
   function newApr(it) {
@@ -3912,7 +3914,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       infoRow('가격', '보증금 ' + (it.depText || '문의') + ' / 월세 ' + (it.rentText || '문의')) +
       infoRow('거래 형태', '임대차 (월세)') +
       infoRow('관리비', it.mgmt).replace('</dd>', pyUnit(it) + '</dd>') +
-      infoRow('해당층 / 총 층수', floorTxt) +
+      infoRow('해당층 / 총 층수', floorTxt).replace('</dd>', it.rf ? '<small class="rfTag">대장상 ' + esc(it.rf) + '</small></dd>' : '</dd>') +
       infoRow('권리금', premMgr(it) ? premMgr(it) : it.premium === '무권리' ? '없음' : (it.unv && !it.premium ? '' : '유선문의')) +
       infoRow('전용면적', m2(it.area)) +
       infoRow('주차대수', it.parking) +
@@ -4447,7 +4449,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     if (!it) return false;
     if (it.reg) {   // 건축물대장이 있으면 대장으로 판단: 집합건물이거나, 이 층 용도가 계단실·승강기처럼 상가가 아닌 경우(다른 동 대장)만 단지 상가
       if (/집합/.test(String(it.reg.kind || ''))) return true;
-      var here = floorRows(it.reg).filter(function (r) { return isHereFloor(r.name, it.floor); });
+      var here = floorRows(it.reg).filter(function (r) { return isHereFloor(r.name, it.rf || it.floor); });
       return here.length > 0 && here.every(function (r) { return r.segs.every(function (g) { return /계단|승강기|엘리베이터|기계실|전기실|주차|공용/.test(g.full) && !/근린|판매|업무|의료|교육|숙박|위락|운동/.test(g.full); }); });
     }
     var xs = sameBldg(it), hs = xs.filter(function (o) { return o.ho; }).length + (it.ho ? 1 : 0);   // 대장이 없을 때: 같은 건물 매물 4건 이상 + 호수 있는 매물 2건 이상
@@ -4766,9 +4768,9 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     var rows = floorRows(it.reg); if (!rows.length) return '';
     var PY = 3.3058, n = rows.length, RH = n > 16 ? 40 : 46, TOP = 30, X0 = 96, MAXW = 200, DX = 22, DY = 12;
     var isRoof = function (r) { return /옥탑|탑층/.test(r.name); }, isUnder = function (r) { return /^(지하|지\d|B\d)/i.test(String(r.name).replace(/\s+/g, '')); };
-    rows.forEach(function (r) { r.roof = isRoof(r); r.under = isUnder(r); r.here = isHereFloor(r.name, it.floor); r.cat = r.segs.slice().sort(function (a, b) { return b.area - a.area; })[0].cat; });
+    rows.forEach(function (r) { r.roof = isRoof(r); r.under = isUnder(r); r.here = isHereFloor(r.name, it.rf || it.floor); r.cat = r.segs.slice().sort(function (a, b) { return b.area - a.area; })[0].cat; });
     var xs = sameBldg(it);
-    rows.forEach(function (r) { r.adds = xs.filter(function (x) { return isHereFloor(r.name, x.floor); }); if (r.adds.length) r.add = r.adds[0]; });   // 같은 층 다른 호실도 (이 매물 층 포함)
+    rows.forEach(function (r) { r.adds = xs.filter(function (x) { return isHereFloor(r.name, x.rf || x.floor); }); if (r.adds.length) r.add = r.adds[0]; });   // 같은 층 다른 호실도 (이 매물 층 포함)
     var g = rows.filter(function (r) { return !r.under && !r.roof; }), b = rows.filter(function (r) { return r.under; });
     var gMax = Math.max.apply(null, g.map(function (r) { return r.tot; }).concat([1])), bMax = Math.max.apply(null, b.map(function (r) { return r.tot; }).concat([0]));
     var shrink = g.length && bMax > gMax * 2, CAP = gMax * 1.3, scale = MAXW / (shrink ? CAP : Math.max(gMax, bMax));
@@ -4778,7 +4780,16 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     var C = { med: ['#C7D6E2', '#A9BCCB', '#E3ECF2'], sale: ['#EDE0C8', '#D8C6A6', '#F6EEDF'], food: ['#EBD6CB', '#D3B7A8', '#F5EAE4'], office: ['#D6DEE4', '#B9C6CF', '#ECF0F3'], edu: ['#D6E0CF', '#BCCAB2', '#EBF0E7'],
       life: ['#E2D9E3', '#C9BCCB', '#F0EBF1'], sport: ['#E9E1BE', '#D2C79C', '#F4F0DE'], house: ['#E6DECF', '#CFC3AE', '#F2EEE6'], park: ['#E4E1DA', '#CBC7BE', '#F1EFEA'], mech: ['#CDD1D5', '#B3B8BD', '#E5E7E9'], etc: ['#E6E1D6', '#CFC8B9', '#F3F0EA'] };
     var ST = ' stroke="#7F8E99" stroke-width=".8"', s = '';
-    if (gi < n) s += '<rect x="0" y="' + gy + '" width="' + W + '" height="' + (H - gy) + '" fill="#F3ECDF"/><line x1="0" x2="' + W + '" y1="' + gy + '" y2="' + gy + '" stroke="#8A6A35" stroke-width="1.6"/>' +
+        // 같은 건물 매물 중 하나라도 「대장층」이 있으면 그 건물 전체에 사선 지반선 (공클 매물 포함)
+    var sp = it.rf ? it : xs.filter(function (x) { return x.rf; })[0];
+    var fi = sp ? rows.findIndex(function (r) { return isHereFloor(r.name, sp.floor); }) : -1, ri = sp ? rows.findIndex(function (r) { return isHereFloor(r.name, sp.rf); }) : -1;
+    var slope = sp && ri >= 0 ? Math.max(0, fi >= 0 ? ri - fi : 1) : 0, fy = gy + slope * RH - 3, gx0 = X0 - 30, gx1 = X0 + MAXW + DX;
+    if (gi < n && slope) s += '<polygon points="0,' + gy + ' ' + gx0 + ',' + gy + ' ' + gx1 + ',' + fy + ' ' + W + ',' + fy + ' ' + W + ',' + H + ' 0,' + H + '" fill="#F3ECDF"/>' +
+      '<polyline points="0,' + gy + ' ' + gx0 + ',' + gy + ' ' + gx1 + ',' + fy + ' ' + W + ',' + fy + '" fill="none" stroke="#8A6A35" stroke-width="1.6"/>' +
+      '<line x1="' + gx1 + '" x2="' + W + '" y1="' + gy + '" y2="' + gy + '" stroke="#8A6A35" stroke-width="1" stroke-dasharray="3 3" opacity=".45"/>' +
+      '<text x="4" y="' + (gy + 13) + '" font-size="10" fill="#8A6A35" font-weight="700">▲ 후면 지반</text>' +
+      '<text x="' + (W - 4) + '" y="' + (fy + 13) + '" text-anchor="end" font-size="10" fill="#8A6A35" font-weight="700">전면 지반 (현황 ' + esc(sp.floor) + ') ▲</text>';
+    else if (gi < n) s += '<rect x="0" y="' + gy + '" width="' + W + '" height="' + (H - gy) + '" fill="#F3ECDF"/><line x1="0" x2="' + W + '" y1="' + gy + '" y2="' + gy + '" stroke="#8A6A35" stroke-width="1.6"/>' +
       '<text x="4" y="' + (gy + 13) + '" font-size="10" fill="#8A6A35" font-weight="700">▲ 지반선 (G.L)</text>';
     for (var i = n - 1; i >= 0; i--) {   // 아래층부터 그려서 위층이 덮도록
       var r = rows[i], w = wOf(r), x = X0, yy = y(i) + 3, h = RH - 6, c = C[r.cat] || C.etc;
@@ -4841,12 +4852,12 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
       wm += '<text x="' + wx + '" y="' + wy + '" transform="rotate(-20 ' + wx + ' ' + wy + ')">부동산다움 02-555-1165</text>';
     s += '<g class="flvWm" opacity=".09" font-size="13" font-weight="800" fill="#294652" pointer-events="none">' + wm + '</g>' +
       '';
-    var SH = H - 30;   // 아래 부동산다움 줄은 표와 입체도 아래로 길게 (flvBar)
+    var SH = H - 30 + (slope && fy + 16 > H - 30 ? fy + 18 - (H - 30) : 0);   // 아래 부동산다움 줄은 표와 입체도 아래로 길게 (flvBar)
     var svg = '<svg class="flvSvg" viewBox="0 0 ' + W + ' ' + SH + '" width="' + W + '" height="' + SH + '" role="img" aria-label="층별 현황 입체도">' + s + '</svg>';
     var m2t = function (v) { return Number(v).toLocaleString('ko-KR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); };
     var tbl = rows.map(function (r, i) {
       var use = r.segs.slice().sort(function (p, q) { return q.area - p.area; }).map(function (x) { return regUse(x.full); }).filter(function (v, k, l) { return v && l.indexOf(v) === k; }).join(' · ') || '-', full = r.segs.map(function (x) { return x.full + ' ' + m2t(x.area) + '㎡'; }).join(' / ');
-      return '<div class="flvR' + (r.here ? ' me' : '') + (r.add ? ' ad' : '') + (i === gi ? ' gl' : '') + '" style="height:' + RH + 'px;--rh:' + RH + 'px" title="' + esc(full) + '"><b>' + esc(r.label) + '</b><span>' + esc(use) + '</span><em>' + (r.tot / PY).toFixed(2) + '평<small>' + m2t(r.tot) + '㎡</small></em></div>';
+      return '<div class="flvR' + (r.here ? ' me' : '') + (r.add ? ' ad' : '') + (i === gi ? ' gl' : '') + '" style="height:' + RH + 'px;--rh:' + RH + 'px" title="' + esc(full) + '"><b>' + esc(r.label) + (slope && i === ri ? '<small class="flNow">현황 ' + esc(sp.floor) + '</small>' : '') + '</b><span>' + esc(use) + '</span><em>' + (r.tot / PY).toFixed(2) + '평<small>' + m2t(r.tot) + '㎡</small></em></div>';
     }).join('');
     return '<section class="dtSec dtFlv"><h2>층별 현황</h2><div class="flv"><div class="flvT"><div class="flvHd"><b>층</b><span>건축물대장상 용도</span><em>층 합계 면적</em></div><div style="height:' + (TOP - 26) + 'px"></div>' + tbl + '</div><div class="flvD">' + svg + '</div><div class="flvBar" aria-hidden="true"><span><i></i>부동산다움 · r-daum.com</span><span>02-555-1165</span></div></div>' +
       '<p class="dtNote">※ 건축물대장상 용도로, 실제 업종과 다를 수 있습니다. 입체도는 층별 면적 비율로 그린 개념도입니다.' +
@@ -4858,7 +4869,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
   function floorSvg(it, targetH) {
     var rows = floorRows(it.reg); if (!rows.length) return '';
     var PY = 3.3058, whole = /통|전층|전체|건물/.test(String(it.floor || ''));
-    rows.forEach(function (r) { r.here = isHereFloor(r.name, it.floor); });
+    rows.forEach(function (r) { r.here = isHereFloor(r.name, it.rf || it.floor); });
     var max = Math.max.apply(null, rows.map(function (r) { return r.tot; }));
     var gi = -1; rows.forEach(function (r, i) { if (gi < 0 && floorKey(r.name) < 0) gi = i; });
     var FSZ = 13.5, FS = '500 ' + FSZ + 'px Noto Sans KR, sans-serif';
@@ -4949,7 +4960,7 @@ function brRelay(g){if(!g.S||!g.map)return;const sh=g.el,R0=sh.getBoundingClient
     if (tagRow && here.length === 1) { occ[tagRow.name] = [[bx - E, bx + bw + E]]; }
     var xs = sameBldg(it), ytag = '';
     xs.forEach(function (o) {
-      var rs = rows.filter(function (r) { return isHereFloor(r.name, o.floor); }); if (!rs.length || rs.length > 3) return;
+      var rs = rows.filter(function (r) { return isHereFloor(r.name, o.rf || o.floor); }); if (!rs.length || rs.length > 3) return;
       rs.forEach(function (r, ri) {
         var m2o = (+o.area || 0) * PY, ox = X0, ow = r.w, hit = null;
         if (m2o > 0 && rs.length === 1) {
